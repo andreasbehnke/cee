@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+	<!-- JCR -->
+	
+	<bean id="jcrRepositoryConfig" class="org.apache.jackrabbit.core.config.RepositoryConfig" factory-method="create">
+		<constructor-arg>
+            <bean class="java.io.File">
+            	<constructor-arg value="D:\cee\workspace\cee-news-impl\repository" />
+            </bean>
+        </constructor-arg>
+	</bean>
+	
+	<bean id="jcrRepository" class="org.apache.jackrabbit.core.RepositoryImpl" factory-method="create" destroy-method="shutdown">
+		<constructor-arg ref="jcrRepositoryConfig"/>
+	</bean>
+	
+	<bean id="jcrPassword" class="java.lang.String">
+	 	<constructor-arg value="password" />
+	</bean>
+	
+	<bean id="jcrCredentials" class="javax.jcr.SimpleCredentials">
+		<constructor-arg value="username" />
+		<constructor-arg>
+			<bean factory-bean="jcrPassword" factory-method="toCharArray" />
+		</constructor-arg>
+	</bean>
+	
+	<bean id="jcrSession" factory-bean="jcrRepository" factory-method="login" scope="request" destroy-method="logout">
+		<constructor-arg ref="jcrCredentials"/>
+	</bean>
+	
+	<!-- Backend Services -->
+	
+	<bean id="siteStore" class="com.cee.news.store.jcr.JcrSiteStore" scope="request">
+		<property name="session" ref="jcrSession" />
+		<aop:scoped-proxy/>
+	</bean>
+	
+	<bean id="articleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="request">
+		<property name="session" ref="jcrSession" />
+		<aop:scoped-proxy/>
+	</bean>
+	
+	<!-- GWT Services -->
+	
+	<bean id="gwtNewsService" class="com.cee.news.server.content.NewsServiceImpl" lazy-init="true">
+		<property name="siteStore" ref="siteStore" />
+		<property name="articleStore" ref="articleStore" />
+	</bean>
+	
+	<bean id="gwtSiteService" class="com.cee.news.server.content.SiteServiceImpl" lazy-init="true">
+		<property name="siteStore" ref="siteStore" />
+	</bean>
+	
+	<bean id="gwtWorkingSetService" class="com.cee.news.server.workingset.WorkingSetServiceImpl" lazy-init="true">
+		<property name="store" ref="newsStore" />
+	</bean>
+</beans>
