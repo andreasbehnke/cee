@@ -16,8 +16,12 @@ public class WorkingSetServiceImpl implements WorkingSetService {
         this.workingSetStore = workingSetStore;
     }
 
-    public int getWorkingSetCount() {
-        return workingSetStore.getWorkingSetCount();
+    public long getWorkingSetCount() {
+        try {
+			return workingSetStore.getWorkingSetCount();
+		} catch (StoreException e) {
+			throw new RuntimeException(e);
+		}
     }
     
     public List<String> getWorkingSetsOrderedByName() {
