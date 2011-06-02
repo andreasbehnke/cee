@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.Size;
-
 /**
  * Bean holding all view data of a working set
  */
@@ -15,8 +13,7 @@ public class WorkingSetData implements Serializable {
 
 	private Boolean isNew = false;
 
-	@Size(min = 3)
-    private String newName;
+	private String newName;
     
     private String oldName;
     
