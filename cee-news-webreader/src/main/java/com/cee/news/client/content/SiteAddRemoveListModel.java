@@ -10,9 +10,9 @@ import java.util.Set;
 
 import com.cee.news.client.list.AddRemoveListModel;
 import com.cee.news.client.list.LinkValue;
-import com.cee.news.client.list.ListChangedEvent;
 import com.cee.news.client.list.SelectionListChangedEvent;
 import com.cee.news.client.list.SelectionListChangedHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Implementation of the {@link AddRemoveListModel} for selecting sites.
@@ -28,18 +28,33 @@ public class SiteAddRemoveListModel extends SiteListContentModel implements AddR
         fireSelectionListChanged();
     }
     
+    @Override
     public void addSelection(int index) {
         selections.add(index);
         fireSelectionListChanged();
     }
-
+    
+    @Override
     public void removeSelection(int index) {
         selections.remove(index);
         fireSelectionListChanged();
     }
     
-    public Set<Integer> getSelections() {
-        return selections;
+    @Override
+    public void setSelections(List<String> selectedSites) {
+    	selections.clear();
+    	if (selectedSites != null) {
+	    	for (String site : selectedSites) {
+				selections.add(sites.indexOf(site));
+			}
+    	}
+    	fireSelectionListChanged();
+    }
+    
+    @Override
+    public void clearSelection() {
+    	selections.clear();
+    	fireSelectionListChanged();
     }
     
     protected void fireSelectionListChanged() {
@@ -50,7 +65,8 @@ public class SiteAddRemoveListModel extends SiteListContentModel implements AddR
         handlerManager.fireEvent(new SelectionListChangedEvent(selectionLinks));
     }
 
-    public void addSelectionListChangedHandler(SelectionListChangedHandler handler) {
-        handlerManager.addHandler(SelectionListChangedEvent.TYPE, handler);
+    @Override
+    public HandlerRegistration addSelectionListChangedHandler(SelectionListChangedHandler handler) {
+        return handlerManager.addHandler(SelectionListChangedEvent.TYPE, handler);
     }
 }

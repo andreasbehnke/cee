@@ -1,5 +1,9 @@
 package com.cee.news.client.list;
 
+import java.util.List;
+
+import com.google.gwt.event.shared.HandlerRegistration;
+
 /**
  * Model of a selectable list. Multiple elements of the content list can be selected.
  */
@@ -18,7 +22,18 @@ public interface AddRemoveListModel extends ContentListModel {
     void removeSelection(int index);
     
     /**
+     * Set the selected keys
+     * @param selections List containing the selected keys
+     */
+    void setSelections(List<String> selections);
+    
+    /**
+     * Clears the current selection
+     */
+    void clearSelection();
+    
+    /**
      * @param handler will be notified if the selection list is changed.
      */
-    void addSelectionListChangedHandler(SelectionListChangedHandler handler);
+    HandlerRegistration addSelectionListChangedHandler(SelectionListChangedHandler handler);
 }

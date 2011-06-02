@@ -11,7 +11,12 @@
 	<bean id="jcrRepositoryConfig" class="org.apache.jackrabbit.core.config.RepositoryConfig" factory-method="create">
 		<constructor-arg>
             <bean class="java.io.File">
-            	<constructor-arg value="D:\cee\workspace\cee-news-impl\repository" />
+            	<constructor-arg value="D:\cee\workspace\cee\cee-news-impl\repository.xml" />
+            </bean>
+        </constructor-arg>
+		<constructor-arg>
+            <bean class="java.io.File">
+            	<constructor-arg value="D:\cee\workspace\cee\cee-news-impl\repository" />
             </bean>
         </constructor-arg>
 	</bean>
@@ -47,6 +52,11 @@
 		<aop:scoped-proxy/>
 	</bean>
 	
+	<bean id="workingSetStore" class="com.cee.news.store.jcr.JcrWorkingSetStore" scope="request">
+		<property name="session" ref="jcrSession" />
+		<aop:scoped-proxy/>
+	</bean>
+	
 	<!-- GWT Services -->
 	
 	<bean id="gwtNewsService" class="com.cee.news.server.content.NewsServiceImpl" lazy-init="true">
@@ -59,6 +69,6 @@
 	</bean>
 	
 	<bean id="gwtWorkingSetService" class="com.cee.news.server.workingset.WorkingSetServiceImpl" lazy-init="true">
-		<property name="store" ref="newsStore" />
+		<property name="workingSetStore" ref="workingSetStore" />
 	</bean>
 </beans>

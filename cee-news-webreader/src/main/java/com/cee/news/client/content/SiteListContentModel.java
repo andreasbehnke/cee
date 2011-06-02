@@ -9,6 +9,7 @@ import com.cee.news.client.error.ErrorSource;
 import com.cee.news.client.list.DefaultListModel;
 import com.cee.news.client.list.ContentListModel;
 import com.cee.news.client.list.LinkValue;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.client.HasSafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -20,7 +21,7 @@ public class SiteListContentModel extends DefaultListModel implements ContentLis
 
     private SiteServiceAsync service = SiteService.Util.getInstance();
     
-    private List<String> sites;
+    protected List<String> sites;
     
     public void updateSites() {
         service.getSites(new AsyncCallback<List<String>>() {
@@ -109,8 +110,8 @@ public class SiteListContentModel extends DefaultListModel implements ContentLis
         return sites.get(index);
     }
 
-    public void addErrorHandler(ErrorHandler handler) {
-        handlerManager.addHandler(ErrorEvent.TYPE, handler);
+    public HandlerRegistration addErrorHandler(ErrorHandler handler) {
+        return handlerManager.addHandler(ErrorEvent.TYPE, handler);
     }
 
     protected void fireErrorEvent(Throwable cause, String description) {

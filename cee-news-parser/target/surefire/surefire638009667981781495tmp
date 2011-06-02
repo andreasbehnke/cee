@@ -1,0 +1,32 @@
+#surefire
+#Mon May 16 08:42:14 CEST 2011
+testClassesDirectory=D\:\\cee\\workspace\\cee\\cee-news-parser\\target\\test-classes
+classPathUrl.4=C\:\\Users\\Andreas\\.m2\\repository\\org\\apache\\httpcomponents\\httpcore\\4.0.1\\httpcore-4.0.1.jar
+classPathUrl.3=C\:\\Users\\Andreas\\.m2\\repository\\org\\apache\\httpcomponents\\httpclient\\4.0.3\\httpclient-4.0.3.jar
+classPathUrl.2=D\:\\cee\\workspace\\cee\\cee-news-store-api\\target\\cee-news-store-api-0.0.1-SNAPSHOT.jar
+useManifestOnlyJar=true
+classPathUrl.1=D\:\\cee\\workspace\\cee\\cee-news-parser\\target\\classes
+reportsDirectory=D\:\\cee\\workspace\\cee\\cee-news-parser\\target\\surefire-reports
+classPathUrl.0=D\:\\cee\\workspace\\cee\\cee-news-parser\\target\\test-classes
+dirscanner.0=directoryScannerOptions
+providerConfiguration=org.apache.maven.surefire.junit4.JUnit4Provider
+testSuiteDefinitionTestSourceDirectory=D\:\\cee\\workspace\\cee\\cee-news-parser\\src\\test\\java
+surefireClassPathUrl.1=C\:\\Users\\Andreas\\.m2\\repository\\org\\apache\\maven\\surefire\\surefire-api\\2.7.1\\surefire-api-2.7.1.jar
+surefireClassPathUrl.0=C\:\\Users\\Andreas\\.m2\\repository\\org\\apache\\maven\\surefire\\surefire-junit4\\2.7.1\\surefire-junit4-2.7.1.jar
+report.2=org.apache.maven.surefire.report.XMLReporter
+useSystemClassLoader=true
+report.1=org.apache.maven.surefire.report.BriefFileReporter
+report.0=org.apache.maven.surefire.report.ForkingConsoleReporter
+excludes0=**/*$*
+isTrimStackTrace=true
+dirscanner.0.params=D\:\\cee\\workspace\\cee\\cee-news-parser\\target\\test-classes|[**/Test*.java, **/*Test.java, **/*TestCase.java]|[**/*$*]
+includes2=**/*TestCase.java
+enableAssertions=true
+includes1=**/*Test.java
+failIfNoTests=false
+includes0=**/Test*.java
+dirscanner.0.types=java.io.File|java.util.ArrayList|java.util.ArrayList
+classPathUrl.7=C\:\\Users\\Andreas\\.m2\\repository\\junit\\junit\\4.8.2\\junit-4.8.2.jar
+childDelegation=false
+classPathUrl.6=C\:\\Users\\Andreas\\.m2\\repository\\commons-codec\\commons-codec\\1.3\\commons-codec-1.3.jar
+classPathUrl.5=C\:\\Users\\Andreas\\.m2\\repository\\commons-logging\\commons-logging\\1.1.1\\commons-logging-1.1.1.jar

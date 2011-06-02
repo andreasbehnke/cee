@@ -1,28 +1,35 @@
 package com.cee.news.client.workingset;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.constraints.Size;
 
 /**
  * Bean holding all view data of a working set
  */
-public class WorkingSetData {
+public class WorkingSetData implements Serializable {
     
-    private boolean isNew = false;
+    private static final long serialVersionUID = 7507904990884062424L;
 
+	private Boolean isNew = false;
+
+	@Size(min = 3)
     private String newName;
     
     private String oldName;
     
-    private List<String> sites;
+    private List<String> sites = new ArrayList<String>();
 
     /**
      * @return If true, this bean is a new created working set, otherwise this working set should be updated
      */
-    public boolean isNew() {
+    public Boolean getIsNew() {
         return isNew;
     }
 
-    public void setNew(boolean isNew) {
+    public void setIsNew(Boolean isNew) {
         this.isNew = isNew;
     }
 

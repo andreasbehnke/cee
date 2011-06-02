@@ -3,8 +3,6 @@ package com.cee.news.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cee.news.client.error.ErrorEvent;
-import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.error.ErrorSource;
 import com.cee.news.client.list.DefaultListModel;
 import com.cee.news.client.list.LinkValue;
@@ -83,13 +81,5 @@ public class NewsPagingContentModel extends DefaultListModel implements PagingCo
                 fireErrorEvent(caught, "Could not load content!");//TODO: i18n
             }
         });
-    }
-
-    public void addErrorHandler(ErrorHandler handler) {
-        handlerManager.addHandler(ErrorEvent.TYPE, handler);
-    }
-    
-    protected void fireErrorEvent(Throwable cause, String description) {
-        handlerManager.fireEvent(new ErrorEvent(cause, description));
     }
 }

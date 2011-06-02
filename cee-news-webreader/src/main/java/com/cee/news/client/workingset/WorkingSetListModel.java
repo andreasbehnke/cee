@@ -1,35 +1,55 @@
 package com.cee.news.client.workingset;
 
-import com.cee.news.client.list.ListChangedHandler;
-import com.cee.news.client.list.ListModel;
-import com.cee.news.client.list.SelectionChangedHandler;
+import java.util.ArrayList;
+import java.util.List;
 
-public class WorkingSetListModel implements ListModel {
+import com.cee.news.client.list.DefaultListModel;
+import com.cee.news.client.list.LinkValue;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
+public class WorkingSetListModel extends DefaultListModel {
     
     private final WorkingSetServiceAsync workingSetService = WorkingSetServiceAsync.Util.getInstance();
+    
+    private List<LinkValue> workingSets;
+    
+    public void update() {
+    	workingSetService.getWorkingSetsOrderedByName(new AsyncCallback<List<String>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				fireErrorEvent(caught, "Could not retrieve list of working sets");
+			}
+
+			@Override
+			public void onSuccess(List<String> result) {
+				fillWorkingSetList(result);
+			}
+    		
+		});
+    }
+    
+    protected void fillWorkingSetList(List<String> workingSetNames) {
+    	workingSets = new ArrayList<LinkValue>();
+    	for(int i=0; i<workingSetNames.size(); i++) {
+    		this.workingSets.add(new LinkValue(i, workingSetNames.get(i)));
+    	}
+    	fireContentListChanged(workingSets);
+    }
 
     public int getContentCount() {
-        return 0;
+    	if (workingSets == null) {
+    		return 0;
+    	}
+    	return workingSets.size();
     }
 
-    public int getSelectedContent() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    public void setSelectedContent(int index) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void addSelectionChangedhandler(SelectionChangedHandler handler) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void addListChangedHandler(ListChangedHandler handler) {
-        // TODO Auto-generated method stub
-
-    }
-
+	public void setSelectedWorkingSet(String name) {
+		for (LinkValue link : workingSets) {
+			if (link.getText().equals(name)) {
+				setSelectedContent(link.getValue());
+				return;
+			}
+		}
+	}
 }

@@ -21,8 +21,6 @@ public interface WorkingSetService extends RemoteService {
 		}
 	}
 	
-	long getWorkingSetCount();
-	
 	List<String> getWorkingSetsOrderedByName();
 	
 	WorkingSetData getWorkingSet(String name);

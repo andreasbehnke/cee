@@ -1,21 +1,20 @@
 package com.cee.news.client;
 
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.LayoutPanel;
+import com.cee.news.client.list.ListPanel;
 import com.cee.news.client.workingset.WorkingSetSelectionPanel;
 import com.google.gwt.dom.client.Style.Unit;
-import com.cee.news.client.list.ListPanel;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.LayoutPanel;
 
 public class StartPanel extends Composite {
-    private ListPanel listPanelLatestArticles;
-    private WorkingSetSelectionPanel workingSetSelectionPanel;
-    private ListPanel listPanelSites;
-
+    
+	private final ListPanel listPanelLatestArticles;
+    private final WorkingSetSelectionPanel workingSetSelectionPanel;
+    private final ListPanel listPanelSites;
+    
     public StartPanel() {
-        
-        LayoutPanel layoutPanel = new LayoutPanel();
+    	LayoutPanel layoutPanel = new LayoutPanel();
         initWidget(layoutPanel);
         layoutPanel.setSize("781px", "441px");
         

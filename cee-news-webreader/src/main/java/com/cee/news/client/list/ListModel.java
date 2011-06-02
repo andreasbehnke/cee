@@ -1,5 +1,7 @@
 package com.cee.news.client.list;
 
+import com.google.gwt.event.shared.HandlerRegistration;
+
 public interface ListModel {
     /**
      * @return The number of content available
@@ -18,12 +20,14 @@ public interface ListModel {
 
     /**
      * @param handler will be notified about changes of the selected index
+     * @return 
      */
-    void addSelectionChangedhandler(SelectionChangedHandler handler);
+    HandlerRegistration addSelectionChangedhandler(SelectionChangedHandler handler);
 
     /**
      * @param handler will be notified if the content model list is changed.
+     * @return 
      */
-    void addListChangedHandler(ListChangedHandler handler);
+    HandlerRegistration addListChangedHandler(ListChangedHandler handler);
 
 }

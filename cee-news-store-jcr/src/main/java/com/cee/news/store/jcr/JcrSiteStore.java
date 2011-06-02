@@ -1,0 +1,142 @@
+package com.cee.news.store.jcr;
+
+import static com.cee.news.store.jcr.JcrStoreConstants.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+
+import com.cee.news.model.Feed;
+import com.cee.news.model.Site;
+import com.cee.news.store.SiteStore;
+import com.cee.news.store.StoreException;
+
+/**
+ * JCR implementation of the {@link SiteStore}
+ */
+public class JcrSiteStore extends JcrStoreBase implements SiteStore {
+
+    private final static String SELECT_SITES_ORDERED_BY_LOCATION = "SELECT [news:location] FROM [news:site] ORDER BY [news:location]";
+
+    public JcrSiteStore() {
+    }
+
+    public JcrSiteStore(Session session) throws StoreException {
+        setSession(session);
+    }
+    
+    protected Node createSiteNode() throws RepositoryException {
+        testSession();
+        return getContent().addNode(NODE_SITE, NODE_SITE);
+    }
+
+    protected void addFeed(Node siteNode, Feed feed) throws RepositoryException {
+        Node feedNode = siteNode.addNode(NODE_FEED, NODE_FEED);
+        feedNode.setProperty(PROP_LOCATION, feed.getLocation());
+        feedNode.setProperty(PROP_CONTENT_TYPE, feed.getContentType());
+        feedNode.setProperty(PROP_TITLE, feed.getTitle());
+        feedNode.setProperty(PROP_ACTIVE, feed.isActive());
+    }
+
+    public void update(Site site) throws StoreException {
+        if (site == null) {
+            throw new IllegalArgumentException("Parameter site must not be null");
+        }
+        Node siteNode = null;
+        try {
+            siteNode = getSiteNode(site.getLocation());
+        } catch (RepositoryException e) {
+            throw new StoreException(site, "Could not retrieve site node from repository", e);
+        }
+        if (siteNode == null) {
+            try {
+                siteNode = createSiteNode();
+            } catch (RepositoryException e) {
+                throw new StoreException(site, "Could not create site node", e);
+            }
+        }
+        try {
+            siteNode.setProperty(PROP_LOCATION, site.getLocation());
+            siteNode.setProperty(PROP_TITLE, site.getTitle());
+            siteNode.setProperty(PROP_DESCRIPTION, site.getDescription());
+            NodeIterator feeds = siteNode.getNodes(NODE_FEED);
+            while (feeds.hasNext()) {
+                feeds.nextNode().remove();
+            }
+            for (Feed feed : site.getFeeds()) {
+                addFeed(siteNode, feed);
+            }
+        } catch (RepositoryException e) {
+            throw new StoreException(site, "Could not update site node", e);
+        }
+        try {
+            getSession().save();
+        } catch (Exception e) {
+            throw new StoreException(site, "Could not save session", e);
+        }
+    }
+
+    public Site getSite(String location) throws StoreException {
+        if (location == null) {
+            throw new IllegalArgumentException("Parameter location must not be null");
+        }
+        Node siteNode = null;
+        try {
+            siteNode = getSiteNode(location);
+        } catch (RepositoryException e) {
+            throw new StoreException("Could not query site node", e);
+        }
+        if (siteNode == null) {
+            return null;
+        }
+        Site site = new Site();
+        try {
+            site.setLocation(siteNode.getProperty(PROP_LOCATION).getString());
+            if (siteNode.hasProperty(PROP_DESCRIPTION)) {
+                site.setDescription(siteNode.getProperty(PROP_DESCRIPTION).getString());
+            }
+            if (siteNode.hasProperty(PROP_TITLE)) {
+                site.setTitle(siteNode.getProperty(PROP_TITLE).getString());
+            }
+        } catch (RepositoryException e) {
+            throw new StoreException("Could not populate site with properties", e);
+        }
+        try {
+            NodeIterator iter = siteNode.getNodes(NODE_FEED);
+            while (iter.hasNext()) {
+                Node feedNode = iter.nextNode();
+                Feed feed = new Feed(feedNode.getProperty(PROP_LOCATION).getString(), feedNode.getProperty(PROP_TITLE).getString(), feedNode.getProperty(PROP_CONTENT_TYPE).getString());
+                site.getFeeds().add(feed);
+            }
+        } catch (RepositoryException e) {
+            throw new StoreException("Could not fetch feeds of site", e);
+        }
+        return site;
+    }
+
+    protected NodeIterator getSiteNodesOrderedByUrl() throws RepositoryException {
+        testSession();
+        QueryManager queryManager = getSession().getWorkspace().getQueryManager();
+        Query q = queryManager.createQuery(SELECT_SITES_ORDERED_BY_LOCATION, Query.JCR_SQL2);
+        return q.execute().getNodes();
+    }
+
+    public List<String> getSitesOrderedByLocation() throws StoreException {
+        try {
+            List<String> sites = new ArrayList<String>();
+            NodeIterator iter = getSiteNodesOrderedByUrl();
+            while (iter.hasNext()) {
+                sites.add(iter.nextNode().getProperty(PROP_LOCATION).getString());
+            }
+            return sites;
+        } catch (RepositoryException e) {
+            throw new StoreException("Could not retrieve site nodes", e);
+        }
+    }
+}

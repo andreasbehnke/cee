@@ -1,7 +1,9 @@
 package com.cee.news.client.error;
 
+import com.google.gwt.event.shared.HandlerRegistration;
+
 public interface ErrorSource {
     
-    void addErrorHandler(ErrorHandler handler);
+    HandlerRegistration addErrorHandler(ErrorHandler handler);
 
 }
