@@ -40,7 +40,9 @@ public abstract class JcrTestBase {
         deleteTestRepository();
         repository = new TransientRepository(new File(TEST_REPOSITORY_DIR));
         session = repository.login(new SimpleCredentials("username", "password".toCharArray()));
-        new JcrStoreInitializer().registerNodeTypes(session);
+        JcrStoreInitializer init = new JcrStoreInitializer();
+        init.setSession(session);
+        init.registerNodeTypes();
     }
     
     protected static void closeSession() {
