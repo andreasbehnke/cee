@@ -8,15 +8,15 @@
 
 	<!-- JCR -->
 	
-	<bean id="jcrRepositoryConfig" class="org.apache.jackrabbit.core.config.RepositoryConfig" factory-method="create">
+	<bean id="jcrRepositoryConfig" class="org.apache.jackrabbit.core.config.RepositoryConfig" factory-method="install">
 		<constructor-arg>
             <bean class="java.io.File">
-            	<constructor-arg value="D:\cee\workspace\cee\cee-news-impl\repository.xml" />
+            	<constructor-arg value="repository.xml" />
             </bean>
         </constructor-arg>
 		<constructor-arg>
             <bean class="java.io.File">
-            	<constructor-arg value="D:\cee\workspace\cee\cee-news-impl\repository" />
+            	<constructor-arg value="repository" />
             </bean>
         </constructor-arg>
 	</bean>
