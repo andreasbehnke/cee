@@ -29,5 +29,13 @@
 	<welcome-file-list>
 		<welcome-file>NewsReader.html</welcome-file>
 	</welcome-file-list>
+	<servlet>
+		<servlet-name>SiteUpdateService</servlet-name>
+		<servlet-class>com.cee.news.server.content.SiteUpdateServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SiteUpdateService</servlet-name>
+		<url-pattern>/NewsReader/SiteUpdateService</url-pattern>
+	</servlet-mapping>
 	
 </web-app>
