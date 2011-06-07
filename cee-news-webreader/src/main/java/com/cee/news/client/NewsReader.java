@@ -2,6 +2,7 @@ package com.cee.news.client;
 
 import com.cee.news.client.content.SiteAddRemoveListModel;
 import com.cee.news.client.workingset.NewWorkingSetWorkflow;
+import com.cee.news.client.workingset.WorkingSetEditor;
 import com.cee.news.client.workingset.WorkingSetListModel;
 import com.cee.news.client.workingset.WorkingSetSelectionPresenter;
 import com.cee.news.client.workingset.WorkingSetSelectionView;
@@ -41,12 +42,14 @@ public class NewsReader implements EntryPoint {
 		final WorkingSetSelectionView workingSetSelectionView = startPanel.getWorkingSetSelectionPanel();
 		final SiteAddRemoveListModel siteAddRemoveListModel = new SiteAddRemoveListModel();
 
+		final WorkingSetEditor workingSetEditor = new WorkingSetEditor(siteAddRemoveListModel);
+		final NewWorkingSetWorkflow newWorkingSetWorkflow = new NewWorkingSetWorkflow(workingSetListModel, workingSetEditor);
+		
 		new WorkingSetSelectionPresenter(workingSetListModel, workingSetSelectionView);
 		workingSetSelectionView.getNewButton().addClickHandler(new ClickHandler() {
-			
 			@Override
 			public void onClick(ClickEvent event) {
-				new NewWorkingSetWorkflow(workingSetListModel, siteAddRemoveListModel).start();
+				newWorkingSetWorkflow.start();
 			}
 		});
         

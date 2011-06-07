@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
-public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData> {
+public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData>, WorkingSetView {
     
 	private InlineLabel labelErrorMessage;
 	
@@ -127,14 +127,26 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
     	return sitesEditor;
     }
 
+	/* (non-Javadoc)
+	 * @see com.cee.news.client.workingset.WorkingSetView#getButtonSave()
+	 */
+	@Override
 	public HasClickHandlers getButtonSave() {
 		return buttonSave;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.cee.news.client.workingset.WorkingSetView#getButtonCancel()
+	 */
+	@Override
 	public HasClickHandlers getButtonCancel() {
 		return buttonCancel;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.cee.news.client.workingset.WorkingSetView#getErrorText()
+	 */
+	@Override
 	public HasText getErrorText() {
 		return labelErrorMessage;
 	}

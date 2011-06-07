@@ -3,6 +3,9 @@ package com.cee.news.server.workingset;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cee.news.client.workingset.WorkingSetData;
 import com.cee.news.client.workingset.WorkingSetService;
 import com.cee.news.model.WorkingSet;
@@ -10,6 +13,16 @@ import com.cee.news.store.StoreException;
 import com.cee.news.store.WorkingSetStore;
 
 public class WorkingSetServiceImpl implements WorkingSetService {
+	
+	private static final String COULD_NOT_UPDATE_WORKING_SET = "Could not update working set";
+
+	private static final String COULD_NOT_RETRIEVE_WORKING_SET = "Could not retrieve working set";
+
+	private static final String COULD_NOT_ASK_WORKING_SET = "Could not ask working set";
+
+	private static final String COULD_NOT_RETRIEVE_WORKING_SET_LIST = "Could not retrieve working set list";
+
+	private static Logger log = LoggerFactory.getLogger(WorkingSetServiceImpl.class);
 
     private WorkingSetStore workingSetStore;
 
@@ -21,7 +34,8 @@ public class WorkingSetServiceImpl implements WorkingSetService {
         try {
             return workingSetStore.getWorkingSetsOrderedByName();
         } catch (StoreException e) {
-            throw new RuntimeException(e);
+        	log.error(COULD_NOT_RETRIEVE_WORKING_SET_LIST, e);
+            throw new RuntimeException(COULD_NOT_RETRIEVE_WORKING_SET_LIST);
         }
     }
 
@@ -29,7 +43,8 @@ public class WorkingSetServiceImpl implements WorkingSetService {
         try {
             return workingSetStore.getWorkingSet(name) != null;
         } catch (StoreException e) {
-            throw new RuntimeException(e);
+        	log.error(COULD_NOT_ASK_WORKING_SET, e);
+            throw new RuntimeException(COULD_NOT_ASK_WORKING_SET);
         }
     }
 
@@ -43,7 +58,8 @@ public class WorkingSetServiceImpl implements WorkingSetService {
             wsd.setSites(new ArrayList<String>(workingSet.getSites()));
             return wsd;
         } catch (StoreException e) {
-            throw new RuntimeException(e);
+        	log.error(COULD_NOT_RETRIEVE_WORKING_SET, e);
+            throw new RuntimeException(COULD_NOT_RETRIEVE_WORKING_SET);
         }
     }
     
@@ -67,7 +83,8 @@ public class WorkingSetServiceImpl implements WorkingSetService {
             workingSet.setSites(wsd.getSites());
             workingSetStore.update(workingSet);
         } catch (StoreException e) {
-            throw new RuntimeException(e);
+        	log.error(COULD_NOT_UPDATE_WORKING_SET, e);
+            throw new RuntimeException(COULD_NOT_UPDATE_WORKING_SET);
         }
     }
 }

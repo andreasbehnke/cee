@@ -5,7 +5,6 @@ import java.util.List;
 import com.cee.news.client.error.ErrorEvent;
 import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.error.ErrorSource;
-import com.cee.news.client.list.AddRemoveListModel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.EditorError;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -19,28 +18,18 @@ public class NewWorkingSetWorkflow implements ErrorSource {
 	
 	private final WorkingSetListModel workingSetListModel;
 	
-	private final AddRemoveListModel sitesModel;
+	private final WorkingSetDataEditorDriver driver;
 	
-	private WorkingSetDataEditorDriver driver;
+	private final WorkingSetServiceAsync service = WorkingSetServiceAsync.Util.getInstance();
 	
-	private WorkingSetServiceAsync service = WorkingSetServiceAsync.Util.getInstance();
+	private final WorkingSetEditor editor;
 	
-	private WorkingSetEditor editor;
+	private final EventBus handlerManager = new SimpleEventBus();
 	
-	private EventBus handlerManager = new SimpleEventBus();
-	
-	public NewWorkingSetWorkflow(WorkingSetListModel workingSetListModel, AddRemoveListModel sitesModel) {
-		this.sitesModel = sitesModel;
+	public NewWorkingSetWorkflow(final WorkingSetListModel workingSetListModel, final WorkingSetEditor editor) {
 		this.workingSetListModel = workingSetListModel;
 		driver = GWT.create(WorkingSetDataEditorDriver.class);
-	}
-
-	public void start() {
-		
-		WorkingSetData workingSetData = new WorkingSetData();
-		workingSetData.setIsNew(true);
-		
-		editor = new WorkingSetEditor(sitesModel);
+		this.editor = editor;
 		editor.getButtonCancel().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -53,7 +42,13 @@ public class NewWorkingSetWorkflow implements ErrorSource {
 				validate();
 			}
 		});
-		driver.initialize(editor);
+		driver.initialize(editor);	
+	}
+
+	public void start() {
+		WorkingSetData workingSetData = new WorkingSetData();
+		workingSetData.setIsNew(true);
+		
 		driver.edit(workingSetData);
 		editor.center();
 	}
@@ -67,6 +62,7 @@ public class NewWorkingSetWorkflow implements ErrorSource {
 				message += editorError.getMessage();
 			}
 			showValidationError(message);
+			return;
 		}
 		
 		service.containsWorkingSet(workingSetData.getNewName(), new AsyncCallback<Boolean>() {
@@ -95,6 +91,7 @@ public class NewWorkingSetWorkflow implements ErrorSource {
 			public void onSuccess(Void result) {
 				editor.hide();
 				workingSetListModel.update();
+				//TODO: We need a callback from update!
 				workingSetListModel.setSelectedWorkingSet(workingSetData.getNewName());
 			}
 			

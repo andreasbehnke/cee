@@ -6,6 +6,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+/**
+ * Asynchronously update service. Updates the articles of sites.
+ */
 @RemoteServiceRelativePath("services/gwtSiteUpdateService")
 public interface SiteUpdateService extends RemoteService {
 	/**
@@ -21,7 +24,27 @@ public interface SiteUpdateService extends RemoteService {
 		}
 	}
 	
-	int updateSites(List<String> sites);
+	/**
+	 * Adds update task for given site to the update queue.
+	 * If the queue already contains a task for the site, no additional
+	 * task will be added.
+	 * @param site The site to update
+	 * @return Number of update tasks in the queue
+	 */
+	int addSiteToUpdateQueue(String site);
 	
+	/**
+	 * Adds update tasks for each given site to the update queue.
+	 * If the queue already contains a task for a given site, no additional
+	 * task will be added.
+	 * @param sites The sites to update
+	 * @return Number of update tasks in the queue
+	 */
+	int addSitesToUpdateQueue(List<String> sites);
+	
+	/**
+	 * @return The number of update tasks in the queue. Used for displaying 
+	 * a progress bar.
+	 */
 	int getUpdateQueueSize();
 }
