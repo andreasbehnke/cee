@@ -16,7 +16,7 @@
 
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
-		<maven.compiler.sourceEncoding>UTF8</maven.compiler.sourceEncoding>
+		<project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 	</properties>
 
 	<modules>
