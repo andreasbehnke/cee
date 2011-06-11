@@ -1,4 +1,4 @@
-﻿package com.cee.news.parser.impl;
+package com.cee.news.parser.impl;
 
 import static org.junit.Assert.*;
 
