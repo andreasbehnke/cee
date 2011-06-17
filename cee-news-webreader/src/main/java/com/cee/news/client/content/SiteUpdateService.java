@@ -25,6 +25,13 @@ public interface SiteUpdateService extends RemoteService {
 	}
 	
 	/**
+	 * Retrieves all sites information from a given web url
+	 * @param location The web URL
+	 * @return Site information, either in state ok and the site object embedded or in error state
+	 */
+	SiteRetrivalInformation retrieveSiteData(String location);
+	
+	/**
 	 * Adds update task for given site to the update queue.
 	 * If the queue already contains a task for the site, no additional
 	 * task will be added.

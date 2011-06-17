@@ -9,5 +9,7 @@ public interface WorkingSetView {
 
 	HasClickHandlers getButtonCancel();
 	
+	HasClickHandlers getButtonAddNewSite();
+	
 	HasText getErrorText();
 }

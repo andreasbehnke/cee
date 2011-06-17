@@ -36,14 +36,14 @@ public class NewsServiceImpl implements NewsService {
     }
 
     //TODO: Articles should be identified by their id, not the index in a changing list!
-    protected Article getArticle(String siteLocation, int index) throws StoreException {
-        Site site = siteStore.getSite(siteLocation);
+    protected Article getArticle(String siteName, int index) throws StoreException {
+        Site site = siteStore.getSite(siteName);
         return articleStore.getArticle(getArticleLocations(site).get(index));
     }
 
-    public List<String> getHeadlines(String siteLocation) {
+    public List<String> getHeadlines(String siteName) {
         try {
-            Site site = siteStore.getSite(siteLocation);
+            Site site = siteStore.getSite(siteName);
             List<String> articles = getArticleLocations(site);
             List<String> headlines = new ArrayList<String>();
             for (String articleLocation : articles) {
@@ -55,9 +55,9 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    public SafeHtml getHtmlDescription(String siteLocation, int index) {
+    public SafeHtml getHtmlDescription(String siteName, int index) {
         try {
-            Article article = getArticle(siteLocation, index);
+            Article article = getArticle(siteName, index);
             SafeHtmlBuilder builder = new SafeHtmlBuilder();
             builder.appendHtmlConstant("<h3>");
             builder.appendEscaped(article.getTitle());
@@ -75,10 +75,10 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-    public SafeHtml getHtmlContent(String siteLocation, int index) {
+    public SafeHtml getHtmlContent(String siteName, int index) {
         try {
             SafeHtmlBuilder builder = new SafeHtmlBuilder();
-            Article article = getArticle(siteLocation, index);
+            Article article = getArticle(siteName, index);
             builder.appendHtmlConstant("<h1>");
             builder.appendEscaped(article.getTitle());
             builder.appendHtmlConstant("</h1>");

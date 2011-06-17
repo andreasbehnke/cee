@@ -24,7 +24,7 @@ public interface SiteService extends RemoteService {
 	
 	List<String> getSites();
 	
-	SafeHtml getTitle(String siteUrl);
+	SafeHtml getTitle(String name);
 	
-	SafeHtml getHtmlDescription(String siteUrl);
+	SafeHtml getHtmlDescription(String name);
 }

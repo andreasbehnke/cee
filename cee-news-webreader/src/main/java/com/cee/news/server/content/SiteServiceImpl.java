@@ -20,27 +20,27 @@ public class SiteServiceImpl implements SiteService {
 
     public List<String> getSites() {
         try {
-            return siteStore.getSitesOrderedByLocation();
+            return siteStore.getSitesOrderedByName();
         } catch (StoreException e) {
             throw new RuntimeException(e);
         }
     }
     
-    public SafeHtml getTitle(String siteUrl) {
+    public SafeHtml getTitle(String siteName) {
         try {
-            Site site = siteStore.getSite(siteUrl);
+            Site site = siteStore.getSite(siteName);
             SafeHtmlBuilder builder = new SafeHtmlBuilder();
             String title = site.getTitle();
-            builder.appendEscaped(title == null ? siteUrl : title);
+            builder.appendEscaped(title == null ? siteName : title);
             return builder.toSafeHtml();
         } catch (StoreException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public SafeHtml getHtmlDescription(String siteUrl) {
+    public SafeHtml getHtmlDescription(String siteName) {
         try {
-            Site site = siteStore.getSite(siteUrl);
+            Site site = siteStore.getSite(siteName);
             SafeHtmlBuilder builder = new SafeHtmlBuilder();
             String title = site.getTitle();
             String description = site.getDescription();

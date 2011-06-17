@@ -39,8 +39,8 @@ public class TestJcrSiteStore extends JcrTestBase {
     public void testUpdateSite() throws LoginException, RepositoryException, MalformedURLException, StoreException {
         Site site = new Site();
         site.setDescription("Description");
-        String url = "http://www.spiegel.de/blabla/test/test.jsp?id=52643584";
-        site.setLocation(url);
+        site.setLocation("http://www.spiegel.de/blabla/test/test.jsp?id=52643584");
+        site.setName("spiegel.de");
         site.setTitle("Title");
         List<Feed> feeds = new ArrayList<Feed>();
         feeds.add(new Feed("http://www.spiegel.de/feed1.rss", "feed1", "application/xml"));
@@ -48,9 +48,10 @@ public class TestJcrSiteStore extends JcrTestBase {
         site.setFeeds(feeds);
         siteStore.update(site);
         
-        site = siteStore.getSite(url);
+        site = siteStore.getSite("spiegel.de");
         assertEquals("Description", site.getDescription());
-        assertEquals(url, site.getLocation());
+        assertEquals("http://www.spiegel.de/blabla/test/test.jsp?id=52643584", site.getLocation());
+        assertEquals("spiegel.de", site.getName());
         assertEquals("Title", site.getTitle());
         feeds = site.getFeeds();
         assertEquals(2, feeds.size());
@@ -72,9 +73,9 @@ public class TestJcrSiteStore extends JcrTestBase {
         site.setFeeds(feeds);
         siteStore.update(site);
         
-        site = siteStore.getSite(url);
+        site = siteStore.getSite("spiegel.de");
         assertEquals("Description123", site.getDescription());
-        assertEquals(url, site.getLocation());
+        assertEquals("http://www.spiegel.de/blabla/test/test.jsp?id=52643584", site.getLocation());
         assertEquals("Title123", site.getTitle());
         feeds = site.getFeeds();
         assertEquals(1, feeds.size());
@@ -85,12 +86,13 @@ public class TestJcrSiteStore extends JcrTestBase {
         assertEquals("http://www.tageschau.de/feed.rss", feed1.getLocation());
         
         //create site with null description and title
-        url = "www.blablabla.com";
+        String name = "www.blablabla.com";
         site = new Site();
-        site.setLocation(url);
+        site.setName(name);
+        site.setLocation(name);
         siteStore.update(site);
         
-        site = siteStore.getSite(url);
+        site = siteStore.getSite(name);
         assertNull(site.getDescription());
         assertNull(site.getTitle());
     }
@@ -101,24 +103,27 @@ public class TestJcrSiteStore extends JcrTestBase {
     }
 
     @Test
-    public void testGetSitesOrderedByUrl() throws StoreException, MalformedURLException, LoginException, RepositoryException {
+    public void testGetSitesOrderedByName() throws StoreException, MalformedURLException, LoginException, RepositoryException {
         Site site = new Site();
         site.setDescription("Description");
         site.setLocation("http://www.bbb.de");
+        site.setName("http://www.bbb.de");
         site.setTitle("Title");
         siteStore.update(site);
         site = new Site();
         site.setDescription("Description");
         site.setLocation("http://www.ccc.de");
+        site.setName("http://www.ccc.de");
         site.setTitle("Title");
         siteStore.update(site);
         site = new Site();
         site.setDescription("Description");
         site.setLocation("http://www.abc.de");
+        site.setName("http://www.abc.de");
         site.setTitle("Title");
         siteStore.update(site);
         
-        List<String> sites = siteStore.getSitesOrderedByLocation();
+        List<String> sites = siteStore.getSitesOrderedByName();
         assertEquals("http://www.abc.de", sites.get(0));
         assertEquals("http://www.bbb.de", sites.get(1));
         assertEquals("http://www.ccc.de", sites.get(2));

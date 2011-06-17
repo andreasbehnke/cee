@@ -16,14 +16,14 @@ public interface SiteStore {
     void update(Site site) throws StoreException;
     
     /**
-     * Get a site by location
-     * @param location The sites location
+     * Get a site by its unique name
+     * @param name The site's name
      * @return Site or null if site not found
      */
-    Site getSite(String location) throws StoreException;
+    Site getSite(String name) throws StoreException;
     
     /**
      * @return List of URL referencing 
      */
-    List<String> getSitesOrderedByLocation() throws StoreException;
+    List<String> getSitesOrderedByName() throws StoreException;
 }

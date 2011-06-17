@@ -25,9 +25,9 @@ public interface NewsService extends RemoteService {
 		}
 	}
 	
-	List<String> getHeadlines(String siteUrl);
+	List<String> getHeadlines(String siteName);
 	
-	SafeHtml getHtmlDescription(String siteUrl, int index);
+	SafeHtml getHtmlDescription(String siteName, int index);
 	
-	SafeHtml getHtmlContent(String siteUrl, int index);
+	SafeHtml getHtmlContent(String siteName, int index);
 }

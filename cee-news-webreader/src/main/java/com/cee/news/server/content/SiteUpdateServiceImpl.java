@@ -1,5 +1,8 @@
 package com.cee.news.server.content;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -7,9 +10,13 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
+import com.cee.news.client.content.SiteRetrivalInformation;
+import com.cee.news.client.content.SiteRetrivalInformation.SiteRetrivalState;
 import com.cee.news.client.content.SiteUpdateService;
 import com.cee.news.model.Site;
+import com.cee.news.parser.SiteParser;
 import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -40,11 +47,11 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet impleme
 	}
 
 	@Override
-	public int addSiteToUpdateQueue(String site) {
-		if (!workQueue.contains(site)) {
+	public int addSiteToUpdateQueue(String siteName) {
+		if (!workQueue.contains(siteName)) {
 			Site siteEntity = null;
 			try {
-				siteEntity = siteStore.getSite(site);				
+				siteEntity = siteStore.getSite(siteName);				
 			} catch (StoreException e) {
 				log.error(COULD_NOT_RETRIEVE_SITE, e);
 				throw new RuntimeException(COULD_NOT_RETRIEVE_SITE);
@@ -69,8 +76,36 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet impleme
 		return workQueue.size();
 	}
 	
+	@Override
+	public SiteRetrivalInformation retrieveSiteData(String location) {
+		SiteParser parser = createSiteParser();
+		SiteRetrivalInformation info = new SiteRetrivalInformation();
+		URL locationUrl = null;
+		try {
+			locationUrl = new URL(location);
+		} catch (MalformedURLException e) {
+			info.setState(SiteRetrivalState.malformedUrl);
+			return info;
+		}
+		try {
+			Site site = parser.parse(locationUrl);
+			info.setSite(site);
+			info.setState(SiteRetrivalState.ok);
+		} catch (IOException e) {
+			info.setState(SiteRetrivalState.ioError);
+		} catch (SAXException e) {
+			info.setState(SiteRetrivalState.parserError);
+		}
+		return info;
+	}
+	
 	/**
-	 * @return A update site command which all dependencies injected
+	 * @return A update site command prepared with all dependencies
 	 */
 	protected abstract SiteUpdateCommand createUpdateSiteCommand();
+	
+	/**
+	 * @return A site parser prepared with all dependencies
+	 */
+	protected abstract SiteParser createSiteParser();
 }

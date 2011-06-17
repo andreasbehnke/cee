@@ -13,7 +13,7 @@ import com.cee.news.store.StoreException;
 
 public abstract class JcrStoreBase {
     
-    private final static String SELECT_SITE_BY_LOCATION = "SELECT * FROM [news:site] WHERE [news:location]='%s'";
+    private final static String SELECT_SITE_BY_NAME = "SELECT * FROM [news:site] WHERE [news:name]='%s'";
     
     private Session session;
 
@@ -46,10 +46,10 @@ public abstract class JcrStoreBase {
         return content;
     }
 
-    protected Node getSiteNode(String location) throws RepositoryException {
+    protected Node getSiteNode(String name) throws RepositoryException {
         testSession();
         QueryManager queryManager = session.getWorkspace().getQueryManager();
-        Query q = queryManager.createQuery(String.format(SELECT_SITE_BY_LOCATION, location), Query.JCR_SQL2);
+        Query q = queryManager.createQuery(String.format(SELECT_SITE_BY_NAME, name), Query.JCR_SQL2);
         NodeIterator iter = q.execute().getNodes();
         if (iter.hasNext()) {
             Node siteNode = iter.nextNode();

@@ -22,6 +22,7 @@ primaryitem news:content
 
 [news:site]
 primaryitem news:article
+- news:name        (STRING)
 - news:location    (URI)
 - news:title       (STRING)
 - news:description (STRING)

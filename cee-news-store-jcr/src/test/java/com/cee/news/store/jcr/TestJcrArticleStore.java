@@ -41,6 +41,7 @@ public class TestJcrArticleStore extends JcrTestBase {
     
     private Site createSite() throws StoreException {
         Site site = new Site();
+        site.setName("http://www.abc.de");
         site.setLocation("http://www.abc.de");
         siteStore.update(site);
         return site;
@@ -167,6 +168,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         Site site2 = new Site();
         site2.setDescription("Description");
         site2.setLocation("http://www.xyz.de");
+        site2.setName("http://www.xyz.de");
         site2.setTitle("Title");
         siteStore.update(site2);
         

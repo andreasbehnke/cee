@@ -22,7 +22,7 @@ import com.cee.news.store.StoreException;
  */
 public class JcrSiteStore extends JcrStoreBase implements SiteStore {
 
-    private final static String SELECT_SITES_ORDERED_BY_LOCATION = "SELECT [news:location] FROM [news:site] ORDER BY [news:location]";
+    private final static String SELECT_SITES_ORDERED_BY_NAME = "SELECT [news:name] FROM [news:site] ORDER BY [news:name]";
 
     public JcrSiteStore() {
     }
@@ -50,7 +50,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         }
         Node siteNode = null;
         try {
-            siteNode = getSiteNode(site.getLocation());
+            siteNode = getSiteNode(site.getName());
         } catch (RepositoryException e) {
             throw new StoreException(site, "Could not retrieve site node from repository", e);
         }
@@ -62,6 +62,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
             }
         }
         try {
+        	siteNode.setProperty(PROP_NAME, site.getName());
             siteNode.setProperty(PROP_LOCATION, site.getLocation());
             siteNode.setProperty(PROP_TITLE, site.getTitle());
             siteNode.setProperty(PROP_DESCRIPTION, site.getDescription());
@@ -82,13 +83,13 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         }
     }
 
-    public Site getSite(String location) throws StoreException {
-        if (location == null) {
-            throw new IllegalArgumentException("Parameter location must not be null");
+    public Site getSite(String name) throws StoreException {
+        if (name == null) {
+            throw new IllegalArgumentException("Parameter name must not be null");
         }
         Node siteNode = null;
         try {
-            siteNode = getSiteNode(location);
+            siteNode = getSiteNode(name);
         } catch (RepositoryException e) {
             throw new StoreException("Could not query site node", e);
         }
@@ -97,6 +98,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         }
         Site site = new Site();
         try {
+        	site.setName(siteNode.getProperty(PROP_NAME).getString());
             site.setLocation(siteNode.getProperty(PROP_LOCATION).getString());
             if (siteNode.hasProperty(PROP_DESCRIPTION)) {
                 site.setDescription(siteNode.getProperty(PROP_DESCRIPTION).getString());
@@ -120,19 +122,19 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         return site;
     }
 
-    protected NodeIterator getSiteNodesOrderedByUrl() throws RepositoryException {
+    protected NodeIterator getSiteNodesOrderedByName() throws RepositoryException {
         testSession();
         QueryManager queryManager = getSession().getWorkspace().getQueryManager();
-        Query q = queryManager.createQuery(SELECT_SITES_ORDERED_BY_LOCATION, Query.JCR_SQL2);
+        Query q = queryManager.createQuery(SELECT_SITES_ORDERED_BY_NAME, Query.JCR_SQL2);
         return q.execute().getNodes();
     }
 
-    public List<String> getSitesOrderedByLocation() throws StoreException {
+    public List<String> getSitesOrderedByName() throws StoreException {
         try {
             List<String> sites = new ArrayList<String>();
-            NodeIterator iter = getSiteNodesOrderedByUrl();
+            NodeIterator iter = getSiteNodesOrderedByName();
             while (iter.hasNext()) {
-                sites.add(iter.nextNode().getProperty(PROP_LOCATION).getString());
+                sites.add(iter.nextNode().getProperty(PROP_NAME).getString());
             }
             return sites;
         } catch (RepositoryException e) {

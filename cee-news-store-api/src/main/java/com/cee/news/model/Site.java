@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Site {
+	
+	private String name;
 
     private String location;
 
@@ -13,7 +15,18 @@ public class Site {
 
     private List<Feed> feeds = new ArrayList<Feed>();
 
-    public String getLocation() {
+    /**
+     * @return The unique name of the site
+     */
+    public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getLocation() {
         return location;
     }
 

@@ -36,6 +36,8 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
 
 	private Button buttonCancel;
 
+	private Button buttonAddNewSite;
+
     public WorkingSetEditor(final AddRemoveListModel sitesModel) {
     	setText("Edit Working Set");
         LayoutPanel layoutPanel = new LayoutPanel();
@@ -83,7 +85,7 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
 			}
 		});
         
-        Button buttonAddNewSite = new Button("Add New Site");
+        buttonAddNewSite = new Button("Add New Site");
         layoutPanel.add(buttonAddNewSite);
         layoutPanel.setWidgetRightWidth(buttonAddNewSite, 50.0, Unit.PCT, 130.0, Unit.PX);
         layoutPanel.setWidgetBottomHeight(buttonAddNewSite, 56.0, Unit.PX, 24.0, Unit.PX);
@@ -127,25 +129,21 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
     	return sitesEditor;
     }
 
-	/* (non-Javadoc)
-	 * @see com.cee.news.client.workingset.WorkingSetView#getButtonSave()
-	 */
 	@Override
 	public HasClickHandlers getButtonSave() {
 		return buttonSave;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.cee.news.client.workingset.WorkingSetView#getButtonCancel()
-	 */
 	@Override
 	public HasClickHandlers getButtonCancel() {
 		return buttonCancel;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.cee.news.client.workingset.WorkingSetView#getErrorText()
-	 */
+	@Override
+	public HasClickHandlers getButtonAddNewSite() {
+		return buttonAddNewSite;
+	}
+	
 	@Override
 	public HasText getErrorText() {
 		return labelErrorMessage;

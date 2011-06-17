@@ -1,5 +1,6 @@
 package com.cee.news.client;
 
+import com.cee.news.client.content.AddSiteWorkflow;
 import com.cee.news.client.content.SiteAddRemoveListModel;
 import com.cee.news.client.workingset.NewWorkingSetWorkflow;
 import com.cee.news.client.workingset.WorkingSetEditor;
@@ -50,6 +51,16 @@ public class NewsReader implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				newWorkingSetWorkflow.start();
+			}
+		});
+		
+		final AddSiteWorkflow addSiteWorkflow = new AddSiteWorkflow();
+		
+		workingSetEditor.getButtonAddNewSite().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				addSiteWorkflow.start();
 			}
 		});
         
