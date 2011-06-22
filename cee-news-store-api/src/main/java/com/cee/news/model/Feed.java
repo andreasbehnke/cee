@@ -10,6 +10,8 @@ public class Feed {
     private String title;
 
     private boolean active;
+    
+    public Feed() {}
 
     public Feed(String location, String title, String contentType) {
         this.location = location;

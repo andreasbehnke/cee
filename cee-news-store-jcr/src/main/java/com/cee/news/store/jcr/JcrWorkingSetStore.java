@@ -88,6 +88,15 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
             throw new StoreException(oldName, "Could not rename working set", e);
         }
     }
+    
+    @Override
+    public boolean contains(String name) throws StoreException {
+    	try {
+			return getWorkingSetNode(name) != null;
+		} catch (RepositoryException e) {
+			throw new StoreException(name, "Could not test existence of working set", e);
+		}
+    }
 
     public WorkingSet getWorkingSet(String name) throws StoreException {
         try {

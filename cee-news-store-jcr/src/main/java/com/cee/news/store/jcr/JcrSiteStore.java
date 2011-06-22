@@ -82,6 +82,15 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
             throw new StoreException(site, "Could not save session", e);
         }
     }
+    
+    @Override
+    public boolean contains(String name) throws StoreException {
+    	try {
+            return getSiteNode(name) != null;
+        } catch (RepositoryException e) {
+            throw new StoreException(name, "Could not test existence of site", e);
+        }
+    }
 
     public Site getSite(String name) throws StoreException {
         if (name == null) {

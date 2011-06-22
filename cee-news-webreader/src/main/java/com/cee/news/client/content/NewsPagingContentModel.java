@@ -3,7 +3,6 @@ package com.cee.news.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cee.news.client.error.ErrorSource;
 import com.cee.news.client.list.DefaultListModel;
 import com.cee.news.client.list.LinkValue;
 import com.cee.news.client.paging.PagingContentModel;
@@ -15,7 +14,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 /**
  * {@link PagingContentModel} which calls remote news service asynchronously
  */
-public class NewsPagingContentModel extends DefaultListModel implements PagingContentModel, ErrorSource {
+public class NewsPagingContentModel extends DefaultListModel implements PagingContentModel {
     
     private final NewsServiceAsync service = NewsService.Util.getInstance();
     

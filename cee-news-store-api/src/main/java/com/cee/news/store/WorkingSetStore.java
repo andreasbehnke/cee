@@ -10,6 +10,8 @@ public interface WorkingSetStore {
     
     void rename(String oldName, String newName) throws StoreException;
     
+    boolean contains(String name) throws StoreException;
+    
     WorkingSet getWorkingSet(String name) throws StoreException;
     
     long getWorkingSetCount() throws StoreException;

@@ -3,13 +3,9 @@ package com.cee.news.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cee.news.client.error.ErrorEvent;
-import com.cee.news.client.error.ErrorHandler;
-import com.cee.news.client.error.ErrorSource;
-import com.cee.news.client.list.DefaultListModel;
 import com.cee.news.client.list.ContentListModel;
+import com.cee.news.client.list.DefaultListModel;
 import com.cee.news.client.list.LinkValue;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.client.HasSafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -17,9 +13,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 /**
  * List content model implementation for sites
  */
-public class SiteListContentModel extends DefaultListModel implements ContentListModel, ErrorSource {
+public class SiteListContentModel extends DefaultListModel implements ContentListModel {
 
-    private SiteServiceAsync service = SiteService.Util.getInstance();
+    private SiteServiceAsync service = SiteServiceAsync.Util.getInstance();
     
     protected List<String> sites;
     
@@ -108,13 +104,5 @@ public class SiteListContentModel extends DefaultListModel implements ContentLis
     
     public String getSite(int index) {
         return sites.get(index);
-    }
-
-    public HandlerRegistration addErrorHandler(ErrorHandler handler) {
-        return handlerManager.addHandler(ErrorEvent.TYPE, handler);
-    }
-
-    protected void fireErrorEvent(Throwable cause, String description) {
-        handlerManager.fireEvent(new ErrorEvent(cause, description));
     }
 }

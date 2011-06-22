@@ -1,17 +1,16 @@
 package com.cee.news.client.workingset;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * Bean holding all view data of a working set
  */
-public class WorkingSetData implements Serializable {
+public class WorkingSetData implements IsSerializable {
     
-    private static final long serialVersionUID = 7507904990884062424L;
-
-	private Boolean isNew = false;
+	private Boolean isNew = true;
 
 	private String newName;
     

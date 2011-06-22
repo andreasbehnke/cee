@@ -29,7 +29,7 @@ public interface SiteUpdateService extends RemoteService {
 	 * @param location The web URL
 	 * @return Site information, either in state ok and the site object embedded or in error state
 	 */
-	SiteRetrivalInformation retrieveSiteData(String location);
+	SiteData retrieveSiteData(String location);
 	
 	/**
 	 * Adds update task for given site to the update queue.

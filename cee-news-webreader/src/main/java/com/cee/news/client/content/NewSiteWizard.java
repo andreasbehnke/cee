@@ -2,37 +2,32 @@ package com.cee.news.client.content;
 
 import java.util.List;
 
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.DeckPanel;
-import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.cell.client.CheckboxCell;
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.cee.news.model.Site;
-import com.google.gwt.user.cellview.client.CellList;
-import com.cee.news.model.Feed;
-import com.google.gwt.cell.client.AbstractCell;
-import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.Cell.Context;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.view.client.AsyncDataProvider;
-import com.google.gwt.view.client.HasData;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DeckPanel;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.TextBox;
 
 public class NewSiteWizard extends DialogBox implements NewSiteWizardView {
 
-	private CellTable<Feed> cellTableFeeds;
+	private CellTable<FeedData> cellTableFeeds;
 	private DeckPanel deckPanel;
 	private TextBox textBoxSiteUrl;
 	private TextBox textBoxSiteName;
 	private Button buttonCancel;
-	private Button buttonNext;
-	private Button buttonFinish;
+	private Button buttonLocationInput;
+	private Button buttonStoreSite;
+	private InlineLabel labelErrorMessage;
 
 	public NewSiteWizard() {
 		setHTML("Add New Site");
@@ -69,31 +64,31 @@ public class NewSiteWizard extends DialogBox implements NewSiteWizardView {
 		deckPanel.add(panelSelectFeeds);
 		panelSelectFeeds.setSize("100%", "100%");
 		
-		cellTableFeeds = new CellTable<Feed>();
+		cellTableFeeds = new CellTable<FeedData>();
 		panelSelectFeeds.add(cellTableFeeds);
 		panelSelectFeeds.setWidgetLeftRight(cellTableFeeds, 12.0, Unit.PX, 12.0, Unit.PX);
 		panelSelectFeeds.setWidgetTopHeight(cellTableFeeds, 42.0, Unit.PX, 144.0, Unit.PX);
 		
-		Column<Feed, Boolean> columnActive = new Column<Feed, Boolean>(new CheckboxCell()) {
+		Column<FeedData, Boolean> columnActive = new Column<FeedData, Boolean>(new CheckboxCell()) {
 			@Override
-			public Boolean getValue(Feed feed) {
-				return feed.isActive();
+			public Boolean getValue(FeedData feed) {
+				return feed.getIsActive();
 			}
 		};
-		columnActive.setFieldUpdater(new FieldUpdater<Feed, Boolean>() {
+		columnActive.setFieldUpdater(new FieldUpdater<FeedData, Boolean>() {
 			
 			@Override
-			public void update(int index, Feed feed, Boolean active) {
-				feed.setActive(active);
+			public void update(int index, FeedData feed, Boolean active) {
+				feed.setIsActive(active);
 				cellTableFeeds.redraw();
 			}
 		});
 		
 		cellTableFeeds.addColumn(columnActive, "Active");
 		
-		TextColumn<Feed> columnTitle = new TextColumn<Feed>() {
+		TextColumn<FeedData> columnTitle = new TextColumn<FeedData>() {
 			@Override
-			public String getValue(Feed feed) {
+			public String getValue(FeedData feed) {
 				return feed.getTitle();
 			}
 		};
@@ -115,7 +110,7 @@ public class NewSiteWizard extends DialogBox implements NewSiteWizardView {
 		panelSelectFeeds.setWidgetBottomHeight(textBoxSiteName, 9.0, Unit.PX, 28.0, Unit.PX);
 		deckPanel.showWidget(0);
 		
-		InlineLabel labelErrorMessage = new InlineLabel("");
+		labelErrorMessage = new InlineLabel("");
 		layoutPanel.add(labelErrorMessage);
 		layoutPanel.setWidgetLeftRight(labelErrorMessage, 10.0, Unit.PX, 12.0, Unit.PX);
 		layoutPanel.setWidgetBottomHeight(labelErrorMessage, 38.0, Unit.PX, 35.0, Unit.PX);
@@ -125,71 +120,73 @@ public class NewSiteWizard extends DialogBox implements NewSiteWizardView {
 		layoutPanel.setWidgetRightWidth(buttonCancel, 12.0, Unit.PX, 78.0, Unit.PX);
 		layoutPanel.setWidgetBottomHeight(buttonCancel, 8.0, Unit.PX, 24.0, Unit.PX);
 		
-		buttonNext = new Button("Next");
-		layoutPanel.add(buttonNext);
-		layoutPanel.setWidgetRightWidth(buttonNext, 96.0, Unit.PX, 78.0, Unit.PX);
-		layoutPanel.setWidgetBottomHeight(buttonNext, 8.0, Unit.PX, 24.0, Unit.PX);
-		buttonNext.setText("Next");
+		buttonLocationInput = new Button("Next");
+		layoutPanel.add(buttonLocationInput);
+		layoutPanel.setWidgetRightWidth(buttonLocationInput, 96.0, Unit.PX, 78.0, Unit.PX);
+		layoutPanel.setWidgetBottomHeight(buttonLocationInput, 8.0, Unit.PX, 24.0, Unit.PX);
+		buttonLocationInput.setText("Next");
 		
-		buttonFinish = new Button("Finish");
+		buttonStoreSite = new Button("Finish");
 		layoutPanel.setVisible(false);
-		layoutPanel.add(buttonFinish);
-		layoutPanel.setWidgetRightWidth(buttonFinish, 96.0, Unit.PX, 78.0, Unit.PX);
-		layoutPanel.setWidgetBottomHeight(buttonFinish, 8.0, Unit.PX, 24.0, Unit.PX);
+		layoutPanel.add(buttonStoreSite);
+		layoutPanel.setWidgetRightWidth(buttonStoreSite, 96.0, Unit.PX, 78.0, Unit.PX);
+		layoutPanel.setWidgetBottomHeight(buttonStoreSite, 8.0, Unit.PX, 24.0, Unit.PX);
 		
 	}
 
 	@Override
 	public void showPageLocationInput() {
-		// TODO Auto-generated method stub
-		
+		deckPanel.showWidget(0);
+		buttonLocationInput.setVisible(true);
+		buttonStoreSite.setVisible(false);
 	}
 
 	@Override
 	public void showPageFeedSelection() {
-		// TODO Auto-generated method stub
-		
+		deckPanel.showWidget(1);
+		buttonLocationInput.setVisible(false);
+		buttonStoreSite.setVisible(true);
 	}
 
 	@Override
-	public HasClickHandlers getButtonNext() {
-		// TODO Auto-generated method stub
-		return null;
+	public HasClickHandlers getButtonLocationInput() {
+		return buttonLocationInput;
 	}
 
 	@Override
 	public HasClickHandlers getButtonCancel() {
-		// TODO Auto-generated method stub
-		return null;
+		return buttonCancel;
 	}
 
 	@Override
-	public HasClickHandlers getButtonFinish() {
-		// TODO Auto-generated method stub
-		return null;
+	public HasClickHandlers getButtonStoreSite() {
+		return buttonStoreSite;
 	}
 
 	@Override
-	public String getLocationInput() {
-		// TODO Auto-generated method stub
-		return null;
+	public HasValue<String> getLocationInput() {
+		return textBoxSiteUrl;
 	}
 
 	@Override
-	public void setSiteName(String name) {
-		// TODO Auto-generated method stub
-		
+	public HasValue<String> getSiteNameInput() {
+		return textBoxSiteName;
+	}
+	
+	@Override
+	public HasText getErrorText() {
+		return labelErrorMessage;
 	}
 
 	@Override
-	public String getSiteName() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setFeeds(List<FeedData> feeds) {
+		cellTableFeeds.setRowData(feeds);
 	}
-
+	
 	@Override
-	public void setFeeds(List<Feed> feeds) {
-		// TODO Auto-generated method stub
-		
+	public void setButtonsEnabled(boolean enabled) {
+		buttonCancel.setEnabled(enabled);
+		buttonStoreSite.setEnabled(enabled);
+		buttonLocationInput.setEnabled(enabled);
 	}
 }

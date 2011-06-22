@@ -2,9 +2,9 @@ package com.cee.news.client.paging;
 
 import java.util.List;
 
+import com.cee.news.client.list.LinkValue;
 import com.cee.news.client.list.ListChangedEvent;
 import com.cee.news.client.list.ListChangedHandler;
-import com.cee.news.client.list.LinkValue;
 import com.cee.news.client.list.SelectionChangedEvent;
 import com.cee.news.client.list.SelectionChangedHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;

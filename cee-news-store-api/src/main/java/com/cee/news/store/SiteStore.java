@@ -16,6 +16,13 @@ public interface SiteStore {
     void update(Site site) throws StoreException;
     
     /**
+     * Tests the existence of a site
+     * @param name the name of the site to test
+     * @return True, if a site with the given name exist
+     */
+    boolean contains(String name) throws StoreException;
+    
+    /**
      * Get a site by its unique name
      * @param name The site's name
      * @return Site or null if site not found

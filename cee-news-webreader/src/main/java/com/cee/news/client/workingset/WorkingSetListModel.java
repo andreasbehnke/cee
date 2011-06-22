@@ -3,6 +3,7 @@ package com.cee.news.client.workingset;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.list.DefaultListModel;
 import com.cee.news.client.list.LinkValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -13,7 +14,7 @@ public class WorkingSetListModel extends DefaultListModel {
     
     private List<LinkValue> workingSets;
     
-    public void update() {
+    public void update(final NotificationCallback callback) {
     	workingSetService.getWorkingSetsOrderedByName(new AsyncCallback<List<String>>() {
 
 			@Override
@@ -24,6 +25,9 @@ public class WorkingSetListModel extends DefaultListModel {
 			@Override
 			public void onSuccess(List<String> result) {
 				fillWorkingSetList(result);
+				if (callback != null) {
+					callback.finished();
+				}
 			}
     		
 		});

@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.client.workingset.WorkingSetData;
 import com.cee.news.client.workingset.WorkingSetService;
 import com.cee.news.model.WorkingSet;
@@ -17,8 +18,6 @@ public class WorkingSetServiceImpl implements WorkingSetService {
 	private static final String COULD_NOT_UPDATE_WORKING_SET = "Could not update working set";
 
 	private static final String COULD_NOT_RETRIEVE_WORKING_SET = "Could not retrieve working set";
-
-	private static final String COULD_NOT_ASK_WORKING_SET = "Could not ask working set";
 
 	private static final String COULD_NOT_RETRIEVE_WORKING_SET_LIST = "Could not retrieve working set list";
 
@@ -39,15 +38,6 @@ public class WorkingSetServiceImpl implements WorkingSetService {
         }
     }
 
-    public boolean containsWorkingSet(String name) {
-        try {
-            return workingSetStore.getWorkingSet(name) != null;
-        } catch (StoreException e) {
-        	log.error(COULD_NOT_ASK_WORKING_SET, e);
-            throw new RuntimeException(COULD_NOT_ASK_WORKING_SET);
-        }
-    }
-
     public WorkingSetData getWorkingSet(String name) {
         try {
             WorkingSet workingSet = workingSetStore.getWorkingSet(name);
@@ -63,12 +53,12 @@ public class WorkingSetServiceImpl implements WorkingSetService {
         }
     }
     
-    public void update(WorkingSetData wsd) {
+    public EntityUpdateResult update(WorkingSetData wsd) {
         try {
             String newName = wsd.getNewName();
             String oldName = wsd.getOldName();
             if (workingSetStore.getWorkingSet(newName) != null) {
-                throw new IllegalArgumentException("Working set with name " + newName + " already exists!");
+                return EntityUpdateResult.entityExists;
             }
             if (!wsd.getIsNew() && !newName.equals(oldName)) {
                 workingSetStore.rename(oldName, newName);
@@ -82,6 +72,7 @@ public class WorkingSetServiceImpl implements WorkingSetService {
             }
             workingSet.setSites(wsd.getSites());
             workingSetStore.update(workingSet);
+            return EntityUpdateResult.ok;
         } catch (StoreException e) {
         	log.error(COULD_NOT_UPDATE_WORKING_SET, e);
             throw new RuntimeException(COULD_NOT_UPDATE_WORKING_SET);

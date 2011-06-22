@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import com.cee.news.client.content.SiteRetrivalInformation;
-import com.cee.news.client.content.SiteRetrivalInformation.SiteRetrivalState;
+import com.cee.news.client.content.SiteData;
+import com.cee.news.client.content.SiteData.SiteRetrivalState;
 import com.cee.news.client.content.SiteUpdateService;
 import com.cee.news.model.Site;
 import com.cee.news.parser.SiteParser;
@@ -77,9 +77,10 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet impleme
 	}
 	
 	@Override
-	public SiteRetrivalInformation retrieveSiteData(String location) {
+	public SiteData retrieveSiteData(String location) {
 		SiteParser parser = createSiteParser();
-		SiteRetrivalInformation info = new SiteRetrivalInformation();
+		SiteData info = new SiteData();
+		info.setIsNew(true);
 		URL locationUrl = null;
 		try {
 			locationUrl = new URL(location);
@@ -89,7 +90,7 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet impleme
 		}
 		try {
 			Site site = parser.parse(locationUrl);
-			info.setSite(site);
+			info = SiteConverter.createFromSite(site);
 			info.setState(SiteRetrivalState.ok);
 		} catch (IOException e) {
 			info.setState(SiteRetrivalState.ioError);

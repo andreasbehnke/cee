@@ -1,6 +1,8 @@
 package com.cee.news.client;
 
 import com.cee.news.client.content.AddSiteWorkflow;
+import com.cee.news.client.content.NewSiteWizard;
+import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.content.SiteAddRemoveListModel;
 import com.cee.news.client.workingset.NewWorkingSetWorkflow;
 import com.cee.news.client.workingset.WorkingSetEditor;
@@ -54,7 +56,8 @@ public class NewsReader implements EntryPoint {
 			}
 		});
 		
-		final AddSiteWorkflow addSiteWorkflow = new AddSiteWorkflow();
+		final NewSiteWizardView newSiteWizard = new NewSiteWizard();
+		final AddSiteWorkflow addSiteWorkflow = new AddSiteWorkflow(newSiteWizard);
 		
 		workingSetEditor.getButtonAddNewSite().addClickHandler(new ClickHandler() {
 			
@@ -65,7 +68,7 @@ public class NewsReader implements EntryPoint {
 		});
         
 		//trigger update
-		workingSetListModel.update();
+		workingSetListModel.update(null);
 		siteAddRemoveListModel.updateSites();
 	}   
 }

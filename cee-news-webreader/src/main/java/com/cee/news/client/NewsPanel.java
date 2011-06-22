@@ -1,12 +1,12 @@
 package com.cee.news.client;
 
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.dom.client.Style.Unit;
-import com.cee.news.client.paging.PagingPanel;
 import com.cee.news.client.list.ListPanel;
+import com.cee.news.client.paging.PagingPanel;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.LayoutPanel;
 
 public class NewsPanel extends Composite {
 

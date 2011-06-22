@@ -2,8 +2,9 @@ package com.cee.news.client.content;
 
 import java.util.List;
 
-import com.cee.news.model.Feed;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * The view of the {@link AddSiteWorkflow}
@@ -20,29 +21,32 @@ public interface NewSiteWizardView {
 	 */
 	void showPageFeedSelection();
 	
-	HasClickHandlers getButtonNext();
+	HasClickHandlers getButtonLocationInput();
+	
+	HasClickHandlers getButtonStoreSite();
 	
 	HasClickHandlers getButtonCancel();
-	
-	HasClickHandlers getButtonFinish();
 	
 	/**
 	 * @return User's location input
 	 */
-	String getLocationInput();
-	
-	/**
-	 * @param name The site name hint
-	 */
-	void setSiteName(String name);
+	HasValue<String> getLocationInput();
 	
 	/**
 	 * @return User's site name input
 	 */
-	String getSiteName();
+	HasValue<String> getSiteNameInput();
+	
+	HasText getErrorText();
 	
 	/**
 	 * @param feeds Feeds which should be selected by user
 	 */
-	void setFeeds(List<Feed> feeds);
+	void setFeeds(List<FeedData> feeds);
+	
+	void show();
+	
+	void hide();
+	
+	void setButtonsEnabled(boolean enabled);
 }
