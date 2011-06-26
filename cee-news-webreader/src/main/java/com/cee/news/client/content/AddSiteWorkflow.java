@@ -44,6 +44,7 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 	public void start() {
 		wizard.showPageLocationInput();
 		wizard.setButtonsEnabled(true);
+		wizard.show();
 	}
 
 	public void validateLocationInput(String location) {
