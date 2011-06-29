@@ -66,7 +66,7 @@
 	
 	<bean id="webClient" class="com.cee.news.parser.net.DefaultWebClient" scope="prototype">
 		<property name="httpClient">
-			<bean id="httpClient" scope="prototype" />
+			<bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient" scope="prototype" />
 		</property>
 	</bean>
 	
@@ -88,6 +88,18 @@
 	<bean id="updateSiteCommand" class="com.cee.news.server.content.SiteUpdateCommandImpl" scope="prototype">
 		<property name="siteUpdater" ref="siteUpdater" />
 	</bean>
+	
+	<bean id="htmlReader" class="org.ccil.cowan.tagsoup.Parser" scope="prototype" />
+
+	<bean id="feedChecker" class="com.cee.news.parser.impl.RomeFeedChecker">
+		<property name="webClient" ref="webClient" />
+	</bean>
+
+	<bean id="siteParser" class="com.cee.news.parser.SiteParser">
+		<property name="webClient" ref="webClient" />
+    	<property name="reader" ref="htmlReader" />
+		<property name="feedChecker" ref="feedChecker" />
+	</bean>
 
 	<!-- GWT Services -->
 
@@ -108,5 +120,6 @@
 		<constructor-arg type="int" value="10" />
 		<property name="siteStore" ref="siteStore" />
 		<lookup-method name="createUpdateSiteCommand" bean="updateSiteCommand" />
+		<lookup-method name="createSiteParser" bean="siteParser" />
 	</bean>
 </beans>

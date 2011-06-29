@@ -122,12 +122,11 @@ public class NewSiteWizard extends DialogBox implements NewSiteWizardView {
 		
 		buttonLocationInput = new Button("Next");
 		layoutPanel.add(buttonLocationInput);
-		layoutPanel.setWidgetRightWidth(buttonLocationInput, 96.0, Unit.PX, 78.0, Unit.PX);
+		layoutPanel.setWidgetRightWidth(buttonLocationInput, 180.0, Unit.PX, 78.0, Unit.PX);
 		layoutPanel.setWidgetBottomHeight(buttonLocationInput, 8.0, Unit.PX, 24.0, Unit.PX);
 		buttonLocationInput.setText("Next");
 		
 		buttonStoreSite = new Button("Finish");
-		layoutPanel.setVisible(false);
 		layoutPanel.add(buttonStoreSite);
 		layoutPanel.setWidgetRightWidth(buttonStoreSite, 96.0, Unit.PX, 78.0, Unit.PX);
 		layoutPanel.setWidgetBottomHeight(buttonStoreSite, 8.0, Unit.PX, 24.0, Unit.PX);

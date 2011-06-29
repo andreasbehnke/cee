@@ -44,7 +44,7 @@ public interface NewSiteWizardView {
 	 */
 	void setFeeds(List<FeedData> feeds);
 	
-	void show();
+	void center();
 	
 	void hide();
 	
