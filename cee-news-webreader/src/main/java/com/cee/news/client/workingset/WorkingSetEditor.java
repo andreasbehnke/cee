@@ -89,7 +89,6 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
         layoutPanel.add(buttonAddNewSite);
         layoutPanel.setWidgetRightWidth(buttonAddNewSite, 50.0, Unit.PCT, 130.0, Unit.PX);
         layoutPanel.setWidgetBottomHeight(buttonAddNewSite, 56.0, Unit.PX, 24.0, Unit.PX);
-        //TODO Implement Workflow for new Site
         
         buttonSave = new Button("Save");
         layoutPanel.add(buttonSave);
