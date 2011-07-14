@@ -1,6 +1,7 @@
 package com.cee.news.client;
 
 import com.cee.news.client.list.ListPanel;
+import com.cee.news.client.list.ListView;
 import com.cee.news.client.workingset.WorkingSetSelectionPanel;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Composite;
@@ -43,13 +44,13 @@ public class StartPanel extends Composite {
         layoutPanel.setWidgetLeftWidth(nlnlblLatestNews, 366.0, Unit.PX, 90.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(nlnlblLatestNews, 30.0, Unit.PX, 16.0, Unit.PX);
     }
-    public ListPanel getListPanelLatestArticles() {
+    public ListView getListViewLatestArticles() {
         return listPanelLatestArticles;
     }
     public WorkingSetSelectionPanel getWorkingSetSelectionPanel() {
         return workingSetSelectionPanel;
     }
-    public ListPanel getListPanelSites() {
+    public ListView getListViewSites() {
         return listPanelSites;
     }
 }

@@ -110,6 +110,7 @@
 
 	<bean id="gwtSiteService" class="com.cee.news.server.content.SiteServiceImpl" lazy-init="true">
 		<property name="siteStore" ref="siteStore" />
+		<property name="workingSetStore" ref="workingSetStore" />
 	</bean>
 
 	<bean id="gwtWorkingSetService" class="com.cee.news.server.workingset.WorkingSetServiceImpl" lazy-init="true">

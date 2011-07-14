@@ -3,6 +3,7 @@ package com.cee.news.client.list;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -56,6 +57,9 @@ public class AddRemoveListPresenter {
     
     protected void fillSelectionList(List<LinkValue> links) {
         selectionView.removeAll();
+        for (Entry<Integer, HasEnabled> entry : sourceItems.entrySet()) {
+			entry.getValue().setEnabled(true);
+		}
         for (final LinkValue link : links) {
             ListItemView item = selectionView.addItem();
             model.getContentDescription(item, link.getValue());
@@ -64,6 +68,7 @@ public class AddRemoveListPresenter {
                     removeSelection(link);
                 }
             });
+            sourceItems.get(link.getValue()).setEnabled(false);
         }
     }
     

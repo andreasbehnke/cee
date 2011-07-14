@@ -2,9 +2,9 @@ package com.cee.news.client.content;
 
 import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.client.error.ErrorSourceBase;
-import com.cee.news.store.SiteStore;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class AddSiteWorkflow extends ErrorSourceBase {
@@ -123,6 +123,7 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 			@Override
 			public void onSuccess(EntityUpdateResult result) {
 				wizard.hide();
+				fireSiteAdded(site.getName());
 			}
 			
 			@Override
@@ -134,5 +135,13 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 	private void showErrorMessage(String message) {
 		wizard.getErrorText().setText(message);
 		wizard.setButtonsEnabled(true);
+	}
+	
+	protected void fireSiteAdded(String siteName) {
+		handlerManager.fireEvent(new SiteAddedEvent(siteName));
+	}
+	
+	public HandlerRegistration addSiteAddedHandler(SiteAddedHandler handler) {
+		return handlerManager.addHandler(SiteAddedEvent.TYPE, handler);
 	}
 }

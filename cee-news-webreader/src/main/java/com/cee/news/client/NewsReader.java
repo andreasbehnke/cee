@@ -1,9 +1,17 @@
 package com.cee.news.client;
 
+import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.content.AddSiteWorkflow;
 import com.cee.news.client.content.NewSiteWizard;
 import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.content.SiteAddRemoveListModel;
+import com.cee.news.client.content.SiteAddedEvent;
+import com.cee.news.client.content.SiteAddedHandler;
+import com.cee.news.client.content.SiteListContentModel;
+import com.cee.news.client.error.ErrorDialog;
+import com.cee.news.client.list.ListPresenter;
+import com.cee.news.client.list.SelectionChangedEvent;
+import com.cee.news.client.list.SelectionChangedHandler;
 import com.cee.news.client.workingset.NewWorkingSetWorkflow;
 import com.cee.news.client.workingset.WorkingSetEditor;
 import com.cee.news.client.workingset.WorkingSetListModel;
@@ -24,6 +32,8 @@ public class NewsReader implements EntryPoint {
 	public void onModuleLoad() {
 		RootPanel rootPanel = RootPanel.get();
 		
+		ErrorDialog errorDialog = new ErrorDialog();
+		
 		LayoutPanel layoutPanel = new LayoutPanel();
 		rootPanel.add(layoutPanel);
 		
@@ -42,11 +52,27 @@ public class NewsReader implements EntryPoint {
 		
 		//Working set selection
 		final WorkingSetListModel workingSetListModel = new WorkingSetListModel();
+		workingSetListModel.addErrorHandler(errorDialog);
 		final WorkingSetSelectionView workingSetSelectionView = startPanel.getWorkingSetSelectionPanel();
 		final SiteAddRemoveListModel siteAddRemoveListModel = new SiteAddRemoveListModel();
-
+		siteAddRemoveListModel.addErrorHandler(errorDialog);
+		
+		//Site List
+		final SiteListContentModel sitesOfWorkingSetModel = new SiteListContentModel();
+		sitesOfWorkingSetModel.addErrorHandler(errorDialog);
+		new ListPresenter(sitesOfWorkingSetModel, startPanel.getListViewSites());
+		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler() {
+			
+			@Override
+			public void onSelectionChange(SelectionChangedEvent event) {
+				sitesOfWorkingSetModel.updateSites(workingSetListModel.getWorkingSetName(event.getSelection()));
+			}
+		});
+		
+		//New Working Set Workflow
 		final WorkingSetEditor workingSetEditor = new WorkingSetEditor(siteAddRemoveListModel);
 		final NewWorkingSetWorkflow newWorkingSetWorkflow = new NewWorkingSetWorkflow(workingSetListModel, workingSetEditor);
+		newWorkingSetWorkflow.addErrorHandler(errorDialog);
 		
 		new WorkingSetSelectionPresenter(workingSetListModel, workingSetSelectionView);
 		workingSetSelectionView.getNewButton().addClickHandler(new ClickHandler() {
@@ -57,7 +83,10 @@ public class NewsReader implements EntryPoint {
 		});
 		
 		final NewSiteWizardView newSiteWizard = new NewSiteWizard();
+		
+		//Add Site Workflow
 		final AddSiteWorkflow addSiteWorkflow = new AddSiteWorkflow(newSiteWizard);
+		addSiteWorkflow.addErrorHandler(errorDialog);
 		
 		workingSetEditor.getButtonAddNewSite().addClickHandler(new ClickHandler() {
 			
@@ -66,9 +95,26 @@ public class NewsReader implements EntryPoint {
 				addSiteWorkflow.start();
 			}
 		});
-        
+		
+		addSiteWorkflow.addSiteAddedHandler(new SiteAddedHandler() {
+			
+			@Override
+			public void onSiteAdded(SiteAddedEvent event) {
+				siteAddRemoveListModel.updateSites();
+			}
+		});
+		
 		//trigger update
-		workingSetListModel.update(null);
+		workingSetListModel.update(new NotificationCallback() {
+			
+			@Override
+			public void finished() {
+				if (workingSetListModel.getContentCount() > 0) {
+					//TODO: remember last selected working set, cookie?
+					workingSetListModel.setSelectedContent(0);
+				}
+			}
+		});
 		siteAddRemoveListModel.updateSites();
 	}   
 }

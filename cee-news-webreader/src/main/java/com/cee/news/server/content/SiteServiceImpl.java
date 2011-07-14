@@ -12,6 +12,7 @@ import com.cee.news.client.error.ServiceException;
 import com.cee.news.model.Site;
 import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
+import com.cee.news.store.WorkingSetStore;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SimpleHtmlSanitizer;
@@ -32,13 +33,29 @@ public class SiteServiceImpl implements SiteService {
 
 	private SiteStore siteStore;
 	
+	private WorkingSetStore workingSetStore;
+	
 	public void setSiteStore(SiteStore siteStore) {
 		this.siteStore = siteStore;
+	}
+	
+	public void setWorkingSetStore(WorkingSetStore workingSetStore) {
+		this.workingSetStore = workingSetStore;
 	}
 
 	public List<String> getSites() {
 		try {
 			return siteStore.getSitesOrderedByName();
+		} catch (StoreException e) {
+			log.error(COULD_NOT_RETRIEVE_SITE_LIST, e);
+			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_LIST);
+		}
+	}
+	
+	@Override
+	public List<String> getSitesOfWorkingSet(String workingSetName) {
+		try {
+			return workingSetStore.getWorkingSet(workingSetName).getSites();
 		} catch (StoreException e) {
 			log.error(COULD_NOT_RETRIEVE_SITE_LIST, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_LIST);
@@ -64,9 +81,13 @@ public class SiteServiceImpl implements SiteService {
 			SafeHtmlBuilder builder = new SafeHtmlBuilder();
 			String title = site.getTitle();
 			String description = site.getDescription();
-			builder.appendHtmlConstant("<h3>");
+			builder.appendHtmlConstant("<div class=\"title\">");
 			builder.appendEscaped(title == null ? site.getLocation() : title);
-			builder.appendHtmlConstant("</h3>");
+			builder.appendHtmlConstant("</div>");
+			builder.appendHtmlConstant("<div class=\"name\">");
+			builder.appendEscaped(site.getName());
+			builder.appendHtmlConstant("</div>");
+			
 			if (description != null) {
 				builder.appendHtmlConstant("<div class=\"description\">");
 				builder.append(SimpleHtmlSanitizer.sanitizeHtml(site

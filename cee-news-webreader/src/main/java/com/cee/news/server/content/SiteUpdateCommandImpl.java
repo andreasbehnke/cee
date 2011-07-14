@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.cee.news.server.content;
 
 import java.io.IOException;
@@ -62,6 +59,6 @@ public class SiteUpdateCommandImpl implements SiteUpdateCommand {
 		if (!(obj instanceof SiteUpdateCommandImpl))
 			return false;
 		SiteUpdateCommandImpl other = (SiteUpdateCommandImpl) obj;
-		return site.getLocation().equals(other.site.getLocation());
+		return site.getName().equals(other.site.getName());
 	}	
 }

@@ -56,4 +56,8 @@ public class WorkingSetListModel extends DefaultListModel {
 			}
 		}
 	}
+	
+	public String getWorkingSetName(int index) {
+		return workingSets.get(index).getText();
+	}
 }

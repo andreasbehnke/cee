@@ -3,7 +3,9 @@ package com.cee.news.client.workingset;
 import java.util.List;
 
 import com.cee.news.client.list.AddRemoveListModel;
+import com.cee.news.client.list.AddRemoveListPresenter;
 import com.cee.news.client.list.ListPanel;
+import com.cee.news.client.list.ListPresenter;
 import com.cee.news.client.list.SelectionListEditor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.editor.client.Editor;
@@ -59,15 +61,17 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
         layoutPanel.setWidgetLeftWidth(listPanelSites, 0.0, Unit.PX, 50.0, Unit.PCT);
         layoutPanel.setWidgetTopBottom(listPanelSites, 65.0, Unit.PX, 86.0, Unit.PX);
         
-        InlineLabel nlnlblAvailableSites = new InlineLabel("Available Sites:");
-        layoutPanel.add(nlnlblAvailableSites);
-        layoutPanel.setWidgetLeftWidth(nlnlblAvailableSites, 0.0, Unit.PX, 90.0, Unit.PX);
-        layoutPanel.setWidgetTopHeight(nlnlblAvailableSites, 34.0, Unit.PX, 24.0, Unit.PX);
-        
         ListPanel listPanelSelectedSites = new ListPanel();
         layoutPanel.add(listPanelSelectedSites);
         layoutPanel.setWidgetRightWidth(listPanelSelectedSites, 0.0, Unit.PX, 50.0, Unit.PCT);
         layoutPanel.setWidgetTopBottom(listPanelSelectedSites, 65.0, Unit.PX, 86.0, Unit.PX);
+        
+        new AddRemoveListPresenter(sitesModel, listPanelSites, listPanelSelectedSites);
+        
+        InlineLabel nlnlblAvailableSites = new InlineLabel("Available Sites:");
+        layoutPanel.add(nlnlblAvailableSites);
+        layoutPanel.setWidgetLeftWidth(nlnlblAvailableSites, 0.0, Unit.PX, 90.0, Unit.PX);
+        layoutPanel.setWidgetTopHeight(nlnlblAvailableSites, 34.0, Unit.PX, 24.0, Unit.PX);
         
         InlineLabel nlnlblSelectedSites = new InlineLabel("Selected Sites:");
         layoutPanel.add(nlnlblSelectedSites);

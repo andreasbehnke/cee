@@ -32,6 +32,21 @@ public class SiteListContentModel extends DefaultListModel implements ContentLis
         });
     }
     
+    public void updateSites(String workingSetName) {
+    	service.getSitesOfWorkingSet(workingSetName, new AsyncCallback<List<String>>() {
+			
+			@Override
+			public void onSuccess(List<String> result) {
+				setSites(result);
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				fireErrorEvent(caught, "Could not retrieve site list");
+			}
+		});
+    }
+    
     protected void setSites(List<String> sites) {
         this.sites = sites;
         List<LinkValue> links = new ArrayList<LinkValue>();

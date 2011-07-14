@@ -16,6 +16,12 @@ public interface SiteService extends RemoteService {
 	List<String> getSites();
 	
 	/**
+	 * @param workingSetName Unique name of working set
+	 * @return List of site names of given working set
+	 */
+	List<String> getSitesOfWorkingSet(String workingSetName);
+	
+	/**
 	 * Retrieve the sites formatted title
 	 * @param name The name of the site
 	 * @return The HTML formatted site title
