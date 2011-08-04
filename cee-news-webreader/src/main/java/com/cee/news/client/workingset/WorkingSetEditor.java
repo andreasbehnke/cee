@@ -2,10 +2,10 @@ package com.cee.news.client.workingset;
 
 import java.util.List;
 
-import com.cee.news.client.list.AddRemoveListModel;
-import com.cee.news.client.list.AddRemoveListPresenter;
+import com.cee.news.client.list.ContentModel;
+import com.cee.news.client.list.MultiSelectListModel;
+import com.cee.news.client.list.MultiSelectListPresenter;
 import com.cee.news.client.list.ListPanel;
-import com.cee.news.client.list.ListPresenter;
 import com.cee.news.client.list.SelectionListEditor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.editor.client.Editor;
@@ -40,7 +40,7 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
 
 	private Button buttonAddNewSite;
 
-    public WorkingSetEditor(final AddRemoveListModel sitesModel) {
+    public WorkingSetEditor(final MultiSelectListModel siteListModel, final ContentModel siteContentModel) {
     	setText("Edit Working Set");
         LayoutPanel layoutPanel = new LayoutPanel();
         setWidget(layoutPanel);
@@ -66,7 +66,7 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
         layoutPanel.setWidgetRightWidth(listPanelSelectedSites, 0.0, Unit.PX, 50.0, Unit.PCT);
         layoutPanel.setWidgetTopBottom(listPanelSelectedSites, 65.0, Unit.PX, 86.0, Unit.PX);
         
-        new AddRemoveListPresenter(sitesModel, listPanelSites, listPanelSelectedSites);
+        new MultiSelectListPresenter(siteListModel, siteContentModel, listPanelSites, listPanelSelectedSites);
         
         InlineLabel nlnlblAvailableSites = new InlineLabel("Available Sites:");
         layoutPanel.add(nlnlblAvailableSites);
@@ -85,7 +85,7 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
         buttonRemoveAllSites.addClickHandler(new ClickHandler() {	
 			@Override
 			public void onClick(ClickEvent event) {
-				sitesModel.clearSelection();
+				siteListModel.clearSelection();
 			}
 		});
         
@@ -110,7 +110,7 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
         layoutPanel.setWidgetLeftRight(labelErrorMessage, 0.0, Unit.PX, 0.0, Unit.PX);
         layoutPanel.setWidgetBottomHeight(labelErrorMessage, 31.0, Unit.PX, 19.0, Unit.PX);
 
-        sitesEditor = new SelectionListEditor(sitesModel);
+        sitesEditor = new SelectionListEditor(siteListModel);
         
         oldNameEditor = SimpleEditor.of();
         isNewEditor = SimpleEditor.of();

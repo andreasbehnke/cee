@@ -2,7 +2,7 @@ package com.cee.news.client.workingset;
 
 import java.util.List;
 
-import com.cee.news.client.list.LinkValue;
+import com.cee.news.client.list.EntityKey;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
@@ -16,7 +16,7 @@ public interface WorkingSetSelectionView {
     
     int getSelectedWorkingSet();
     
-    void setSelectedWorkingSet(int index);
+    void setSelectedWorkingSet(int key);
     
-    void setWorkingSets(List<LinkValue> names);
+    void setWorkingSets(List<EntityKey> names);
 }

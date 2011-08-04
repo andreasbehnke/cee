@@ -2,7 +2,7 @@ package com.cee.news.client.paging;
 
 import java.util.List;
 
-import com.cee.news.client.list.LinkValue;
+import com.cee.news.client.list.EntityKey;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.client.HasSafeHtml;
@@ -51,7 +51,7 @@ public interface PagingView {
     /**
      * @param links The list of links which should be displayed in e.g. a selection box
      */
-    void setJumpToLinks(List<LinkValue> links);
+    void setJumpToLinks(List<EntityKey> links);
     
     /**
      * @param index The currently selected index of the selection box

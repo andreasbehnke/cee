@@ -2,7 +2,7 @@ package com.cee.news.client.paging;
 
 import java.util.List;
 
-import com.cee.news.client.list.LinkValue;
+import com.cee.news.client.list.EntityKey;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -95,10 +95,10 @@ public class PagingPanel extends Composite implements PagingView {
         return mainContent;
     }
 
-    public void setJumpToLinks(List<LinkValue> links) {
+    public void setJumpToLinks(List<EntityKey> links) {
         comboBoxJumpTo.clear();
-        for (LinkValue linkValue : links) {
-            comboBoxJumpTo.addItem(linkValue.getText(), linkValue.getValue() + "");
+        for (EntityKey linkValue : links) {
+            comboBoxJumpTo.addItem(linkValue.getName(), linkValue.getKey());
         }
     }
     

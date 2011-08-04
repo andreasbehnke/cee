@@ -3,7 +3,7 @@ package com.cee.news.client.content;
 import java.util.List;
 
 import com.cee.news.client.async.EntityUpdateResult;
-import com.google.gwt.safehtml.shared.SafeHtml;
+import com.cee.news.client.list.EntityKey;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -13,34 +13,34 @@ public interface SiteService extends RemoteService {
 	/**
 	 * @return List of all available sites names
 	 */
-	List<String> getSites();
+	List<EntityKey> getSites();
 	
 	/**
 	 * @param workingSetName Unique name of working set
 	 * @return List of site names of given working set
 	 */
-	List<String> getSitesOfWorkingSet(String workingSetName);
+	List<EntityKey> getSitesOfWorkingSet(String workingSetName);
 	
 	/**
 	 * Retrieve the sites formatted title
 	 * @param name The name of the site
 	 * @return The HTML formatted site title
 	 */
-	SafeHtml getTitle(String name);
+	String getHtmlTitle(String name);
 	
 	/**
 	 * Retrieve the sites formatted description
 	 * @param name The name of the site
 	 * @return The HTML formatted site description
 	 */
-	SafeHtml getHtmlDescription(String name);
+	String getHtmlDescription(String name);
 	
 	/**
 	 * Guesses a unique site name for a given site name.
 	 * If the name does not exists, the name will be returned.
 	 * Otherwise a number will be incremented and appended to name 
-	 * until the name does not math any existing name.
-	 * @param name The user's name
+	 * until the name does not match any existing name.
+	 * @param name The name to test
 	 * @return A unique name
 	 */
 	String guessUniqueSiteName(String name);

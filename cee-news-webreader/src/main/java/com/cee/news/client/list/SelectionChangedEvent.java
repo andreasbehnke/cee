@@ -9,14 +9,17 @@ public class SelectionChangedEvent extends GwtEvent<SelectionChangedHandler> {
     
     public static final GwtEvent.Type<SelectionChangedHandler> TYPE = new Type<SelectionChangedHandler>();
     
-    private final int selection;
+    private final String key;
     
-    public SelectionChangedEvent(int selection) {
-        this.selection = selection;
+    public SelectionChangedEvent(String key) {
+        this.key = key;
     }
     
-    public int getSelection() {
-        return selection;
+    /**
+     * @return Primary key of the selected entity
+     */
+    public String getKey() {
+        return key;
     }
 
     @Override

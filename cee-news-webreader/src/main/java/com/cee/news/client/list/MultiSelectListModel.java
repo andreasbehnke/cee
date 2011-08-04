@@ -7,19 +7,19 @@ import com.google.gwt.event.shared.HandlerRegistration;
 /**
  * Model of a selectable list. Multiple elements of the content list can be selected.
  */
-public interface AddRemoveListModel extends ContentListModel {
+public interface MultiSelectListModel extends ListModel {
     
     /**
-     * Adds the element at index to the selection list
-     * @param index The index of the element to be added
+     * Adds the element with key to the selection list
+     * @param key The key of the element to be added
      */
-    void addSelection(int index);
+    void addSelection(String key);
     
     /**
-     * Removes the element at index from the selection list
-     * @param index The index of the element to be removed
+     * Removes the element with key from the selection list
+     * @param key The key of the element to be removed
      */
-    void removeSelection(int index);
+    void removeSelection(String key);
     
     /**
      * Set the selected keys

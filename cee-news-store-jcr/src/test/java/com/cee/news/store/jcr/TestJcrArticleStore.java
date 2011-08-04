@@ -19,10 +19,13 @@ import org.junit.Test;
 import com.cee.news.model.Article;
 import com.cee.news.model.Site;
 import com.cee.news.model.TextBlock;
+import com.cee.news.model.WorkingSet;
 import com.cee.news.store.StoreException;
 
 public class TestJcrArticleStore extends JcrTestBase {
 
+	private static JcrWorkingSetStore workingSetStore;
+	
     private static JcrSiteStore siteStore;
     
     private static JcrArticleStore articleStore;
@@ -30,6 +33,7 @@ public class TestJcrArticleStore extends JcrTestBase {
     @BeforeClass
     public static void setupStores() throws LoginException, RepositoryException, StoreException {
         setupSession();
+        workingSetStore = new JcrWorkingSetStore(session);
         siteStore = new JcrSiteStore(session);
         articleStore = new JcrArticleStore(session);
     }
@@ -65,7 +69,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         article.setTitle("Title");
         articleStore.update(site, article);
         
-        article = articleStore.getArticle(url);
+        article = articleStore.getArticle("1");
         assertEquals("1", article.getId());
         assertEquals(url, article.getLocation());
         assertEquals(2010, article.getPublishedDate().get(Calendar.YEAR));
@@ -95,8 +99,8 @@ public class TestJcrArticleStore extends JcrTestBase {
         article.getContent().add(new TextBlock("Another hello world!", 3));
         articleStore.update(site, article);
         
-        article = articleStore.getArticle(url);
-        article.setContent(articleStore.getContent(url));
+        article = articleStore.getArticle("1");
+        article.setContent(articleStore.getContent("1"));
         assertEquals(2, article.getContent().size());
         Set<String> content = new HashSet<String>();
         content.add(article.getContent().get(0).getContent());
@@ -107,16 +111,16 @@ public class TestJcrArticleStore extends JcrTestBase {
         article.getContent().remove(0);
         articleStore.update(site, article);
         
-        article = articleStore.getArticle(url);
-        article.setContent(articleStore.getContent(url));
+        article = articleStore.getArticle("1");
+        article.setContent(articleStore.getContent("1"));
         assertEquals(1, article.getContent().size());
         assertEquals(article.getContent().get(0).getContent(), "Another hello world!");
         
         article.getContent().add(new TextBlock("XYZ", 1));
         articleStore.update(site, article);
         
-        article = articleStore.getArticle(url);
-        article.setContent(articleStore.getContent(url));
+        article = articleStore.getArticle("1");
+        article.setContent(articleStore.getContent("1"));
         assertEquals(2, article.getContent().size());
         content = new HashSet<String>();
         content.add(article.getContent().get(0).getContent());
@@ -178,7 +182,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         article.setLocation(url);
         cal = Calendar.getInstance();
         cal.clear();
-        cal.set(Calendar.YEAR, 1999);
+        cal.set(Calendar.YEAR, 2012);
         cal.set(Calendar.MONTH, 12);
         cal.set(Calendar.DAY_OF_MONTH, 23);
         article.setPublishedDate(cal);
@@ -186,13 +190,26 @@ public class TestJcrArticleStore extends JcrTestBase {
         
         List<String> articles = articleStore.getArticlesOrderedByDate(site);
         assertEquals(3, articles.size());
-        assertEquals("http://www.abc.de/2", articles.get(0));
-        assertEquals("http://www.abc.de/1", articles.get(1));
-        assertEquals("http://www.abc.de/3", articles.get(2));
+        assertEquals("2", articles.get(0));
+        assertEquals("1", articles.get(1));
+        assertEquals("3", articles.get(2));
         
         articles = articleStore.getArticlesOrderedByDate(site2);
         assertEquals(1, articles.size());
-        assertEquals("http://www.xyz.de/4", articles.get(0));
+        assertEquals("4", articles.get(0));
+        
+        WorkingSet workingSet = new WorkingSet();
+        workingSet.setName("Default");
+        workingSet.getSites().add(site.getName());
+        workingSet.getSites().add(site2.getName());
+        workingSetStore.update(workingSet);
+        
+        articles = articleStore.getArticlesOrderedByDate(workingSet);
+        assertEquals(4, articles.size());
+        assertEquals("4", articles.get(0));
+        assertEquals("2", articles.get(1));
+        assertEquals("1", articles.get(2));
+        assertEquals("3", articles.get(3));
     }
 
     @Test
@@ -208,7 +225,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         article.getContent().add(new TextBlock("Hello world!", 2));
         articleStore.update(site, article);
 
-        List<TextBlock> content = articleStore.getContent("http://www.abc.de/1");
+        List<TextBlock> content = articleStore.getContent("1");
         assertEquals(3, content.size());
         assertEquals("This are four words", content.get(0).getContent());
         assertEquals(4, content.get(0).getNumWords());

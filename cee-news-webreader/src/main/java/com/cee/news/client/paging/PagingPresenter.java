@@ -2,9 +2,12 @@ package com.cee.news.client.paging;
 
 import java.util.List;
 
-import com.cee.news.client.list.LinkValue;
+import com.cee.news.client.list.ContentModel;
+import com.cee.news.client.list.EntityKey;
+import com.cee.news.client.list.EntityKeyUtil;
 import com.cee.news.client.list.ListChangedEvent;
 import com.cee.news.client.list.ListChangedHandler;
+import com.cee.news.client.list.ListModel;
 import com.cee.news.client.list.SelectionChangedEvent;
 import com.cee.news.client.list.SelectionChangedHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -18,32 +21,36 @@ import com.google.gwt.event.dom.client.ClickHandler;
  */
 public class PagingPresenter {
 
-    private final PagingContentModel model;
+	private final ListModel listModel;
+	
+    private final ContentModel contentModel;
 
     private final PagingView view;
+    
+    private List<EntityKey> keys;
 
-    public PagingPresenter(final PagingContentModel model, final PagingView view) {
-        this.model = model;
+    public PagingPresenter( final ListModel listModel, final ContentModel contentModel, final PagingView view) {
+        this.listModel = listModel;
+    	this.contentModel = contentModel;
         this.view = view;
 
-        model.addListChangedHandler(new ListChangedHandler() {
+        listModel.addListChangedHandler(new ListChangedHandler() {
             public void onContentListChanged(ListChangedEvent event) {
                 fillJumpToList(event.getLinks());
             }
         });
-
-        model.addSelectionChangedhandler(new SelectionChangedHandler() {
+        
+        listModel.addSelectionChangedhandler(new SelectionChangedHandler() {
             public void onSelectionChange(SelectionChangedEvent event) {
-                onSelectionChanged(event.getSelection());
+                onSelectionChanged(event.getKey());
             }
         });
         
         view.addJumpToChangedHandler(new ChangeHandler() {
             public void onChange(ChangeEvent event) {
-                int selection = view.getJumpToSelectedIndex();
-                if (selection > -1) {
-                    model.setSelectedContent(selection);
-                }
+                int index = view.getJumpToSelectedIndex();
+                String key = keys.get(index).getKey();
+                listModel.setSelectedKey(key);
             }
         });
         
@@ -60,38 +67,42 @@ public class PagingPresenter {
         });
     }
 
-    protected void fillJumpToList(List<LinkValue> links) {
-        view.setJumpToLinks(links);
+    protected void fillJumpToList(List<EntityKey> keys) {
+    	this.keys = keys;
+        view.setJumpToLinks(keys);
     }
     
-    protected void onSelectionChanged(int index) {
-        view.setJumpToSelectedIndex(index);
+    protected void onSelectionChanged(String key) {
+    	int index = EntityKeyUtil.getIndexOfEntityKey(keys, key);
+    	view.setJumpToSelectedIndex(index);
         if (index == 0) {
             view.setPreviousEnabled(false);
         } else {
             view.setPreviousEnabled(true);
-            model.getContentTitle(view.getPreviousContent(), index - 1);
+            String prevKey = keys.get(index - 1).getKey();
+            contentModel.getContentTitle(view.getPreviousContent(), prevKey);
         }
-        if (index == model.getContentCount() - 1) {
+        if (index == listModel.getContentCount() - 1) {
             view.setNextEnabled(false);
         } else {
             view.setNextEnabled(true);
-            model.getContentTitle(view.getNextContent(), index + 1);
+            String nextKey = keys.get(index + 1).getKey();
+            contentModel.getContentTitle(view.getNextContent(), nextKey);
         }
-        model.getContent(view.getMainContent(), index);
+        contentModel.getContent(view.getMainContent(), key);
     }
     
     protected void increment() {
-        int currentSelection = model.getSelectedContent();
-        if (currentSelection < model.getContentCount() - 1) {
-            model.setSelectedContent(currentSelection + 1);
+        int currentSelection = EntityKeyUtil.getIndexOfEntityKey(keys, listModel.getSelectedKey());
+        if (currentSelection < listModel.getContentCount() - 1) {
+        	listModel.setSelectedKey(keys.get(currentSelection + 1).getKey());
         }
     }
     
     protected void decrement() {
-        int currentSelection = model.getSelectedContent();
+    	int currentSelection = EntityKeyUtil.getIndexOfEntityKey(keys, listModel.getSelectedKey());
         if (currentSelection > 0) {
-            model.setSelectedContent(currentSelection - 1);
+        	listModel.setSelectedKey(keys.get(currentSelection - 1).getKey());
         }
     }
 }

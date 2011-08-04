@@ -19,6 +19,7 @@ import javax.jcr.query.RowIterator;
 import com.cee.news.model.Article;
 import com.cee.news.model.Site;
 import com.cee.news.model.TextBlock;
+import com.cee.news.model.WorkingSet;
 import com.cee.news.store.ArticleStore;
 import com.cee.news.store.StoreException;
 
@@ -27,12 +28,16 @@ import com.cee.news.store.StoreException;
  */
 public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
 
-    private final static String SELECT_ARTICLE_BY_LOCATION = "SELECT * FROM [news:article] WHERE [news:location]='%s'";
+    private final static String SELECT_ARTICLE_BY_LOCATION = "SELECT * FROM [news:article] WHERE [news:id]='%s'";
 
-    private final static String SELECT_ARTICLES_OF_SITE_ORDERED_BY_DATE = "SELECT a.[news:location] AS location " 
+    private final static String SELECT_ARTICLES_OF_SITE_ORDERED_BY_DATE = "SELECT a.[news:id] AS id " 
                                                                         + "FROM [news:article] AS a INNER JOIN [news:site] AS s ON ISCHILDNODE(a,s) "
-                                                                        + "WHERE s.[news:location] = '%s' " 
+                                                                        + "WHERE %s " 
                                                                         + "ORDER BY a.[news:published] DESC";
+    
+    private final static String OR = "OR ";
+    
+    private final static String WHERE_SITE_NAME_TERM = "s.[news:name] = '%s' ";
 
     public JcrArticleStore() {
     }
@@ -41,18 +46,18 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         setSession(session);
     }
     
-    protected Node getArticleNode(String location) throws RepositoryException {
-        if (location == null) {
-            throw new IllegalArgumentException("Parameter location must not be null");
+    protected Node getArticleNode(String id) throws RepositoryException {
+        if (id == null) {
+            throw new IllegalArgumentException("Parameter id must not be null");
         }
         testSession();
         QueryManager queryManager = getSession().getWorkspace().getQueryManager();
-        Query q = queryManager.createQuery(String.format(SELECT_ARTICLE_BY_LOCATION, location), Query.JCR_SQL2);
+        Query q = queryManager.createQuery(String.format(SELECT_ARTICLE_BY_LOCATION, id), Query.JCR_SQL2);
         NodeIterator iter = q.execute().getNodes();
         if (iter.hasNext()) {
             Node articleNode = iter.nextNode();
             if (iter.hasNext()) {
-                throw new IllegalStateException("There must only one article with same URL location");
+                throw new IllegalStateException("There must only one article with same ID");
             }
             return articleNode;
         } else {
@@ -69,7 +74,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
         Node articleNode = null;
         try {
-            articleNode = getArticleNode(article.getLocation());
+            articleNode = getArticleNode(article.getId());
         } catch (RepositoryException e) {
             throw new StoreException(article, "Could not retrive article node", e);
         }
@@ -77,7 +82,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         if (articleNode == null) {
             Node siteNode = null;
             try {
-                siteNode = getSiteNode(site.getLocation());
+                siteNode = getSiteNode(site.getName());
             } catch (RepositoryException e) {
                 throw new StoreException(site, "Could not find site node", e);
             }
@@ -128,13 +133,13 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
     }
 
-    public Article getArticle(String location) throws StoreException {
-        if (location == null) {
+    public Article getArticle(String id) throws StoreException {
+        if (id == null) {
             throw new IllegalArgumentException("Parameter location must not be null");
         }
         Node articleNode = null;
         try {
-            articleNode = getArticleNode(location);
+            articleNode = getArticleNode(id);
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrive article node", e);
         }
@@ -155,11 +160,26 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             return article;
         }
     }
+    
+    protected String buildExpression(String formatStr, String operator, List<String> keys) {
+    	boolean isFirst = true;
+    	StringBuilder buffer = new StringBuilder();
+    	for (String key : keys) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				buffer.append(operator);
+			}
+			buffer.append(String.format(formatStr, key));
+		}
+    	return buffer.toString();
+    }
 
-    protected RowIterator getArticlesOfSiteOrderedByPublication(String siteLocation) throws RepositoryException {
+    protected RowIterator getArticlesOfSitesOrderedByPublication(List<String> siteNames) throws RepositoryException {
         testSession();
         QueryManager queryManager = getSession().getWorkspace().getQueryManager();
-        Query q = queryManager.createQuery(String.format(SELECT_ARTICLES_OF_SITE_ORDERED_BY_DATE, siteLocation), Query.JCR_SQL2);
+        String whereExpression = buildExpression(WHERE_SITE_NAME_TERM, OR, siteNames);
+        Query q = queryManager.createQuery(String.format(SELECT_ARTICLES_OF_SITE_ORDERED_BY_DATE, whereExpression), Query.JCR_SQL2);
         return q.execute().getRows();
     }
 
@@ -169,9 +189,28 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
         try {
             List<String> articles = new ArrayList<String>();
-            RowIterator iter = getArticlesOfSiteOrderedByPublication(site.getLocation());
+            List<String> sites = new ArrayList<String>();
+            sites.add(site.getName());
+            RowIterator iter = getArticlesOfSitesOrderedByPublication(sites);
             while (iter.hasNext()) {
-                articles.add(iter.nextRow().getValue("location").getString());
+                articles.add(iter.nextRow().getValue("id").getString());
+            }
+            return articles;
+        } catch (RepositoryException e) {
+            throw new StoreException("Could not retrieve articles", e);
+        }
+    }
+    
+    @Override
+    public List<String> getArticlesOrderedByDate(WorkingSet workingSet) throws StoreException {
+    	if (workingSet == null) {
+            throw new IllegalArgumentException("Parameter workingSet must not be null");
+        }
+        try {
+            List<String> articles = new ArrayList<String>();
+            RowIterator iter = getArticlesOfSitesOrderedByPublication(workingSet.getSites());
+            while (iter.hasNext()) {
+                articles.add(iter.nextRow().getValue("id").getString());
             }
             return articles;
         } catch (RepositoryException e) {
@@ -179,13 +218,13 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
     }
 
-    public List<TextBlock> getContent(String location) throws StoreException {
-        if (location == null) {
-            throw new IllegalArgumentException("Parameter location must not be null");
+    public List<TextBlock> getContent(String id) throws StoreException {
+        if (id == null) {
+            throw new IllegalArgumentException("Parameter id must not be null");
         }
         Node articleNode = null;
         try {
-            articleNode = getArticleNode(location);
+            articleNode = getArticleNode(id);
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrieve article node", e);
         }

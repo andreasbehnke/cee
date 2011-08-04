@@ -2,7 +2,7 @@ package com.cee.news.client.workingset;
 
 import java.util.List;
 
-import com.cee.news.client.list.LinkValue;
+import com.cee.news.client.list.EntityKey;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -62,10 +62,10 @@ public class WorkingSetSelectionPanel extends Composite implements WorkingSetSel
         comboBoxSelect.addChangeHandler(handler);
     }
 
-    public void setWorkingSets(List<LinkValue> names) {
+    public void setWorkingSets(List<EntityKey> names) {
         comboBoxSelect.clear();
-        for (LinkValue name : names) {
-            comboBoxSelect.addItem(name.getText());
+        for (EntityKey name : names) {
+            comboBoxSelect.addItem(name.getName());
         }
     }
 

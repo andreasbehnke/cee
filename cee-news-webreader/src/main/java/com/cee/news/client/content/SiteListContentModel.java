@@ -1,29 +1,26 @@
 package com.cee.news.client.content;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.cee.news.client.list.ContentListModel;
+import com.cee.news.client.list.ContentModel;
 import com.cee.news.client.list.DefaultListModel;
-import com.cee.news.client.list.LinkValue;
+import com.cee.news.client.list.EntityKey;
+import com.cee.news.client.util.SafeHtmlUtil;
 import com.google.gwt.safehtml.client.HasSafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * List content model implementation for sites
  */
-public class SiteListContentModel extends DefaultListModel implements ContentListModel {
+public class SiteListContentModel extends DefaultListModel implements ContentModel {
 
     private SiteServiceAsync service = SiteServiceAsync.Util.getInstance();
     
-    protected List<String> sites;
-    
     public void updateSites() {
-        service.getSites(new AsyncCallback<List<String>>() {
+        service.getSites(new AsyncCallback<List<EntityKey>>() {
             
-            public void onSuccess(List<String> result) {
-                setSites(result);
+            public void onSuccess(List<EntityKey> result) {
+                setKeys(result);
             }
             
             public void onFailure(Throwable caught) {
@@ -33,11 +30,11 @@ public class SiteListContentModel extends DefaultListModel implements ContentLis
     }
     
     public void updateSites(String workingSetName) {
-    	service.getSitesOfWorkingSet(workingSetName, new AsyncCallback<List<String>>() {
+    	service.getSitesOfWorkingSet(workingSetName, new AsyncCallback<List<EntityKey>>() {
 			
 			@Override
-			public void onSuccess(List<String> result) {
-				setSites(result);
+			public void onSuccess(List<EntityKey> result) {
+				setKeys(result);
 			}
 			
 			@Override
@@ -45,30 +42,6 @@ public class SiteListContentModel extends DefaultListModel implements ContentLis
 				fireErrorEvent(caught, "Could not retrieve site list");
 			}
 		});
-    }
-    
-    protected void setSites(List<String> sites) {
-        this.sites = sites;
-        List<LinkValue> links = new ArrayList<LinkValue>();
-        int count = 0;
-        for (String location : sites) {
-            links.add(new LinkValue(count, location));
-            count++;
-        }
-        fireContentListChanged(links);
-        setSelectedContent(0);
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.cee.news.client.list.ListContentModel#getContentCount()
-     */
-    public int getContentCount() {
-        if (sites == null) {
-            return 0;
-        }
-        return sites.size();
     }
 
     /*
@@ -78,12 +51,12 @@ public class SiteListContentModel extends DefaultListModel implements ContentLis
      * com.cee.news.client.list.ListContentModel#getContentTitle(com.google.
      * gwt.safehtml.client.HasSafeHtml, int)
      */
-    public void getContentTitle(final HasSafeHtml target, int index) {
-        String location = sites.get(index);
-        service.getTitle(location, new AsyncCallback<SafeHtml>() {
+    @Override
+    public void getContentTitle(final HasSafeHtml target, String key) {
+        service.getHtmlTitle(key, new AsyncCallback<String>() {
             
-            public void onSuccess(SafeHtml result) {
-                target.setHTML(result);
+            public void onSuccess(String result) {
+                target.setHTML(SafeHtmlUtil.sanitize(result));
             }
             
             public void onFailure(Throwable caught) {
@@ -99,12 +72,12 @@ public class SiteListContentModel extends DefaultListModel implements ContentLis
      * com.cee.news.client.list.ListContentModel#getContentDescription(com.google
      * .gwt.safehtml.client.HasSafeHtml, int)
      */
-    public void getContentDescription(final HasSafeHtml target, int index) {
-        String location = sites.get(index);
-        service.getHtmlDescription(location, new AsyncCallback<SafeHtml>() {
+    @Override
+    public void getContentDescription(final HasSafeHtml target, String key) {
+        service.getHtmlDescription(key, new AsyncCallback<String>() {
             
-            public void onSuccess(SafeHtml result) {
-                target.setHTML(result);
+            public void onSuccess(String result) {
+                target.setHTML(SafeHtmlUtil.sanitize(result));
             }
             
             public void onFailure(Throwable caught) {
@@ -112,12 +85,9 @@ public class SiteListContentModel extends DefaultListModel implements ContentLis
             }
         });
     }
-    
-    public String getSelectedSite() {
-        return sites.get(selection);
-    }
-    
-    public String getSite(int index) {
-        return sites.get(index);
-    }
+
+	@Override
+	public void getContent(HasSafeHtml target, String key) {
+		//no main content available for sites
+	}
 }

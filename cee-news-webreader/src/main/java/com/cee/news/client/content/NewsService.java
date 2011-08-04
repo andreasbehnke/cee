@@ -2,8 +2,8 @@ package com.cee.news.client.content;
 
 import java.util.List;
 
+import com.cee.news.client.list.EntityKey;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -25,9 +25,11 @@ public interface NewsService extends RemoteService {
 		}
 	}
 	
-	List<String> getHeadlines(String siteName);
+	List<EntityKey> getArticlesOfSite(String siteName);
 	
-	SafeHtml getHtmlDescription(String siteName, int index);
+	List<EntityKey> getArticlesOfWorkingSet(String workingSetName);
 	
-	SafeHtml getHtmlContent(String siteName, int index);
+	String getHtmlDescription(String articleId);
+	
+	String getHtmlContent(String articleId);
 }

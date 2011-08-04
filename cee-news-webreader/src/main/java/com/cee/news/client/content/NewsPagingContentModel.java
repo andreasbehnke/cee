@@ -1,69 +1,53 @@
 package com.cee.news.client.content;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import com.cee.news.client.list.ContentModel;
 import com.cee.news.client.list.DefaultListModel;
-import com.cee.news.client.list.LinkValue;
-import com.cee.news.client.paging.PagingContentModel;
+import com.cee.news.client.list.EntityKey;
+import com.cee.news.client.util.SafeHtmlUtil;
 import com.google.gwt.safehtml.client.HasSafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SimpleHtmlSanitizer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * {@link PagingContentModel} which calls remote news service asynchronously
- */
-public class NewsPagingContentModel extends DefaultListModel implements PagingContentModel {
+ *
+ *
+ **/
+ 
+ //TODO Test methods!
+public class NewsPagingContentModel extends DefaultListModel implements ContentModel {
     
     private final NewsServiceAsync service = NewsService.Util.getInstance();
     
-    private String siteLocation;
-    
-    private List<String> headlines;
-    
     public void setSelectedSite(String siteLocation) {
-        this.siteLocation = siteLocation;
-        service.getHeadlines(siteLocation, new AsyncCallback<List<String>>() {
-            public void onSuccess(List<String> result) {
-                setHeadlines(result);
+        service.getArticlesOfSite(siteLocation, new AsyncCallback<List<EntityKey>>() {
+            public void onSuccess(List<EntityKey> result) {
+                setKeys(result);
             }
             public void onFailure(Throwable caught) {
                 fireErrorEvent(caught, "Could not load headlines!");//TODO: i18n
             }
         });
     }
-    
-    protected void setHeadlines(List<String> headlines) {
-        this.headlines = headlines;
-        List<LinkValue> links = new ArrayList<LinkValue>();
-        int count = 0;
-        for (String headline : headlines) {
-            links.add(new LinkValue(count, headline));
-            count++;
-        }
-        fireContentListChanged(links);
-        setSelectedContent(0);
-    }
 
-    public int getContentCount() {
-        if (headlines == null) {
-            return 0;
-        }
-        return headlines.size();
-    }
-
-    public void getContentTitle(final HasSafeHtml target, int index) {
-        if (headlines == null) {
+    public void getContentTitle(final HasSafeHtml target, String key) {
+        if (keys == null) {
             throw new IllegalStateException("Headlines have not been set yet!");
         }
-        target.setHTML(SimpleHtmlSanitizer.sanitizeHtml(headlines.get(index)));
+        for (EntityKey entityKey : keys) {
+			if (entityKey.getKey().equals(key)) {
+				target.setHTML(SafeHtmlUtil.sanitize(entityKey.getName()));
+				return;
+			}
+		}
+        throw new IllegalArgumentException("Could not find headline for key " + key);
     }
 
-    public void getContentDescription(final HasSafeHtml target, int index) {
-        service.getHtmlDescription(siteLocation, index, new AsyncCallback<SafeHtml>() {
-            public void onSuccess(SafeHtml result) {
-                target.setHTML(result);
+    public void getContentDescription(final HasSafeHtml target, String key) {
+        service.getHtmlDescription(key, new AsyncCallback<String>() {
+            public void onSuccess(String result) {
+                target.setHTML(SafeHtmlUtil.sanitize(result) );
             }
             public void onFailure(Throwable caught) {
                 fireErrorEvent(caught, "Could not load description!");//TODO: i18n
@@ -71,10 +55,10 @@ public class NewsPagingContentModel extends DefaultListModel implements PagingCo
         });
     }
 
-    public void getContent(final HasSafeHtml target, int index) {
-        service.getHtmlContent(siteLocation, index, new AsyncCallback<SafeHtml>() {
-            public void onSuccess(SafeHtml result) {
-                target.setHTML(result);
+    public void getContent(final HasSafeHtml target, String key) {
+        service.getHtmlContent(key, new AsyncCallback<String>() {
+            public void onSuccess(String result) {
+            	target.setHTML(SafeHtmlUtil.sanitize(result) );
             }
             public void onFailure(Throwable caught) {
                 fireErrorEvent(caught, "Could not load content!");//TODO: i18n

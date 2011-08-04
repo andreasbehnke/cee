@@ -9,14 +9,14 @@ public interface ListModel {
     int getContentCount();
 
     /**
-     * @return The index of the current content
+     * @return The primary key of the current content
      */
-    int getSelectedContent();
+    String getSelectedKey();
 
     /**
-     * @param index the current selected index
+     * @param key the current selected entity
      */
-    void setSelectedContent(int index);
+    void setSelectedKey(String key);
 
     /**
      * @param handler will be notified about changes of the selected index

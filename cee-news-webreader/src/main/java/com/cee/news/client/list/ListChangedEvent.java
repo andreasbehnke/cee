@@ -2,7 +2,6 @@ package com.cee.news.client.list;
 
 import java.util.List;
 
-import com.cee.news.client.paging.PagingContentModel;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -12,13 +11,13 @@ public class ListChangedEvent extends GwtEvent<ListChangedHandler> {
 
     public final static GwtEvent.Type<ListChangedHandler> TYPE = new Type<ListChangedHandler>();
     
-    private final List<LinkValue> links;
+    private final List<EntityKey> links;
     
-    public ListChangedEvent(List<LinkValue> links) {
+    public ListChangedEvent(List<EntityKey> links) {
         this.links = links;
     }
 
-    public List<LinkValue> getLinks() {
+    public List<EntityKey> getLinks() {
         return links;
     }
 

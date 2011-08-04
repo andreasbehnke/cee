@@ -8,14 +8,13 @@ import com.google.gwt.editor.client.LeafValueEditor;
 /**
  * Editor adapter for the {@link SelectionChangedHandler}
  */
-public class SelectionListEditor implements LeafValueEditor<List<String>>,
-		SelectionListChangedHandler {
+public class SelectionListEditor implements LeafValueEditor<List<String>>, SelectionListChangedHandler {
 	
-	private AddRemoveListModel model;
+	private MultiSelectListModel model;
 	
 	private List<String> selections = new ArrayList<String>();
 	
-	public SelectionListEditor(AddRemoveListModel model) {
+	public SelectionListEditor(MultiSelectListModel model) {
 		this.model = model;
 		model.addSelectionListChangedHandler(this);
 	}
@@ -33,8 +32,8 @@ public class SelectionListEditor implements LeafValueEditor<List<String>>,
 	@Override
 	public void onSelectionListChanged(SelectionListChangedEvent event) {
 		selections.clear();
-		for (LinkValue link : event.getLinks()) {
-			selections.add(link.getText());
+		for (EntityKey link : event.getLinks()) {
+			selections.add(link.getKey());
 		}
 	}
 }

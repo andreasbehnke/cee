@@ -11,20 +11,18 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class NewWorkingSetWorkflow extends ErrorSourceBase {
+public class WorkingSetWorkflow extends ErrorSourceBase {
 
 	private final WorkingSetListModel workingSetListModel;
 
 	private final WorkingSetDataEditorDriver driver;
 
-	private final WorkingSetServiceAsync service = WorkingSetServiceAsync.Util
-			.getInstance();
+	private final WorkingSetServiceAsync service = WorkingSetServiceAsync.Util.getInstance();
 
 	private final WorkingSetEditor editor;
 
 	// TODO: Enabled / Disable buttons on async service request!
-	public NewWorkingSetWorkflow(final WorkingSetListModel workingSetListModel,
-			final WorkingSetEditor editor) {
+	public WorkingSetWorkflow(final WorkingSetListModel workingSetListModel, final WorkingSetEditor editor) {
 		this.workingSetListModel = workingSetListModel;
 		driver = GWT.create(WorkingSetDataEditorDriver.class);
 		this.editor = editor;
@@ -43,10 +41,28 @@ public class NewWorkingSetWorkflow extends ErrorSourceBase {
 		driver.initialize(editor);
 	}
 
-	public void start() {
+	public void newWorkingSet() {
 		WorkingSetData workingSetData = new WorkingSetData();
 		workingSetData.setIsNew(true);
-
+		showEditor(workingSetData);
+	}
+	
+	public void editWorkingSet(final String name) {
+		service.getWorkingSet(name, new AsyncCallback<WorkingSetData>() {
+			
+			@Override
+			public void onSuccess(WorkingSetData result) {
+				showEditor(result);
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				fireErrorEvent(caught, "Could not retrieve working set \"" + name + "\"");
+			}
+		});
+	}
+	
+	protected void showEditor(WorkingSetData workingSetData) {
 		driver.edit(workingSetData);
 		editor.center();
 	}
@@ -62,6 +78,11 @@ public class NewWorkingSetWorkflow extends ErrorSourceBase {
 			showValidationError(message);
 			return;
 		}
+		String name = workingSetData.getNewName();
+		if (name == null || name.trim().isEmpty()) {
+			showValidationError("Missing or invalid working set name!");
+			return;
+		}
 
 		service.update(workingSetData, new AsyncCallback<EntityUpdateResult>() {
 
@@ -69,8 +90,7 @@ public class NewWorkingSetWorkflow extends ErrorSourceBase {
 			public void onSuccess(EntityUpdateResult result) {
 				switch (result) {
 				case entityExists:
-					showValidationError("Working Set with name "
-							+ workingSetData.getNewName() + " exists!");
+					showValidationError("Working Set with name " + workingSetData.getNewName() + " exists!");
 					break;
 				case ok:
 					editor.hide();
@@ -78,7 +98,7 @@ public class NewWorkingSetWorkflow extends ErrorSourceBase {
 						
 						@Override
 						public void finished() {
-							workingSetListModel.setSelectedWorkingSet(workingSetData.getNewName());
+							workingSetListModel.setSelectedKey(workingSetData.getNewName());
 						}
 					});
 					break;

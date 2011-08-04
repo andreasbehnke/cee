@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cee.news.client.async.EntityUpdateResult;
+import com.cee.news.client.list.EntityKey;
 import com.cee.news.client.workingset.WorkingSetData;
 import com.cee.news.client.workingset.WorkingSetService;
 import com.cee.news.model.WorkingSet;
@@ -29,9 +30,17 @@ public class WorkingSetServiceImpl implements WorkingSetService {
         this.workingSetStore = workingSetStore;
     }
     
-    public List<String> getWorkingSetsOrderedByName() {
+	protected List<EntityKey> buildWorkingSetKeys(List<String> names) {
+		List<EntityKey> keys = new ArrayList<EntityKey>();
+		for (String name : names) {
+			keys.add(new EntityKey(name, name));
+		}
+		return keys;
+	}
+    
+    public List<EntityKey> getWorkingSetsOrderedByName() {
         try {
-            return workingSetStore.getWorkingSetsOrderedByName();
+            return buildWorkingSetKeys(workingSetStore.getWorkingSetsOrderedByName());
         } catch (StoreException e) {
         	log.error(COULD_NOT_RETRIEVE_WORKING_SET_LIST, e);
             throw new RuntimeException(COULD_NOT_RETRIEVE_WORKING_SET_LIST);
@@ -57,7 +66,7 @@ public class WorkingSetServiceImpl implements WorkingSetService {
         try {
             String newName = wsd.getNewName();
             String oldName = wsd.getOldName();
-            if (workingSetStore.getWorkingSet(newName) != null) {
+            if (wsd.getIsNew() && workingSetStore.getWorkingSet(newName) != null) {
                 return EntityUpdateResult.entityExists;
             }
             if (!wsd.getIsNew() && !newName.equals(oldName)) {
