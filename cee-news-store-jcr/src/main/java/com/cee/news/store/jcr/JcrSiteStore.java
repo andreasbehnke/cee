@@ -123,6 +123,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
             while (iter.hasNext()) {
                 Node feedNode = iter.nextNode();
                 Feed feed = new Feed(feedNode.getProperty(PROP_LOCATION).getString(), feedNode.getProperty(PROP_TITLE).getString(), feedNode.getProperty(PROP_CONTENT_TYPE).getString());
+                feed.setActive(feedNode.getProperty(PROP_ACTIVE).getBoolean());
                 site.getFeeds().add(feed);
             }
         } catch (RepositoryException e) {

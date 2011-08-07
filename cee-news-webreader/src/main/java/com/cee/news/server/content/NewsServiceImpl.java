@@ -33,6 +33,10 @@ public class NewsServiceImpl implements NewsService {
 	public void setSiteStore(SiteStore siteStore) {
 		this.siteStore = siteStore;
 	}
+	
+	public void setWorkingSetStore(WorkingSetStore workingSetStore) {
+		this.workingSetStore = workingSetStore;
+	}
 
 	// TODO localized date format
 	protected String formatDate(Calendar calendar) {

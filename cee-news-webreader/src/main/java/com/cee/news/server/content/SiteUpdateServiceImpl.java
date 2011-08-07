@@ -3,7 +3,6 @@ package com.cee.news.server.content;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -15,22 +14,28 @@ import org.xml.sax.SAXException;
 import com.cee.news.client.content.SiteData;
 import com.cee.news.client.content.SiteData.SiteRetrivalState;
 import com.cee.news.client.content.SiteUpdateService;
+import com.cee.news.client.error.ServiceException;
 import com.cee.news.model.Site;
+import com.cee.news.model.WorkingSet;
 import com.cee.news.parser.SiteParser;
 import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
+import com.cee.news.store.WorkingSetStore;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet implements
-		SiteUpdateService {
+public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet
+		implements SiteUpdateService {
 
 	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site";
 
 	private static final long serialVersionUID = 8695157160684778713L;
 
-	private static final Logger log = LoggerFactory.getLogger(SiteUpdateServiceImpl.class);
-	
+	private static final Logger log = LoggerFactory
+			.getLogger(SiteUpdateServiceImpl.class);
+
 	private SiteStore siteStore;
+
+	private WorkingSetStore workingSetStore;
 
 	private final ThreadPoolExecutor pool;
 
@@ -41,9 +46,13 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet impleme
 		pool = new ThreadPoolExecutor(threadPoolSize, threadPoolSize, 0,
 				TimeUnit.MILLISECONDS, workQueue);
 	}
-	
+
 	public void setSiteStore(SiteStore siteStore) {
 		this.siteStore = siteStore;
+	}
+
+	public void setWorkingSetStore(WorkingSetStore workingSetStore) {
+		this.workingSetStore = workingSetStore;
 	}
 
 	@Override
@@ -51,7 +60,7 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet impleme
 		if (!workQueue.contains(siteName)) {
 			Site siteEntity = null;
 			try {
-				siteEntity = siteStore.getSite(siteName);				
+				siteEntity = siteStore.getSite(siteName);
 			} catch (StoreException e) {
 				log.error(COULD_NOT_RETRIEVE_SITE, e);
 				throw new RuntimeException(COULD_NOT_RETRIEVE_SITE);
@@ -64,18 +73,31 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet impleme
 	}
 
 	@Override
-	public int addSitesToUpdateQueue(List<String> sites) {
-		for (String site : sites) {
-			addSiteToUpdateQueue(site);
+	public int addSitesOfWorkingSetToUpdateQueue(String workingSetName) {
+		try {
+			WorkingSet ws = workingSetStore.getWorkingSet(workingSetName);
+			if (ws == null)
+				throw new IllegalArgumentException("Unknown working set: "
+						+ workingSetName);
+			for (String site : ws.getSites()) {
+				addSiteToUpdateQueue(site);
+			}
+			return workQueue.size();
+		} catch (StoreException se) {
+			throw new ServiceException(se.toString());
 		}
-		return workQueue.size();
 	}
 
 	@Override
 	public int getUpdateQueueSize() {
 		return workQueue.size();
 	}
-	
+
+	@Override
+	public void clearQueue() {
+		workQueue.clear();
+	}
+
 	@Override
 	public SiteData retrieveSiteData(String location) {
 		SiteParser parser = createSiteParser();
@@ -99,12 +121,12 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet impleme
 		}
 		return info;
 	}
-	
+
 	/**
 	 * @return A update site command prepared with all dependencies
 	 */
 	protected abstract SiteUpdateCommand createUpdateSiteCommand();
-	
+
 	/**
 	 * @return A site parser prepared with all dependencies
 	 */

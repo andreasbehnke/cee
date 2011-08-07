@@ -206,6 +206,9 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
     	if (workingSet == null) {
             throw new IllegalArgumentException("Parameter workingSet must not be null");
         }
+    	if (workingSet.getSites() == null || workingSet.getSites().isEmpty()) {
+    		return new ArrayList<String>();
+    	}
         try {
             List<String> articles = new ArrayList<String>();
             RowIterator iter = getArticlesOfSitesOrderedByPublication(workingSet.getSites());

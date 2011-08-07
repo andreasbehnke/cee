@@ -1,7 +1,6 @@
 package com.cee.news.store.jcr;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -43,7 +42,9 @@ public class TestJcrSiteStore extends JcrTestBase {
         site.setName("spiegel.de");
         site.setTitle("Title");
         List<Feed> feeds = new ArrayList<Feed>();
-        feeds.add(new Feed("http://www.spiegel.de/feed1.rss", "feed1", "application/xml"));
+        Feed feed = new Feed("http://www.spiegel.de/feed1.rss", "feed1", "application/xml");
+        feed.setActive(true);
+        feeds.add(feed);
         feeds.add(new Feed("http://www.spiegel.de/feed2.rss", "feed2", "application/rss"));
         site.setFeeds(feeds);
         siteStore.update(site);
@@ -61,9 +62,11 @@ public class TestJcrSiteStore extends JcrTestBase {
         Feed feed1 = feedMap.get("feed1");
         assertEquals("application/xml", feed1.getContentType());
         assertEquals("http://www.spiegel.de/feed1.rss", feed1.getLocation());
+        assertTrue(feed1.isActive());
         Feed feed2 = feedMap.get("feed2");
         assertEquals("application/rss", feed2.getContentType());
         assertEquals("http://www.spiegel.de/feed2.rss", feed2.getLocation());
+        assertFalse(feed2.isActive());
         
         //change site
         site.setDescription("Description123");

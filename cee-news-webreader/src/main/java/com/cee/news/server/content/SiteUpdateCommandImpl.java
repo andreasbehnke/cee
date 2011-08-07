@@ -40,7 +40,9 @@ public class SiteUpdateCommandImpl implements SiteUpdateCommand {
 		}
 		
 		try {
+			log.info("Updating site {} at location {}", site.getName(), site.getLocation());
 			siteUpdater.update(site);
+			log.info("Finished updating site {} at location {}", site.getName(), site.getLocation());
 		} catch (ParserException e) {
 			log.error("Could not parse articles of site", e);
 		} catch (StoreException e) {

@@ -47,12 +47,21 @@
 
 	<!-- Backend Services -->
 
-	<bean id="siteStore" class="com.cee.news.store.jcr.JcrSiteStore" scope="request">
+	<bean id="articleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="request">
 		<property name="session" ref="jcrSession" />
 		<aop:scoped-proxy />
 	</bean>
+	
+	<!-- Article store used by the thread pool which executes commands -->
+	<bean id="commandArticleStore" class="com.cee.news.store.jcr.JcrArticleStore">
+		<property name="session">
+			<bean factory-bean="jcrRepository" factory-method="login" destroy-method="logout">
+				<constructor-arg ref="jcrCredentials" />
+			</bean>
+		</property>
+	</bean>
 
-	<bean id="articleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="request">
+	<bean id="siteStore" class="com.cee.news.store.jcr.JcrSiteStore" scope="request">
 		<property name="session" ref="jcrSession" />
 		<aop:scoped-proxy />
 	</bean>
@@ -81,7 +90,7 @@
 	<bean id="siteUpdater" class="com.cee.news.parser.SiteUpdater" scope="prototype">
 		<property name="articleParser" ref="articleParser" />
 		<property name="feedParser" ref="feedParser" />
-		<property name="store" ref="articleStore" />
+		<property name="store" ref="commandArticleStore" />
 		<property name="onlyActiveFeeds" value="true" />
 	</bean>
 
@@ -105,6 +114,7 @@
 
 	<bean id="gwtNewsService" class="com.cee.news.server.content.NewsServiceImpl" lazy-init="true">
 		<property name="siteStore" ref="siteStore" />
+		<property name="workingSetStore" ref="workingSetStore" />
 		<property name="articleStore" ref="articleStore" />
 	</bean>
 
@@ -120,6 +130,7 @@
 	<bean id="gwtSiteUpdateService" class="com.cee.news.server.content.SiteUpdateServiceImpl" lazy-init="true">
 		<constructor-arg type="int" value="10" />
 		<property name="siteStore" ref="siteStore" />
+		<property name="workingSetStore" ref="workingSetStore" />
 		<lookup-method name="createUpdateSiteCommand" bean="updateSiteCommand" />
 		<lookup-method name="createSiteParser" bean="siteParser" />
 	</bean>

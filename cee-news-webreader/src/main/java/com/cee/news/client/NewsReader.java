@@ -3,10 +3,15 @@ package com.cee.news.client;
 import com.cee.news.client.content.AddSiteWorkflow;
 import com.cee.news.client.content.NewSiteWizard;
 import com.cee.news.client.content.NewSiteWizardView;
+import com.cee.news.client.content.NewsListContentModel;
 import com.cee.news.client.content.SiteAddedEvent;
 import com.cee.news.client.content.SiteAddedHandler;
 import com.cee.news.client.content.SiteListContentModel;
+import com.cee.news.client.content.SiteUpdateService;
+import com.cee.news.client.content.SiteUpdateServiceAsync;
 import com.cee.news.client.error.ErrorDialog;
+import com.cee.news.client.error.ErrorEvent;
+import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.list.ListPresenter;
 import com.cee.news.client.list.SelectionChangedEvent;
 import com.cee.news.client.list.SelectionChangedHandler;
@@ -19,6 +24,8 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -27,10 +34,27 @@ import com.google.gwt.user.client.ui.RootPanel;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class NewsReader implements EntryPoint {
+	
+	/**
+	 * Application event bus. The following events are routed:
+	 * 
+	 * {@link ErrorEvent} Event raised for all unknown exceptions
+	 * {@link SelectionChangedEvent} Event raised if the current working set is changed
+	 */
+	private final SimpleEventBus appEventBus = new SimpleEventBus();
+	
+	private final ErrorHandler globalErrorHandler = new ErrorHandler() {
+		@Override
+		public void onError(ErrorEvent event) {
+			appEventBus.fireEvent(event);
+		}
+	};
+	
 	public void onModuleLoad() {
 		RootPanel rootPanel = RootPanel.get();
 		
 		ErrorDialog errorDialog = new ErrorDialog();
+		appEventBus.addHandler(ErrorEvent.TYPE, errorDialog);
 		
 		LayoutPanel layoutPanel = new LayoutPanel();
 		rootPanel.add(layoutPanel);
@@ -48,32 +72,62 @@ public class NewsReader implements EntryPoint {
 		newsPanel.setSize("100%", "100%");
 		deckPanel.showWidget(0);
 		
-		//Working set selection
+		//Working Set Selection
 		final WorkingSetListModel workingSetListModel = new WorkingSetListModel();
-		workingSetListModel.addErrorHandler(errorDialog);
+		workingSetListModel.addErrorHandler(globalErrorHandler);
+		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler() {
+			@Override
+			public void onSelectionChange(SelectionChangedEvent event) {
+				appEventBus.fireEvent(event);
+			}
+		});
 		final WorkingSetSelectionView workingSetSelectionView = startPanel.getWorkingSetSelectionPanel();
 		final SiteListContentModel siteAddRemoveListModel = new SiteListContentModel();
-		siteAddRemoveListModel.addErrorHandler(errorDialog);
+		siteAddRemoveListModel.addErrorHandler(globalErrorHandler);
+		
+		//Site Update Service
+		final SiteUpdateServiceAsync siteUpdateService = SiteUpdateService.Util.getInstance();
+		appEventBus.addHandler(SelectionChangedEvent.TYPE, new SelectionChangedHandler() {
+			@Override
+			public void onSelectionChange(SelectionChangedEvent event) {
+				siteUpdateService.addSitesOfWorkingSetToUpdateQueue(event.getKey(), new AsyncCallback<Integer>() {
+					@Override
+					public void onSuccess(Integer result) {
+						// TODO Start progress bar
+					}
+					@Override
+					public void onFailure(Throwable caught) {
+						appEventBus.fireEvent(new ErrorEvent(caught, "Could not queue commands for working set update"));
+					}
+				});
+			}
+		});
+		
+		//Latest Article List
+		final NewsListContentModel newsListContentModel = new NewsListContentModel();
+		new ListPresenter(newsListContentModel, newsListContentModel, startPanel.getListViewLatestArticles());
+		appEventBus.addHandler(SelectionChangedEvent.TYPE, new SelectionChangedHandler() {
+			@Override
+			public void onSelectionChange(SelectionChangedEvent event) {
+				newsListContentModel.updateFromWorkingSet(event.getKey());
+			}
+		});
 		
 		//Site List
 		final SiteListContentModel sitesOfWorkingSetModel = new SiteListContentModel();
-		sitesOfWorkingSetModel.addErrorHandler(errorDialog);
+		sitesOfWorkingSetModel.addErrorHandler(globalErrorHandler);
 		new ListPresenter(sitesOfWorkingSetModel, sitesOfWorkingSetModel, startPanel.getListViewSites());
-		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler() {
-			
+		appEventBus.addHandler(SelectionChangedEvent.TYPE, new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {
 				sitesOfWorkingSetModel.updateSites(event.getKey());
 			}
 		});
 		
-		//Latest Article List
-		
 		//New & Edit Working Set Workflow
 		final WorkingSetEditor workingSetEditor = new WorkingSetEditor(siteAddRemoveListModel, siteAddRemoveListModel);
 		final WorkingSetWorkflow workingSetWorkflow = new WorkingSetWorkflow(workingSetListModel, workingSetEditor);
-		workingSetWorkflow.addErrorHandler(errorDialog);
-		
+		workingSetWorkflow.addErrorHandler(globalErrorHandler);
 		new WorkingSetSelectionPresenter(workingSetListModel, workingSetSelectionView);
 		workingSetSelectionView.getNewButton().addClickHandler(new ClickHandler() {
 			@Override
@@ -82,29 +136,23 @@ public class NewsReader implements EntryPoint {
 			}
 		});
 		workingSetSelectionView.getEditButton().addClickHandler(new ClickHandler() {
-			
 			@Override
 			public void onClick(ClickEvent event) {
 				workingSetWorkflow.editWorkingSet(workingSetListModel.getSelectedKey());
 			}
 		});
-		
-		final NewSiteWizardView newSiteWizard = new NewSiteWizard();
-		
+				
 		//Add Site Workflow
+		final NewSiteWizardView newSiteWizard = new NewSiteWizard();
 		final AddSiteWorkflow addSiteWorkflow = new AddSiteWorkflow(newSiteWizard);
-		addSiteWorkflow.addErrorHandler(errorDialog);
-		
+		addSiteWorkflow.addErrorHandler(globalErrorHandler);
 		workingSetEditor.getButtonAddNewSite().addClickHandler(new ClickHandler() {
-			
 			@Override
 			public void onClick(ClickEvent event) {
 				addSiteWorkflow.start();
 			}
 		});
-		
 		addSiteWorkflow.addSiteAddedHandler(new SiteAddedHandler() {
-			
 			@Override
 			public void onSiteAdded(SiteAddedEvent event) {
 				siteAddRemoveListModel.updateSites();
@@ -114,5 +162,5 @@ public class NewsReader implements EntryPoint {
 		//trigger update
 		workingSetListModel.update();
 		siteAddRemoveListModel.updateSites();
-	}   
+	}
 }
