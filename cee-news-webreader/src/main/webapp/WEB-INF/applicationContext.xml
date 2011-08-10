@@ -36,6 +36,10 @@
 	<bean id="jcrSession" factory-bean="jcrRepository" factory-method="login" scope="request" destroy-method="logout">
 		<constructor-arg ref="jcrCredentials" />
 	</bean>
+	
+	<bean id="jcrCommandSession" factory-bean="jcrRepository" factory-method="login" destroy-method="logout">
+		<constructor-arg ref="jcrCredentials" />
+	</bean>
 
 	<bean class="com.cee.news.store.jcr.JcrStoreInitializer" init-method="registerNodeTypes" scope="singleton">
 		<property name="session">
@@ -46,24 +50,26 @@
 	</bean>
 
 	<!-- Backend Services -->
-
-	<bean id="articleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="request">
-		<property name="session" ref="jcrSession" />
-		<aop:scoped-proxy />
-	</bean>
 	
-	<!-- Article store used by the thread pool which executes commands -->
-	<bean id="commandArticleStore" class="com.cee.news.store.jcr.JcrArticleStore">
-		<property name="session">
-			<bean factory-bean="jcrRepository" factory-method="login" destroy-method="logout">
-				<constructor-arg ref="jcrCredentials" />
-			</bean>
-		</property>
-	</bean>
-
 	<bean id="siteStore" class="com.cee.news.store.jcr.JcrSiteStore" scope="request">
 		<property name="session" ref="jcrSession" />
 		<aop:scoped-proxy />
+	</bean>
+
+	<bean id="articleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="request">
+		<property name="session" ref="jcrSession" />
+		<property name="siteStore" ref="siteStore" />
+		<aop:scoped-proxy />
+	</bean>
+	
+	<!-- Store used by the thread pool which executes commands -->
+	<bean id="commandSiteStore" class="com.cee.news.store.jcr.JcrSiteStore">
+		<property name="session" ref="jcrCommandSession" />
+	</bean>
+	
+	<bean id="commandArticleStore" class="com.cee.news.store.jcr.JcrArticleStore">
+		<property name="session" ref="jcrCommandSession" />
+		<property name="siteStore" ref="commandSiteStore" />
 	</bean>
 
 	<bean id="workingSetStore" class="com.cee.news.store.jcr.JcrWorkingSetStore" scope="request">

@@ -1,19 +1,14 @@
 package com.cee.news.store.jcr;
 
-import static com.cee.news.store.jcr.JcrStoreConstants.*;
+import static com.cee.news.store.jcr.JcrStoreConstants.NODE_CONTENT;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.query.Query;
-import javax.jcr.query.QueryManager;
 
 import com.cee.news.store.StoreException;
 
 public abstract class JcrStoreBase {
-    
-    private final static String SELECT_SITE_BY_NAME = "SELECT * FROM [news:site] WHERE [news:name]='%s'";
     
     private Session session;
 
@@ -44,21 +39,5 @@ public abstract class JcrStoreBase {
     
     protected Node getContent() {
         return content;
-    }
-
-    protected Node getSiteNode(String name) throws RepositoryException {
-        testSession();
-        QueryManager queryManager = session.getWorkspace().getQueryManager();
-        Query q = queryManager.createQuery(String.format(SELECT_SITE_BY_NAME, name), Query.JCR_SQL2);
-        NodeIterator iter = q.execute().getNodes();
-        if (iter.hasNext()) {
-            Node siteNode = iter.nextNode();
-            if (iter.hasNext()) {
-                throw new IllegalStateException("There must only one site with same URL location");
-            }
-            return siteNode;
-        } else {
-            return null;
-        }
     }
 }

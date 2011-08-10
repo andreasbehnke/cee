@@ -17,8 +17,9 @@ public interface ArticleStore {
      * If an article with same ID does not exist, a new article will be created.
      * @param site The articles site
      * @param article The article which needs update
+     * @return primary key of the article being added
      */
-    void update(Site site, Article article) throws StoreException;
+    String update(Site site, Article article) throws StoreException;
     
     /**
      * Get article by unique id

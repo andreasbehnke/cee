@@ -22,6 +22,8 @@ import com.cee.news.store.StoreException;
  */
 public class JcrSiteStore extends JcrStoreBase implements SiteStore {
 
+	private final static String SELECT_SITE_BY_NAME = "SELECT * FROM [news:site] WHERE [news:name]='%s'";
+    
     private final static String SELECT_SITES_ORDERED_BY_NAME = "SELECT [news:name] FROM [news:site] ORDER BY [news:name]";
 
     public JcrSiteStore() {
@@ -29,6 +31,22 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
 
     public JcrSiteStore(Session session) throws StoreException {
         setSession(session);
+    }
+    
+    protected Node getSiteNode(String name) throws RepositoryException {
+        testSession();
+        QueryManager queryManager = getSession().getWorkspace().getQueryManager();
+        Query q = queryManager.createQuery(String.format(SELECT_SITE_BY_NAME, name), Query.JCR_SQL2);
+        NodeIterator iter = q.execute().getNodes();
+        if (iter.hasNext()) {
+            Node siteNode = iter.nextNode();
+            if (iter.hasNext()) {
+                throw new IllegalStateException("There must only one site with same URL location");
+            }
+            return siteNode;
+        } else {
+            return null;
+        }
     }
     
     protected Node createSiteNode() throws RepositoryException {
