@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>cee-news-webreader-tomcat6</artifactId>
+	<packaging>war</packaging>
+	<name>News Reader</name>
+		
+	<parent>
+		<groupId>com.cee</groupId>
+		<artifactId>cee</artifactId>
+		<version>1.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<dependencies>
+	
+		<!-- internal -->
+		<dependency>
+			<groupId>com.cee</groupId>
+			<artifactId>cee-news-webreader</artifactId>
+			<type>war</type>
+		</dependency>
+		
+		<!-- external -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jcl</artifactId>
+		</dependency>
+	</dependencies>
+</project>

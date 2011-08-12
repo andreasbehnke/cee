@@ -12,8 +12,12 @@
 	<properties>
 		<jdk.version>1.6</jdk.version>
 		<project.version>1.1-SNAPSHOT</project.version>
+		
+		<!-- dependency versions -->
 		<gwt.version>2.3.0</gwt.version>
 		<spring.version>2.5.6.SEC02</spring.version>
+		<slf4j.version>1.6.1</slf4j.version>
+		<jackrabbit.version>2.2.7</jackrabbit.version>
 		
 		<source.encoding>UTF-8</source.encoding>
 		<repository.url>http://192.168.1.201:8080/archiva</repository.url>
@@ -76,6 +80,7 @@
 		<module>cee-news-store-api</module>
 		<module>cee-news-store-jcr</module>
 		<module>cee-news-webreader</module>
+		<module>cee-news-webreader-tomcat6</module>
 	</modules>
 
 	<dependencyManagement>
@@ -100,6 +105,18 @@
 				<groupId>com.cee</groupId>
 				<artifactId>cee-news-store-jcr</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
+				<artifactId>cee-news-webreader</artifactId>
+				<version>${project.version}</version>
+				<type>war</type>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
+				<artifactId>cee-news-webreader-tomcat6</artifactId>
+				<version>${project.version}</version>
+				<type>war</type>
 			</dependency>
 
 			<!-- external -->
@@ -158,7 +175,12 @@
 			<dependency>
 				<groupId>org.apache.jackrabbit</groupId>
 				<artifactId>jackrabbit-core</artifactId>
-				<version>2.2.1</version>
+				<version>${jackrabbit.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.jackrabbit</groupId>
+				<artifactId>jackrabbit-jcr-commons</artifactId>
+				<version>${jackrabbit.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.ccil.cowan.tagsoup</groupId>
@@ -168,33 +190,33 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>1.5.3</version>
+				<version>${slf4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
-				<artifactId>jcl-over-slf4j</artifactId>
-				<version>1.5.3</version>
+				<artifactId>slf4j-jcl</artifactId>
+				<version>${slf4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
-				<version>1.5.3</version>
+				<version>${slf4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
-				<version>1.2.14</version>
+				<version>1.2.16</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
-			<dependency>
+			<!-- dependency>
 				<groupId>xerces</groupId>
 				<artifactId>xercesImpl</artifactId>
 				<version>2.9.1</version>
-			</dependency>
+			</dependency -->
 		</dependencies>
 	</dependencyManagement>
 

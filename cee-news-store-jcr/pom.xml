@@ -25,9 +25,8 @@
 			<artifactId>jcr</artifactId>
 		</dependency>
 		<dependency>
-		<!-- TODO: We only need the CND node type reader. Provide a library for this feature -->
 			<groupId>org.apache.jackrabbit</groupId>
-			<artifactId>jackrabbit-core</artifactId>
+			<artifactId>jackrabbit-jcr-commons</artifactId>
 		</dependency>
 
 		<!-- testing -->
@@ -39,6 +38,16 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jackrabbit</groupId>
+			<artifactId>jackrabbit-core</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
