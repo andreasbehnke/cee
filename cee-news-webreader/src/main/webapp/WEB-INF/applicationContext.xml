@@ -85,8 +85,11 @@
 		</property>
 	</bean>
 	
+	<bean id="htmlParser" class="org.ccil.cowan.tagsoup.Parser" scope="prototype"/>
+	
 	<bean id="articleParser" class="com.cee.news.parser.impl.BoilerpipeArticleParser" scope="prototype">
 		<property name="webClient" ref="webClient" />
+		<property name="parser" ref="htmlParser"/>
 	</bean>
 	
 	<bean id="feedParser" class="com.cee.news.parser.impl.RomeFeedParser" scope="prototype">

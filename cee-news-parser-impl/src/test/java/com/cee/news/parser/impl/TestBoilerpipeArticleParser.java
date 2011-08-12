@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.ccil.cowan.tagsoup.Parser;
 import org.junit.Test;
 
 import com.cee.news.model.Article;
@@ -21,7 +22,9 @@ public class TestBoilerpipeArticleParser {
     public void testParse() throws ParserException, IOException {
         Article article = new Article();
         article.setLocation(getClass().getResource("spiegelArticle.html").toExternalForm());
-        ArticleParser parser = new BoilerpipeArticleParser(new WebClient() {
+        ArticleParser parser = new BoilerpipeArticleParser(
+        		new Parser(),
+        		new WebClient() {
             public InputStream openStream(URL location) throws IOException {
                 return location.openStream();
             }
