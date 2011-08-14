@@ -89,7 +89,7 @@
 	
 	<bean id="articleParser" class="com.cee.news.parser.impl.BoilerpipeArticleParser" scope="prototype">
 		<property name="webClient" ref="webClient" />
-		<property name="parser" ref="htmlParser"/>
+		<property name="reader" ref="htmlParser"/>
 	</bean>
 	
 	<bean id="feedParser" class="com.cee.news.parser.impl.RomeFeedParser" scope="prototype">
