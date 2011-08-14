@@ -3,19 +3,12 @@
 
 <log4j:configuration debug="true">
 
-	<appender name="ROLL" class="org.apache.log4j.rolling.RollingFileAppender">
-		<file>newsReader.log</file>
-		<rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
-			<param name="FileNamePattern" value="newsReader.%d{yyyy-MM}.log" />
-		</rollingPolicy>
-
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%c{1} - %m%n" />
-		</layout>
+	<appender name="FILE" class="org.apache.log4j.FileAppender">
+		<file>/var/log/tomcat6/newsReader.log</file>
 	</appender>
 
 	<root>
-		<appender-ref ref="ROLL" />
+		<appender-ref ref="FILE" />
 	</root>
 
 </log4j:configuration>
