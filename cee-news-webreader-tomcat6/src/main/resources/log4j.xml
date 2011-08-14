@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration>
+
+<log4j:configuration debug="true">
+
+	<appender name="ROLL" class="org.apache.log4j.rolling.RollingFileAppender">
+		<file>newsReader.log</file>
+		<rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+			<param name="FileNamePattern" value="/wombat/foo.%d{yyyy-MM}.gz" />
+		</rollingPolicy>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%c{1} - %m%n" />
+		</layout>
+	</appender>
+
+	<root>
+		<appender-ref ref="ROLL" />
+	</root>
+
+</log4j:configuration>

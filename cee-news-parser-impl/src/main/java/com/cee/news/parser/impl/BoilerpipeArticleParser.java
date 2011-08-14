@@ -5,21 +5,19 @@ import java.net.URL;
 import java.util.List;
 
 import org.xml.sax.InputSource;
-import org.xml.sax.Parser;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import com.cee.news.model.Article;
-import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.ArticleParser;
 import com.cee.news.parser.ParserException;
+import com.cee.news.parser.net.WebClient;
 
 import de.l3s.boilerpipe.BoilerpipeInput;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.document.TextBlock;
 import de.l3s.boilerpipe.document.TextDocument;
 import de.l3s.boilerpipe.sax.BoilerpipeHTMLContentHandler;
-import de.l3s.boilerpipe.sax.BoilerpipeSAXInput;
 
 /**
  * Implementation of {@link ArticleParser} using the {@link BoilerpipeInput} of the boilerpipe library.
