@@ -4,7 +4,7 @@
 <log4j:configuration debug="true">
 
 	<appender name="FILE" class="org.apache.log4j.FileAppender">
-		<file>/var/log/tomcat6/newsReader.log</file>
+		<File>/var/log/tomcat6/newsReader.log</File>
 	</appender>
 
 	<root>
