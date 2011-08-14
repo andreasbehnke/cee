@@ -6,11 +6,12 @@
 	<appender name="FILE" class="org.apache.log4j.FileAppender">
 		<param name="File" value="/var/log/tomcat6/newsReader.log"/>
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%c{1} - %m%n" />
+			<param name="ConversionPattern" value="%-4r [%t] %-5p %c %x - %m%n" />
 		</layout>
 	</appender>
 
 	<root>
+		<level value="DEBUG" />
 		<appender-ref ref="FILE" />
 	</root>
 
