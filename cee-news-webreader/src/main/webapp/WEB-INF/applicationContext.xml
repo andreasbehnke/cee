@@ -37,7 +37,7 @@
 		<constructor-arg ref="jcrCredentials" />
 	</bean>
 	
-	<bean id="jcrCommandSession" factory-bean="jcrRepository" factory-method="login" destroy-method="logout">
+	<bean id="jcrCommandSession" factory-bean="jcrRepository" factory-method="login" scope="prototype" destroy-method="logout">
 		<constructor-arg ref="jcrCredentials" />
 	</bean>
 
