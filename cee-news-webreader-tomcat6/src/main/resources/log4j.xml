@@ -6,7 +6,7 @@
 	<appender name="ROLL" class="org.apache.log4j.rolling.RollingFileAppender">
 		<file>newsReader.log</file>
 		<rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
-			<param name="FileNamePattern" value="/wombat/foo.%d{yyyy-MM}.gz" />
+			<param name="FileNamePattern" value="newsReader.%d{yyyy-MM}.log" />
 		</rollingPolicy>
 
 		<layout class="org.apache.log4j.PatternLayout">
