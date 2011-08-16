@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -20,6 +22,8 @@ import com.cee.news.parser.net.WebClient;
  * the meta information from document header.
  */
 public class SiteParser {
+	
+	private static final Logger log = LoggerFactory.getLogger(SiteParser.class);
 
     private WebClient webClient;
     
@@ -84,8 +88,10 @@ public class SiteParser {
 
         InputStream input = webClient.openStream(siteLocation);
         try {
+        	log.info("start parsing site document {}", siteLocation);
             reader.parse(new InputSource(input));
         } finally {
+        	log.info("finished parsing site document {}", siteLocation);
             input.close();
         }
         
@@ -95,6 +101,7 @@ public class SiteParser {
         List<Feed> remove = new ArrayList<Feed>();
         for (Feed feed : feeds) {
             if (!feedChecker.isSupportedFeed(new URL(feed.getLocation()))) {
+            	log.debug("removing unknown feed type from sites feed list: {} - {}", feed.getContentType(), feed.getTitle());
                 remove.add(feed);
             }
         }

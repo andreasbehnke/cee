@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -23,6 +25,8 @@ import de.l3s.boilerpipe.sax.BoilerpipeHTMLContentHandler;
  * Implementation of {@link ArticleParser} using the {@link BoilerpipeInput} of the boilerpipe library.
  */
 public class BoilerpipeArticleParser implements ArticleParser {
+	
+	private static final Logger log = LoggerFactory.getLogger(BoilerpipeArticleParser.class);
     
     private XMLReader reader;
     
@@ -54,13 +58,15 @@ public class BoilerpipeArticleParser implements ArticleParser {
      */
     public Article parse(Article article) throws ParserException, IOException {
         try {
+        	log.info("start parsing article content of {}", article.getTitle());
         	BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
         	
         	//TODO register tag action for none text content like media and so on
         	
         	reader.setContentHandler(boilerpipeHandler);
         	reader.parse(new InputSource(webClient.openStream(new URL(article.getLocation()))));
-            TextDocument textDoc = boilerpipeHandler.toTextDocument();
+        	TextDocument textDoc = boilerpipeHandler.toTextDocument();
+        	log.debug("extracting main content from {}", article.getTitle());
             ArticleExtractor.INSTANCE.process(textDoc);
             List<com.cee.news.model.TextBlock> content = article.getContent();
             for (TextBlock block : textDoc.getTextBlocks()) {
@@ -70,8 +76,9 @@ public class BoilerpipeArticleParser implements ArticleParser {
                 }
             }
             if (content.size() < 1) {
-               // throw new ParserException("No article content found for " + article.getLocation());
+            	log.warn("no main content found for {}", article.getTitle());
             }
+            log.info("finished parsing article content of {}, found {} textblocks", article.getTitle(), content.size());
             return article;
         } catch (BoilerpipeProcessingException e) {
             throw new ParserException(e);

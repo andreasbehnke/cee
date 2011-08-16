@@ -8,6 +8,8 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default {@link WebClient} implementation uses the {@link HttpClient} for HTTP
@@ -15,9 +17,11 @@ import org.apache.http.client.methods.HttpGet;
  */
 public class DefaultWebClient implements WebClient {
 
-    private final static String HTTP_PROTOCOL = "http";
+	private static final Logger log = LoggerFactory.getLogger(DefaultWebClient.class);
+	
+    private static final String HTTP_PROTOCOL = "http";
 
-    private final static String HTTPS_PROTOCOL = "https";
+    private static final String HTTPS_PROTOCOL = "https";
 
     private HttpClient httpClient;
 
@@ -39,8 +43,10 @@ public class DefaultWebClient implements WebClient {
     public InputStream openStream(URL location) throws IOException {
         String protocol = location.getProtocol();
         if (protocol.equalsIgnoreCase(HTTP_PROTOCOL) || protocol.equalsIgnoreCase(HTTPS_PROTOCOL)) {
-            return openHttpStream(location);
+            log.debug("open http stream for {}", location);
+        	return openHttpStream(location);
         } else {
+        	log.debug("open standard stream for {}", location);
             return location.openStream();
         }
     }
@@ -59,14 +65,17 @@ public class DefaultWebClient implements WebClient {
         if (entity == null) {
             throw new IOException("No entity received for " + location.toExternalForm());
         }
+        log.debug("retrieved http entity for {}", location);
         return entity;
     }
 
     public WebResponse openWebResponse(final URL location) throws IOException {
         String protocol = location.getProtocol();
         if (protocol.equalsIgnoreCase(HTTP_PROTOCOL) || protocol.equalsIgnoreCase(HTTPS_PROTOCOL)) {
-            return openHttpWebResponse(location);
+        	log.debug("open http response for {}", location);
+        	return openHttpWebResponse(location);
         } else {
+        	log.debug("open standard response for {}", location);
             return new WebResponse() {
                 public InputStream openStream() throws IOException {
                     return DefaultWebClient.this.openStream(location);

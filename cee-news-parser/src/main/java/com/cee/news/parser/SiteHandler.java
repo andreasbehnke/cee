@@ -3,6 +3,8 @@ package com.cee.news.parser;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -20,6 +22,8 @@ import com.cee.news.model.Site;
  * </ol>
  */
 public class SiteHandler extends DefaultHandler {
+	
+	private static final Logger log = LoggerFactory.getLogger(SiteHandler.class);
 
     private enum States {
         start, header, finished
@@ -48,6 +52,7 @@ public class SiteHandler extends DefaultHandler {
         switch (state) {
         case start:
             if (localName.equalsIgnoreCase("head")) {
+            	log.debug("found document head");
                 state = States.header;
             }
             break;
@@ -59,10 +64,14 @@ public class SiteHandler extends DefaultHandler {
                     String type = attributes.getValue("type");
                     String href = attributes.getValue("href");
                     if (href != null) {
+                    	if (log.isDebugEnabled()) {
+                    		log.debug("found feed {} of type {} at {}", new Object[]{title, type, href});
+                    	}
                         URL location = null;
                         try {
                             location = new URL(siteLocation, href);
                         } catch (MalformedURLException e) {
+                        	log.warn("found feed {} with invalid url: {}", title, href);
                             break;// the URL is invalid, ignore feed
                         }
                         site.getFeeds().add(new Feed(location.toExternalForm(), title, type));
@@ -71,6 +80,7 @@ public class SiteHandler extends DefaultHandler {
             } else if (localName.equalsIgnoreCase("meta")) {
                 String name = attributes.getValue("name");
                 if (name != null && name.equalsIgnoreCase("description")) {
+                	log.debug("found sites description");
                     site.setDescription(attributes.getValue("content"));
                 }
             }
@@ -85,11 +95,13 @@ public class SiteHandler extends DefaultHandler {
         if (state == States.header) {
             if (localName.equalsIgnoreCase("head")) {
                 state = States.finished;
+                log.debug("finished document");
                 // TODO: what is the best practice to stop the XMLReader from
                 // parsing
                 // further HTML code? Documentation says, an exception should be
                 // thrown...
             } else if (localName.equalsIgnoreCase("title")) {
+            	log.debug("found sites title");
                 site.setTitle(characterBuffer.toString());
             }
         }
