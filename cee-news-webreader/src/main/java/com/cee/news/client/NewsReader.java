@@ -1,11 +1,8 @@
 package com.cee.news.client;
 
-import com.cee.news.client.content.AddSiteWorkflow;
 import com.cee.news.client.content.NewSiteWizard;
 import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.content.NewsListContentModel;
-import com.cee.news.client.content.SiteAddedEvent;
-import com.cee.news.client.content.SiteAddedHandler;
 import com.cee.news.client.content.SiteListContentModel;
 import com.cee.news.client.content.SiteUpdateService;
 import com.cee.news.client.content.SiteUpdateServiceAsync;
@@ -15,11 +12,11 @@ import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.list.ListPresenter;
 import com.cee.news.client.list.SelectionChangedEvent;
 import com.cee.news.client.list.SelectionChangedHandler;
-import com.cee.news.client.workingset.WorkingSetWorkflow;
 import com.cee.news.client.workingset.WorkingSetEditor;
 import com.cee.news.client.workingset.WorkingSetListModel;
 import com.cee.news.client.workingset.WorkingSetSelectionPresenter;
 import com.cee.news.client.workingset.WorkingSetSelectionView;
+import com.cee.news.client.workingset.WorkingSetWorkflow;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -82,8 +79,6 @@ public class NewsReader implements EntryPoint {
 			}
 		});
 		final WorkingSetSelectionView workingSetSelectionView = startPanel.getWorkingSetSelectionPanel();
-		final SiteListContentModel siteAddRemoveListModel = new SiteListContentModel();
-		siteAddRemoveListModel.addErrorHandler(globalErrorHandler);
 		
 		//Site Update Service
 		final SiteUpdateServiceAsync siteUpdateService = SiteUpdateService.Util.getInstance();
@@ -120,13 +115,16 @@ public class NewsReader implements EntryPoint {
 		appEventBus.addHandler(SelectionChangedEvent.TYPE, new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {
-				sitesOfWorkingSetModel.updateSites(event.getKey());
+				sitesOfWorkingSetModel.update(null, event.getKey());
 			}
 		});
-		
+
 		//New & Edit Working Set Workflow
+		final NewSiteWizardView newSiteWizard = new NewSiteWizard();
+		final SiteListContentModel siteAddRemoveListModel = new SiteListContentModel();
+		siteAddRemoveListModel.addErrorHandler(globalErrorHandler);
 		final WorkingSetEditor workingSetEditor = new WorkingSetEditor(siteAddRemoveListModel, siteAddRemoveListModel);
-		final WorkingSetWorkflow workingSetWorkflow = new WorkingSetWorkflow(workingSetListModel, workingSetEditor);
+		final WorkingSetWorkflow workingSetWorkflow = new WorkingSetWorkflow(workingSetListModel, siteAddRemoveListModel, workingSetEditor, newSiteWizard);
 		workingSetWorkflow.addErrorHandler(globalErrorHandler);
 		new WorkingSetSelectionPresenter(workingSetListModel, workingSetSelectionView);
 		workingSetSelectionView.getNewButton().addClickHandler(new ClickHandler() {
@@ -141,26 +139,9 @@ public class NewsReader implements EntryPoint {
 				workingSetWorkflow.editWorkingSet(workingSetListModel.getSelectedKey());
 			}
 		});
-				
-		//Add Site Workflow
-		final NewSiteWizardView newSiteWizard = new NewSiteWizard();
-		final AddSiteWorkflow addSiteWorkflow = new AddSiteWorkflow(newSiteWizard);
-		addSiteWorkflow.addErrorHandler(globalErrorHandler);
-		workingSetEditor.getButtonAddNewSite().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				addSiteWorkflow.start();
-			}
-		});
-		addSiteWorkflow.addSiteAddedHandler(new SiteAddedHandler() {
-			@Override
-			public void onSiteAdded(SiteAddedEvent event) {
-				siteAddRemoveListModel.updateSites();
-			}
-		});
 		
 		//trigger update
-		workingSetListModel.update();
-		siteAddRemoveListModel.updateSites();
+		workingSetListModel.update(null);
+		siteAddRemoveListModel.update(null);
 	}
 }

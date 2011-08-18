@@ -11,10 +11,6 @@ public class WorkingSetListModel extends DefaultListModel {
     
     private final WorkingSetServiceAsync workingSetService = WorkingSetServiceAsync.Util.getInstance();
     
-    public void update() {
-    	update(null);
-    }
-    
     public void update(final NotificationCallback callback) {
     	workingSetService.getWorkingSetsOrderedByName(new AsyncCallback<List<EntityKey>>() {
 

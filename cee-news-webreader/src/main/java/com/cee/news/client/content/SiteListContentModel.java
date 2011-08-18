@@ -2,6 +2,7 @@ package com.cee.news.client.content;
 
 import java.util.List;
 
+import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.list.ContentModel;
 import com.cee.news.client.list.DefaultListModel;
 import com.cee.news.client.list.EntityKey;
@@ -16,11 +17,14 @@ public class SiteListContentModel extends DefaultListModel implements ContentMod
 
     private SiteServiceAsync service = SiteServiceAsync.Util.getInstance();
     
-    public void updateSites() {
+    public void update(final NotificationCallback callback) {
         service.getSites(new AsyncCallback<List<EntityKey>>() {
             
             public void onSuccess(List<EntityKey> result) {
                 setKeys(result);
+                if (callback != null) {
+                	callback.finished();
+                }
             }
             
             public void onFailure(Throwable caught) {
@@ -29,12 +33,15 @@ public class SiteListContentModel extends DefaultListModel implements ContentMod
         });
     }
     
-    public void updateSites(String workingSetName) {
+    public void update(final NotificationCallback callback, String workingSetName) {
     	service.getSitesOfWorkingSet(workingSetName, new AsyncCallback<List<EntityKey>>() {
 			
 			@Override
 			public void onSuccess(List<EntityKey> result) {
 				setKeys(result);
+				if (callback != null) {
+                	callback.finished();
+                }
 			}
 			
 			@Override

@@ -4,11 +4,18 @@ import java.util.List;
 
 import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.client.async.NotificationCallback;
+import com.cee.news.client.content.AddSiteWorkflow;
+import com.cee.news.client.content.NewSiteWizardView;
+import com.cee.news.client.content.SiteAddedEvent;
+import com.cee.news.client.content.SiteAddedHandler;
+import com.cee.news.client.content.SiteListContentModel;
+import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.error.ErrorSourceBase;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.EditorError;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class WorkingSetWorkflow extends ErrorSourceBase {
@@ -20,9 +27,11 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 	private final WorkingSetServiceAsync service = WorkingSetServiceAsync.Util.getInstance();
 
 	private final WorkingSetEditor editor;
+	
+	final AddSiteWorkflow addSiteWorkflow;
 
 	// TODO: Enabled / Disable buttons on async service request!
-	public WorkingSetWorkflow(final WorkingSetListModel workingSetListModel, final WorkingSetEditor editor) {
+	public WorkingSetWorkflow(final WorkingSetListModel workingSetListModel, final SiteListContentModel siteListModel, final WorkingSetEditor editor, final NewSiteWizardView newSiteWizard) {
 		this.workingSetListModel = workingSetListModel;
 		driver = GWT.create(WorkingSetDataEditorDriver.class);
 		this.editor = editor;
@@ -38,6 +47,26 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 				validate();
 			}
 		});
+		addSiteWorkflow = new AddSiteWorkflow(newSiteWizard);
+		editor.getButtonAddNewSite().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				addSiteWorkflow.start();
+			}
+		});
+		addSiteWorkflow.addSiteAddedHandler(new SiteAddedHandler() {
+			@Override
+			public void onSiteAdded(final SiteAddedEvent event) {
+				siteListModel.update(new NotificationCallback() {
+					
+					@Override
+					public void finished() {
+						siteListModel.addSelection(event.getSiteName());
+					}
+				});
+			}
+		});
+		
 		driver.initialize(editor);
 	}
 
@@ -117,5 +146,11 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 
 	protected void showValidationError(String message) {
 		editor.getErrorText().setText(message);
+	}
+	
+	@Override
+	public HandlerRegistration addErrorHandler(ErrorHandler handler) {
+		addSiteWorkflow.addErrorHandler(handler);
+		return super.addErrorHandler(handler);
 	}
 }

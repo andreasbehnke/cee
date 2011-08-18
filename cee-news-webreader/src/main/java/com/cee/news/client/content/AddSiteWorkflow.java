@@ -118,6 +118,7 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 
 	private void storeSite() {
 		wizard.setButtonsEnabled(false);
+		site.setName(wizard.getSiteNameInput().getValue());
 		siteService.update(site, new AsyncCallback<EntityUpdateResult>() {
 			
 			@Override

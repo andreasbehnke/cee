@@ -3,9 +3,9 @@ package com.cee.news.client.workingset;
 import java.util.List;
 
 import com.cee.news.client.list.ContentModel;
+import com.cee.news.client.list.ListPanel;
 import com.cee.news.client.list.MultiSelectListModel;
 import com.cee.news.client.list.MultiSelectListPresenter;
-import com.cee.news.client.list.ListPanel;
 import com.cee.news.client.list.SelectionListEditor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.editor.client.Editor;
@@ -109,9 +109,8 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
         layoutPanel.add(labelErrorMessage);
         layoutPanel.setWidgetLeftRight(labelErrorMessage, 0.0, Unit.PX, 0.0, Unit.PX);
         layoutPanel.setWidgetBottomHeight(labelErrorMessage, 31.0, Unit.PX, 19.0, Unit.PX);
-
-        sitesEditor = new SelectionListEditor(siteListModel);
         
+        sitesEditor = new SelectionListEditor(siteListModel);
         oldNameEditor = SimpleEditor.of();
         isNewEditor = SimpleEditor.of();
     }

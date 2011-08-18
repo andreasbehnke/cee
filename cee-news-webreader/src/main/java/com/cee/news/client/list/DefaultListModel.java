@@ -13,7 +13,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * event handlers and the content selection. Implementations must call fireContentListChanged(List<LinkValue> links)
  * after initialization and every time the underlying model changes.
  */
-public class DefaultListModel extends ErrorSourceBase implements MultiSelectListModel {
+public abstract class DefaultListModel extends ErrorSourceBase implements MultiSelectListModel {
 
 	protected List<EntityKey> keys;
     

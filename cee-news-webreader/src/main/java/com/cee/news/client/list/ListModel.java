@@ -3,7 +3,8 @@ package com.cee.news.client.list;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface ListModel {
-    /**
+	
+	/**
      * @return The number of content available
      */
     int getContentCount();
