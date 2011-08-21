@@ -117,13 +117,13 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         }
     }
 
-    public Site getSite(String name) throws StoreException {
-        if (name == null) {
-            throw new IllegalArgumentException("Parameter name must not be null");
+    public Site getSite(String key) throws StoreException {
+        if (key == null) {
+            throw new IllegalArgumentException("Parameter key must not be null");
         }
         Node siteNode = null;
         try {
-            siteNode = getSiteNode(name);
+            siteNode = getContentNodeOrNull(key);
         } catch (RepositoryException e) {
             throw new StoreException("Could not query site node", e);
         }

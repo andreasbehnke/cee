@@ -24,10 +24,10 @@ public interface ArticleStore {
     
     /**
      * Get article by unique id
-     * @param id The id of the article
+     * @param key The key of the article
      * @return Article found in repository
      */
-    Article getArticle(String id) throws StoreException;
+    Article getArticle(String key) throws StoreException;
     
     /**
      * Returns a list of unique identifiers of all site's articles
@@ -45,9 +45,9 @@ public interface ArticleStore {
     
     /**
      * Returns the contents of the article with given id
-     * @param id Identifier of article
+     * @param key Identifier of article
      * @return The text blocks of this article
      */
-    List<TextBlock> getContent(String id) throws StoreException;
+    List<TextBlock> getContent(String key) throws StoreException;
     
 }

@@ -25,10 +25,10 @@ public interface SiteStore {
     
     /**
      * Get a site by its unique name
-     * @param name The site's name
+     * @param key The site's key as returned by methods for retrieving site lists
      * @return Site or null if site not found
      */
-    Site getSite(String name) throws StoreException;
+    Site getSite(String key) throws StoreException;
     
     /**
      * @return List of URL referencing 
