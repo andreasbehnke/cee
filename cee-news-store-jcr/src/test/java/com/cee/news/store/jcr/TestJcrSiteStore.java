@@ -104,7 +104,7 @@ public class TestJcrSiteStore extends JcrTestBase {
     
     @Test
     public void testGetSite() throws StoreException, MalformedURLException {
-        assertNull(siteStore.getSite("http://www.blablabla.de"));
+        assertNull(siteStore.getSite(Text.escapeIllegalJcrChars("http://www.blablabla.de")));
     }
 
     @Test
