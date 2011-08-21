@@ -14,10 +14,10 @@ import javax.jcr.RepositoryException;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.cee.news.model.Article;
+import com.cee.news.model.NamedKey;
 import com.cee.news.model.Site;
 import com.cee.news.model.TextBlock;
 import com.cee.news.model.WorkingSet;
@@ -70,7 +70,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         article.setTitle("Title");
         articleStore.update(site, article);
         
-        String path = articleStore.getArticlesOrderedByDate(site).get(0);
+        String path = articleStore.getArticlesOrderedByDate(site).get(0).getKey();
         
         article = articleStore.getArticle(path);
         assertEquals("1", article.getId());
@@ -84,7 +84,6 @@ public class TestJcrArticleStore extends JcrTestBase {
     
     //TODO: Implement complete content path logic, so existing content can be detected
     @Test
-    @Ignore
     public void testUpdateSiteArticleChangeContent() throws StoreException, MalformedURLException {
         Site site = createSite("site2");
         
@@ -193,28 +192,28 @@ public class TestJcrArticleStore extends JcrTestBase {
         article.setPublishedDate(cal);
         String path4 = articleStore.update(site2, article);
         
-        List<String> articles = articleStore.getArticlesOrderedByDate(site);
+        List<NamedKey> articles = articleStore.getArticlesOrderedByDate(site);
         assertEquals(3, articles.size());
-        assertEquals(path2, articles.get(0));
-        assertEquals(path1, articles.get(1));
-        assertEquals(path3, articles.get(2));
+        assertEquals(path2, articles.get(0).getKey());
+        assertEquals(path1, articles.get(1).getKey());
+        assertEquals(path3, articles.get(2).getKey());
         
         articles = articleStore.getArticlesOrderedByDate(site2);
         assertEquals(1, articles.size());
-        assertEquals(path4, articles.get(0));
+        assertEquals(path4, articles.get(0).getKey());
         
         WorkingSet workingSet = new WorkingSet();
         workingSet.setName("Default");
-        workingSet.getSites().add(site.getName());
-        workingSet.getSites().add(site2.getName());
+        workingSet.getSites().add(new NamedKey(site.getName(), JcrSiteStore.getSitePath(site.getName())));
+        workingSet.getSites().add(new NamedKey(site2.getName(), JcrSiteStore.getSitePath(site2.getName())));
         workingSetStore.update(workingSet);
         
         articles = articleStore.getArticlesOrderedByDate(workingSet);
         assertEquals(4, articles.size());
-        assertEquals(path4, articles.get(0));
-        assertEquals(path2, articles.get(1));
-        assertEquals(path1, articles.get(2));
-        assertEquals(path3, articles.get(3));
+        assertEquals(path4, articles.get(0).getKey());
+        assertEquals(path2, articles.get(1).getKey());
+        assertEquals(path1, articles.get(2).getKey());
+        assertEquals(path3, articles.get(3).getKey());
     }
 
     @Test

@@ -12,6 +12,7 @@ import com.cee.news.client.content.SiteService;
 import com.cee.news.client.error.ServiceException;
 import com.cee.news.client.list.EntityKey;
 import com.cee.news.model.Site;
+import com.cee.news.server.EntityKeyConversions;
 import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
 import com.cee.news.store.WorkingSetStore;
@@ -41,18 +42,10 @@ public class SiteServiceImpl implements SiteService {
 	public void setWorkingSetStore(WorkingSetStore workingSetStore) {
 		this.workingSetStore = workingSetStore;
 	}
-	
-	protected List<EntityKey> buildSiteKeys(List<String> names) {
-		List<EntityKey> keys = new ArrayList<EntityKey>();
-		for (String name : names) {
-			keys.add(new EntityKey(name, name));
-		}
-		return keys;
-	}
 
 	public List<EntityKey> getSites() {
 		try {
-			return buildSiteKeys(siteStore.getSitesOrderedByName());
+			return EntityKeyConversions.createEntityKeys(siteStore.getSitesOrderedByName());
 		} catch (StoreException e) {
 			log.error(COULD_NOT_RETRIEVE_SITE_LIST, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_LIST);
@@ -62,7 +55,7 @@ public class SiteServiceImpl implements SiteService {
 	@Override
 	public List<EntityKey> getSitesOfWorkingSet(String workingSetName) {
 		try {
-			return buildSiteKeys(workingSetStore.getWorkingSet(workingSetName).getSites());
+			return EntityKeyConversions.createEntityKeys(workingSetStore.getWorkingSet(workingSetName).getSites());
 		} catch (StoreException e) {
 			log.error(COULD_NOT_RETRIEVE_SITE_LIST, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_LIST);

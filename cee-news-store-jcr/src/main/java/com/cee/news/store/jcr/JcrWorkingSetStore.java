@@ -18,6 +18,7 @@ import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
+import com.cee.news.model.NamedKey;
 import com.cee.news.model.WorkingSet;
 import com.cee.news.store.StoreException;
 import com.cee.news.store.WorkingSetStore;
@@ -65,7 +66,7 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
                 workingSetNode.setProperty(PROP_NAME, workingSet.getName());
             }
             String[] sites = new String[workingSet.getSites().size()];
-            List<String> siteList = workingSet.getSites();
+            List<String> siteList = NamedKeyUtil.extractKeys(workingSet.getSites());
             for (int i=0; i < siteList.size(); i++) {
                 sites[i] = siteList.get(i);
             }
@@ -106,9 +107,9 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
             }
             WorkingSet workingSet = new WorkingSet();
             workingSet.setName(wsNode.getProperty(PROP_NAME).getString());
-            List<String> sites = new ArrayList<String>();
+            List<NamedKey> sites = new ArrayList<NamedKey>();
             for (Value value : wsNode.getProperty(PROP_SITES).getValues()) {
-                sites.add(value.getString());
+                sites.add(new NamedKey(value.getString(), value.getString()));
             }
             workingSet.setSites(sites);
             return workingSet;
@@ -124,12 +125,13 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
         return q.execute().getNodes();
     }
     
-    public List<String> getWorkingSetsOrderedByName() throws StoreException {
+    public List<NamedKey> getWorkingSetsOrderedByName() throws StoreException {
         try {
-            List<String> workingSets = new ArrayList<String>();
+            List<NamedKey> workingSets = new ArrayList<NamedKey>();
             NodeIterator iter = getWorkingSetNodesOrderedByName();
             while (iter.hasNext()) {
-                workingSets.add(iter.nextNode().getProperty(PROP_NAME).getString());
+            	String name = iter.nextNode().getProperty(PROP_NAME).getString();
+                workingSets.add(new NamedKey(name, name));
             }
             return workingSets;
         } catch (RepositoryException e) {

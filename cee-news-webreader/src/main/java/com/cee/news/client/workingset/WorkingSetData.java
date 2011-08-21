@@ -3,6 +3,7 @@ package com.cee.news.client.workingset;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cee.news.client.list.EntityKey;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
@@ -16,7 +17,7 @@ public class WorkingSetData implements IsSerializable {
     
     private String oldName;
     
-    private List<String> sites = new ArrayList<String>();
+    private List<EntityKey> sites = new ArrayList<EntityKey>();
 
     /**
      * @return If true, this bean is a new created working set, otherwise this working set should be updated
@@ -54,11 +55,11 @@ public class WorkingSetData implements IsSerializable {
     /**
      * @return Site URL's of this working set
      */
-    public List<String> getSites() {
+    public List<EntityKey> getSites() {
         return sites;
     }
 
-    public void setSites(List<String> sites) {
+    public void setSites(List<EntityKey> sites) {
         this.sites = sites;
     }
 }

@@ -11,11 +11,13 @@ import java.util.Map;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 
+import org.apache.jackrabbit.util.Text;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.cee.news.model.Feed;
+import com.cee.news.model.NamedKey;
 import com.cee.news.model.Site;
 import com.cee.news.store.StoreException;
 
@@ -126,9 +128,10 @@ public class TestJcrSiteStore extends JcrTestBase {
         site.setTitle("Title");
         siteStore.update(site);
         
-        List<String> sites = siteStore.getSitesOrderedByName();
-        assertEquals("http://www.abc.de", sites.get(0));
-        assertEquals("http://www.bbb.de", sites.get(1));
-        assertEquals("http://www.ccc.de", sites.get(2));
+        List<NamedKey> sites = siteStore.getSitesOrderedByName();
+        assertEquals("http://www.abc.de", sites.get(0).getName());
+        assertEquals(Text.escapeIllegalJcrChars("http://www.abc.de"), sites.get(0).getKey());
+        assertEquals("http://www.bbb.de", sites.get(1).getName());
+        assertEquals("http://www.ccc.de", sites.get(2).getName());
     }
 }

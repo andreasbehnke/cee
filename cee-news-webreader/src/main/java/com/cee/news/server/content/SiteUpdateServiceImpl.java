@@ -15,6 +15,7 @@ import com.cee.news.client.content.SiteData;
 import com.cee.news.client.content.SiteData.SiteRetrivalState;
 import com.cee.news.client.content.SiteUpdateService;
 import com.cee.news.client.error.ServiceException;
+import com.cee.news.model.NamedKey;
 import com.cee.news.model.Site;
 import com.cee.news.model.WorkingSet;
 import com.cee.news.parser.SiteParser;
@@ -79,8 +80,8 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet
 			if (ws == null)
 				throw new IllegalArgumentException("Unknown working set: "
 						+ workingSetName);
-			for (String site : ws.getSites()) {
-				addSiteToUpdateQueue(site);
+			for (NamedKey siteKey : ws.getSites()) {
+				addSiteToUpdateQueue(siteKey.getName());
 			}
 			return workQueue.size();
 		} catch (StoreException se) {

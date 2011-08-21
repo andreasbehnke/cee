@@ -40,6 +40,8 @@ public final class JcrStoreConstants {
     public static final String NODE_TEXTBLOCK = "news:textblock";
     
     public static final String NODE_WORKINGSET = "news:workingSet";
+    
+    public static final String SLASH = "/";
 
     private JcrStoreConstants() {}
 }

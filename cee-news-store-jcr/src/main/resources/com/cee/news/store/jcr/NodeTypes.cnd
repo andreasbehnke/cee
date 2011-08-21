@@ -27,7 +27,7 @@ primaryitem news:article
 - news:title       (STRING)
 - news:description (STRING)
 + news:feed        (news:feed) multiple
-+ news:article     (news:article) multiple
++ *                (news:article) multiple
 
 [news:workingSet]
 - news:name        (STRING)
@@ -35,5 +35,5 @@ primaryitem news:article
 
 [news:content]
 primaryitem news:site
-+ news:site        (news:site) multiple
++ *                (news:site) multiple
 + news:workingSet  (news:workingSet) multiple

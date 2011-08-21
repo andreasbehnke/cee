@@ -12,6 +12,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.cee.news.model.NamedKey;
 import com.cee.news.model.WorkingSet;
 import com.cee.news.store.StoreException;
 
@@ -28,9 +29,9 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
     private static final long EXPECTED_COUNT = 3;
     private static final String UNKOWN_WORKING_SET = "unkown";
     private static final String EXPECTED_NAME = "abc";
-    private static final String SITE_C = "siteC";
-    private static final String SITE_B = "siteB";
-    private static final String SITE_A = "siteA";
+    private static final NamedKey SITE_A = new NamedKey("siteA", "siteA");
+    private static final NamedKey SITE_B = new NamedKey("siteB", "siteB");
+    private static final NamedKey SITE_C = new NamedKey("siteC", "siteC");
     private static final String TESTWORKINGSET = "testworkingset";
     private static JcrWorkingSetStore workingSetStore;
     
@@ -49,7 +50,7 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
     public void testUpdateWorkingSet() throws StoreException {
         WorkingSet ws = new WorkingSet();
         ws.setName(TESTWORKINGSET);
-        List<String> sites = new ArrayList<String>();
+        List<NamedKey> sites = new ArrayList<NamedKey>();
         sites.add(SITE_A);
         sites.add(SITE_B);
         sites.add(SITE_C);
@@ -91,10 +92,10 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
         ws.setName(WORKINGSET_1);
         workingSetStore.update(ws);
         
-        List<String> workingSets = workingSetStore.getWorkingSetsOrderedByName();
-        assertEquals(WORKINGSET_1, workingSets.get(0));
-        assertEquals(WORKINGSET_2, workingSets.get(1));
-        assertEquals(WORKINGSET_3, workingSets.get(2));
+        List<NamedKey> workingSets = workingSetStore.getWorkingSetsOrderedByName();
+        assertEquals(WORKINGSET_1, workingSets.get(0).getKey());
+        assertEquals(WORKINGSET_2, workingSets.get(1).getKey());
+        assertEquals(WORKINGSET_3, workingSets.get(2).getKey());
     }
     
     @Test

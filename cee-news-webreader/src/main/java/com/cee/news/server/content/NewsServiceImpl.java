@@ -11,6 +11,7 @@ import com.cee.news.model.Article;
 import com.cee.news.model.Site;
 import com.cee.news.model.TextBlock;
 import com.cee.news.model.WorkingSet;
+import com.cee.news.server.EntityKeyConversions;
 import com.cee.news.store.ArticleStore;
 import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
@@ -43,19 +44,10 @@ public class NewsServiceImpl implements NewsService {
 		return SimpleDateFormat.getDateInstance().format(calendar.getTime());
 	}
 	
-	protected List<EntityKey> buildArticleKeys(List<String> locations) throws StoreException {
-		List<EntityKey> keys = new ArrayList<EntityKey>();
-		for (String articleLocation : locations) {
-			Article article = articleStore.getArticle(articleLocation);
-			keys.add(new EntityKey(articleLocation, article.getTitle()));
-		}
-		return keys;
-	}
-
 	public List<EntityKey> getArticlesOfSite(String siteName) {
 		try {
 			Site site = siteStore.getSite(siteName);
-			return buildArticleKeys(articleStore.getArticlesOrderedByDate(site));
+			return EntityKeyConversions.createEntityKeys(articleStore.getArticlesOrderedByDate(site));
 		} catch (StoreException exception) {
 			throw new RuntimeException(exception);
 		}
@@ -65,7 +57,7 @@ public class NewsServiceImpl implements NewsService {
 	public List<EntityKey> getArticlesOfWorkingSet(String workingSetName) {
 		try {
 			WorkingSet workingSet = workingSetStore.getWorkingSet(workingSetName);
-			return buildArticleKeys(articleStore.getArticlesOrderedByDate(workingSet));
+			return EntityKeyConversions.createEntityKeys(articleStore.getArticlesOrderedByDate(workingSet));
 		} catch (StoreException exception) {
 			throw new RuntimeException(exception);
 		}

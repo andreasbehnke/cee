@@ -38,6 +38,20 @@ public abstract class JcrStoreBase {
     }
     
     protected Node getContent() {
+    	testSession();
         return content;
+    }
+    
+    protected Node getNodeOrNull(Node parent, String relPath) throws RepositoryException {
+    	testSession();
+    	if (parent.hasNode(relPath)) {
+        	return parent.getNode(relPath);
+        } else {
+        	return null;
+        }
+    }
+    
+    protected Node getContentNodeOrNull(String relPath) throws RepositoryException {
+    	return getNodeOrNull(getContent(), relPath);
     }
 }
