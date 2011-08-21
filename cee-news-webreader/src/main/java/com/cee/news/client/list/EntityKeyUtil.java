@@ -1,5 +1,6 @@
 package com.cee.news.client.list;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class EntityKeyUtil {
@@ -24,5 +25,12 @@ public final class EntityKeyUtil {
     	throw new IllegalArgumentException("Unknown key: " + key);
     }
 
+    public static List<String> extractKeys(List<EntityKey> keys) {
+    	List<String> result = new ArrayList<String>();
+    	for (EntityKey entityKey : keys) {
+			result.add(entityKey.getKey());
+		}
+    	return result;
+    }
 	
 }

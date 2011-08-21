@@ -3,6 +3,7 @@ package com.cee.news.client.workingset;
 import java.util.List;
 
 import com.cee.news.client.list.ContentModel;
+import com.cee.news.client.list.EntityKey;
 import com.cee.news.client.list.ListPanel;
 import com.cee.news.client.list.MultiSelectListModel;
 import com.cee.news.client.list.MultiSelectListPresenter;
@@ -127,7 +128,7 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
 		return isNewEditor;
 	}
 
-	public Editor<List<String>> sites() {
+	public Editor<List<EntityKey>> sites() {
     	return sitesEditor;
     }
 

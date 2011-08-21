@@ -1,6 +1,5 @@
 package com.cee.news.server.workingset;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,7 +9,6 @@ import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.client.list.EntityKey;
 import com.cee.news.client.workingset.WorkingSetData;
 import com.cee.news.client.workingset.WorkingSetService;
-import com.cee.news.model.NamedKey;
 import com.cee.news.model.WorkingSet;
 import com.cee.news.server.EntityKeyConversions;
 import com.cee.news.store.StoreException;
