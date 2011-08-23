@@ -1,10 +1,14 @@
 package com.cee.news.model;
 
+import java.io.Serializable;
+
 /**
  * Key-name pair referencing an entity within a store
  */
-public class EntityKey {
+public class EntityKey implements Serializable {
 	
+	private static final long serialVersionUID = -8676630329141286676L;
+
 	private String name;
 	
 	private String key;
