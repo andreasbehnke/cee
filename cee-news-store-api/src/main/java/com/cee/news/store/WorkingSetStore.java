@@ -2,7 +2,7 @@ package com.cee.news.store;
 
 import java.util.List;
 
-import com.cee.news.model.NamedKey;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.WorkingSet;
 
 public interface WorkingSetStore {
@@ -17,5 +17,5 @@ public interface WorkingSetStore {
     
     long getWorkingSetCount() throws StoreException;
     
-    List<NamedKey> getWorkingSetsOrderedByName() throws StoreException;
+    List<EntityKey> getWorkingSetsOrderedByName() throws StoreException;
 }

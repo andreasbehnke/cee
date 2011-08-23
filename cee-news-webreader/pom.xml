@@ -33,6 +33,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
+			<artifactId>cee-news-store-api</artifactId>
+			<classifier>sources</classifier>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.cee</groupId>
 			<artifactId>cee-news-parser</artifactId>
 			<type>jar</type>
 			<scope>compile</scope>

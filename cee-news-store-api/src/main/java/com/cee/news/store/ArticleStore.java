@@ -3,7 +3,7 @@ package com.cee.news.store;
 import java.util.List;
 
 import com.cee.news.model.Article;
-import com.cee.news.model.NamedKey;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
 import com.cee.news.model.TextBlock;
 import com.cee.news.model.WorkingSet;
@@ -34,14 +34,14 @@ public interface ArticleStore {
      * @param site The site from which to retrieve identifiers
      * @return List of article identifiers
      */
-    List<NamedKey> getArticlesOrderedByDate(Site site) throws StoreException;
+    List<EntityKey> getArticlesOrderedByDate(Site site) throws StoreException;
     
     /**
      * Returns a list of unique identifiers of all working set's articles
      * @param workingSet The working set to retrieve all articles from
      * @return List of all article identifiers
      */
-    List<NamedKey> getArticlesOrderedByDate(WorkingSet workingSet) throws StoreException;
+    List<EntityKey> getArticlesOrderedByDate(WorkingSet workingSet) throws StoreException;
     
     /**
      * Returns the contents of the article with given id

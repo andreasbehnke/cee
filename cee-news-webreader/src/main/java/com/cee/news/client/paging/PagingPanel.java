@@ -2,7 +2,7 @@ package com.cee.news.client.paging;
 
 import java.util.List;
 
-import com.cee.news.client.list.EntityKey;
+import com.cee.news.model.EntityKey;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickHandler;

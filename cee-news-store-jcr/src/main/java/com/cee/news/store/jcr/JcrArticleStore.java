@@ -20,7 +20,7 @@ import javax.jcr.query.RowIterator;
 import org.apache.jackrabbit.util.Text;
 
 import com.cee.news.model.Article;
-import com.cee.news.model.NamedKey;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
 import com.cee.news.model.TextBlock;
 import com.cee.news.model.WorkingSet;
@@ -216,19 +216,19 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         return q.execute().getRows();
     }
     
-    protected List<NamedKey> buildPathList(RowIterator iterator) throws RepositoryException {
-    	List<NamedKey> pathes = new ArrayList<NamedKey>();
+    protected List<EntityKey> buildPathList(RowIterator iterator) throws RepositoryException {
+    	List<EntityKey> pathes = new ArrayList<EntityKey>();
         while (iterator.hasNext()) {
         	Row row = iterator.nextRow();
         	String articleId = row.getValue(ARTICLE_ID_SELECTOR).getString();
         	String articleTitle = row.getValue(ARTICLE_TITLE_SELECTOR).getString();
         	String siteName = row.getValue(SITE_NAME_SELECTOR).getString();
-            pathes.add(new NamedKey(articleTitle, getArticlePath(siteName, articleId)));
+            pathes.add(new EntityKey(articleTitle, getArticlePath(siteName, articleId)));
         }
         return pathes;
     }
 
-    public List<NamedKey> getArticlesOrderedByDate(Site site) throws StoreException {
+    public List<EntityKey> getArticlesOrderedByDate(Site site) throws StoreException {
         if (site == null) {
             throw new IllegalArgumentException("Parameter site must not be null");
         }
@@ -242,12 +242,12 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
     }
     
     @Override
-    public List<NamedKey> getArticlesOrderedByDate(WorkingSet workingSet) throws StoreException {
+    public List<EntityKey> getArticlesOrderedByDate(WorkingSet workingSet) throws StoreException {
     	if (workingSet == null) {
             throw new IllegalArgumentException("Parameter workingSet must not be null");
         }
     	if (workingSet.getSites() == null || workingSet.getSites().isEmpty()) {
-    		return new ArrayList<NamedKey>();
+    		return new ArrayList<EntityKey>();
     	}
         try {
         	return buildPathList(

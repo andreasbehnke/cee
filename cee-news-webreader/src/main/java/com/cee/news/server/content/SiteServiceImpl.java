@@ -9,9 +9,8 @@ import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.client.content.SiteData;
 import com.cee.news.client.content.SiteService;
 import com.cee.news.client.error.ServiceException;
-import com.cee.news.client.list.EntityKey;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
-import com.cee.news.server.EntityKeyConversions;
 import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
 import com.cee.news.store.WorkingSetStore;
@@ -44,7 +43,7 @@ public class SiteServiceImpl implements SiteService {
 
 	public List<EntityKey> getSites() {
 		try {
-			return EntityKeyConversions.createEntityKeys(siteStore.getSitesOrderedByName());
+			return siteStore.getSitesOrderedByName();
 		} catch (StoreException e) {
 			log.error(COULD_NOT_RETRIEVE_SITE_LIST, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_LIST);
@@ -54,7 +53,7 @@ public class SiteServiceImpl implements SiteService {
 	@Override
 	public List<EntityKey> getSitesOfWorkingSet(String workingSetName) {
 		try {
-			return EntityKeyConversions.createEntityKeys(workingSetStore.getWorkingSet(workingSetName).getSites());
+			return workingSetStore.getWorkingSet(workingSetName).getSites();
 		} catch (StoreException e) {
 			log.error(COULD_NOT_RETRIEVE_SITE_LIST, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_LIST);

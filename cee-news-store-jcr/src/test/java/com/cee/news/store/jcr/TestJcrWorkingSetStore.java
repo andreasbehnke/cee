@@ -12,7 +12,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.cee.news.model.NamedKey;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.WorkingSet;
 import com.cee.news.store.StoreException;
 
@@ -29,9 +29,9 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
     private static final long EXPECTED_COUNT = 3;
     private static final String UNKOWN_WORKING_SET = "unkown";
     private static final String EXPECTED_NAME = "abc";
-    private static final NamedKey SITE_A = new NamedKey("siteA", "siteA");
-    private static final NamedKey SITE_B = new NamedKey("siteB", "siteB");
-    private static final NamedKey SITE_C = new NamedKey("siteC", "siteC");
+    private static final EntityKey SITE_A = new EntityKey("siteA", "siteA");
+    private static final EntityKey SITE_B = new EntityKey("siteB", "siteB");
+    private static final EntityKey SITE_C = new EntityKey("siteC", "siteC");
     private static final String TESTWORKINGSET = "testworkingset";
     private static JcrWorkingSetStore workingSetStore;
     
@@ -50,7 +50,7 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
     public void testUpdateWorkingSet() throws StoreException {
         WorkingSet ws = new WorkingSet();
         ws.setName(TESTWORKINGSET);
-        List<NamedKey> sites = new ArrayList<NamedKey>();
+        List<EntityKey> sites = new ArrayList<EntityKey>();
         sites.add(SITE_A);
         sites.add(SITE_B);
         sites.add(SITE_C);
@@ -92,7 +92,7 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
         ws.setName(WORKINGSET_1);
         workingSetStore.update(ws);
         
-        List<NamedKey> workingSets = workingSetStore.getWorkingSetsOrderedByName();
+        List<EntityKey> workingSets = workingSetStore.getWorkingSetsOrderedByName();
         assertEquals(WORKINGSET_1, workingSets.get(0).getKey());
         assertEquals(WORKINGSET_2, workingSets.get(1).getKey());
         assertEquals(WORKINGSET_3, workingSets.get(2).getKey());

@@ -3,6 +3,8 @@ package com.cee.news.client.list;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cee.news.model.EntityKey;
+
 public final class EntityKeyUtil {
 	
 	private EntityKeyUtil() {}

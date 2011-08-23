@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.cee.news.client.error.ErrorSourceBase;
+import com.cee.news.model.EntityKey;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**

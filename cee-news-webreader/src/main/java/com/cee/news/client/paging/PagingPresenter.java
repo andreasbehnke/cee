@@ -3,13 +3,13 @@ package com.cee.news.client.paging;
 import java.util.List;
 
 import com.cee.news.client.list.ContentModel;
-import com.cee.news.client.list.EntityKey;
 import com.cee.news.client.list.EntityKeyUtil;
 import com.cee.news.client.list.ListChangedEvent;
 import com.cee.news.client.list.ListChangedHandler;
 import com.cee.news.client.list.ListModel;
 import com.cee.news.client.list.SelectionChangedEvent;
 import com.cee.news.client.list.SelectionChangedHandler;
+import com.cee.news.model.EntityKey;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;

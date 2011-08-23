@@ -2,6 +2,7 @@ package com.cee.news.client.list;
 
 import java.util.List;
 
+import com.cee.news.model.EntityKey;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**

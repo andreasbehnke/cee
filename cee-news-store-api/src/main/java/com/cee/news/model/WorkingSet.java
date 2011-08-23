@@ -10,7 +10,7 @@ public class WorkingSet {
     
     private String name;
     
-    private List<NamedKey> sites = new ArrayList<NamedKey>();
+    private List<EntityKey> sites = new ArrayList<EntityKey>();
 
     public String getName() {
         return name;
@@ -20,11 +20,11 @@ public class WorkingSet {
         this.name = name;
     }
 
-    public List<NamedKey> getSites() {
+    public List<EntityKey> getSites() {
         return sites;
     }
 
-    public void setSites(List<NamedKey> sites) {
+    public void setSites(List<EntityKey> sites) {
         this.sites = sites; 
     }
 }

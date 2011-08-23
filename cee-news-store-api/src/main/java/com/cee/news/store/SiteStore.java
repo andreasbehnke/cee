@@ -2,7 +2,7 @@ package com.cee.news.store;
 
 import java.util.List;
 
-import com.cee.news.model.NamedKey;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
 
 /**
@@ -33,5 +33,5 @@ public interface SiteStore {
     /**
      * @return List of URL referencing 
      */
-    List<NamedKey> getSitesOrderedByName() throws StoreException;
+    List<EntityKey> getSitesOrderedByName() throws StoreException;
 }

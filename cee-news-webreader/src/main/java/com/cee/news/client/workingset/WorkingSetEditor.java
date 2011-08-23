@@ -3,11 +3,11 @@ package com.cee.news.client.workingset;
 import java.util.List;
 
 import com.cee.news.client.list.ContentModel;
-import com.cee.news.client.list.EntityKey;
 import com.cee.news.client.list.ListPanel;
 import com.cee.news.client.list.MultiSelectListModel;
 import com.cee.news.client.list.MultiSelectListPresenter;
 import com.cee.news.client.list.SelectionListEditor;
+import com.cee.news.model.EntityKey;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.IsEditor;

@@ -22,7 +22,7 @@ import javax.jcr.query.QueryManager;
 import org.apache.jackrabbit.util.Text;
 
 import com.cee.news.model.Feed;
-import com.cee.news.model.NamedKey;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
 import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
@@ -164,14 +164,14 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         return q.execute().getNodes();
     }
 
-    public List<NamedKey> getSitesOrderedByName() throws StoreException {
+    public List<EntityKey> getSitesOrderedByName() throws StoreException {
         try {
-            List<NamedKey> sites = new ArrayList<NamedKey>();
+            List<EntityKey> sites = new ArrayList<EntityKey>();
             NodeIterator iter = getSiteNodesOrderedByName();
             while (iter.hasNext()) {
             	String name = iter.nextNode().getProperty(PROP_NAME).getString();
             	String path = getSitePath(name);
-                sites.add(new NamedKey(name, path));
+                sites.add(new EntityKey(name, path));
             }
             return sites;
         } catch (RepositoryException e) {

@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.cee.news.client.list.ContentModel;
 import com.cee.news.client.list.DefaultListModel;
-import com.cee.news.client.list.EntityKey;
 import com.cee.news.client.util.SafeHtmlUtil;
+import com.cee.news.model.EntityKey;
 import com.google.gwt.safehtml.client.HasSafeHtml;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

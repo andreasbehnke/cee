@@ -17,7 +17,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.cee.news.model.Article;
-import com.cee.news.model.NamedKey;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
 import com.cee.news.model.TextBlock;
 import com.cee.news.model.WorkingSet;
@@ -192,7 +192,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         article.setPublishedDate(cal);
         String path4 = articleStore.update(site2, article);
         
-        List<NamedKey> articles = articleStore.getArticlesOrderedByDate(site);
+        List<EntityKey> articles = articleStore.getArticlesOrderedByDate(site);
         assertEquals(3, articles.size());
         assertEquals(path2, articles.get(0).getKey());
         assertEquals(path1, articles.get(1).getKey());
@@ -204,8 +204,8 @@ public class TestJcrArticleStore extends JcrTestBase {
         
         WorkingSet workingSet = new WorkingSet();
         workingSet.setName("Default");
-        workingSet.getSites().add(new NamedKey(site.getName(), JcrSiteStore.getSitePath(site.getName())));
-        workingSet.getSites().add(new NamedKey(site2.getName(), JcrSiteStore.getSitePath(site2.getName())));
+        workingSet.getSites().add(new EntityKey(site.getName(), JcrSiteStore.getSitePath(site.getName())));
+        workingSet.getSites().add(new EntityKey(site2.getName(), JcrSiteStore.getSitePath(site2.getName())));
         workingSetStore.update(workingSet);
         
         articles = articleStore.getArticlesOrderedByDate(workingSet);

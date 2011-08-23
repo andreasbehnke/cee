@@ -3,7 +3,7 @@ package com.cee.news.model;
 /**
  * Key-name pair referencing an entity within a store
  */
-public class NamedKey {
+public class EntityKey {
 	
 	private String name;
 	
@@ -25,12 +25,12 @@ public class NamedKey {
 		this.key = key;
 	}
 
-	public NamedKey(String name, String key) {
+	public EntityKey(String name, String key) {
 		this.name = name;
 		this.key = key;
 	}
 
-	public NamedKey() {}
+	public EntityKey() {}
 
 	@Override
 	public int hashCode() {
@@ -49,7 +49,7 @@ public class NamedKey {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		NamedKey other = (NamedKey) obj;
+		EntityKey other = (EntityKey) obj;
 		if (key == null) {
 			if (other.key != null)
 				return false;

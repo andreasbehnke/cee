@@ -17,7 +17,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.cee.news.model.Feed;
-import com.cee.news.model.NamedKey;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
 import com.cee.news.store.StoreException;
 
@@ -128,7 +128,7 @@ public class TestJcrSiteStore extends JcrTestBase {
         site.setTitle("Title");
         siteStore.update(site);
         
-        List<NamedKey> sites = siteStore.getSitesOrderedByName();
+        List<EntityKey> sites = siteStore.getSitesOrderedByName();
         assertEquals("http://www.abc.de", sites.get(0).getName());
         assertEquals(Text.escapeIllegalJcrChars("http://www.abc.de"), sites.get(0).getKey());
         assertEquals("http://www.bbb.de", sites.get(1).getName());

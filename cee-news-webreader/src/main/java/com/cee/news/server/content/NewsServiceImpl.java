@@ -5,12 +5,11 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.cee.news.client.content.NewsService;
-import com.cee.news.client.list.EntityKey;
 import com.cee.news.model.Article;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
 import com.cee.news.model.TextBlock;
 import com.cee.news.model.WorkingSet;
-import com.cee.news.server.EntityKeyConversions;
 import com.cee.news.store.ArticleStore;
 import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
@@ -46,7 +45,7 @@ public class NewsServiceImpl implements NewsService {
 	public List<EntityKey> getArticlesOfSite(String siteName) {
 		try {
 			Site site = siteStore.getSite(siteName);
-			return EntityKeyConversions.createEntityKeys(articleStore.getArticlesOrderedByDate(site));
+			return articleStore.getArticlesOrderedByDate(site);
 		} catch (StoreException exception) {
 			throw new RuntimeException(exception);
 		}
@@ -56,7 +55,7 @@ public class NewsServiceImpl implements NewsService {
 	public List<EntityKey> getArticlesOfWorkingSet(String workingSetName) {
 		try {
 			WorkingSet workingSet = workingSetStore.getWorkingSet(workingSetName);
-			return EntityKeyConversions.createEntityKeys(articleStore.getArticlesOrderedByDate(workingSet));
+			return articleStore.getArticlesOrderedByDate(workingSet);
 		} catch (StoreException exception) {
 			throw new RuntimeException(exception);
 		}
