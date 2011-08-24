@@ -61,7 +61,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 					
 					@Override
 					public void finished() {
-						siteListModel.addSelection(event.getSiteName());
+						siteListModel.addSelection(event.getEntityKey().getKey());
 					}
 				});
 			}
@@ -116,8 +116,8 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 		service.update(workingSetData, new AsyncCallback<EntityUpdateResult>() {
 
 			@Override
-			public void onSuccess(EntityUpdateResult result) {
-				switch (result) {
+			public void onSuccess(final EntityUpdateResult result) {
+				switch (result.getState()) {
 				case entityExists:
 					showValidationError("Working Set with name " + workingSetData.getNewName() + " exists!");
 					break;
@@ -127,7 +127,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 						
 						@Override
 						public void finished() {
-							workingSetListModel.setSelectedKey(workingSetData.getNewName());
+							workingSetListModel.setSelectedKey(result.getKey().getKey());
 						}
 					});
 					break;

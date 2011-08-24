@@ -50,18 +50,22 @@ public class WorkingSetSelectionPanel extends Composite implements WorkingSetSel
         layoutPanel.setWidgetTopHeight(buttonEdit, 0.0, Unit.PX, 24.0, Unit.PX);
     }
     
+    @Override
     public int getSelectedWorkingSet() {
         return comboBoxSelect.getSelectedIndex();
     }
     
+    @Override
     public void setSelectedWorkingSet(int index) {
         comboBoxSelect.setSelectedIndex(index);
     }
 
+    @Override
     public void addSelectionChangedHandler(ChangeHandler handler) {
         comboBoxSelect.addChangeHandler(handler);
     }
 
+    @Override
     public void setWorkingSets(List<EntityKey> names) {
         comboBoxSelect.clear();
         for (EntityKey name : names) {
@@ -69,11 +73,18 @@ public class WorkingSetSelectionPanel extends Composite implements WorkingSetSel
         }
     }
 
+    @Override
     public HasClickHandlers getNewButton() {
         return buttonNew;
     }
 
+    @Override
     public HasClickHandlers getEditButton() {
         return buttonEdit;
+    }
+    
+    @Override
+    public void setEditButtonEnabled(boolean enabled) {
+    	buttonEdit.setEnabled(enabled);
     }
 }

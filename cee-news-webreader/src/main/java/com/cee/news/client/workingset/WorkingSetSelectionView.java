@@ -14,6 +14,8 @@ public interface WorkingSetSelectionView {
     
     HasClickHandlers getEditButton();
     
+    void setEditButtonEnabled(boolean enabled);
+    
     int getSelectedWorkingSet();
     
     void setSelectedWorkingSet(int key);

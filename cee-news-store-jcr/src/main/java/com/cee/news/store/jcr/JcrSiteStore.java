@@ -68,7 +68,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         feedNode.setProperty(PROP_ACTIVE, feed.isActive());
     }
 
-    public void update(Site site) throws StoreException {
+    public EntityKey update(Site site) throws StoreException {
         if (site == null) {
             throw new IllegalArgumentException("Parameter site must not be null");
         }
@@ -103,6 +103,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         }
         try {
             getSession().save();
+            return new EntityKey(name, getSitePath(name));
         } catch (Exception e) {
             throw new StoreException(site, "Could not save session", e);
         }

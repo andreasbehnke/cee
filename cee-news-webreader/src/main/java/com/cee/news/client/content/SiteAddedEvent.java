@@ -1,5 +1,6 @@
 package com.cee.news.client.content;
 
+import com.cee.news.model.EntityKey;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -9,14 +10,14 @@ public class SiteAddedEvent extends GwtEvent<SiteAddedHandler> {
 
 	public final static GwtEvent.Type<SiteAddedHandler> TYPE = new Type<SiteAddedHandler>();
 
-	private final String siteName;
+	private final EntityKey entityKey;
 
-	public SiteAddedEvent(final String siteName) {
-		this.siteName = siteName;
+	public SiteAddedEvent(final EntityKey entityKey) {
+		this.entityKey = entityKey;
 	}
 
-	public String getSiteName() {
-		return siteName;
+	public EntityKey getEntityKey() {
+		return entityKey;
 	}
 
 	@Override

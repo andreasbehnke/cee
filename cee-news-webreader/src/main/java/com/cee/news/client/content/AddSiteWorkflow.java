@@ -1,7 +1,9 @@
 package com.cee.news.client.content;
 
 import com.cee.news.client.async.EntityUpdateResult;
+import com.cee.news.client.async.EntityUpdateResult.State;
 import com.cee.news.client.error.ErrorSourceBase;
+import com.cee.news.model.EntityKey;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -123,8 +125,12 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 			
 			@Override
 			public void onSuccess(EntityUpdateResult result) {
+				if (result.getState() == State.entityExists) {
+					showErrorMessage("Site with name " + site.getName() + " already exists!");//TODO: localization
+					return;
+				}
 				wizard.hide();
-				fireSiteAdded(site.getName());
+				fireSiteAdded(result.getKey());
 			}
 			
 			@Override
@@ -138,8 +144,8 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 		wizard.setButtonsEnabled(true);
 	}
 	
-	protected void fireSiteAdded(String siteName) {
-		handlerManager.fireEvent(new SiteAddedEvent(siteName));
+	protected void fireSiteAdded(EntityKey entityKey) {
+		handlerManager.fireEvent(new SiteAddedEvent(entityKey));
 	}
 	
 	public HandlerRegistration addSiteAddedHandler(SiteAddedHandler handler) {

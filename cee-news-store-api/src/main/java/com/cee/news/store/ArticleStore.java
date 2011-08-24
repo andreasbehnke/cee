@@ -20,7 +20,7 @@ public interface ArticleStore {
      * @param article The article which needs update
      * @return primary key of the article being added
      */
-    String update(Site site, Article article) throws StoreException;
+    EntityKey update(Site site, Article article) throws StoreException;
     
     /**
      * Get article by unique id

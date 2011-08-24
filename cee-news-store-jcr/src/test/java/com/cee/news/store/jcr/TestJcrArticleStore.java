@@ -101,7 +101,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         article.setTitle("Title");
         article.getContent().add(new TextBlock("Hello world!", 2));
         article.getContent().add(new TextBlock("Another hello world!", 3));
-        String path = articleStore.update(site, article);
+        String path = articleStore.update(site, article).getKey();
         
         article = articleStore.getArticle(path);
         article.setContent(articleStore.getContent(path));
@@ -147,7 +147,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         cal.set(Calendar.MONTH, 1);
         cal.set(Calendar.DAY_OF_MONTH, 12);
         article.setPublishedDate(cal);
-        String path1 = articleStore.update(site, article);
+        String path1 = articleStore.update(site, article).getKey();
         
         article = new Article();
         article.setId("2");
@@ -159,7 +159,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         cal.set(Calendar.MONTH, 2);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         article.setPublishedDate(cal);
-        String path2 = articleStore.update(site, article);
+        String path2 = articleStore.update(site, article).getKey();
         
         article = new Article();
         article.setId("3");
@@ -171,7 +171,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         cal.set(Calendar.MONTH, 12);
         cal.set(Calendar.DAY_OF_MONTH, 23);
         article.setPublishedDate(cal);
-        String path3 = articleStore.update(site, article);
+        String path3 = articleStore.update(site, article).getKey();
         
         Site site2 = createSite("site4");
         site2.setDescription("Description");
@@ -190,7 +190,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         cal.set(Calendar.MONTH, 12);
         cal.set(Calendar.DAY_OF_MONTH, 23);
         article.setPublishedDate(cal);
-        String path4 = articleStore.update(site2, article);
+        String path4 = articleStore.update(site2, article).getKey();
         
         List<EntityKey> articles = articleStore.getArticlesOrderedByDate(site);
         assertEquals(3, articles.size());
@@ -227,7 +227,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         article.getContent().add(new TextBlock("This are four words", 4));
         article.getContent().add(new TextBlock("foo ba", 2));
         article.getContent().add(new TextBlock("Hello world!", 2));
-        String path = articleStore.update(site, article);
+        String path = articleStore.update(site, article).getKey();
 
         List<TextBlock> content = articleStore.getContent(path);
         assertEquals(3, content.size());

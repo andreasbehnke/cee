@@ -7,7 +7,7 @@ import com.cee.news.model.WorkingSet;
 
 public interface WorkingSetStore {
 
-    void update(WorkingSet workingSet) throws StoreException;
+    EntityKey update(WorkingSet workingSet) throws StoreException;
     
     void rename(String oldName, String newName) throws StoreException;
     

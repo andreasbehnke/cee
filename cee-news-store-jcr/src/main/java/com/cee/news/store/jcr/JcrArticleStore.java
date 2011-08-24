@@ -91,7 +91,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         return getContentNodeOrNull(articlePath);
     }
 
-    public String update(Site site, Article article) throws StoreException {
+    public EntityKey update(Site site, Article article) throws StoreException {
         if (site == null) {
             throw new IllegalArgumentException("Parameter site must not be null");
         }
@@ -160,7 +160,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
         try {
             getSession().save();
-            return getArticlePath(siteName, articleId);
+            return new EntityKey(article.getTitle(), getArticlePath(siteName, articleId));
         } catch (RepositoryException e) {
             throw new StoreException(site, "Could not save session", e);
         }

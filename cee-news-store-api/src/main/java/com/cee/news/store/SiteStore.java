@@ -12,9 +12,10 @@ public interface SiteStore {
     
     /**
      * Creates or updates a site
-     * @param site 
+     * @param site The site which needs update or should be added
+     * @return The entity of the site being added
      */
-    void update(Site site) throws StoreException;
+    EntityKey update(Site site) throws StoreException;
     
     /**
      * Tests the existence of a site

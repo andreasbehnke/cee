@@ -58,12 +58,13 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
         }
     }
 
-    public void update(WorkingSet workingSet) throws StoreException {
+    public EntityKey update(WorkingSet workingSet) throws StoreException {
         try {
+        	String name = workingSet.getName();
             Node workingSetNode = getWorkingSetNode(workingSet.getName());
             if (workingSetNode == null) {
                 workingSetNode = getContent().addNode(NODE_WORKINGSET, NODE_WORKINGSET);
-                workingSetNode.setProperty(PROP_NAME, workingSet.getName());
+                workingSetNode.setProperty(PROP_NAME, name);
             }
             String[] sites = new String[workingSet.getSites().size()];
             List<String> siteList = NamedKeyUtil.extractKeys(workingSet.getSites());
@@ -72,6 +73,7 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
             }
             workingSetNode.setProperty(PROP_SITES, sites);
             getSession().save();
+            return new EntityKey(name, name);
         } catch (RepositoryException e) {
             throw new StoreException(workingSet, "Could not update working set", e);
         }

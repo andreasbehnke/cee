@@ -87,7 +87,13 @@ public abstract class DefaultListModel extends ErrorSourceBase implements MultiS
         if (keys != null && !keys.isEmpty()) {
         	setSelectedKey(keys.get(0).getKey());
         }
-        selectedKeys.clear();
+        Set<String> newSelectedKeys = new HashSet<String>();
+        for (String key : selectedKeys) {
+			if (keys.contains(key)) {
+				newSelectedKeys.add(key);
+			}
+		}
+        this.selectedKeys = newSelectedKeys;
         fireSelectionListChanged();
     }
     
@@ -102,7 +108,7 @@ public abstract class DefaultListModel extends ErrorSourceBase implements MultiS
     protected void fireSelectionListChanged() {
         List<EntityKey> selectionLinks = new ArrayList<EntityKey>();
         for (String key : selectedKeys) {
-            selectionLinks.add(EntityKeyUtil.getEntityKey(keys, key));
+            selectionLinks.add(keys.get(keys.indexOf(key)));
         }
         handlerManager.fireEvent(new SelectionListChangedEvent(selectionLinks));
     }
