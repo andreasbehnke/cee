@@ -18,6 +18,8 @@ import javax.jcr.query.Row;
 import javax.jcr.query.RowIterator;
 
 import org.apache.jackrabbit.util.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cee.news.model.Article;
 import com.cee.news.model.EntityKey;
@@ -32,6 +34,7 @@ import com.cee.news.store.StoreException;
  */
 public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
 
+	private final static Logger log = LoggerFactory.getLogger(JcrArticleStore.class);
 
     private final static String SITE_NAME_SELECTOR = "siteName";
     
@@ -160,7 +163,9 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
         try {
             getSession().save();
-            return new EntityKey(article.getTitle(), getArticlePath(siteName, articleId));
+            EntityKey key = new EntityKey(article.getTitle(), getArticlePath(siteName, articleId));
+            log.debug("Created article {}", key);
+            return key;
         } catch (RepositoryException e) {
             throw new StoreException(site, "Could not save session", e);
         }
