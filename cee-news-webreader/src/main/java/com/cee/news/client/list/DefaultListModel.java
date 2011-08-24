@@ -89,7 +89,7 @@ public abstract class DefaultListModel extends ErrorSourceBase implements MultiS
         }
         Set<String> newSelectedKeys = new HashSet<String>();
         for (String key : selectedKeys) {
-			if (keys.contains(key)) {
+			if (EntityKeyUtil.containsEntityKey(keys,key)) {
 				newSelectedKeys.add(key);
 			}
 		}
@@ -108,7 +108,7 @@ public abstract class DefaultListModel extends ErrorSourceBase implements MultiS
     protected void fireSelectionListChanged() {
         List<EntityKey> selectionLinks = new ArrayList<EntityKey>();
         for (String key : selectedKeys) {
-            selectionLinks.add(keys.get(keys.indexOf(key)));
+            selectionLinks.add(EntityKeyUtil.getEntityKey(keys, key));
         }
         handlerManager.fireEvent(new SelectionListChangedEvent(selectionLinks));
     }

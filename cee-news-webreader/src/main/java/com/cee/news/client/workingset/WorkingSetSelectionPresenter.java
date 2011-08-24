@@ -2,6 +2,7 @@ package com.cee.news.client.workingset;
 
 import java.util.List;
 
+import com.cee.news.client.list.EntityKeyUtil;
 import com.cee.news.client.list.ListChangedEvent;
 import com.cee.news.client.list.ListChangedHandler;
 import com.cee.news.client.list.ListModel;
@@ -37,7 +38,7 @@ public class WorkingSetSelectionPresenter {
         model.addSelectionChangedhandler(new SelectionChangedHandler() {
             
             public void onSelectionChange(SelectionChangedEvent event) {
-            	int index = keys.indexOf(event.getKey());
+            	int index = EntityKeyUtil.getIndexOfEntityKey(keys, event.getKey());
                 view.setSelectedWorkingSet(index);
             }
         });
