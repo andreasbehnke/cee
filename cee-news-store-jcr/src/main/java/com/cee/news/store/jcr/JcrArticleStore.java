@@ -34,7 +34,7 @@ import com.cee.news.store.StoreException;
  */
 public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
 
-	private final static Logger log = LoggerFactory.getLogger(JcrArticleStore.class);
+	private final static Logger LOG = LoggerFactory.getLogger(JcrArticleStore.class);
 
     private final static String SITE_NAME_SELECTOR = "siteName";
     
@@ -126,9 +126,6 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             }
             try {
                 articleNode = siteNode.addNode(getArticlePath(articleId), NODE_ARTICLE);
-                if (log.isDebugEnabled()) {
-                	log.debug("Added article node {}", articleNode.getPath());
-                }
             } catch (RepositoryException e) {
                 throw new StoreException(article, "Could not add article to site", e);
             }
@@ -138,9 +135,6 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
                 NodeIterator iter = articleNode.getNodes(NODE_CONTENT);
                 while(iter.hasNext()) {
                     iter.nextNode().remove();
-                }
-                if (log.isDebugEnabled()) {
-                	log.debug("Updating article node {}", articleNode.getPath());
                 }
                 getSession().save();
             } catch (RepositoryException e) {
@@ -170,7 +164,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         try {
             getSession().save();
             EntityKey key = new EntityKey(article.getTitle(), getArticlePath(siteName, articleId));
-            log.debug("Stored article {}", key);
+            LOG.debug("Created article {}", key);
             return key;
         } catch (RepositoryException e) {
             throw new StoreException(site, "Could not save session", e);
@@ -189,7 +183,6 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
 
         if (articleNode == null) {
-        	log.warn("No article found for path {}", articlePath);
             return null;
         } else {
             Article article = new Article();
@@ -202,7 +195,6 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             } catch (RepositoryException e) {
                 throw new StoreException("Could not set article properties", e);
             }
-            log.debug("Found article {} for path {}", new Object[]{article.getTitle(), articlePath});
             return article;
         }
     }
@@ -248,11 +240,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         try {
             List<String> sites = new ArrayList<String>();
             sites.add(site.getName());
-            List<EntityKey> keys = buildPathList(getArticlesOfSitesOrderedByPublication(sites));
-            if (log.isDebugEnabled()) {
-            	log.debug("Found {} articles for site {}", new Object[]{keys.size(), site.getName()});
-            }
-            return keys;
+            return buildPathList(getArticlesOfSitesOrderedByPublication(sites));
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrieve articles", e);
         }
@@ -264,17 +252,13 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             throw new IllegalArgumentException("Parameter workingSet must not be null");
         }
     	if (workingSet.getSites() == null || workingSet.getSites().isEmpty()) {
-    		log.warn("WorkingSet {} contains no sites", workingSet.getName());
     		return new ArrayList<EntityKey>();
     	}
         try {
-        	List<EntityKey> keys = buildPathList(
+        	return buildPathList(
         			getArticlesOfSitesOrderedByPublication(
-        					EntityKey.extractNames(workingSet.getSites())));
-        	if (log.isDebugEnabled()) {
-            	log.debug("Found {} articles for working set {}", new Object[]{keys.size(), workingSet.getName()});
-            }
-            return keys;
+        					NamedKeyUtil.extractNames(
+        							workingSet.getSites())));
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrieve articles", e);
         }
@@ -299,9 +283,6 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             while (iter.hasNext()) {
                 Node textNode = iter.nextNode();
                 content.add(new TextBlock(textNode.getProperty(PROP_CONTENT).getString(), (int) textNode.getProperty(PROP_WORDS).getLong()));
-            }
-            if (log.isDebugEnabled()) {
-            	log.debug("Found {} text blocks for article {}", new Object[]{content.size(), articlePath});
             }
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrieve text blocks of article", e);
