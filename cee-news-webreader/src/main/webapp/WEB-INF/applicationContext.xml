@@ -63,11 +63,11 @@
 	</bean>
 	
 	<!-- Store used by the thread pool which executes commands -->
-	<bean id="commandSiteStore" class="com.cee.news.store.jcr.JcrSiteStore">
+	<bean id="commandSiteStore" class="com.cee.news.store.jcr.JcrSiteStore" scope="prototype">
 		<property name="session" ref="jcrCommandSession" />
 	</bean>
 	
-	<bean id="commandArticleStore" class="com.cee.news.store.jcr.JcrArticleStore">
+	<bean id="commandArticleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="prototype">
 		<property name="session" ref="jcrCommandSession" />
 		<property name="siteStore" ref="commandSiteStore" />
 	</bean>
