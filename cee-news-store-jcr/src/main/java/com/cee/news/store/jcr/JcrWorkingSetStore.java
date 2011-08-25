@@ -18,6 +18,10 @@ import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
+import org.slf4j.LoggerFactory;
+
+import org.slf4j.Logger;
+
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.WorkingSet;
 import com.cee.news.store.StoreException;
@@ -27,6 +31,8 @@ import com.cee.news.store.WorkingSetStore;
  * JCR implementation of the {@link WorkingSetStore}.
  */
 public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore {
+	
+	private final static Logger LOG = LoggerFactory.getLogger(JcrWorkingSetStore.class);
     
     private final static String SELECT_WORKING_SET_BY_NAME = "SELECT * FROM [news:workingSet] WHERE [news:name]='%s'";
 
@@ -65,14 +71,18 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
             if (workingSetNode == null) {
                 workingSetNode = getContent().addNode(NODE_WORKINGSET, NODE_WORKINGSET);
                 workingSetNode.setProperty(PROP_NAME, name);
+                if(LOG.isDebugEnabled()) {
+                	LOG.debug("Added working set node for {}", name);
+                }
             }
             String[] sites = new String[workingSet.getSites().size()];
-            List<String> siteList = NamedKeyUtil.extractKeys(workingSet.getSites());
+            List<String> siteList = EntityKey.extractKeys(workingSet.getSites());
             for (int i=0; i < siteList.size(); i++) {
                 sites[i] = siteList.get(i);
             }
             workingSetNode.setProperty(PROP_SITES, sites);
             getSession().save();
+            LOG.debug("Stored working set {}", name);
             return new EntityKey(name, name);
         } catch (RepositoryException e) {
             throw new StoreException(workingSet, "Could not update working set", e);
@@ -86,6 +96,7 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
                 throw new IllegalArgumentException("The weorking set with name " + oldName + " does not exists!");
             }
             workingSetNode.setProperty(PROP_NAME, newName);
+            LOG.debug("Renamed working set {} to {}", oldName, newName);
             getSession().save();
         } catch (RepositoryException e) {
             throw new StoreException(oldName, "Could not rename working set", e);
@@ -105,6 +116,7 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
         try {
             Node wsNode = getWorkingSetNode(name);
             if (wsNode == null) {
+            	LOG.warn("No working set node found for {}", name);
                 return null;
             }
             WorkingSet workingSet = new WorkingSet();
@@ -114,6 +126,7 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
                 sites.add(new EntityKey(value.getString(), value.getString()));
             }
             workingSet.setSites(sites);
+            LOG.debug("Found working set {}", name);
             return workingSet;
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrieve working set", e);
@@ -134,6 +147,9 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
             while (iter.hasNext()) {
             	String name = iter.nextNode().getProperty(PROP_NAME).getString();
                 workingSets.add(new EntityKey(name, name));
+            }
+            if(LOG.isDebugEnabled()) {
+            	LOG.debug("Found {} working sets", workingSets.size());
             }
             return workingSets;
         } catch (RepositoryException e) {

@@ -135,10 +135,10 @@ public class TestJcrArticleStore extends JcrTestBase {
 
     @Test
     public void testGetArticlesOrderedByDate() throws StoreException, MalformedURLException {
-        Site site = createSite("site3");
+        Site site = createSite("http://www.abc.de");
         
         Article article = new Article();
-        article.setId("1");
+        article.setId("http://www.abc.de/ID_1");
         String url = "http://www.abc.de/1";
         article.setLocation(url);
         Calendar cal = Calendar.getInstance();
@@ -150,7 +150,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         String path1 = articleStore.update(site, article).getKey();
         
         article = new Article();
-        article.setId("2");
+        article.setId("http://www.abc.de/ID_2");
         url = "http://www.abc.de/2";
         article.setLocation(url);
         cal = Calendar.getInstance();
@@ -162,7 +162,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         String path2 = articleStore.update(site, article).getKey();
         
         article = new Article();
-        article.setId("3");
+        article.setId("http://www.abc.de/ID_3");
         url = "http://www.abc.de/3";
         article.setLocation(url);
         cal = Calendar.getInstance();
@@ -181,7 +181,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         siteStore.update(site2);
         
         article = new Article();
-        article.setId("4");
+        article.setId("http://www.xyz.de/ID_4");
         url = "http://www.xyz.de/4";
         article.setLocation(url);
         cal = Calendar.getInstance();

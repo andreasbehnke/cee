@@ -6,10 +6,15 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cee.news.store.StoreException;
 
 public abstract class JcrStoreBase {
     
+	private static final Logger LOG = LoggerFactory.getLogger(JcrStoreBase.class);
+	
     private Session session;
 
     private Node content;
@@ -22,6 +27,9 @@ public abstract class JcrStoreBase {
         try {
             Node root = session.getRootNode();
             this.content = root.getNode(NODE_CONTENT);
+            if (LOG.isDebugEnabled()) {
+            	LOG.debug("Session initialized for instance {}: {}", this, session);
+            }
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrieve root node from repository", e);
         }

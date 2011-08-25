@@ -20,6 +20,8 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
 import org.apache.jackrabbit.util.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cee.news.model.Feed;
 import com.cee.news.model.EntityKey;
@@ -31,6 +33,8 @@ import com.cee.news.store.StoreException;
  * JCR implementation of the {@link SiteStore}
  */
 public class JcrSiteStore extends JcrStoreBase implements SiteStore {
+	
+	private final static Logger LOG = LoggerFactory.getLogger(JcrSiteStore.class);
 
 	private final static String SELECT_SITES_ORDERED_BY_NAME = "SELECT [news:name] FROM [news:site] ORDER BY [news:name]";
 
@@ -82,6 +86,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         if (siteNode == null) {
             try {
                 siteNode = createSiteNode(name);
+                LOG.debug("Added site node for ", name);
             } catch (RepositoryException e) {
                 throw new StoreException(site, "Could not create site node", e);
             }
@@ -103,6 +108,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         }
         try {
             getSession().save();
+            LOG.debug("Stored site node for ", name);
             return new EntityKey(name, getSitePath(name));
         } catch (Exception e) {
             throw new StoreException(site, "Could not save session", e);
@@ -129,6 +135,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
             throw new StoreException("Could not query site node", e);
         }
         if (siteNode == null) {
+        	LOG.warn("No site node found for {}", key);
             return null;
         }
         Site site = new Site();
@@ -155,6 +162,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         } catch (RepositoryException e) {
             throw new StoreException("Could not fetch feeds of site", e);
         }
+        LOG.debug("Found site node for {}", key);
         return site;
     }
 
@@ -173,6 +181,9 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
             	String name = iter.nextNode().getProperty(PROP_NAME).getString();
             	String path = getSitePath(name);
                 sites.add(new EntityKey(name, path));
+            }
+            if(LOG.isDebugEnabled()) {
+            	LOG.debug("Found {} sites in repository", sites.size());
             }
             return sites;
         } catch (RepositoryException e) {

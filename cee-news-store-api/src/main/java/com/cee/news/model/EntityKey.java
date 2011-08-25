@@ -1,6 +1,8 @@
 package com.cee.news.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Key-name pair referencing an entity within a store
@@ -64,5 +66,21 @@ public class EntityKey implements Serializable {
 	@Override
 	public String toString() {
 		return "[" + key + ":" + name + "]";
+	}
+
+	public static List<String> extractNames(List<EntityKey> input) {
+		List<String> keys = new ArrayList<String>(input.size());
+		for (EntityKey key : input) {
+			keys.add(key.getName());
+		}
+		return keys;
+	}
+
+	public static List<String> extractKeys(List<EntityKey> input) {
+		List<String> keys = new ArrayList<String>(input.size());
+		for (EntityKey key : input) {
+			keys.add(key.getKey());
+		}
+		return keys;
 	}
 }
