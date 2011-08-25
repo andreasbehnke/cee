@@ -18,7 +18,7 @@ import com.cee.news.store.StoreException;
  */
 public class SiteUpdater {
 	
-	private static final Logger log = LoggerFactory.getLogger(SiteUpdater.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SiteUpdater.class);
 
     private ArticleParser articleParser;
 
@@ -91,24 +91,32 @@ public class SiteUpdater {
      *             If an IO error occurred
      */
     public int update(Site site) throws ParserException, StoreException, IOException {
-        log.info("starting site update for {}", site.getName());
+        LOG.info("starting update for site {}", site.getName());
     	int articleCount = 0;
         for (Feed feed : site.getFeeds()) {
             if (onlyActiveFeeds && !feed.isActive()) {
                 continue;
             }
-            log.debug("update site by feed {}", feed.getTitle());
+            LOG.debug("processing feed {}", feed.getTitle());
             List<Article> articles = null;
             articles = feedParser.parse(new URL(feed.getLocation()));
             for (Article article : articles) {
-            	log.debug("store article {}", article.getTitle());
-                store.update(site, articleParser.parse(article));
-                articleCount++;
+            	try {
+            		article = articleParser.parse(article);	
+            	} catch(Exception e) {
+            		LOG.error("could not parse article {}", article.getTitle());
+            	}
+            	try {
+            		store.update(site, article);
+            		articleCount++;
+            	} catch (Exception e) {
+            		LOG.error("could not store article {}", article.getTitle());
+				}
                 // TODO: Implement equality compare and add new article version
                 // if necessary
             }
         }
-        log.info("updated {} articles of site {}", articleCount, site.getName());
+        LOG.info("updated {} articles of site {}", articleCount, site.getName());
         return articleCount;
     }
 }

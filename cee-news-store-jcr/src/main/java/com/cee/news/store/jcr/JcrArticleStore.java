@@ -257,7 +257,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         try {
         	return buildPathList(
         			getArticlesOfSitesOrderedByPublication(
-        					NamedKeyUtil.extractNames(
+        					EntityKey.extractNames(
         							workingSet.getSites())));
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrieve articles", e);

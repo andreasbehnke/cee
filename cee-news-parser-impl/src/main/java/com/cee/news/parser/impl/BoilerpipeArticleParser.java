@@ -26,7 +26,7 @@ import de.l3s.boilerpipe.sax.BoilerpipeHTMLContentHandler;
  */
 public class BoilerpipeArticleParser implements ArticleParser {
 	
-	private static final Logger log = LoggerFactory.getLogger(BoilerpipeArticleParser.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BoilerpipeArticleParser.class);
     
     private XMLReader reader;
     
@@ -58,7 +58,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
      */
     public Article parse(Article article) throws ParserException, IOException {
         try {
-        	log.info("start parsing article content of {}", article.getTitle());
+        	LOG.info("start parsing article content of {}", article.getTitle());
         	BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
         	
         	//TODO register tag action for none text content like media and so on
@@ -66,7 +66,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
         	reader.setContentHandler(boilerpipeHandler);
         	reader.parse(new InputSource(webClient.openStream(new URL(article.getLocation()))));
         	TextDocument textDoc = boilerpipeHandler.toTextDocument();
-        	log.debug("extracting main content from {}", article.getTitle());
+        	LOG.debug("extracting main content from {}", article.getTitle());
             ArticleExtractor.INSTANCE.process(textDoc);
             List<com.cee.news.model.TextBlock> content = article.getContent();
             for (TextBlock block : textDoc.getTextBlocks()) {
@@ -76,9 +76,9 @@ public class BoilerpipeArticleParser implements ArticleParser {
                 }
             }
             if (content.size() < 1) {
-            	log.warn("no main content found for {}", article.getTitle());
+            	LOG.warn("no main content found for {}", article.getTitle());
             }
-            log.info("finished parsing article content of {}, found {} textblocks", article.getTitle(), content.size());
+            LOG.info("finished parsing article content of {}, found {} textblocks", article.getTitle(), content.size());
             return article;
         } catch (BoilerpipeProcessingException e) {
             throw new ParserException(e);

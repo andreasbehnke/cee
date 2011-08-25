@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultWebClient implements WebClient {
 
-	private static final Logger log = LoggerFactory.getLogger(DefaultWebClient.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DefaultWebClient.class);
 	
     private static final String HTTP_PROTOCOL = "http";
 
@@ -43,10 +43,10 @@ public class DefaultWebClient implements WebClient {
     public InputStream openStream(URL location) throws IOException {
         String protocol = location.getProtocol();
         if (protocol.equalsIgnoreCase(HTTP_PROTOCOL) || protocol.equalsIgnoreCase(HTTPS_PROTOCOL)) {
-            log.debug("open http stream for {}", location);
+            LOG.debug("open http stream for {}", location);
         	return openHttpStream(location);
         } else {
-        	log.debug("open standard stream for {}", location);
+        	LOG.debug("open standard stream for {}", location);
             return location.openStream();
         }
     }
@@ -65,17 +65,17 @@ public class DefaultWebClient implements WebClient {
         if (entity == null) {
             throw new IOException("No entity received for " + location.toExternalForm());
         }
-        log.debug("retrieved http entity for {}", location);
+        LOG.debug("retrieved http entity for {}", location);
         return entity;
     }
 
     public WebResponse openWebResponse(final URL location) throws IOException {
         String protocol = location.getProtocol();
         if (protocol.equalsIgnoreCase(HTTP_PROTOCOL) || protocol.equalsIgnoreCase(HTTPS_PROTOCOL)) {
-        	log.debug("open http response for {}", location);
+        	LOG.debug("open http response for {}", location);
         	return openHttpWebResponse(location);
         } else {
-        	log.debug("open standard response for {}", location);
+        	LOG.debug("open standard response for {}", location);
             return new WebResponse() {
                 public InputStream openStream() throws IOException {
                     return DefaultWebClient.this.openStream(location);

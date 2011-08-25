@@ -23,7 +23,7 @@ import com.cee.news.parser.net.WebClient;
  */
 public class SiteParser {
 	
-	private static final Logger log = LoggerFactory.getLogger(SiteParser.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SiteParser.class);
 
     private WebClient webClient;
     
@@ -88,10 +88,10 @@ public class SiteParser {
 
         InputStream input = webClient.openStream(siteLocation);
         try {
-        	log.info("start parsing site document {}", siteLocation);
+        	LOG.info("start parsing site document {}", siteLocation);
             reader.parse(new InputSource(input));
         } finally {
-        	log.info("finished parsing site document {}", siteLocation);
+        	LOG.info("finished parsing site document {}", siteLocation);
             input.close();
         }
         
@@ -101,8 +101,10 @@ public class SiteParser {
         List<Feed> remove = new ArrayList<Feed>();
         for (Feed feed : feeds) {
             if (!feedChecker.isSupportedFeed(new URL(feed.getLocation()))) {
-            	log.debug("removing unknown feed type from sites feed list: {} - {}", feed.getContentType(), feed.getTitle());
-                remove.add(feed);
+            	if (LOG.isDebugEnabled()) {
+            		LOG.debug("removing unknown feed type from sites feed list: {} - {}", feed.getContentType(), feed.getTitle());
+            	}
+            	remove.add(feed);
             }
         }
         feeds.removeAll(remove);
