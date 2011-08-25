@@ -107,10 +107,10 @@ public class SiteUpdater {
                 		store.update(site, article);
                 		articleCount++;
                 	} catch (Exception e) {
-                		LOG.error("could not store article {}: {}", article.getTitle(), e);
+                		LOG.error("could not store article {}", article.getTitle(), e);
     				}
             	} catch(Exception e) {
-            		LOG.error("could not parse article {}: {}", article.getTitle(), e);
+            		LOG.error("could not parse article {}", article.getTitle(), e);
             	}
                 // TODO: Implement equality compare and add new article version
                 // if necessary
