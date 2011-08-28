@@ -1,0 +1,178 @@
+<html>
+<head>
+<title>GWT Validation - Architecture</title>
+</head>
+<body>
+
+	<h2>Architecture</h2>
+
+	<p>From an architectural view we can divide the library into two
+		parts: client side and server side validation.</p>
+	<h2>Client side validation architecture</h2>
+	<p>
+		On the client side we foremost have the usability aspect of
+		validation. The users who will mostly be not malicious (hopefully)
+		need a way of knowing that they entered some data that the application
+		can tell is not correct. The requirements of the application might
+		also require, that the validations should be shown in a "nice" and/or
+		contextual way to the end user. So here is where probably the most
+		work is needed from the developers point of view (even though its
+		useless from a security point of view). <br />In order to support
+		this kind of usage the client side part of the library has the
+		following functionality:
+	<ul>
+		<li>Validate input fields</li>
+		<li>Show "nice" error messages</li>
+		<li>Show validation errors coming from the server side</li>
+	</ul>
+	</p>
+
+	<p>There are three main objects that you will use while doing
+		validation with the GWT Validation Library.
+	<ul>
+		<li>Validators</li>
+		<p>The validators are used to implement a validation constraint.
+			These validators can be instantiated with widgets which act as an
+			input for the validators validation algorithm. For example you can
+			use an IntegerValidator and add a TextBox instance to it. It will
+			then validate that the value entered into the TextBox instance is an
+			integer value. The only thing that validators do is to inform your
+			application that one or more values failed to meet the required
+			validation constraints (what you do with this information is
+			completely up to you).</p>
+		<li>Actions</li>
+		<p>The actions define a specific functionality that should be
+			carried out when a specific validator fails. An action or even
+			multiple actions can be added to a validator, so you have the freedom
+			of reacting differently for different validation constraints or
+			widgets, additionally you are able to build your actions as you
+			require them once and reuse them everywhere. An example action would
+			be the StyleAction, which will add and, optionally, remove a
+			CSS-style from the validated widget if the validation failed (E.g.
+			adding a style that adds a red border to the widget which failed
+			input validation).</p>
+		<li>Transformers</li>
+		<p>Transformers also fall into the category "usability". They
+			might be used to assist the user in the data entry process. For
+			example there is an UpperCaseTransformer. It is used to transform the
+			data entered into some TextBox into upper case. So the user is
+			assisted by this functionality in his data entry process.</p>
+	</ul>
+	</p>
+
+
+
+
+	<p>While the library already comes with some validators, actions
+		and transformers it is easy for you to create your own. So you have
+		the freedom of implementing the validation cases you really need and
+		are not provided for by the library (this is what makes this library
+		also a validation framework).</p>
+	<br />
+	<br />
+	<p>
+		One core element of the actual validation process was left out so far.
+		The
+		<tt>ValidationProcessor</tt>
+		. It is responsible for invoking all the necessary validations and
+		invoking the actions for all the failed validations. It is also
+		responsible for handling errors that occured on the server side of the
+		application (more on that later). For each window, dialog, etc. there
+		is usually one instance that you invoke to validate all the fields.
+		The result will tell you whether client side validation failed or
+		succeeded. If it failed all the actions added to validators that
+		failed will be invoked automatically. If it succeeded you propably
+		want to communicate the entered data to the server (You don't have to,
+		the library doesn't bother with how you communicate your data to the
+		server).
+	</p>
+	<br />
+	<p>Look at the schematic drawing below. It shows you how the
+		components (your input fields and GWT-VL) interact with each other on
+		the client side.</p>
+	<br />
+	<img src="images/clientarchitecture.jpg" />
+
+
+	<h2>Server side validation architecture</h2>
+	<p>The server side validation does not care about things like
+		usability or how the validation errors are presented to the user. Its
+		purpose is to ensure syntactically and semantically correct user
+		input. This can only be achieved at the server side, as we can never
+		trust the data that gets sent from the client side. That means that on
+		the server side we need to be aware that possibly every single data
+		input may be wrong or even malicious, so we need to check each and
+		every input. Furthermore some validations can only be carried out on
+		the server side. As a result the server side part of the library has
+		the following functionality:
+	<ul>
+		<li>Validate user input</li>
+		<li>Hand over possible validation errors to the client</li>
+	</ul>
+	</p>
+	<p>As you can see the server side has nothing to do with how or
+		even if that information is presented to the end user.</p>
+	<p>
+		As a result the server side is not quite so complex as the client side
+		part of the library. The main part you will use will be the
+		<tt>ServerValidation</tt>
+		class. It provides methods such as
+		<tt>ServerValidation.notNull</tt>
+		etc. that will help you to check correct data on the server side and
+		already gives you the functionality for talking back validation errors
+		to the client which will then be visually rich (as you defined them)
+		shown to the end user. The good thing is, that you are not limited to
+		the
+		<tt>ServerValidation</tt>
+		class validation functionality. You can easily do your own possibly
+		more advanced checks (like checking if some property value already
+		exists in the database, eg. a username). The
+		<tt>ServerValidation</tt>
+		class gives you an really easy way to talk even these back to the
+		client with (
+		<tt>ServerValidation.exception()</tt>
+		!) and you still profit from the automatic action invocation on the
+		client side.
+	</p>
+	<p>If you are using Hibernate-Validator you can even use some of
+		the hibernate validation constraints. If they fail it will also be
+		talked back to the client automatically without you needing to plugin
+		some custom code everywhere to get the profit from the hibernate
+		validations. Actually you can use all of the Hibernate-Validator
+		annotations. Although there are some issues with some of the
+		validation constraints that prevent the GWT Validation Library from
+		knowing which of the properties caused the failure. Right now there is
+		nothing that the library can do, the problem occurs only with
+		annotations that need to query the database in order to know if the
+		validation failed or not (e.g. unique=true on a column). So you should
+		take care of these cases yourself (which is not so complicated after
+		all). Annotations like @NotNull or @Length are automatically taken
+		care of by GWT-VL. In the future their might be additions to that
+		behaviour, so stay tuned.</p>
+
+	<p>For connecting the client side with the server side validation
+		there exist two possible ways.
+	<ul>
+		<li>GWT-RPC</li>
+		<p>If you can use RPC, than all the methods of the services that
+			do validation and want to talk the validation information back to the
+			client, are required declaring to throw ValidationException's. After
+			an failed async call this exception can be passed to the
+			ValidationProcessor who will parse it and invoke the failed
+			validation actions according to the exception.</p>
+		<li>Generic plain text</li>
+		<p>If you are not using GWT-RPC there is the possibility to use a
+			functionality provided by GWT-VL that can translate a
+			ValidationException into a simple String representation. This can
+			then be send to the client and the ValidationProcessor is able to
+			reconstruct the ValidationException from this String.</p>
+	</ul>
+	<p>To the user it should be fairly transparent whether the
+		validation error was rooted on a client side validation or on a server
+		side validation. The only "feelable" difference might be a short delay
+		in response time depending on how fast the client-server communication
+		is.</p>
+	<p>The schematic drawing below shows you how the server side part
+		of the library is architectured:</p>
+</body>
+</html>

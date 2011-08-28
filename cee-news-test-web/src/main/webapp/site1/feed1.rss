@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+	<channel>
+		<title>Dev Site</title>
+		<link>http://mydevsite</link>
+		<description>Blog about software development</description>
+		<language>de</language>
+		<pubDate>Mon, 10 Jan 2011 06:50:47 +0100</pubDate>
+		<lastBuildDate>Mon, 10 Jan 2011 06:50:47 +0100</lastBuildDate>
+		<item>
+			<title>GWT Validation - Architecture</title>
+			<link>article1.html</link>
+			<description>From an architectural view we can divide the library into two parts: client side and server side validation.</description>
+			<pubDate>Mon, 10 Jan 2011 06:12:38 +0100</pubDate>
+			<guid>article1.html</guid>
+		</item>
+		<item>
+			<title>Client side validation</title>
+			<link>article2.html</link>
+			<description>To get you up and running I will you show you a quick example
+		how the client side of the validation functionality is build using the
+		GWT Validation Library.</description>
+			<pubDate>Mon, 09 Jan 2011 06:12:38 +0100</pubDate>
+			<guid>article2.html</guid>
+		</item>
+		<item>
+			<title>Server side validation</title>
+			<link>article3.html</link>
+			<description>The GWT Validation Library makes it easy to do server side validation
+		and automates the process of showing the validation errors "nicely" on
+		the client side.</description>
+			<pubDate>Mon, 08 Jan 2011 06:12:38 +0100</pubDate>
+			<guid>article3.html</guid>
+		</item>
+		<item>
+			<title>Developer&#39;s Guide - Cell Widgets - Google Web Toolkit - Google Code</title>
+			<link>article4.html</link>
+			<description>Cell widgets (data presentation widgets) are high-performance, lightweight widgets composed of Cells for displaying data.</description>
+			<pubDate>Mon, 10 Jan 2010 06:12:38 +0100</pubDate>
+			<guid>article4.html</guid>
+		</item>
+	</channel>
+</rss>
