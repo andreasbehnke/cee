@@ -16,7 +16,8 @@
 		<!-- dependency versions -->
 		<gwt.version>2.3.0</gwt.version>
 		<spring.version>2.5.6.SEC02</spring.version>
-		<slf4j.version>1.6.2</slf4j.version>
+		<!-- TODO: Set this to 1.6.2! -->
+		<slf4j.version>1.6.1</slf4j.version>
 		<jackrabbit.version>2.2.7</jackrabbit.version>
 		
 		<source.encoding>UTF-8</source.encoding>
@@ -81,6 +82,7 @@
 		<module>cee-news-store-jcr</module>
 		<module>cee-news-webreader</module>
 		<module>cee-news-webreader-tomcat6</module>
+		<module>cee-news-webreader-jetty7</module>
 	</modules>
 
 	<dependencyManagement>

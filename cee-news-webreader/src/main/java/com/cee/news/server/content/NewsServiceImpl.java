@@ -4,6 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cee.news.client.content.NewsService;
 import com.cee.news.model.Article;
 import com.cee.news.model.EntityKey;
@@ -17,6 +20,8 @@ import com.cee.news.store.WorkingSetStore;
 
 public class NewsServiceImpl implements NewsService {
 
+	private static final Logger LOG = LoggerFactory.getLogger(NewsServiceImpl.class);
+	
 	private static final long serialVersionUID = -1910608040966050631L;
 
 	private ArticleStore articleStore;
@@ -45,7 +50,11 @@ public class NewsServiceImpl implements NewsService {
 	public List<EntityKey> getArticlesOfSite(String siteName) {
 		try {
 			Site site = siteStore.getSite(siteName);
-			return articleStore.getArticlesOrderedByDate(site);
+			List<EntityKey> keys = articleStore.getArticlesOrderedByDate(site);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Retrieved {} articles for site {}", keys.size(), siteName);
+			}
+			return keys;
 		} catch (StoreException exception) {
 			throw new RuntimeException(exception);
 		}
@@ -55,7 +64,11 @@ public class NewsServiceImpl implements NewsService {
 	public List<EntityKey> getArticlesOfWorkingSet(String workingSetName) {
 		try {
 			WorkingSet workingSet = workingSetStore.getWorkingSet(workingSetName);
-			return articleStore.getArticlesOrderedByDate(workingSet);
+			List<EntityKey> keys = articleStore.getArticlesOrderedByDate(workingSet);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Retrieved {} articles for working set {}", keys.size(), workingSetName);
+			}
+			return keys;
 		} catch (StoreException exception) {
 			throw new RuntimeException(exception);
 		}

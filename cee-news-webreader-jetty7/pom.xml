@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>cee-news-webreader-tomcat6</artifactId>
+	<artifactId>cee-news-webreader-jetty7</artifactId>
 	<packaging>war</packaging>
-	<name>News Reader - Tomcat 6 Bundle</name>
+	<name>News Reader - Jetty 7 Bundle</name>
 		
 	<parent>
 		<groupId>com.cee</groupId>
@@ -27,10 +27,6 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>apache-log4j-extras</artifactId>
 		</dependency>
 	</dependencies>
 </project>
