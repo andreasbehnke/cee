@@ -36,7 +36,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         setupSession();
         workingSetStore = new JcrWorkingSetStore(session);
         siteStore = new JcrSiteStore(session);
-        articleStore = new JcrArticleStore(siteStore, session);
+        articleStore = new JcrArticleStore(session);
     }
     
     @AfterClass
@@ -134,7 +134,7 @@ public class TestJcrArticleStore extends JcrTestBase {
     }
 
     @Test
-    public void testGetArticlesOrderedByDate() throws StoreException, MalformedURLException {
+    public void testGetArticlesOrderedByDate() throws StoreException, MalformedURLException, RepositoryException {
         Site site = createSite("http://www.abc.de");
         
         Article article = new Article();
@@ -191,6 +191,8 @@ public class TestJcrArticleStore extends JcrTestBase {
         cal.set(Calendar.DAY_OF_MONTH, 23);
         article.setPublishedDate(cal);
         String path4 = articleStore.update(site2, article).getKey();
+        
+        articleStore.dumpContent();
         
         List<EntityKey> articles = articleStore.getArticlesOrderedByDate(site);
         assertEquals(3, articles.size());

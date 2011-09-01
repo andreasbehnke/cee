@@ -33,7 +33,7 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="jcrSession" factory-bean="jcrRepository" factory-method="login" scope="request" destroy-method="logout">
+	<bean id="jcrSession" factory-bean="jcrRepository" factory-method="login" scope="prototype" destroy-method="logout">
 		<constructor-arg ref="jcrCredentials" />
 	</bean>
 	
@@ -51,33 +51,27 @@
 
 	<!-- Backend Services -->
 	
-	<bean id="siteStore" class="com.cee.news.store.jcr.JcrSiteStore" scope="request">
+	<bean id="siteStore" class="com.cee.news.store.jcr.JcrSiteStore" scope="prototype">
 		<property name="session" ref="jcrSession" />
-		<aop:scoped-proxy />
 	</bean>
 
-	<bean id="articleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="request">
+	<bean id="articleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="prototype">
 		<property name="session" ref="jcrSession" />
-		<aop:scoped-proxy />
 	</bean>
 	
 	<!-- Store used by the thread pool which executes commands -->
+	
 	<bean id="commandArticleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="prototype">
 		<property name="session" ref="jcrCommandSession" />
 	</bean>
 
-	<bean id="workingSetStore" class="com.cee.news.store.jcr.JcrWorkingSetStore" scope="request">
+	<bean id="workingSetStore" class="com.cee.news.store.jcr.JcrWorkingSetStore" scope="prototype">
 		<property name="session" ref="jcrSession" />
-		<aop:scoped-proxy />
 	</bean>
 
 	<!-- Parser -->
 	
-	<bean id="webClient" class="com.cee.news.parser.net.DefaultWebClient" scope="prototype">
-		<property name="httpClient">
-			<bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient" scope="prototype" />
-		</property>
-	</bean>
+	<bean id="webClient" class="com.cee.news.parser.net.ClassResourceWebClient" scope="prototype"/>
 	
 	<bean id="htmlParser" class="org.ccil.cowan.tagsoup.Parser" scope="prototype"/>
 	
@@ -93,7 +87,7 @@
 	<bean id="siteUpdater" class="com.cee.news.parser.SiteUpdater" scope="prototype">
 		<property name="articleParser" ref="articleParser" />
 		<property name="feedParser" ref="feedParser" />
-		<property name="store" ref="commandArticleStore" />
+		<property name="store" ref="articleStore" />
 		<property name="onlyActiveFeeds" value="true" />
 	</bean>
 

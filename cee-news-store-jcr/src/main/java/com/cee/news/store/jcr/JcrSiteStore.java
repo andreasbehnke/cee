@@ -45,7 +45,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         setSession(session);
     }
     
-    protected static String getSitePath(String name) {
+    public static String getSitePath(String name) {
     	return Text.escapeIllegalJcrChars(name);
     }
     
@@ -84,7 +84,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
             throw new StoreException(site, "Could not retrieve site node from repository", e);
         }
         if (siteNode == null) {
-            try {
+            try {		
                 siteNode = createSiteNode(name);
                 LOG.debug("Added site node for ", name);
             } catch (RepositoryException e) {

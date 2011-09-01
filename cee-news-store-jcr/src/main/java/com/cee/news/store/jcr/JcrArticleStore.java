@@ -43,7 +43,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
     private final static String ARTICLE_TITLE_SELECTOR = "articleTitle";
     
     private final static String SELECT_ARTICLES_OF_SITE_ORDERED_BY_DATE = "SELECT s.[news:name] AS " + SITE_NAME_SELECTOR + ", a.[news:id] AS " + ARTICLE_ID_SELECTOR + ", a.[news:title] AS " + ARTICLE_TITLE_SELECTOR + " "
-                                                                        + "FROM [news:article] AS a INNER JOIN [news:site] AS s ON ISCHILDNODE(a,s) "
+                                                                        + "FROM [news:article] AS a INNER JOIN [news:site] AS s ON ISCHILDNODE(a, s) "
                                                                         + "WHERE %s " 
                                                                         + "ORDER BY a.[news:published] DESC";
     
@@ -51,19 +51,12 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
     
     private final static String WHERE_SITE_NAME_TERM = "s.[news:name] = '%s' ";
     
-    private JcrSiteStore siteStore;
-
     public JcrArticleStore() {
     }
 
-    public JcrArticleStore(JcrSiteStore siteStore, Session session) throws StoreException {
+    public JcrArticleStore(Session session) throws StoreException {
         setSession(session);
-        setSiteStore(siteStore);
     }
-    
-    public void setSiteStore(JcrSiteStore siteStore) {
-		this.siteStore = siteStore;
-	}
     
     protected static String getArticlePath(String articleId) {
     	return Text.escapeIllegalJcrChars(articleId);
@@ -101,9 +94,6 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         if (article == null) {
             throw new IllegalArgumentException("Parameter article must not be null");
         }
-        if (siteStore == null) {
-        	throw new IllegalStateException("Site store has not been initialized");
-        }
         Node articleNode = null;
         String siteName = site.getName();
         String articleId = article.getId();
@@ -117,7 +107,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         if (articleNode == null) {
             Node siteNode = null;
             try {
-                siteNode = siteStore.getSiteNode(siteName);
+                siteNode = getContentNodeOrNull(JcrSiteStore.getSitePath(siteName));
             } catch (RepositoryException e) {
                 throw new StoreException(site, "Could not find site node", e);
             }

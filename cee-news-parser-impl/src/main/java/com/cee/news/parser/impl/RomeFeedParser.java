@@ -79,8 +79,8 @@ public class RomeFeedParser implements FeedParser {
             }
             article.setId(id);
             try {
-                new URL(link);//check for well formed URL
-                article.setLocation(link);
+            	URL articleUrl = new URL(feedLocation, link);//check for well formed URL
+                article.setLocation(articleUrl.toExternalForm());
             } catch (MalformedURLException e) {
                 throw new ParserException("The article has an invalid URL.", e);
             }

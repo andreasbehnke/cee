@@ -3,6 +3,8 @@ package com.cee.news.server.content;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -31,8 +33,9 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet
 
 	private static final long serialVersionUID = 8695157160684778713L;
 
-	private static final Logger log = LoggerFactory
-			.getLogger(SiteUpdateServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(SiteUpdateServiceImpl.class);
+	
+	private final List<String> sitesInProgress;
 
 	private SiteStore siteStore;
 
@@ -46,6 +49,7 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet
 		workQueue = new LinkedBlockingQueue<Runnable>();
 		pool = new ThreadPoolExecutor(threadPoolSize, threadPoolSize, 0,
 				TimeUnit.MILLISECONDS, workQueue);
+		sitesInProgress = new ArrayList<String>();
 	}
 
 	public void setSiteStore(SiteStore siteStore) {
@@ -55,26 +59,45 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet
 	public void setWorkingSetStore(WorkingSetStore workingSetStore) {
 		this.workingSetStore = workingSetStore;
 	}
+	
+	private synchronized void removeSite(String siteName) {
+		if (!sitesInProgress.remove(siteName)) {
+			log.warn("{} could not be removed from list of sites in progress", siteName);
+		}
+	}
 
 	@Override
-	public int addSiteToUpdateQueue(String siteName) {
-		if (!workQueue.contains(siteName)) {
+	public synchronized int addSiteToUpdateQueue(final String siteName) {
+		if (!sitesInProgress.contains(siteName)) {
 			Site siteEntity = null;
 			try {
 				siteEntity = siteStore.getSite(siteName);
 			} catch (StoreException e) {
 				log.error(COULD_NOT_RETRIEVE_SITE, e);
-				throw new RuntimeException(COULD_NOT_RETRIEVE_SITE);
+				throw new ServiceException(COULD_NOT_RETRIEVE_SITE);
 			}
-			SiteUpdateCommand command = createUpdateSiteCommand();
+			SiteUpdateCommand command = createSiteUpdateCommand();
+			command.addCommandCallback(new CommandCallback() {
+				
+				@Override
+				public void notifyFinished() {
+					removeSite(siteName);
+				}
+				
+				@Override
+				public void notifyError(Exception ex) {
+					//TODO: how to handle error reporting for the user?
+				}
+			});
 			command.setSite(siteEntity);
+			sitesInProgress.add(siteName);
 			pool.execute(command);
 		}
-		return workQueue.size();
+		return sitesInProgress.size();
 	}
 
 	@Override
-	public int addSitesOfWorkingSetToUpdateQueue(String workingSetName) {
+	public synchronized int addSitesOfWorkingSetToUpdateQueue(String workingSetName) {
 		try {
 			WorkingSet ws = workingSetStore.getWorkingSet(workingSetName);
 			if (ws == null)
@@ -83,7 +106,7 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet
 			for (EntityKey siteKey : ws.getSites()) {
 				addSiteToUpdateQueue(siteKey.getName());
 			}
-			return workQueue.size();
+			return sitesInProgress.size();
 		} catch (StoreException se) {
 			throw new ServiceException(se.toString());
 		}
@@ -91,12 +114,14 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet
 
 	@Override
 	public int getUpdateQueueSize() {
-		return workQueue.size();
+		return sitesInProgress.size();
 	}
 
 	@Override
-	public void clearQueue() {
+	public synchronized void clearQueue() {
+		log.info("Clearing work queue");
 		workQueue.clear();
+		sitesInProgress.clear();
 	}
 
 	@Override
@@ -126,7 +151,7 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet
 	/**
 	 * @return A update site command prepared with all dependencies
 	 */
-	protected abstract SiteUpdateCommand createUpdateSiteCommand();
+	protected abstract SiteUpdateCommand createSiteUpdateCommand();
 
 	/**
 	 * @return A site parser prepared with all dependencies

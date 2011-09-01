@@ -100,6 +100,11 @@
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
+				<artifactId>cee-news-regression-test</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
 				<artifactId>cee-news-store-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -113,6 +118,12 @@
 				<groupId>com.cee</groupId>
 				<artifactId>cee-news-store-jcr</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
+				<artifactId>cee-news-test-web</artifactId>
+				<version>${project.version}</version>
+				<type>war</type>
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
@@ -231,11 +242,11 @@
 				<artifactId>spring</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
-			<!-- dependency>
-				<groupId>xerces</groupId>
-				<artifactId>xercesImpl</artifactId>
-				<version>2.9.1</version>
-			</dependency -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
