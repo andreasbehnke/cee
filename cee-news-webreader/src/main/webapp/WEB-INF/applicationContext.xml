@@ -85,9 +85,9 @@
 
 	<!-- Parser -->
 	
-	<bean id="webClient" class="com.cee.news.parser.net.DefaultWebClient" scope="thread">
+	<bean id="webClient" class="com.cee.news.parser.net.DefaultWebClient" scope="prototype">
 		<property name="httpClient">
-			<bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient" scope="thread" />
+			<bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient" scope="prototype" />
 		</property>
 	</bean>
 	
