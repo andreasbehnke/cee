@@ -1,0 +1,199 @@
+<html>
+<head>
+<title>Server side validation</title>
+</head>
+<body>
+	<h2>Server side validation</h2>
+	<p>
+		The GWT Validation Library makes it easy to do server side validation
+		and automates the process of showing the validation errors "nicely" on
+		the client side. That is for showing validation errors rooted on the
+		server side the same functionality that is used for showing client
+		side validation errors is used. That means if you bound for example a
+		<tt class="interfacename">StyleAction</tt>
+		to an
+		<tt class="interfacename">Validator</tt>
+		which was added to a TextBox that sets a red border when validation
+		fails, that same functionality is accessed while processing validation
+		errors from the server side, with a minimum amount of additional
+		effort on the developers side.
+	</p>
+	<p>
+		On the server side we have one special object which you will work
+		with: The
+		<tt>ServerValidation</tt>
+		.
+	</p>
+	<p>
+		It provides methods for doing your validation checks, so you can
+		validate if the data sent by the client is correct. The main
+		functionality that the
+		<tt>ServerValidation</tt>
+		provides is the possibility to throw an
+		<tt class="interfacename">ValidationException</tt>
+		. This
+		<tt>ValidationException</tt>
+		can be understood by the client side code of the library and will
+		result in the invocation of the actions added to the field that failed
+		validation. So let's jump right into how you would do server side
+		validation:
+	</p>
+	<br />
+	<pre>
+	public void saveCar(Car car) throws ValidationException {
+	
+		ServerValidation()
+		.notNull(car, "car")
+		.inRange(car.getPS(), 40, 230, "ps")
+		.min(car.getSeats(), 2, "seats")
+		.max(car.getDoors(), 5, "doors");
+		
+		
+		//If we come here no validation errors, so invoke business logic
+		
+		carDao.save(car);
+	
+	} 
+			</pre>
+	<p>
+		What we have here is a method of some service invoked via RCP. Note
+		that it declares
+		<tt class="interfacename">throws ValidationException</tt>
+		.
+	</p>
+	<p>
+		We then use the
+		<tt>ServerValidation</tt>
+		object to do some validations. Per default the
+		<tt class="interfacename">ServerValidation</tt>
+		will follow a "fail fast" approach (can be configured). That means the
+		first validation constraint that is not met, will be send back to the
+		client. So in this case the client would only see one validation
+		failure even if there might have been more, because in the "fail fast"
+		mode the first validation restriction that is not met will immediately
+		trigger an
+		<tt>ValidationException</tt>
+		. This way we can safely assume that after the validation calls are
+		over and there was no exception thrown, the validations went through
+		successfully. If you would rather like to validate all the validations
+		and only throw the
+		<tt>ValidationException</tt>
+		after all validations are validated you can do the following:
+	</p>
+	<pre>
+	public void saveCar(Car car) throws ValidationException {
+	
+		ServerValidation(<font style="color: #f00;">false</font>)
+		.notNull(car, "car")
+		.inRange(car.getPS(), 40, 230, "ps")
+		.min(car.getSeats(), 2, "seats")
+		.max(car.getDoors(), 5, "doors")
+		<font style="color: #f00;">.validate()</font>; //This will throw an <tt
+			class="interfacename">ValidationException</tt> if there
+				//were one or more errors
+		
+		
+		//If we come here no validation errors, so invoke business logic
+		
+		carDao.save(car);
+	
+	} 
+			</pre>
+	<p>
+		In this case all validations will be run and only at the end (at the
+		call to <i>validate()</i>) a
+		<tt class="interfacename">ValidationException</tt>
+		might be thrown. This lets the client side part of the library be
+		notified not only of the first validation that failed, like in the
+		first example, it hands back ALL the errors to the client side that
+		occured. This will in most cases probably be the better method to use
+		the
+		<tt>ServerValidation</tt>
+		.
+	</p>
+
+	<p>
+		If you have validation needs that the
+		<tt>ServerValidation</tt>
+		does not provide (you will most likely have) than there is a easy way
+		to still profit from the GWT Validation Libraries infrastructure. See
+		this example:
+	</p>
+	<pre>
+	public void createUser(User newUser) throws ValidationException {
+	
+		if(usernameTaken(newUser.getUsername())) {
+			ServerValidation.exception("username_exists", "username");
+		}
+		
+		userDao.create(newUser);
+		
+	}
+			</pre>
+	<p>
+		The value of the first parameter is the message key which is given by
+		you and can be fully i18n on the client side (see the <a
+			href="?to=i18nDoc">section about i18n</a>). The second argument
+		specifies the property that this validation error will be associated
+		to on the client side.
+	</p>
+
+	<h2>Server side to client side validation</h2>
+	<p>
+		Lets look at a full example of validation that utilizes client side
+		and server side validations. We assume we have a client side as shown
+		in <a href="?to=clientDoc">client side validation chapter</a>. On the
+		corresponding server side we want to store the entered year of birth.
+		For exemplary reasons we also need this year to be unique. This unique
+		check can only be done on the server side. So we could develop the
+		server side something like this:
+	</p>
+	<pre>
+	public void saveBirthYear(int birthYear) throws ValidationException {
+		if(birthYearExists(birthYear)) {
+			ServerValidation.exception("birth_year_exists", <font
+			style="color: #f00;">"birthYear"</font>);
+		}
+		
+		birthYearsDao.create(birthYear);
+	}
+			</pre>
+	<p>
+		The important part here is that the second parameter ("birthYear") to
+		the
+		<tt class="interfacename">ServerValidation.execption()</tt>
+		method is called exactly the same like on the client side were we
+		added a validator to the TextBox that contains the user input for the
+		year of birth:
+	</p>
+	<pre>
+	ValidationProcessor validator = new DefaultValidationProcessor();
+	
+	validator.addValidators( <font style="color: #f00;">"birthYear"</font>,
+		new IntegerValidator(birthYearTextBox, 1890, 2009)
+			.addActionForFailure(new StyleAction("validationFailedBorder"))
+			.addActionForFailure(new LabelTextAction(errorLabel))
+	);
+			</pre>
+	<p>
+		The result is, that the user is provided with a validation message
+		(through the
+		<tt class="interfacename">LabelTextAction</tt>
+		and a custom style (in this case the
+		<tt class="interfacename">StyleAction</tt>
+		) is added no matter if the error occured on the client side (through
+		the
+		<tt class="interfacename">IntegerValidator</tt>
+		) or on the server side (through
+		<tt>ServerValidation.exception()</tt>
+		). So if you needed to change the visual appearence of validation
+		errors you only need to change the client side code as the server side
+		code just forwards to whatever you defined on the client side. You can
+		take this approach even further by providing custom Validators that
+		already come with the actions you seem fit pre-initialized, so you
+		don't even have to add the actions over and over again. Because of
+		this modularity it should be really time saving to build a rich visual
+		user feedback.
+	</p>
+</body>
+</html>

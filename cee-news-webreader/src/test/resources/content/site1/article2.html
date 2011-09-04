@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>Client side validation</title>
+</head>
+<body>
+	<h2>Client side validation</h2>
+
+	<p>To get you up and running I will you show you a quick example
+		how the client side of the validation functionality is build using the
+		GWT Validation Library.</p>
+	<p>We will have a form with one TextBox widget which will be used
+		for entering the year of birth. If the validation fails we want the
+		TextBox to get a red border, additionally a label should be set to the
+		corresponding error message, that tells the user what went wrong.
+		Standard GWT stuff will be for some part ignored because the example
+		should help you focus on the specifics of validation (Its assumed that
+		you know standard GWT stuff).</p>
+	<p>So let's start:</p>
+	<p>
+		We have a Dialog which we added the TextBox to. What we need
+		additionally is a button that will trigger the validation and a Label
+		that will present the validation error message, if there was one. <br />
+		So we basically have something like this:
+	</p>
+	<pre>
+	TextBox birthYearTextBox = new TextBox();
+	Label errorLabel = new Label("");
+	Button validateButton = new Button("Validate!");
+			</pre>
+	<br />
+	<p>We would add these components to the dialog and then we would
+		setup the validation constraints like this:</p>
+	<pre>
+	ValidationProcessor validator = new DefaultValidationProcessor();
+	
+	validator.addValidators( "birthYear",
+		new IntegerValidator(birthYearTextBox, 1890, 2009)
+			.addActionForFailure(new StyleAction("validationFailedBorder"))
+			.addActionForFailure(new LabelTextAction(errorLabel))
+	);
+			</pre>
+	<p>
+		We now have associated a validation constraint with a widget. We
+		configured the <i>IntegerValidator</i> so that it will accept integer
+		values in the range of [1890,2009]. We added two actions to the
+		validator. The first action is the <i>StyleAction</i> which we
+		configured to add the "validationFailedBorder" CSS-style (These styles
+		must be defined by you in your projects CSS-file) to the validated
+		widget (the TextBox), if it fails the validation. The second action
+		that will be invoked if the validation fails is the <i>LabelTextAction</i>.
+		It will set the text of the label to the error message that the <i>IntegerValidator</i>
+		generates if its constraint is violated.
+	</p>
+	<p>The only thing missing now, is the invocation of the validation
+		process. Normally, before the data is send to the server we will
+		perform client side validation and abort if it finds errors. To do
+		this we configure the validate button to trigger validation:</p>
+	<pre>
+	validateButton.addClickListener(new ClickListener() {
+		public void onClick(Widget sender) {
+			boolean success = validator.validate();
+			if(success) {
+				//No validation errors found. We can submit the data to the server!
+			}else {
+				//One (or more) validations failed. The actions will have been
+				//already invoked by the validator.validate() call.
+			}
+		}
+	});
+			</pre>
+	<p>
+		That is essentially all you have to do to add rich client validations.
+		You would do this with every data input widget that you want to
+		validate. There is also the concept of
+		<tt>GroupValidator</tt>
+		's that are able to group certain validators and can then be used as a
+		single validator. For example there exists a
+		<tt>TrimmedStringLengthValidator</tt>
+		. It consists of a TrimTransformator that will trim the input of a
+		widget and a
+		<tt>StringLengthValidator</tt>
+		that will check if the trimmed input has a specific length.<br /> <br />As
+		with validators, transformators and actions you can freely create your
+		own group validators. This is part of the modular design of the GWT
+		Validation Library that tries to help you to follow DRY (Don't repeat
+		yourself) practices. So you would normally identify which kind of
+		validations , transformators and actions you need and develop them
+		once while using them throughout the application.
+	</p>
+	<p>
+		For more informations on these issues take a look into the <a
+			href="?to=resources">resources section</a>.
+	</p>
+</body>
+</html>
