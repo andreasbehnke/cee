@@ -3,6 +3,8 @@ package com.cee.news.server.content;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springbyexample.bean.scope.thread.ThreadScopeRunnable;
+
 public abstract class AbstractCommand implements Command {
 
 	private List<CommandCallback> callbacks = new ArrayList<CommandCallback>();
@@ -12,7 +14,12 @@ public abstract class AbstractCommand implements Command {
 	@Override
 	public void run() {
 		try {
-			runInternal();
+			new ThreadScopeRunnable(new Runnable() {
+				@Override
+				public void run() {
+					runInternal();
+				}
+			}).run();
 		} catch (Exception ex) {
 			fireError(ex);
 		} finally {

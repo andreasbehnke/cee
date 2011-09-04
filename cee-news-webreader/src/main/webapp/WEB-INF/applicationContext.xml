@@ -3,6 +3,17 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
+	<!-- Register thread scope -->
+	<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+		<property name="scopes">
+			<map>
+				<entry key="thread">
+					<bean class="org.springbyexample.bean.scope.thread.ThreadScope"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
 	<!-- JCR -->
 
 	<bean id="jcrRepositoryConfig" class="org.apache.jackrabbit.core.config.RepositoryConfig" factory-method="install">
@@ -37,7 +48,7 @@
 		<constructor-arg ref="jcrCredentials" />
 	</bean>
 	
-	<bean id="jcrCommandSession" factory-bean="jcrRepository" factory-method="login" scope="prototype" destroy-method="logout">
+	<bean id="jcrCommandSession" factory-bean="jcrRepository" factory-method="login" scope="thread" destroy-method="logout">
 		<constructor-arg ref="jcrCredentials" />
 	</bean>
 
@@ -62,8 +73,9 @@
 	</bean>
 	
 	<!-- Store used by the thread pool which executes commands -->
-	<bean id="commandArticleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="prototype">
+	<bean id="commandArticleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="thread">
 		<property name="session" ref="jcrCommandSession" />
+		<aop:scoped-proxy />
 	</bean>
 
 	<bean id="workingSetStore" class="com.cee.news.store.jcr.JcrWorkingSetStore" scope="request">
@@ -73,9 +85,9 @@
 
 	<!-- Parser -->
 	
-	<bean id="webClient" class="com.cee.news.parser.net.DefaultWebClient" scope="prototype">
+	<bean id="webClient" class="com.cee.news.parser.net.DefaultWebClient" scope="thread">
 		<property name="httpClient">
-			<bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient" scope="prototype" />
+			<bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient" scope="thread" />
 		</property>
 	</bean>
 	
@@ -103,11 +115,11 @@
 	
 	<bean id="htmlReader" class="org.ccil.cowan.tagsoup.Parser" scope="prototype" />
 
-	<bean id="feedChecker" class="com.cee.news.parser.impl.RomeFeedChecker">
+	<bean id="feedChecker" class="com.cee.news.parser.impl.RomeFeedChecker" scope="prototype">
 		<property name="webClient" ref="webClient" />
 	</bean>
 
-	<bean id="siteParser" class="com.cee.news.parser.SiteParser">
+	<bean id="siteParser" class="com.cee.news.parser.SiteParser" scope="prototype">
 		<property name="webClient" ref="webClient" />
     	<property name="reader" ref="htmlReader" />
 		<property name="feedChecker" ref="feedChecker" />
