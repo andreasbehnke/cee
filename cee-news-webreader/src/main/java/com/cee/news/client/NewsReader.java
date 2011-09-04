@@ -78,7 +78,7 @@ public class NewsReader implements EntryPoint {
 				appEventBus.fireEvent(event);
 			}
 		});
-		final WorkingSetSelectionView workingSetSelectionView = startPanel.getWorkingSetSelectionPanel();
+		final WorkingSetSelectionView workingSetSelectionView = startPanel.getWorkingSetSelectionView();
 		
 		//Site Update Service
 		final SiteUpdateServiceAsync siteUpdateService = SiteUpdateService.Util.getInstance();
@@ -100,7 +100,7 @@ public class NewsReader implements EntryPoint {
 		
 		//Latest Article List
 		final NewsListContentModel newsListContentModel = new NewsListContentModel();
-		new ListPresenter(newsListContentModel, newsListContentModel, startPanel.getListViewLatestArticles());
+		new ListPresenter(newsListContentModel, newsListContentModel, startPanel.getLatestArticlesListView());
 		appEventBus.addHandler(SelectionChangedEvent.TYPE, new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {
@@ -111,7 +111,7 @@ public class NewsReader implements EntryPoint {
 		//Site List
 		final SiteListContentModel sitesOfWorkingSetModel = new SiteListContentModel();
 		sitesOfWorkingSetModel.addErrorHandler(globalErrorHandler);
-		new ListPresenter(sitesOfWorkingSetModel, sitesOfWorkingSetModel, startPanel.getListViewSites());
+		new ListPresenter(sitesOfWorkingSetModel, sitesOfWorkingSetModel, startPanel.getSitesListView());
 		appEventBus.addHandler(SelectionChangedEvent.TYPE, new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {

@@ -10,16 +10,18 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 
 public class NewsPanel extends Composite {
 
-    public NewsPanel() {
+    private Button buttonGoToStart;
+
+	public NewsPanel() {
         
         LayoutPanel layoutPanel = new LayoutPanel();
         initWidget(layoutPanel);
         layoutPanel.setSize("963px", "470px");
         
-        Button btnGoToStart = new Button("Go to Start");
-        layoutPanel.add(btnGoToStart);
-        layoutPanel.setWidgetLeftWidth(btnGoToStart, 0.0, Unit.PX, 124.0, Unit.PX);
-        layoutPanel.setWidgetTopHeight(btnGoToStart, 0.0, Unit.PX, 24.0, Unit.PX);
+        buttonGoToStart = new Button("Go to Start");
+        layoutPanel.add(buttonGoToStart);
+        layoutPanel.setWidgetLeftWidth(buttonGoToStart, 0.0, Unit.PX, 124.0, Unit.PX);
+        layoutPanel.setWidgetTopHeight(buttonGoToStart, 0.0, Unit.PX, 24.0, Unit.PX);
         
         PagingPanel pagingPanel = new PagingPanel();
         layoutPanel.add(pagingPanel);
@@ -36,7 +38,7 @@ public class NewsPanel extends Composite {
         layoutPanel.setWidgetLeftWidth(nlnlblCurrentSite, 0.0, Unit.PX, 90.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(nlnlblCurrentSite, 30.0, Unit.PX, 16.0, Unit.PX);
         
-        InlineLabel nlnlblNewInlinelabel = new InlineLabel("What other say:");
+        InlineLabel nlnlblNewInlinelabel = new InlineLabel("What others say:");
         layoutPanel.add(nlnlblNewInlinelabel);
         layoutPanel.setWidgetRightWidth(nlnlblNewInlinelabel, 178.0, Unit.PX, 149.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(nlnlblNewInlinelabel, 30.0, Unit.PX, 16.0, Unit.PX);

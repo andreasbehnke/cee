@@ -3,12 +3,13 @@ package com.cee.news.client;
 import com.cee.news.client.list.ListPanel;
 import com.cee.news.client.list.ListView;
 import com.cee.news.client.workingset.WorkingSetSelectionPanel;
+import com.cee.news.client.workingset.WorkingSetSelectionView;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 
-public class StartPanel extends Composite {
+public class StartPanel extends Composite implements StartView {
     
 	private final ListPanel listPanelLatestArticles;
     private final WorkingSetSelectionPanel workingSetSelectionPanel;
@@ -44,13 +45,25 @@ public class StartPanel extends Composite {
         layoutPanel.setWidgetLeftWidth(nlnlblLatestNews, 366.0, Unit.PX, 90.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(nlnlblLatestNews, 30.0, Unit.PX, 16.0, Unit.PX);
     }
-    public ListView getListViewLatestArticles() {
+    /* (non-Javadoc)
+	 * @see com.cee.news.client.StartView#getLatestArticlesListView()
+	 */
+    @Override
+	public ListView getLatestArticlesListView() {
         return listPanelLatestArticles;
     }
-    public WorkingSetSelectionPanel getWorkingSetSelectionPanel() {
+    /* (non-Javadoc)
+	 * @see com.cee.news.client.StartView#getWorkingSetSelectionView()
+	 */
+    @Override
+	public WorkingSetSelectionView getWorkingSetSelectionView() {
         return workingSetSelectionPanel;
     }
-    public ListView getListViewSites() {
+    /* (non-Javadoc)
+	 * @see com.cee.news.client.StartView#getSitesListView()
+	 */
+    @Override
+	public ListView getSitesListView() {
         return listPanelSites;
     }
 }

@@ -68,8 +68,12 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 					public void onSuccess(SiteData result) {
 						switch (result.getState()) {
 						case ok:
-							site = result;
-							guessUniqueSiteName();
+							if (site.getFeeds().size() < 1) {
+								showErrorMessage("This site does not provide any feed information");
+							} else {
+								site = result;
+								guessUniqueSiteName();
+							}
 							break;
 						case ioError:
 							showErrorMessage("Could not load site");

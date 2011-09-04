@@ -18,6 +18,8 @@ import com.cee.news.store.WorkingSetStore;
 
 public class SiteServiceImpl implements SiteService {
 
+	private static final String PREFIX_HTTP_WWW = "http://www.";
+
 	private static final String COULD_NOT_GUESS_SITE_NAME = "Could not guess site name";
 
 	private static final String COULD_NOT_RETRIEVE_SITE_DESCRIPTION = "Could not retrieve site description";
@@ -95,8 +97,18 @@ public class SiteServiceImpl implements SiteService {
 
 	@Override
 	public String guessUniqueSiteName(String name) {
+		if (name == null) {
+			throw new IllegalArgumentException("Paramter name must not be null");
+		}
 		int counter = 1;
 		String guessName = name;
+		if (guessName.startsWith(PREFIX_HTTP_WWW)) {
+			guessName = guessName.substring(PREFIX_HTTP_WWW.length());
+			int point = guessName.indexOf('.');
+			if (point>0) {
+				guessName = guessName.substring(0, point);
+			}
+		}
 		try {
 			while(siteStore.contains(guessName)) {
 				guessName = name + " " + counter;

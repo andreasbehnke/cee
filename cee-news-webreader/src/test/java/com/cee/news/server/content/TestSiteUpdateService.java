@@ -16,7 +16,6 @@ import com.cee.news.client.content.SiteUpdateService;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
-import com.cee.news.store.ArticleStore;
 import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
 import com.cee.news.store.jcr.JcrArticleStore;
@@ -58,20 +57,18 @@ public class TestSiteUpdateService {
 	
 	@Test
 	public void testSiteUpdate() throws StoreException, InterruptedException, RepositoryException {
-		 Site site = createSite();
-		 siteStore.update(site);
+		Site site = createSite();
+		siteStore.update(site);
+		
+		Assert.assertEquals(1, siteUpdateService.addSiteToUpdateQueue(TEST_SITE));
+		
+		while(siteUpdateService.getUpdateQueueSize() > 0) {
+			Thread.sleep(100);
+		}
 		 
-		 Assert.assertEquals(1, siteUpdateService.addSiteToUpdateQueue(TEST_SITE));
+		articleStore.dumpContent();
 		 
-		 while(siteUpdateService.getUpdateQueueSize() > 0) {
-			 Thread.sleep(100);
-		 }
-		 
-		 articleStore.dumpContent();
-		 
-		 List<EntityKey> keys = articleStore.getArticlesOrderedByDate(site);
-		 Assert.assertEquals(4, keys.size());
-		 
+		List<EntityKey> keys = articleStore.getArticlesOrderedByDate(site);
+		Assert.assertEquals(4, keys.size());
 	}
-
 }
