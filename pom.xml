@@ -15,7 +15,7 @@
 		
 		<!-- dependency versions -->
 		<gwt.version>2.3.0</gwt.version>
-		<spring.version>2.5.6.SEC02</spring.version>
+		<spring.version>3.0.6.RELEASE</spring.version>
 		<!-- TODO: Set this to 1.6.2! -->
 		<slf4j.version>1.6.1</slf4j.version>
 		<jackrabbit.version>2.2.7</jackrabbit.version>
@@ -238,8 +238,44 @@
 				<version>1.1</version>
 			</dependency>
 			<dependency>
+			    <groupId>org.springbyexample</groupId>
+			    <artifactId>org.springbyexample.threadscope</artifactId>
+			    <version>1.0.1</version>
+			    <exclusions>
+			    	<!-- Excluce old 3.0.0 spring version and some ugly stuff -->
+			    	<exclusion>
+			    		<groupId>org.springframework</groupId>
+			    		<artifactId>org.springframework.beans</artifactId>
+			    	</exclusion>
+			    	<exclusion>
+			    		<groupId>org.springframework</groupId>
+			    		<artifactId>org.springframework.context</artifactId>
+			    	</exclusion>
+			    	<exclusion>
+			    		<groupId>org.springframework</groupId>
+			    		<artifactId>org.springframework.context.support</artifactId>
+			    	</exclusion>
+			    	<exclusion>
+			    		<groupId>org.springframework</groupId>
+			    		<artifactId>org.springframework.core</artifactId>
+			    	</exclusion>
+			    	<exclusion>
+			    		<groupId>org.springframework</groupId>
+			    		<artifactId>org.springframework.core</artifactId>
+			    	</exclusion>
+			    	<exclusion>
+			    		<groupId>org.apache.commons</groupId>
+						<artifactId>com.springsource.org.apache.commons.collections</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.slf4j</groupId>
+						<artifactId>com.springsource.slf4j.api</artifactId>
+					</exclusion>
+			    </exclusions>
+			</dependency>
+			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>spring</artifactId>
+				<artifactId>spring-web</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 			<dependency>

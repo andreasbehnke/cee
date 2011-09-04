@@ -47,20 +47,20 @@
 			<groupId>com.cee</groupId>
 			<artifactId>cee-news-parser-impl</artifactId>
 			<type>jar</type>
-			<scope>runtime,test</scope>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
 			<artifactId>cee-news-store-jcr</artifactId>
 			<type>jar</type>
-			<scope>runtime,test</scope>
+			<scope>runtime</scope>
 		</dependency>
 		
 		<!-- external -->
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
-			<scope>runtime,test</scope>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
@@ -70,7 +70,7 @@
 		<dependency>
 			<groupId>org.apache.jackrabbit</groupId>
 			<artifactId>jackrabbit-core</artifactId>
-			<scope>runtime,test</scope>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
@@ -98,11 +98,16 @@
 		<dependency>
 			<groupId>org.ccil.cowan.tagsoup</groupId>
 			<artifactId>tagsoup</artifactId>
-			<scope>runtime,test</scope>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.springbyexample</groupId>
+		    <artifactId>org.springbyexample.threadscope</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring</artifactId>
+			<artifactId>spring-web</artifactId>
 			<scope>compile</scope>
 			<!-- Compile time dependecies is only required for the GWT Spring Servlet. Move this Servlet to another project! -->
 		</dependency>
