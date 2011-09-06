@@ -12,6 +12,7 @@ import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.list.ListPresenter;
 import com.cee.news.client.list.SelectionChangedEvent;
 import com.cee.news.client.list.SelectionChangedHandler;
+import com.cee.news.client.paging.PagingPresenter;
 import com.cee.news.client.workingset.WorkingSetEditor;
 import com.cee.news.client.workingset.WorkingSetListModel;
 import com.cee.news.client.workingset.WorkingSetSelectionPresenter;
@@ -32,6 +33,10 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class NewsReader implements EntryPoint {
 	
+	private static final int NEWS_PANEL_INDEX = 1;
+
+	private static final int START_PANEL_INDEX = 0;
+
 	/**
 	 * Application event bus. The following events are routed:
 	 * 
@@ -56,7 +61,7 @@ public class NewsReader implements EntryPoint {
 		LayoutPanel layoutPanel = new LayoutPanel();
 		rootPanel.add(layoutPanel);
 		
-		DeckPanel deckPanel = new DeckPanel();
+		final DeckPanel deckPanel = new DeckPanel();
 		layoutPanel.add(deckPanel);
 		layoutPanel.setWidgetTopBottom(deckPanel, 0.0, Unit.PX, -468.0, Unit.PX);
 		
@@ -67,7 +72,7 @@ public class NewsReader implements EntryPoint {
 		NewsPanel newsPanel = new NewsPanel();
 		deckPanel.add(newsPanel);
 		newsPanel.setSize("100%", "100%");
-		deckPanel.showWidget(0);
+		deckPanel.showWidget(START_PANEL_INDEX);
 		
 		//Working Set Selection
 		final WorkingSetListModel workingSetListModel = new WorkingSetListModel();
@@ -99,12 +104,12 @@ public class NewsReader implements EntryPoint {
 		});
 		
 		//Latest Article List
-		final NewsListContentModel newsListContentModel = new NewsListContentModel();
-		new ListPresenter(newsListContentModel, newsListContentModel, startPanel.getLatestArticlesListView());
+		final NewsListContentModel latestArticlesOfWorkingSet = new NewsListContentModel();
+		new ListPresenter(latestArticlesOfWorkingSet, latestArticlesOfWorkingSet, startPanel.getLatestArticlesListView());
 		appEventBus.addHandler(SelectionChangedEvent.TYPE, new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {
-				newsListContentModel.updateFromWorkingSet(event.getKey());
+				latestArticlesOfWorkingSet.updateFromWorkingSet(event.getKey());
 			}
 		});
 		
@@ -137,6 +142,23 @@ public class NewsReader implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				workingSetWorkflow.editWorkingSet(workingSetListModel.getSelectedKey());
+			}
+		});
+		
+		//News Paging View
+		final NewsListContentModel pagingNewsList = new NewsListContentModel();
+		final PagingPresenter pagingNewsPresenter = new PagingPresenter(pagingNewsList, pagingNewsList, newsPanel.getPagingView());
+		sitesOfWorkingSetModel.addSelectionChangedhandler(new SelectionChangedHandler() {
+			@Override
+			public void onSelectionChange(SelectionChangedEvent event) {
+				pagingNewsList.updateFromSite(event.getKey());
+				deckPanel.showWidget(NEWS_PANEL_INDEX);
+			}
+		});
+		newsPanel.getButtonGoToStart().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				deckPanel.showWidget(START_PANEL_INDEX);
 			}
 		});
 		

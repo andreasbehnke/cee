@@ -97,7 +97,7 @@ public class NewsServiceImpl implements NewsService {
 			Article article = articleStore.getArticle(articleId);
 			builder.append("<h1>").append(article.getTitle()).append("</h1>")
 					.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>");
-			List<TextBlock> content = articleStore.getContent(article.getLocation());
+			List<TextBlock> content = articleStore.getContent(articleId);
 			for (TextBlock textBlock : content) {
 				builder.append("<p>").append(textBlock.getContent()).append("</p>");
 			}

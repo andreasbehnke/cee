@@ -3,6 +3,7 @@ package com.cee.news.client.paging;
 import java.util.List;
 
 import com.cee.news.client.list.ContentModel;
+import com.cee.news.client.list.EntityKeyUtil;
 import com.cee.news.client.list.ListChangedEvent;
 import com.cee.news.client.list.ListChangedHandler;
 import com.cee.news.client.list.ListModel;
@@ -72,7 +73,7 @@ public class PagingPresenter {
     }
     
     protected void onSelectionChanged(String key) {
-    	int index = keys.indexOf(key);
+    	int index = EntityKeyUtil.getIndexOfEntityKey(keys, key);
     	view.setJumpToSelectedIndex(index);
         if (index == 0) {
             view.setPreviousEnabled(false);
