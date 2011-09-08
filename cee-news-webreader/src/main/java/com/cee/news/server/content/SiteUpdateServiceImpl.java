@@ -113,7 +113,7 @@ public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet
 	}
 
 	@Override
-	public int getUpdateQueueSize() {
+	public int getUpdateTasks() {
 		return sitesInProgress.size();
 	}
 
