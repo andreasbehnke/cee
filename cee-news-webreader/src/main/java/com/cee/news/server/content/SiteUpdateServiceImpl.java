@@ -24,10 +24,8 @@ import com.cee.news.parser.SiteParser;
 import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
 import com.cee.news.store.WorkingSetStore;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public abstract class SiteUpdateServiceImpl extends RemoteServiceServlet
-		implements SiteUpdateService {
+public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site";
 
