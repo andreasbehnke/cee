@@ -50,7 +50,7 @@ public class PagingPresenter {
             public void onChange(ChangeEvent event) {
                 int index = view.getJumpToSelectedIndex();
                 String key = keys.get(index).getKey();
-                listModel.setSelectedKey(key);
+                listModel.userSelectedKey(key);
             }
         });
         
@@ -93,16 +93,16 @@ public class PagingPresenter {
     }
     
     protected void increment() {
-        int currentSelection = keys.indexOf(listModel.getSelectedKey());
+        int currentSelection = EntityKeyUtil.getIndexOfEntityKey(keys, listModel.getSelectedKey());
         if (currentSelection < listModel.getContentCount() - 1) {
-        	listModel.setSelectedKey(keys.get(currentSelection + 1).getKey());
+        	listModel.userSelectedKey(keys.get(currentSelection + 1).getKey());
         }
     }
     
     protected void decrement() {
-    	int currentSelection = keys.indexOf(listModel.getSelectedKey());
+    	int currentSelection = EntityKeyUtil.getIndexOfEntityKey(keys, listModel.getSelectedKey());
         if (currentSelection > 0) {
-        	listModel.setSelectedKey(keys.get(currentSelection - 1).getKey());
+        	listModel.userSelectedKey(keys.get(currentSelection - 1).getKey());
         }
     }
 }

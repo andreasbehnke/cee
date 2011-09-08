@@ -2,6 +2,7 @@ package com.cee.news.parser;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -18,6 +19,8 @@ import com.cee.news.store.StoreException;
  */
 public class SiteUpdater {
 	
+	private static final int DEFAULT_REMAINING_TASKS = 10;
+
 	private static final Logger LOG = LoggerFactory.getLogger(SiteUpdater.class);
 
     private ArticleParser articleParser;
@@ -28,6 +31,8 @@ public class SiteUpdater {
 
     private boolean onlyActiveFeeds = true;
 
+    private int remainingArticles = DEFAULT_REMAINING_TASKS;
+    
     public SiteUpdater() {
     }
 
@@ -43,6 +48,13 @@ public class SiteUpdater {
         this.feedParser = feedParser;
         this.onlyActiveFeeds = onlyActiveFeeds;
     }
+    
+    /**
+     * @return number of remaining articles to update. This information can be used to display a progress bar.
+     */
+    public int getRemainingArticles() {
+		return remainingArticles;
+	}
 
     /**
      * @param articleParser
@@ -84,39 +96,51 @@ public class SiteUpdater {
      *            The site to be updated
      * @return Number of added articles
      * @throws ParserException
-     *             Thrown if the feed or the article could not be parsed
+     *             Thrown if a site's feed could not be parsed
      * @throws StoreException
-     *             Thrown if the article could not be stored
+     *             Thrown if an article could not be stored
      * @throws IOException
-     *             If an IO error occurred
+     *             If an IO error occurred while retrieving a feed
      */
     public int update(Site site) throws ParserException, StoreException, IOException {
         LOG.info("starting update for site {}", site.getName());
-    	int articleCount = 0;
+    	List<Article> articles = new ArrayList<Article>();
         for (Feed feed : site.getFeeds()) {
-            if (onlyActiveFeeds && !feed.isActive()) {
-                continue;
-            }
-            LOG.debug("processing feed {}", feed.getTitle());
-            List<Article> articles = null;
-            articles = feedParser.parse(new URL(feed.getLocation()));
-            for (Article article : articles) {
-            	try {
-            		article = articleParser.parse(article);
-            		try {
-                		store.update(site, article);
-                		articleCount++;
-                	} catch (Exception e) {
-                		LOG.error("could not store article {}", article.getTitle(), e);
-    				}
-            	} catch(Exception e) {
-            		LOG.error("could not parse article {}", article.getTitle(), e);
-            	}
-                // TODO: Implement equality compare and add new article version
-                // if necessary
+            if (!onlyActiveFeeds || feed.isActive()) {
+            	LOG.debug("processing feed {}", feed.getTitle());
+                articles.addAll(feedParser.parse(new URL(feed.getLocation())));
+            	remainingArticles = articles.size();
             }
         }
+        int articleCount = updateArticles(site, articles);
         LOG.info("updated {} articles of site {}", articleCount, site.getName());
+        return articleCount;
+    }
+    
+    /**
+     * Updates all articles of a site
+     * @param site
+     * @param feed
+     * @return number of articles processed
+     * @throws ParserException If the feed could not be parsed
+     * @throws IOException If the feed could not be read
+     * @throws StoreException If the storage of articles failed
+     */
+    protected int updateArticles(Site site, List<Article> articles) throws ParserException, IOException, StoreException {
+    	int articleCount = 0;
+        for (Article article : articles) {
+        	try {
+            	article = articleParser.parse(article);
+            	store.update(site, article);
+        		articleCount++;
+        	} catch(ParserException e) {
+        		LOG.error("could not parse article {}", article.getTitle(), e);
+        	} catch (IOException e) {
+        		LOG.error("could retrieve article {}", article.getTitle(), e);
+			} finally {
+				remainingArticles--;
+			}
+        }
         return articleCount;
     }
 }

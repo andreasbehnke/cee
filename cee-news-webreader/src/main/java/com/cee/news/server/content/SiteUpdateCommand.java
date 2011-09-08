@@ -30,6 +30,14 @@ public class SiteUpdateCommand extends AbstractCommand {
 	}
 	
 	@Override
+	public int getRemainingTasks() {
+		if (siteUpdater == null) {
+			throw new IllegalStateException("Missing site updater");
+		}
+		return siteUpdater.getRemainingArticles();
+	}
+	
+	@Override
 	protected void runInternal() {
 		if (siteUpdater == null) {
 			throw new IllegalStateException("Missing site updater");

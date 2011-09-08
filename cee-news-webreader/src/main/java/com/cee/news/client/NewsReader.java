@@ -1,5 +1,7 @@
 package com.cee.news.client;
 
+import com.cee.news.client.async.NotificationCallback;
+import com.cee.news.client.content.ArticleUtil;
 import com.cee.news.client.content.NewSiteWizard;
 import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.content.NewsListContentModel;
@@ -59,11 +61,13 @@ public class NewsReader implements EntryPoint {
 		appEventBus.addHandler(ErrorEvent.TYPE, errorDialog);
 		
 		LayoutPanel layoutPanel = new LayoutPanel();
-		rootPanel.add(layoutPanel);
+		rootPanel.add(layoutPanel, 0, 0);
+		layoutPanel.setSize("813px", "600px");
 		
 		final DeckPanel deckPanel = new DeckPanel();
 		layoutPanel.add(deckPanel);
-		layoutPanel.setWidgetTopBottom(deckPanel, 0.0, Unit.PX, -468.0, Unit.PX);
+		layoutPanel.setWidgetLeftRight(deckPanel, 0.0, Unit.PX, 0.0, Unit.PX);
+		layoutPanel.setWidgetTopBottom(deckPanel, 0.0, Unit.PX, 0.0, Unit.PX);
 		
 		StartPanel startPanel = new StartPanel();
 		deckPanel.add(startPanel);
@@ -147,12 +151,36 @@ public class NewsReader implements EntryPoint {
 		
 		//News Paging View
 		final NewsListContentModel pagingNewsList = new NewsListContentModel();
-		final PagingPresenter pagingNewsPresenter = new PagingPresenter(pagingNewsList, pagingNewsList, newsPanel.getPagingView());
+		new PagingPresenter(pagingNewsList, pagingNewsList, newsPanel.getPagingView());
 		sitesOfWorkingSetModel.addSelectionChangedhandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {
-				pagingNewsList.updateFromSite(event.getKey());
-				deckPanel.showWidget(NEWS_PANEL_INDEX);
+				if (event.isUserAction()) {
+					pagingNewsList.updateFromSite(event.getKey(), new NotificationCallback() {
+
+						@Override
+						public void finished() {
+							deckPanel.showWidget(NEWS_PANEL_INDEX);
+						}
+					});
+				}
+			}
+		});
+		latestArticlesOfWorkingSet.addSelectionChangedhandler(new SelectionChangedHandler() {
+			@Override
+			public void onSelectionChange(SelectionChangedEvent event) {
+				if (event.isUserAction()) {
+					final String articleKey = event.getKey();
+					final String siteKey = ArticleUtil.getSiteKeyFromArticleKey(articleKey);
+					pagingNewsList.updateFromSite(siteKey, new NotificationCallback() {
+						
+						@Override
+						public void finished() {
+							pagingNewsList.setSelectedKey(articleKey);
+							deckPanel.showWidget(NEWS_PANEL_INDEX);
+						}
+					});
+				}
 			}
 		});
 		newsPanel.getButtonGoToStart().addClickHandler(new ClickHandler() {

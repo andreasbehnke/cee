@@ -8,14 +8,17 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.Label;
 
 public class NewsPanel extends Composite implements NewsView {
 
     private Button buttonGoToStart;
 	private PagingPanel pagingView;
 	private ListPanel whatOthersSayListView;
+	private Label siteNameLabel;
 
 	public NewsPanel() {
         
@@ -31,12 +34,12 @@ public class NewsPanel extends Composite implements NewsView {
         pagingView = new PagingPanel();
         layoutPanel.add(pagingView);
         layoutPanel.setWidgetLeftRight(pagingView, 0.0, Unit.PX, 333.0, Unit.PX);
-        layoutPanel.setWidgetTopHeight(pagingView, 52.0, Unit.PX, 449.0, Unit.PX);
+        layoutPanel.setWidgetTopBottom(pagingView, 52.0, Unit.PX, 0.0, Unit.PX);
         
         whatOthersSayListView = new ListPanel();
         layoutPanel.add(whatOthersSayListView);
         layoutPanel.setWidgetRightWidth(whatOthersSayListView, 0.0, Unit.PX, 327.0, Unit.PX);
-        layoutPanel.setWidgetTopHeight(whatOthersSayListView, 52.0, Unit.PX, 449.0, Unit.PX);
+        layoutPanel.setWidgetTopBottom(whatOthersSayListView, 52.0, Unit.PX, 0.0, Unit.PX);
         
         InlineLabel nlnlblCurrentSite = new InlineLabel("Current Site:");
         layoutPanel.add(nlnlblCurrentSite);
@@ -47,6 +50,11 @@ public class NewsPanel extends Composite implements NewsView {
         layoutPanel.add(nlnlblNewInlinelabel);
         layoutPanel.setWidgetRightWidth(nlnlblNewInlinelabel, 178.0, Unit.PX, 149.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(nlnlblNewInlinelabel, 30.0, Unit.PX, 16.0, Unit.PX);
+        
+        siteNameLabel = new Label("");
+        layoutPanel.add(siteNameLabel);
+        layoutPanel.setWidgetLeftWidth(siteNameLabel, 111.0, Unit.PX, 56.0, Unit.PX);
+        layoutPanel.setWidgetTopHeight(siteNameLabel, 30.0, Unit.PX, 16.0, Unit.PX);
     }
 
 	/* (non-Javadoc)
@@ -71,5 +79,10 @@ public class NewsPanel extends Composite implements NewsView {
 	@Override
 	public ListView getWhatOthersSayListView() {
 		return whatOthersSayListView;
+	}
+	
+	@Override
+	public HasText getSiteNameLabel() {
+		return siteNameLabel;
 	}
 }

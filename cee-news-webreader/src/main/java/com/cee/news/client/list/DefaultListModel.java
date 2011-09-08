@@ -30,7 +30,13 @@ public abstract class DefaultListModel extends ErrorSourceBase implements MultiS
     @Override
     public void setSelectedKey(String key) {
         this.selectedKey = key;
-        fireSelectionChanged();
+        fireSelectionChanged(false);
+    }
+    
+    @Override
+    public void userSelectedKey(String key) {
+    	this.selectedKey = key;
+        fireSelectionChanged(true);
     }
     
     @Override
@@ -101,8 +107,8 @@ public abstract class DefaultListModel extends ErrorSourceBase implements MultiS
         handlerManager.fireEvent(new ListChangedEvent(links));
     }
     
-    protected void fireSelectionChanged() {
-        handlerManager.fireEvent(new SelectionChangedEvent(selectedKey));
+    protected void fireSelectionChanged(boolean userAction) {
+        handlerManager.fireEvent(new SelectionChangedEvent(selectedKey, userAction));
     }
     
     protected void fireSelectionListChanged() {

@@ -2,6 +2,7 @@ package com.cee.news.client.content;
 
 import java.util.List;
 
+import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.list.ContentModel;
 import com.cee.news.client.list.DefaultListModel;
 import com.cee.news.client.util.SafeHtmlUtil;
@@ -20,10 +21,17 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
     
     private final NewsServiceAsync service = NewsService.Util.getInstance();
     
-    public void updateFromSite(String siteLocation) {
+    public void updateFromSite(final String siteLocation) {
+    	updateFromSite(siteLocation, null);
+    }
+    
+    public void updateFromSite(final String siteLocation, final NotificationCallback callback) {
         service.getArticlesOfSite(siteLocation, new AsyncCallback<List<EntityKey>>() {
             public void onSuccess(List<EntityKey> result) {
                 setKeys(result);
+                if(callback != null) {
+                	callback.finished();
+                }
             }
             public void onFailure(Throwable caught) {
                 fireErrorEvent(caught, "Could not load headlines!");//TODO: i18n
@@ -31,12 +39,19 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
         });
     }
     
-    public void updateFromWorkingSet(String workingSetName) {
+    public void updateFromWorkingSet(final String workingSetName) {
+    	updateFromWorkingSet(workingSetName, null);
+    }
+    
+    public void updateFromWorkingSet(final String workingSetName, final NotificationCallback callback) {
     	service.getArticlesOfWorkingSet(workingSetName, new AsyncCallback<List<EntityKey>>() {
 			
 			@Override
 			public void onSuccess(List<EntityKey> result) {
 				setKeys(result);
+				if(callback != null) {
+                	callback.finished();
+                }
 			}
 			
 			@Override

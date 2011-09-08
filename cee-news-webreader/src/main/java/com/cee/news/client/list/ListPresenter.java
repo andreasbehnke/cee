@@ -33,7 +33,7 @@ public class ListPresenter {
             contentModel.getContentDescription(item, link.getKey());
             item.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
-                    listModel.setSelectedKey(link.getKey());
+                    listModel.userSelectedKey(link.getKey());
                 }
             });
         }

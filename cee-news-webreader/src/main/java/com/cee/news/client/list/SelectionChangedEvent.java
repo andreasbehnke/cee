@@ -11,8 +11,11 @@ public class SelectionChangedEvent extends GwtEvent<SelectionChangedHandler> {
     
     private final String key;
     
-    public SelectionChangedEvent(String key) {
+    private final boolean userAction;
+    
+    public SelectionChangedEvent(String key, boolean userAction) {
         this.key = key;
+        this.userAction = userAction;
     }
     
     /**
@@ -21,8 +24,15 @@ public class SelectionChangedEvent extends GwtEvent<SelectionChangedHandler> {
     public String getKey() {
         return key;
     }
+    
+    /**
+     * @return true if this event was triggered by an user action
+     */
+    public boolean isUserAction() {
+		return userAction;
+	}
 
-    @Override
+	@Override
     public com.google.gwt.event.shared.GwtEvent.Type<SelectionChangedHandler> getAssociatedType() {
         return TYPE;
     }

@@ -46,7 +46,7 @@ public class WorkingSetSelectionPresenter {
         view.addSelectionChangedHandler(new ChangeHandler() {
             
             public void onChange(ChangeEvent event) {
-                model.setSelectedKey(keys.get(view.getSelectedWorkingSet()).getKey());
+                model.userSelectedKey(keys.get(view.getSelectedWorkingSet()).getKey());
             }
         });
     }

@@ -62,7 +62,7 @@ public class TestSiteUpdateService {
 		
 		Assert.assertEquals(1, siteUpdateService.addSiteToUpdateQueue(TEST_SITE));
 		
-		while(siteUpdateService.getUpdateQueueSize() > 0) {
+		while(siteUpdateService.getUpdateTasks() > 0) {
 			Thread.sleep(100);
 		}
 		 

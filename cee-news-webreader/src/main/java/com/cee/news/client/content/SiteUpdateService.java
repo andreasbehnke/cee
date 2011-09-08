@@ -34,7 +34,7 @@ public interface SiteUpdateService extends RemoteService {
 	 * If the queue already contains a task for the site, no additional
 	 * task will be added.
 	 * @param site The site to update
-	 * @return Number of update tasks in the queue
+	 * @return Number of update commands in the queue
 	 */
 	int addSiteToUpdateQueue(String site);
 	
@@ -43,7 +43,7 @@ public interface SiteUpdateService extends RemoteService {
 	 * If the queue already contains a task for a given site, no additional
 	 * task will be added.
 	 * @param workingSetName The sites to update
-	 * @return Number of update tasks in the queue
+	 * @return Number of update commands in the queue
 	 */
 	int addSitesOfWorkingSetToUpdateQueue(String workingSetName);
 	
@@ -56,5 +56,5 @@ public interface SiteUpdateService extends RemoteService {
 	 * @return The number of update tasks in the queue. Used for displaying 
 	 * a progress bar.
 	 */
-	int getUpdateQueueSize();
+	int getUpdateTasks();
 }
