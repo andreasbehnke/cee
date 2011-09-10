@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.cee</groupId>
 	<artifactId>cee</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.1</version>
 	<name>Content Extraction Engine</name>
 	<description>Framework for extracting content from documents and websites</description>
 	<packaging>pom</packaging>
@@ -38,9 +37,9 @@
 	</distributionManagement>
 	
 	<scm>
-		<connection>scm:svn:svn://andreasbehnke@192.168.1.201/cee/trunk</connection>
-		<developerConnection>scm:svn:svn://andreasbehnke@192.168.1.201/cee/trunk</developerConnection>
-		<url>svn://andreasbehnke@192.168.1.201/cee/trunk</url>
+		<connection>scm:svn:svn://andreasbehnke@192.168.1.201/cee/tags/cee-1.1</connection>
+		<developerConnection>scm:svn:svn://andreasbehnke@192.168.1.201/cee/tags/cee-1.1</developerConnection>
+		<url>svn://andreasbehnke@192.168.1.201/cee/tags/cee-1.1</url>
 	</scm>
 	
 	<build>
