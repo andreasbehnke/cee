@@ -37,9 +37,15 @@
 		</snapshotRepository>
 	</distributionManagement>
 	
+	<scm>
+		<connection>scm:svn:svn://andreasbehnke@192.168.1.201/cee/trunk</connection>
+		<developerConnection>scm:svn:svn://andreasbehnke@192.168.1.201/cee/trunk</developerConnection>
+		<url>svn://andreasbehnke@192.168.1.201/cee/trunk</url>
+	</scm>
+	
 	<build>
 		<plugins>
-
+		
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
