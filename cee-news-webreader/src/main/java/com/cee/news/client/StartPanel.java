@@ -8,12 +8,16 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.cee.news.client.progress.ProgressView;
+import com.cee.news.client.progress.TextProgressView;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 public class StartPanel extends Composite implements StartView {
     
 	private final ListPanel listPanelLatestArticles;
     private final WorkingSetSelectionPanel workingSetSelectionPanel;
     private final ListPanel listPanelSites;
+	private TextProgressView progressView;
     
     public StartPanel() {
     	LayoutPanel layoutPanel = new LayoutPanel();
@@ -44,6 +48,12 @@ public class StartPanel extends Composite implements StartView {
         layoutPanel.add(nlnlblLatestNews);
         layoutPanel.setWidgetLeftWidth(nlnlblLatestNews, 366.0, Unit.PX, 90.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(nlnlblLatestNews, 30.0, Unit.PX, 16.0, Unit.PX);
+        
+        progressView = new TextProgressView();
+        progressView.setMessageFormat("(update %s)");
+        layoutPanel.add(progressView);
+        layoutPanel.setWidgetLeftRight(progressView, 447.0, Unit.PX, 0.0, Unit.PX);
+        layoutPanel.setWidgetTopHeight(progressView, 30.0, Unit.PX, 16.0, Unit.PX);
     }
     /* (non-Javadoc)
 	 * @see com.cee.news.client.StartView#getLatestArticlesListView()
@@ -65,5 +75,10 @@ public class StartPanel extends Composite implements StartView {
     @Override
 	public ListView getSitesListView() {
         return listPanelSites;
+    }
+    
+    @Override
+    public ProgressView getProgressView() {
+    	return progressView;
     }
 }

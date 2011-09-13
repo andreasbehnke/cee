@@ -15,6 +15,9 @@ import com.cee.news.client.list.ListPresenter;
 import com.cee.news.client.list.SelectionChangedEvent;
 import com.cee.news.client.list.SelectionChangedHandler;
 import com.cee.news.client.paging.PagingPresenter;
+import com.cee.news.client.progress.ProgressHandler;
+import com.cee.news.client.progress.ProgressModel;
+import com.cee.news.client.progress.ProgressPresenter;
 import com.cee.news.client.workingset.WorkingSetEditor;
 import com.cee.news.client.workingset.WorkingSetListModel;
 import com.cee.news.client.workingset.WorkingSetSelectionPresenter;
@@ -91,13 +94,15 @@ public class NewsReader implements EntryPoint {
 		
 		//Site Update Service
 		final SiteUpdateServiceAsync siteUpdateService = SiteUpdateService.Util.getInstance();
+		final ProgressModel progressModel = new ProgressModel();
+		new ProgressPresenter(progressModel, startPanel.getProgressView());
 		appEventBus.addHandler(SelectionChangedEvent.TYPE, new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {
 				siteUpdateService.addSitesOfWorkingSetToUpdateQueue(event.getKey(), new AsyncCallback<Integer>() {
 					@Override
 					public void onSuccess(Integer result) {
-						// TODO Start progress bar
+						progressModel.startMonitor();
 					}
 					@Override
 					public void onFailure(Throwable caught) {
@@ -116,6 +121,9 @@ public class NewsReader implements EntryPoint {
 				latestArticlesOfWorkingSet.updateFromWorkingSet(event.getKey());
 			}
 		});
+		final ProgressUpdateHandler progressUpdateHandler = new ProgressUpdateHandler(latestArticlesOfWorkingSet);
+		appEventBus.addHandler(SelectionChangedEvent.TYPE, progressUpdateHandler);
+		progressModel.addProgressHandler(progressUpdateHandler);
 		
 		//Site List
 		final SiteListContentModel sitesOfWorkingSetModel = new SiteListContentModel();

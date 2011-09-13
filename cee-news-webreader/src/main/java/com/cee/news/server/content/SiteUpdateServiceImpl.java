@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -41,11 +42,13 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private final ThreadPoolExecutor pool;
 
-	private final LinkedBlockingQueue<Runnable> workQueue;
+	private final List<Runnable> runnablesInProgress = new ArrayList<Runnable>();
 
+	private final LinkedBlockingQueue<Runnable> workQueue;
+	
 	public SiteUpdateServiceImpl(int threadPoolSize) {
 		workQueue = new LinkedBlockingQueue<Runnable>();
-		pool = new ThreadPoolExecutor(threadPoolSize, threadPoolSize, 0,
+		pool = new SiteUpdateServiceImpl.Executor(threadPoolSize, threadPoolSize, 0,
 				TimeUnit.MILLISECONDS, workQueue);
 		sitesInProgress = new ArrayList<String>();
 	}
@@ -89,6 +92,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			});
 			command.setSite(siteEntity);
 			sitesInProgress.add(siteName);
+			runnablesInProgress.add(command);
 			pool.execute(command);
 		}
 		return sitesInProgress.size();
@@ -99,8 +103,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 		try {
 			WorkingSet ws = workingSetStore.getWorkingSet(workingSetName);
 			if (ws == null)
-				throw new IllegalArgumentException("Unknown working set: "
-						+ workingSetName);
+				throw new IllegalArgumentException("Unknown working set: " + workingSetName);
 			for (EntityKey siteKey : ws.getSites()) {
 				addSiteToUpdateQueue(siteKey.getName());
 			}
@@ -111,14 +114,23 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	}
 
 	@Override
-	public int getUpdateTasks() {
-		return sitesInProgress.size();
+	public synchronized int getUpdateTasks() {
+		int taskCount = 0;
+		for (Runnable runnable : runnablesInProgress) {
+			if (runnable instanceof AbstractCommand) {
+				taskCount += ((AbstractCommand)runnable).getRemainingTasks();
+			} else {
+				taskCount++;
+			}
+		}
+		return taskCount;
 	}
 
 	@Override
 	public synchronized void clearQueue() {
 		log.info("Clearing work queue");
 		workQueue.clear();
+		runnablesInProgress.clear();
 		sitesInProgress.clear();
 	}
 
@@ -155,4 +167,17 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	 * @return A site parser prepared with all dependencies
 	 */
 	protected abstract SiteParser createSiteParser();
+
+	private class Executor extends ThreadPoolExecutor {
+
+		public Executor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,BlockingQueue<Runnable> workQueue) {
+			super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
+		}
+		
+		@Override
+		protected void afterExecute(Runnable r, Throwable t) {
+			SiteUpdateServiceImpl.this.runnablesInProgress.remove(r);
+			super.afterExecute(r, t);
+		}
+	}
 }
