@@ -83,6 +83,7 @@
 		<module>cee-news-parser</module>
 		<module>cee-news-parser-impl</module>
 		<module>cee-news-store-api</module>
+		<module>cee-news-search-api</module>
 		<module>cee-news-store-jcr</module>
 		<module>cee-news-webreader</module>
 		<module>cee-news-webreader-tomcat6</module>
