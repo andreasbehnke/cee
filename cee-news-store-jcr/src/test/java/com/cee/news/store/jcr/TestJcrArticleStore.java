@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
@@ -31,12 +32,16 @@ public class TestJcrArticleStore extends JcrTestBase {
     
     private static JcrArticleStore articleStore;
     
+    private static DummyArticleChangeListener listener = new DummyArticleChangeListener();
+    
     @BeforeClass
     public static void setupStores() throws LoginException, RepositoryException, StoreException {
         setupSession();
         workingSetStore = new JcrWorkingSetStore(session);
         siteStore = new JcrSiteStore(session);
         articleStore = new JcrArticleStore(session);
+        articleStore.addArticleChangeListener(listener);
+        listener.reset();
     }
     
     @AfterClass
@@ -52,29 +57,54 @@ public class TestJcrArticleStore extends JcrTestBase {
         return site;
     }
     
+    private Article createArticle(String id, String location, int year, int month, int dayOfMonth) {
+    	Article article = new Article();
+        article.setId(id);
+        article.setLocation(location);
+        Calendar cal = Calendar.getInstance();
+        cal.clear();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        article.setPublishedDate(cal);
+        return article;
+    }
+    
+    private Article createArticle(String id, String location, int year, int month, int dayOfMonth, String title, String shortText) {
+    	Article article = createArticle(id, location, year, month, dayOfMonth);
+    	article.setTitle(title);
+    	article.setShortText(shortText);
+    	return article;
+    }
+    
+    private Article createArticle(String id, String location, int year, int month, int dayOfMonth, String title, String shortText, List<TextBlock> content) {
+    	Article article = createArticle(id, location, year, month, dayOfMonth, title, shortText);
+    	article.setContent(content);
+    	return article;
+    }
+    
+    private String updateArticle(Site site, String id, String location, int year, int month, int dayOfMonth) throws StoreException {
+    	return articleStore.update(site, createArticle(id, location, year, month, dayOfMonth)).getKey();
+    }
+    
+    private String updateArticle(Site site, String id, String location, int year, int month, int dayOfMonth, String title, String shortText) throws StoreException {
+    	return articleStore.update(site, createArticle(id, location, year, month, dayOfMonth, title, shortText)).getKey();
+    }
+    
+    private String updateArticle(Site site, String id, String location, int year, int month, int dayOfMonth, String title, String shortText, List<TextBlock> content) throws StoreException {
+    	return articleStore.update(site, createArticle(id, location, year, month, dayOfMonth, title, shortText, content)).getKey();
+    }
+    
     @Test
     public void testUpdateSiteArticle() throws StoreException, MalformedURLException {
         Site site = createSite("site1");
+        String path = updateArticle(site, "1", "http://www.abc.de/1", 2010, 1, 12, "Title", "Short Text");
         
-        Article article = new Article();
-        article.setId("1");
-        String url = "http://www.abc.de/1";
-        article.setLocation(url);
-        Calendar cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(Calendar.YEAR, 2010);
-        cal.set(Calendar.MONTH, 1);
-        cal.set(Calendar.DAY_OF_MONTH, 12);
-        article.setPublishedDate(cal);
-        article.setShortText("Short Text");
-        article.setTitle("Title");
-        articleStore.update(site, article);
-        
-        String path = articleStore.getArticlesOrderedByDate(site).get(0).getKey();
-        
-        article = articleStore.getArticle(path);
+        assertEquals("site1", listener.createdSiteName);
+        assertEquals("1", listener.createdArticleId);
+        Article article = articleStore.getArticle(path);
         assertEquals("1", article.getId());
-        assertEquals(url, article.getLocation());
+        assertEquals("http://www.abc.de/1", article.getLocation());
         assertEquals(2010, article.getPublishedDate().get(Calendar.YEAR));
         assertEquals(1, article.getPublishedDate().get(Calendar.MONTH));
         assertEquals(12, article.getPublishedDate().get(Calendar.DAY_OF_MONTH));
@@ -82,28 +112,18 @@ public class TestJcrArticleStore extends JcrTestBase {
         assertEquals("Title", article.getTitle());
     }
     
-    //TODO: Implement complete content path logic, so existing content can be detected
     @Test
     public void testUpdateSiteArticleChangeContent() throws StoreException, MalformedURLException {
         Site site = createSite("site2");
         
-        Article article = new Article();
-        article.setId("1");
-        String url = "http://www.abc.de/1";
-        article.setLocation(url);
-        Calendar cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(Calendar.YEAR, 2010);
-        cal.set(Calendar.MONTH, 1);
-        cal.set(Calendar.DAY_OF_MONTH, 12);
-        article.setPublishedDate(cal);
-        article.setShortText("Short Text");
-        article.setTitle("Title");
-        article.getContent().add(new TextBlock("Hello world!", 2));
-        article.getContent().add(new TextBlock("Another hello world!", 3));
-        String path = articleStore.update(site, article).getKey();
+        List<TextBlock> text = new ArrayList<TextBlock>();
+        text.add(new TextBlock("Hello world!", 2));
+        text.add(new TextBlock("Another hello world!", 3));
+        String path = updateArticle(site, "1", "http://www.abc.de/1", 2010, 1, 12, "Short Text", "Title", text);
         
-        article = articleStore.getArticle(path);
+        assertEquals("site2", listener.createdSiteName);
+        assertEquals("1", listener.createdArticleId);
+        Article article = articleStore.getArticle(path);
         article.setContent(articleStore.getContent(path));
         assertEquals(2, article.getContent().size());
         Set<String> content = new HashSet<String>();
@@ -115,6 +135,8 @@ public class TestJcrArticleStore extends JcrTestBase {
         article.getContent().remove(0);
         articleStore.update(site, article);
         
+        assertEquals("site2", listener.changedSiteName);
+        assertEquals("1", listener.changedArticleId);
         article = articleStore.getArticle(path);
         article.setContent(articleStore.getContent(path));
         assertEquals(1, article.getContent().size());
@@ -137,62 +159,12 @@ public class TestJcrArticleStore extends JcrTestBase {
     public void testGetArticlesOrderedByDate() throws StoreException, MalformedURLException, RepositoryException {
         Site site = createSite("http://www.abc.de");
         
-        Article article = new Article();
-        article.setId("http://www.abc.de/ID_1");
-        String url = "http://www.abc.de/1";
-        article.setLocation(url);
-        Calendar cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(Calendar.YEAR, 2010);
-        cal.set(Calendar.MONTH, 1);
-        cal.set(Calendar.DAY_OF_MONTH, 12);
-        article.setPublishedDate(cal);
-        String path1 = articleStore.update(site, article).getKey();
-        
-        article = new Article();
-        article.setId("http://www.abc.de/ID_2");
-        url = "http://www.abc.de/2";
-        article.setLocation(url);
-        cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(Calendar.YEAR, 2011);
-        cal.set(Calendar.MONTH, 2);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        article.setPublishedDate(cal);
-        String path2 = articleStore.update(site, article).getKey();
-        
-        article = new Article();
-        article.setId("http://www.abc.de/ID_3");
-        url = "http://www.abc.de/3";
-        article.setLocation(url);
-        cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(Calendar.YEAR, 1999);
-        cal.set(Calendar.MONTH, 12);
-        cal.set(Calendar.DAY_OF_MONTH, 23);
-        article.setPublishedDate(cal);
-        String path3 = articleStore.update(site, article).getKey();
+        String path1 = updateArticle(site, "http://www.abc.de/ID_1", "http://www.abc.de/1", 2010, 1, 12);
+        String path2 = updateArticle(site, "http://www.abc.de/ID_2", "http://www.abc.de/2", 2011, 2, 1);
+        String path3 = updateArticle(site, "http://www.abc.de/ID_3", "http://www.abc.de/3", 1999, 12, 23);
         
         Site site2 = createSite("site4");
-        site2.setDescription("Description");
-        site2.setLocation("http://www.xyz.de");
-        site2.setName("http://www.xyz.de");
-        site2.setTitle("Title");
-        siteStore.update(site2);
-        
-        article = new Article();
-        article.setId("http://www.xyz.de/ID_4");
-        url = "http://www.xyz.de/4";
-        article.setLocation(url);
-        cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(Calendar.YEAR, 2012);
-        cal.set(Calendar.MONTH, 12);
-        cal.set(Calendar.DAY_OF_MONTH, 23);
-        article.setPublishedDate(cal);
-        String path4 = articleStore.update(site2, article).getKey();
-        
-        articleStore.dumpContent();
+        String path4 = updateArticle(site2, "http://www.xyz.de/ID_4", "http://www.xyz.de/4", 2012, 12, 23);
         
         List<EntityKey> articles = articleStore.getArticlesOrderedByDate(site);
         assertEquals(3, articles.size());
@@ -217,21 +189,36 @@ public class TestJcrArticleStore extends JcrTestBase {
         assertEquals(path1, articles.get(2).getKey());
         assertEquals(path3, articles.get(3).getKey());
     }
+    
+/*    @Test
+    public void testGetRelatedArticlesOrderedByRelevance() throws StoreException, RepositoryException {
+    	Site site = createSite("http://www.abc.de");
+    	String path1 = updateArticle(site, "1", "http://www.abc.de/1", 2010, 1, 12, "Exception Store Car Cars Store Taxi", "Title");
+    	String path2 = updateArticle(site, "2", "http://www.abc.de/2", 2010, 1, 12, "Exception Store Car Cars Store Taxi", "Title");
+    	String path3 = updateArticle(site, "3", "http://www.abc.de/3", 2010, 1, 12, "Exception Store Car Cars Store Taxi", "Title");
+    	String path4 = updateArticle(site, "4", "http://www.abc.de/4", 2010, 1, 12, "Exception Store Car Cars Store Taxi", "Title");
+    	String path5 = updateArticle(site, "5", "http://www.abc.de/5", 2010, 1, 12, "Exception Store Car Cars Store Taxi", "Title");
+    	String path6 = updateArticle(site, "6", "http://www.abc.de/6", 2010, 1, 12, "Exception Store Car Cars Store Taxi", "Title");
+
+    	articleStore.dumpContent();
+    	
+    	List<EntityKey> related = articleStore.selectSimilarArticles(path1);
+    	for (EntityKey entityKey : related) {
+			System.out.println(entityKey);
+		}
+    }*/
 
     @Test
     public void testGetContent() throws StoreException, MalformedURLException {
         Site site = createSite("site5");
         
-        Article article = new Article();
-        article.setId("1");
-        String url = "http://www.abc.de/1";
-        article.setLocation(url);
-        article.getContent().add(new TextBlock("This are four words", 4));
-        article.getContent().add(new TextBlock("foo ba", 2));
-        article.getContent().add(new TextBlock("Hello world!", 2));
-        String path = articleStore.update(site, article).getKey();
-
-        List<TextBlock> content = articleStore.getContent(path);
+        List<TextBlock> content = new ArrayList<TextBlock>();
+        content.add(new TextBlock("This are four words", 4));
+        content.add(new TextBlock("foo ba", 2));
+        content.add(new TextBlock("Hello world!", 2));
+        String path = updateArticle(site, "1", "http://www.abc.de/1", 2012, 12, 23, null, null, content);
+        
+        content = articleStore.getContent(path);
         assertEquals(3, content.size());
         assertEquals("This are four words", content.get(0).getContent());
         assertEquals(4, content.get(0).getNumWords());

@@ -1,6 +1,9 @@
 package com.cee.news.store.jcr;
 
-import static com.cee.news.store.jcr.JcrStoreConstants.NODE_CONTENT;
+import static com.cee.news.store.jcr.JcrStoreConstants.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -9,17 +12,39 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
+import javax.jcr.query.Row;
+import javax.jcr.query.RowIterator;
 
+import org.apache.jackrabbit.util.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cee.news.model.EntityKey;
 import com.cee.news.store.StoreException;
 
 public abstract class JcrStoreBase {
     
 	private static final Logger LOG = LoggerFactory.getLogger(JcrStoreBase.class);
+
+	protected static final String SITE_NAME_SELECTOR = "siteName";
+
+	protected static final String ARTICLE_ID_SELECTOR = "articleId";
+
+	protected static final String ARTICLE_TITLE_SELECTOR = "articleTitle";
 	
-    private Session session;
+    protected static String getArticlePath(String articleId) {
+		return Text.escapeIllegalJcrChars(articleId);
+	}
+
+	protected static String getArticlePath(String siteName, String articleId) {
+		return new StringBuilder(300)
+			.append(JcrSiteStore.getSitePath(siteName))
+			.append(SLASH)
+			.append(getArticlePath(articleId))
+			.toString();
+	}
+
+	private Session session;
 
     private Node content;
 
@@ -72,7 +97,7 @@ public abstract class JcrStoreBase {
     }
     
     /** Recursively outputs the contents of the given node. */
-    protected void dumpNode(Node node) throws RepositoryException {
+    public void dumpNode(Node node) throws RepositoryException {
         // First output the node path
         System.out.println(node.getPath());
         // Skip the virtual (and large!) jcr:system subtree
@@ -104,4 +129,28 @@ public abstract class JcrStoreBase {
             dumpNode(nodes.nextNode());
         }
     }
+
+	protected List<EntityKey> buildPathList(RowIterator iterator) throws RepositoryException {
+		List<EntityKey> pathes = new ArrayList<EntityKey>();
+		while (iterator.hasNext()) {
+	    	Row row = iterator.nextRow();
+	    	String articleId = row.getValue(ARTICLE_ID_SELECTOR).getString();
+	    	String articleTitle = row.getValue(ARTICLE_TITLE_SELECTOR).getString();
+	    	String siteName = row.getValue(SITE_NAME_SELECTOR).getString();
+	        pathes.add(new EntityKey(articleTitle, getArticlePath(siteName, articleId)));
+	    }
+	    return pathes;
+	}
+	
+	protected List<EntityKey> buildPathList(NodeIterator iterator) throws RepositoryException {
+		List<EntityKey> pathes = new ArrayList<EntityKey>();
+		while (iterator.hasNext()) {
+	    	Node node = iterator.nextNode();
+	    	String articlePath = node.getPath();
+	    	articlePath.replace("", PATH_CONTENT);
+	    	String articleTitle = node.getProperty(PROP_TITLE).getString();
+	    	pathes.add(new EntityKey(articleTitle, articlePath));
+	    }
+	    return pathes;
+	}
 }

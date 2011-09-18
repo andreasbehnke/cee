@@ -43,5 +43,7 @@ public final class JcrStoreConstants {
     
     public static final String SLASH = "/";
 
+    public static final String PATH_CONTENT = SLASH + NODE_CONTENT + SLASH;
+    
     private JcrStoreConstants() {}
 }

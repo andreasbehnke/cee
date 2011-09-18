@@ -14,10 +14,8 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
-import javax.jcr.query.Row;
 import javax.jcr.query.RowIterator;
 
-import org.apache.jackrabbit.util.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +24,7 @@ import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
 import com.cee.news.model.TextBlock;
 import com.cee.news.model.WorkingSet;
+import com.cee.news.store.ArticleChangeListener;
 import com.cee.news.store.ArticleStore;
 import com.cee.news.store.StoreException;
 
@@ -36,38 +35,32 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
 
 	private final static Logger LOG = LoggerFactory.getLogger(JcrArticleStore.class);
 
-    private final static String SITE_NAME_SELECTOR = "siteName";
-    
-    private final static String ARTICLE_ID_SELECTOR = "articleId";
-    
-    private final static String ARTICLE_TITLE_SELECTOR = "articleTitle";
-    
     private final static String SELECT_ARTICLES_OF_SITE_ORDERED_BY_DATE = "SELECT s.[news:name] AS " + SITE_NAME_SELECTOR + ", a.[news:id] AS " + ARTICLE_ID_SELECTOR + ", a.[news:title] AS " + ARTICLE_TITLE_SELECTOR + " "
                                                                         + "FROM [news:article] AS a INNER JOIN [news:site] AS s ON ISCHILDNODE(a, s) "
                                                                         + "WHERE %s " 
                                                                         + "ORDER BY a.[news:published] DESC";
     
+    private final static String SELECT_RELATED_ARTICLES = //"SELECT s.[news:name] AS " + SITE_NAME_SELECTOR + ", a.[news:id] AS " + ARTICLE_ID_SELECTOR + ", a.[news:title] AS " + ARTICLE_TITLE_SELECTOR + " "
+    													"SELECT * "
+													    + "FROM [news:article] "
+													    //+ "WHERE (%s) AND 
+													    + "WHERE SIMILAR(., '/news:content/%s/news:title') "; 
+													    //+ "ORDER BY a.[news:published] DESC";
+    
     private final static String OR = "OR ";
     
     private final static String WHERE_SITE_NAME_TERM = "s.[news:name] = '%s' ";
+    
+    //TODO: Implement paging
+    private final static int DEFAULT_QUERY_LIMIT = 10;
+    
+    private List<ArticleChangeListener> changeListeners;
     
     public JcrArticleStore() {
     }
 
     public JcrArticleStore(Session session) throws StoreException {
         setSession(session);
-    }
-    
-    protected static String getArticlePath(String articleId) {
-    	return Text.escapeIllegalJcrChars(articleId);
-    }
-    
-    protected static String getArticlePath(String siteName, String articleId) {
-    	return new StringBuilder(300)
-    		.append(JcrSiteStore.getSitePath(siteName))
-    		.append(SLASH)
-    		.append(getArticlePath(articleId))
-    		.toString();
     }
     
     protected Node getArticleNode(String siteName, String articleName) throws RepositoryException {
@@ -103,8 +96,11 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         } catch (RepositoryException e) {
             throw new StoreException(article, "Could not retrive article node", e);
         }
-
+        
+        boolean articleCreated = false;
+        
         if (articleNode == null) {
+        	articleCreated = true;
             Node siteNode = null;
             try {
                 siteNode = getContentNodeOrNull(JcrSiteStore.getSitePath(siteName));
@@ -153,12 +149,37 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
         try {
             getSession().save();
+            if (articleCreated) {
+            	fireArticleCreated(site, article);
+            } else {
+            	fireArticleChanged(site, article);
+            }
             EntityKey key = new EntityKey(article.getTitle(), getArticlePath(siteName, articleId));
             LOG.debug("Created article {}", key);
             return key;
         } catch (RepositoryException e) {
             throw new StoreException(site, "Could not save session", e);
         }
+    }
+    
+    protected void fireArticleChanged(Site site, Article article) {
+    	for (ArticleChangeListener changeListener : changeListeners) {
+			changeListener.onArticleChanged(site, article);
+		}
+    }
+    
+    protected void fireArticleCreated(Site site, Article article) {
+    	for (ArticleChangeListener changeListener : changeListeners) {
+			changeListener.onArticleCreated(site, article);
+		}
+    }
+    
+    @Override
+    public void addArticleChangeListener(ArticleChangeListener listener) {
+    	if (changeListeners == null) {
+    		changeListeners = new ArrayList<ArticleChangeListener>();
+    	}
+    	changeListeners.add(listener);
     }
 
     public Article getArticle(String articlePath) throws StoreException {
@@ -208,21 +229,11 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         QueryManager queryManager = getSession().getWorkspace().getQueryManager();
         String whereExpression = buildExpression(WHERE_SITE_NAME_TERM, OR, siteNames);
         Query q = queryManager.createQuery(String.format(SELECT_ARTICLES_OF_SITE_ORDERED_BY_DATE, whereExpression), Query.JCR_SQL2);
+        q.setOffset(0);
+        q.setLimit(DEFAULT_QUERY_LIMIT);
         return q.execute().getRows();
     }
     
-    protected List<EntityKey> buildPathList(RowIterator iterator) throws RepositoryException {
-    	List<EntityKey> pathes = new ArrayList<EntityKey>();
-        while (iterator.hasNext()) {
-        	Row row = iterator.nextRow();
-        	String articleId = row.getValue(ARTICLE_ID_SELECTOR).getString();
-        	String articleTitle = row.getValue(ARTICLE_TITLE_SELECTOR).getString();
-        	String siteName = row.getValue(SITE_NAME_SELECTOR).getString();
-            pathes.add(new EntityKey(articleTitle, getArticlePath(siteName, articleId)));
-        }
-        return pathes;
-    }
-
     public List<EntityKey> getArticlesOrderedByDate(Site site) throws StoreException {
         if (site == null) {
             throw new IllegalArgumentException("Parameter site must not be null");
@@ -253,7 +264,13 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             throw new StoreException("Could not retrieve articles", e);
         }
     }
-
+    
+    public List<EntityKey> getRelatedArticlesOrderedByRelevance(String articleKey, WorkingSet workingSet) throws StoreException {
+    	// TODO Auto-generated method stub
+    	return null;
+    }
+    
+    @Override
     public List<TextBlock> getContent(String articlePath) throws StoreException {
         if (articlePath == null) {
             throw new IllegalArgumentException("Parameter path must not be null");

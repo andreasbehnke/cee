@@ -15,6 +15,10 @@
 		<!-- internal -->
 		<dependency>
 			<groupId>com.cee</groupId>
+			<artifactId>cee-news-search-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cee</groupId>
 			<artifactId>cee-news-store-api</artifactId>
 		</dependency>
 

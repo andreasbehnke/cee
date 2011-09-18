@@ -12,7 +12,7 @@ import com.cee.news.model.WorkingSet;
  * The article store is responsible for making articles persistent and providing fulltext search.
  */
 public interface ArticleStore {
-
+	
     /**
      * If an article with same ID exists, the existing article will be updated. TODO: Provide version functionality!
      * If an article with same ID does not exist, a new article will be created.
@@ -21,7 +21,12 @@ public interface ArticleStore {
      * @return primary key of the article being added
      */
     EntityKey update(Site site, Article article) throws StoreException;
-    
+
+	/**
+	 * @param listener will be notified about article creation and changes
+	 */
+	void addArticleChangeListener(ArticleChangeListener listener);
+
     /**
      * Get article by unique id
      * @param key The key of the article
