@@ -26,14 +26,14 @@
 		<!-- internal -->
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-store-api</artifactId>
+			<artifactId>cee-news-search-api</artifactId>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-search-api</artifactId>
-			<classifier>sources</classifier>
+			<artifactId>cee-news-store-api</artifactId>
+			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
