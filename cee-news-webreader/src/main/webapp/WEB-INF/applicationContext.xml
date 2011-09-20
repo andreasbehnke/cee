@@ -72,6 +72,11 @@
 		<aop:scoped-proxy />
 	</bean>
 	
+	<bean id="articleSearchService" class="com.cee.news.store.jcr.JcrArticleSearchService" scope="request">
+		<property name="session" ref="jcrSession" />
+		<aop:scoped-proxy />
+	</bean>
+	
 	<!-- Store used by the thread pool which executes commands -->
 	<bean id="commandArticleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="thread">
 		<property name="session" ref="jcrCommandSession" />
@@ -131,6 +136,7 @@
 		<property name="siteStore" ref="siteStore" />
 		<property name="workingSetStore" ref="workingSetStore" />
 		<property name="articleStore" ref="articleStore" />
+		<property name="articleSearchService" ref="articleSearchService" />
 	</bean>
 
 	<bean id="gwtSiteService" class="com.cee.news.server.content.SiteServiceImpl" lazy-init="true">

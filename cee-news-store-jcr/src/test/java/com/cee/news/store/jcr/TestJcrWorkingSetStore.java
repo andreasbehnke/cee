@@ -5,11 +5,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jcr.LoginException;
-import javax.jcr.RepositoryException;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.cee.news.model.EntityKey;
@@ -33,19 +29,6 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
     private static final EntityKey SITE_B = new EntityKey("siteB", "siteB");
     private static final EntityKey SITE_C = new EntityKey("siteC", "siteC");
     private static final String TESTWORKINGSET = "testworkingset";
-    private static JcrWorkingSetStore workingSetStore;
-    
-    @BeforeClass
-    public static void setupStores() throws LoginException, RepositoryException, StoreException {
-        setupSession();
-        workingSetStore = new JcrWorkingSetStore(session);
-    }
-    
-    @AfterClass
-    public static void close() {
-        closeSession();
-    }
-    
     @Test
     public void testUpdateWorkingSet() throws StoreException {
         WorkingSet ws = new WorkingSet();

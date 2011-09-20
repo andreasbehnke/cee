@@ -17,13 +17,13 @@ public class DummyArticleChangeListener implements ArticleChangeListener {
 	@Override
 	public void onArticleCreated(Site site, Article article) {
 		createdSiteName = site.getName();
-		createdArticleId = article.getId();
+		createdArticleId = article.getExternalId();
 	}
 
 	@Override
 	public void onArticleChanged(Site site, Article article) {
 		changedSiteName = site.getName();
-		changedArticleId = article.getId();			
+		changedArticleId = article.getExternalId();			
 	}
 	
 	public void reset() {

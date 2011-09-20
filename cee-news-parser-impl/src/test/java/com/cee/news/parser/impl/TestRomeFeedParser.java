@@ -29,7 +29,7 @@ public class TestRomeFeedParser {
         assertTrue(article.getShortText().startsWith(
                 "Die Nato beginnt die"));
         assertEquals(6, article.getPublishedDate().get(Calendar.HOUR));
-        assertEquals("http://www.spiegel.de/politik/ausland/0,1518,738566,00.html", article.getId());
+        assertEquals("http://www.spiegel.de/politik/ausland/0,1518,738566,00.html", article.getExternalId());
 
     }
 

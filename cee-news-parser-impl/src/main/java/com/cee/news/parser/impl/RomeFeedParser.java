@@ -77,7 +77,7 @@ public class RomeFeedParser implements FeedParser {
             if (id == null) {
                 id = link;
             }
-            article.setId(id);
+            article.setExternalId(id);
             try {
             	URL articleUrl = new URL(feedLocation, link);//check for well formed URL
                 article.setLocation(articleUrl.toExternalForm());

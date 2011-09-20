@@ -89,7 +89,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
         Node articleNode = null;
         String siteName = site.getName();
-        String articleId = article.getId();
+        String articleId = article.getExternalId();
         
         try {
             articleNode = getArticleNode(siteName, articleId);
@@ -198,7 +198,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         } else {
             Article article = new Article();
             try {
-                article.setId(articleNode.getProperty(PROP_ID).getString());
+                article.setExternalId(articleNode.getProperty(PROP_ID).getString());
                 article.setLocation(articleNode.getProperty(PROP_LOCATION).getString());
                 article.setPublishedDate(articleNode.getProperty(PROP_PUBLISHED).getDate());
                 article.setShortText(articleNode.getProperty(PROP_SHORT_TEXT).getString());

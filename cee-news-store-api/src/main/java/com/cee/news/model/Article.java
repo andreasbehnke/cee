@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Article {
 
-    private String id;
+    private String externalId;
 
     private String location;
 
@@ -18,12 +18,12 @@ public class Article {
 
     private Calendar publishedDate;
     
-    public String getId() {
-        return id;
+    public String getExternalId() {
+        return externalId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setExternalId(String id) {
+        this.externalId = id;
     }
 
     public String getLocation() {

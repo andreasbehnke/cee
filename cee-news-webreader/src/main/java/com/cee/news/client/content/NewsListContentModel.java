@@ -60,6 +60,28 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
 			}
 		});
     }
+    
+    public void updateFromArticle(final String articleId) {
+    	updateFromArticle(articleId, null);
+    }
+    
+    public void updateFromArticle(final String articleId, final NotificationCallback callback) {
+    	service.getRelatedArticles(articleId, new AsyncCallback<List<EntityKey>>() {
+			
+			@Override
+			public void onSuccess(List<EntityKey> result) {
+				setKeys(result);
+				if(callback != null) {
+					callback.finished();
+				}
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				fireErrorEvent(caught, "Could not load related articles!");//TODO: i18n
+			}
+		});
+    }
 
     public void getContentTitle(final HasSafeHtml target, String key) {
         if (keys == null) {

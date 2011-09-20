@@ -143,11 +143,18 @@ public abstract class JcrStoreBase {
 	}
 	
 	protected List<EntityKey> buildPathList(NodeIterator iterator) throws RepositoryException {
+		return buildPathList(iterator, null);
+	}
+	
+	protected List<EntityKey> buildPathList(NodeIterator iterator, String skipArticleKey) throws RepositoryException {
 		List<EntityKey> pathes = new ArrayList<EntityKey>();
 		while (iterator.hasNext()) {
 	    	Node node = iterator.nextNode();
 	    	String articlePath = node.getPath();
-	    	articlePath.replace("", PATH_CONTENT);
+	    	articlePath = articlePath.replace(PATH_CONTENT, "");
+	    	if (skipArticleKey != null && articlePath.equalsIgnoreCase(skipArticleKey)) {
+	    		continue;
+	    	}
 	    	String articleTitle = node.getProperty(PROP_TITLE).getString();
 	    	pathes.add(new EntityKey(articleTitle, articlePath));
 	    }

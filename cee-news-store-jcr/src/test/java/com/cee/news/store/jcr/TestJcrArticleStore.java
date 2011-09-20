@@ -10,11 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.cee.news.model.Article;
@@ -26,76 +23,7 @@ import com.cee.news.store.StoreException;
 
 public class TestJcrArticleStore extends JcrTestBase {
 
-	private static JcrWorkingSetStore workingSetStore;
-	
-    private static JcrSiteStore siteStore;
-    
-    private static JcrArticleStore articleStore;
-    
-    private static DummyArticleChangeListener listener = new DummyArticleChangeListener();
-    
-    @BeforeClass
-    public static void setupStores() throws LoginException, RepositoryException, StoreException {
-        setupSession();
-        workingSetStore = new JcrWorkingSetStore(session);
-        siteStore = new JcrSiteStore(session);
-        articleStore = new JcrArticleStore(session);
-        articleStore.addArticleChangeListener(listener);
-        listener.reset();
-    }
-    
-    @AfterClass
-    public static void close() {
-        closeSession();
-    }
-    
-    private Site createSite(String name) throws StoreException {
-        Site site = new Site();
-        site.setName(name);
-        site.setLocation("http://www.abc.de");
-        siteStore.update(site);
-        return site;
-    }
-    
-    private Article createArticle(String id, String location, int year, int month, int dayOfMonth) {
-    	Article article = new Article();
-        article.setId(id);
-        article.setLocation(location);
-        Calendar cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        article.setPublishedDate(cal);
-        return article;
-    }
-    
-    private Article createArticle(String id, String location, int year, int month, int dayOfMonth, String title, String shortText) {
-    	Article article = createArticle(id, location, year, month, dayOfMonth);
-    	article.setTitle(title);
-    	article.setShortText(shortText);
-    	return article;
-    }
-    
-    private Article createArticle(String id, String location, int year, int month, int dayOfMonth, String title, String shortText, List<TextBlock> content) {
-    	Article article = createArticle(id, location, year, month, dayOfMonth, title, shortText);
-    	article.setContent(content);
-    	return article;
-    }
-    
-    private String updateArticle(Site site, String id, String location, int year, int month, int dayOfMonth) throws StoreException {
-    	return articleStore.update(site, createArticle(id, location, year, month, dayOfMonth)).getKey();
-    }
-    
-    private String updateArticle(Site site, String id, String location, int year, int month, int dayOfMonth, String title, String shortText) throws StoreException {
-    	return articleStore.update(site, createArticle(id, location, year, month, dayOfMonth, title, shortText)).getKey();
-    }
-    
-    private String updateArticle(Site site, String id, String location, int year, int month, int dayOfMonth, String title, String shortText, List<TextBlock> content) throws StoreException {
-    	return articleStore.update(site, createArticle(id, location, year, month, dayOfMonth, title, shortText, content)).getKey();
-    }
-    
-    @Test
+	@Test
     public void testUpdateSiteArticle() throws StoreException, MalformedURLException {
         Site site = createSite("site1");
         String path = updateArticle(site, "1", "http://www.abc.de/1", 2010, 1, 12, "Title", "Short Text");
@@ -103,7 +31,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         assertEquals("site1", listener.createdSiteName);
         assertEquals("1", listener.createdArticleId);
         Article article = articleStore.getArticle(path);
-        assertEquals("1", article.getId());
+        assertEquals("1", article.getExternalId());
         assertEquals("http://www.abc.de/1", article.getLocation());
         assertEquals(2010, article.getPublishedDate().get(Calendar.YEAR));
         assertEquals(1, article.getPublishedDate().get(Calendar.MONTH));

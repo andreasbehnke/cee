@@ -1,6 +1,7 @@
 package com.cee.news.server.content;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
 import com.cee.news.model.TextBlock;
 import com.cee.news.model.WorkingSet;
+import com.cee.news.search.ArticleSearchService;
+import com.cee.news.search.SearchException;
 import com.cee.news.store.ArticleStore;
 import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
@@ -26,12 +29,18 @@ public class NewsServiceImpl implements NewsService {
 
 	private ArticleStore articleStore;
 
+	private ArticleSearchService articleSearchService;
+	
 	private SiteStore siteStore;
 
 	private WorkingSetStore workingSetStore;
 	
 	public void setArticleStore(ArticleStore articleStore) {
 		this.articleStore = articleStore;
+	}
+	
+	public void setArticleSearchService(ArticleSearchService articleSearchService) {
+		this.articleSearchService = articleSearchService;
 	}
 
 	public void setSiteStore(SiteStore siteStore) {
@@ -70,6 +79,20 @@ public class NewsServiceImpl implements NewsService {
 			}
 			return keys;
 		} catch (StoreException exception) {
+			throw new RuntimeException(exception);
+		}
+	}
+	
+	@Override
+	public List<EntityKey> getRelatedArticles(String articleId) {
+		try {
+			//TODO: only search within sites!
+			List<EntityKey> keys = articleSearchService.findRelatedArticles(new ArrayList<String>(), articleId);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Retrieved {} related articles for article {}", keys.size(), articleId);
+			}
+			return keys;
+		} catch (SearchException exception) {
 			throw new RuntimeException(exception);
 		}
 	}

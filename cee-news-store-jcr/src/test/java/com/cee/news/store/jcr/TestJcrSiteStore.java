@@ -12,8 +12,6 @@ import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 
 import org.apache.jackrabbit.util.Text;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.cee.news.model.Feed;
@@ -23,19 +21,6 @@ import com.cee.news.store.StoreException;
 
 public class TestJcrSiteStore extends JcrTestBase {
 
-    private static JcrSiteStore siteStore;
-    
-    @BeforeClass
-    public static void setupStores() throws LoginException, RepositoryException, StoreException {
-        setupSession();
-        siteStore = new JcrSiteStore(session);
-    }
-    
-    @AfterClass
-    public static void close() {
-        closeSession();
-    }
-    
     @Test
     public void testUpdateSite() throws LoginException, RepositoryException, MalformedURLException, StoreException {
         Site site = new Site();

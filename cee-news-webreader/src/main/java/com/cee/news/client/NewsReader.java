@@ -198,6 +198,17 @@ public class NewsReader implements EntryPoint {
 			}
 		});
 		
+		//What others say view
+		final NewsListContentModel whatOthersSay = new NewsListContentModel();
+		new ListPresenter(whatOthersSay, whatOthersSay, newsPanel.getWhatOthersSayListView());
+		pagingNewsList.addSelectionChangedhandler(new SelectionChangedHandler() {
+			
+			@Override
+			public void onSelectionChange(SelectionChangedEvent event) {
+				whatOthersSay.updateFromArticle(event.getKey());
+			}
+		});
+		
 		//trigger update
 		workingSetListModel.update(null);
 		siteAddRemoveListModel.update(null);
