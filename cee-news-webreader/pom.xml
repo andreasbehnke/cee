@@ -32,7 +32,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-store-api</artifactId>
+			<artifactId>cee-news-search-api</artifactId>
 			<classifier>sources</classifier>
 			<scope>compile</scope>
 		</dependency>
