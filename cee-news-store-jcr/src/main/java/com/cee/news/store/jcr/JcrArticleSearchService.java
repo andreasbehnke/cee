@@ -8,14 +8,13 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
 import com.cee.news.model.EntityKey;
-import com.cee.news.model.WorkingSet;
 import com.cee.news.search.ArticleSearchService;
 import com.cee.news.search.SearchException;
 import com.cee.news.store.StoreException;
 
 public class JcrArticleSearchService extends JcrStoreBase implements ArticleSearchService {
 
-	private static final String XPATH_SIMILAR_ARTICLES = "//element(*, news:article)[rep:similar(., '/news:content/%s')]";
+	private static final String XPATH_SIMILAR_ARTICLES = "//element(*, news:article)[rep:similar(., '/news:content/%s')] order by @jcr:score descending";
 	
 	public JcrArticleSearchService() {
 	}
