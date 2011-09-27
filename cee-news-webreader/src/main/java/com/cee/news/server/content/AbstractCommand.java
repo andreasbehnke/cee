@@ -27,6 +27,7 @@ public abstract class AbstractCommand implements Command {
 			LOG.debug("Cleared all thread scoped resources for thread {}", Thread.currentThread().getName());
 			
 		} catch (Exception ex) {
+			LOG.error("Error running command", ex);
 			fireError(ex);
 		} finally {
 			fireFinished();

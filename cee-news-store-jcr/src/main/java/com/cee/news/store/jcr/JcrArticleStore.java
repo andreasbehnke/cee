@@ -163,12 +163,14 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
     }
     
     protected void fireArticleChanged(Site site, Article article) {
+    	if (changeListeners == null) return;
     	for (ArticleChangeListener changeListener : changeListeners) {
 			changeListener.onArticleChanged(site, article);
 		}
     }
     
     protected void fireArticleCreated(Site site, Article article) {
+    	if (changeListeners == null) return;
     	for (ArticleChangeListener changeListener : changeListeners) {
 			changeListener.onArticleCreated(site, article);
 		}
