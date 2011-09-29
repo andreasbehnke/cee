@@ -119,7 +119,8 @@ public class NewsServiceImpl implements NewsService {
 			StringBuilder builder = new StringBuilder();
 			Article article = articleStore.getArticle(articleId);
 			builder.append("<h1>").append(article.getTitle()).append("</h1>")
-					.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>");
+					.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>")
+					.append("<p><a href=\"").append(article.getLocation()).append("\" target=\"article\">open article</a></p>");
 			List<TextBlock> content = articleStore.getContent(articleId);
 			for (TextBlock textBlock : content) {
 				builder.append("<p>").append(textBlock.getContent()).append("</p>");

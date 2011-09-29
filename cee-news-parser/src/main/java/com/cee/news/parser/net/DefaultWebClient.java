@@ -2,6 +2,7 @@ package com.cee.news.parser.net;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 
 import org.apache.http.HttpEntity;
@@ -80,6 +81,12 @@ public class DefaultWebClient implements WebClient {
                 public InputStream openStream() throws IOException {
                     return DefaultWebClient.this.openStream(location);
                 }
+                
+                @Override
+                public Reader openReader() throws IOException {
+                	// TODO Auto-generated method stub
+                	return null;
+                }
 
                 public String getContentType() {
                     return null;
@@ -98,6 +105,12 @@ public class DefaultWebClient implements WebClient {
 
             public InputStream openStream() throws IOException {
                 return entity.getContent();
+            }
+            
+            @Override
+            public Reader openReader() throws IOException {
+            	// TODO Auto-generated method stub
+            	return null;
             }
 
             public String getContentType() {

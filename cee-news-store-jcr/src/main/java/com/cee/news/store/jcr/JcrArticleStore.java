@@ -47,13 +47,6 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
 													    + "WHERE SIMILAR(., '/news:content/%s/news:title') "; 
 													    //+ "ORDER BY a.[news:published] DESC";
     
-    private final static String OR = "OR ";
-    
-    private final static String WHERE_SITE_NAME_TERM = "s.[news:name] = '%s' ";
-    
-    //TODO: Implement paging
-    private final static int DEFAULT_QUERY_LIMIT = 10;
-    
     private List<ArticleChangeListener> changeListeners;
     
     public JcrArticleStore() {
@@ -212,20 +205,6 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
     }
     
-    protected String buildExpression(String formatStr, String operator, List<String> keys) {
-    	boolean isFirst = true;
-    	StringBuilder buffer = new StringBuilder();
-    	for (String key : keys) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				buffer.append(operator);
-			}
-			buffer.append(String.format(formatStr, key));
-		}
-    	return buffer.toString();
-    }
-
     protected RowIterator getArticlesOfSitesOrderedByPublication(List<String> siteNames) throws RepositoryException {
         testSession();
         QueryManager queryManager = getSession().getWorkspace().getQueryManager();

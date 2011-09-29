@@ -1,11 +1,14 @@
 package com.cee.news.parser.net;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 
 /**
- * The class resource web client tries to map any request to a resource lookup to a lokal class path lookup.
+ * The class resource web client tries to map any request to a resource lookup to a local class path lookup.
  * Therefore only the PATH segment of the URL is used to find a resource. This implementation of the WebClient
  * is used for testing purposes.
  */
@@ -18,7 +21,11 @@ public class ClassResourceWebClient implements WebClient {
 	@Override
 	public InputStream openStream(final URL location) throws IOException {
 		String path = location.getPath();
-		return getClass().getResourceAsStream(path);
+		InputStream is = getClass().getResourceAsStream(path);
+		if (is == null) {
+			throw new FileNotFoundException(path);
+		}
+		return is;
 	}
 
 	/**
@@ -32,6 +39,11 @@ public class ClassResourceWebClient implements WebClient {
 			@Override
 			public InputStream openStream() throws IOException {
 				return ClassResourceWebClient.this.openStream(location);
+			}
+			
+			@Override
+			public Reader openReader() throws IOException {
+				return new InputStreamReader(ClassResourceWebClient.this.openStream(location));
 			}
 			
 			@Override

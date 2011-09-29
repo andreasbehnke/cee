@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.cee.news.client.content.SiteData;
 import com.cee.news.client.content.SiteUpdateService;
+import com.cee.news.client.content.SiteData.SiteRetrivalState;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
@@ -24,8 +26,12 @@ import com.cee.news.store.jcr.JcrArticleStore;
 @ContextConfiguration(locations={"/testContext.xml"})
 public class TestSiteUpdateService {
 
-	private static final String SITE_URL = "http://www.test.com/content/site1.html";
+	private static final String SITE_URL = "http://www.test.com/content/index.html";
 
+	private static final String SITE_MALFORMED_URL = "xyz://www.test.com/content/index.html";
+
+	private static final String MISSING_SITE_URL = "http://www.test.com/content/unknown.html";
+	
 	private static final String FEED_TYPE = "application/rss+xml";
 
 	private static final String FEED_TITLE = "Dev User Stories";
@@ -56,6 +62,26 @@ public class TestSiteUpdateService {
 	}
 	
 	@Test
+	public void testRetrieveSiteDataOk() {
+		SiteData siteData = siteUpdateService.retrieveSiteData(SITE_URL);
+		Assert.assertEquals(SiteRetrivalState.ok, siteData.getState());
+		Assert.assertEquals("Site 1", siteData.getTitle());
+		Assert.assertEquals(2, siteData.getFeeds().size());
+	}
+	
+	@Test
+	public void testRetrieveSiteDataMalformedUrlError() {
+		SiteData siteData = siteUpdateService.retrieveSiteData(SITE_MALFORMED_URL);
+		Assert.assertEquals(SiteRetrivalState.malformedUrl, siteData.getState());
+	}
+	
+	@Test
+	public void testRetrieveSiteDataIoError() {
+		SiteData siteData = siteUpdateService.retrieveSiteData(MISSING_SITE_URL);
+		Assert.assertEquals(SiteRetrivalState.ioError, siteData.getState());
+	}
+	
+	@Test
 	public void testSiteUpdate() throws StoreException, InterruptedException, RepositoryException {
 		Site site = createSite();
 		siteStore.update(site);
@@ -65,8 +91,6 @@ public class TestSiteUpdateService {
 		while(siteUpdateService.getUpdateTasks() > 0) {
 			Thread.sleep(100);
 		}
-		 
-		articleStore.dumpContent();
 		 
 		List<EntityKey> keys = articleStore.getArticlesOrderedByDate(site);
 		Assert.assertEquals(4, keys.size());

@@ -21,23 +21,27 @@ public class TestJcrArticleSearchService extends JcrTestBase {
 
 	private static final String SCORE3 = "Year 2011 electric energy Cars Economics Year 2011 electric energy Year 2011 electric energy ";
 
-	private static final String SCORE4 = "Year 2011 electric energy Cars Year 2011 electric energy Year 2011 electric energy ";
-
 	private static final String SCORE5 = "Year 2011 electric energy Year 2011 electric energy Year 2011 electric energy ";
+
+	private static final String UNRELATED = "Food Issue dog eat cats alambama";
 
 	@Test
 	public void testGetRelatedArticles() throws StoreException, SearchException {
 		Site site = createSite("site1");
+		Site site2 = createSite("site2");
 		String path1 = updateArticle(site, "1", "http://www.abc.de/1", 2010, 1, 12, "Title", TEXT);
 		String path2 = updateArticle(site, "2", "http://www.abc.de/2", 2010, 1, 12, "Title", SCORE2);
 		String path3 = updateArticle(site, "3", "http://www.abc.de/3", 2010, 1, 12, "Title", SCORE1);
-		String path4 = updateArticle(site, "4", "http://www.abc.de/4", 2010, 1, 12, "Title", SCORE3);
+		updateArticle(site2, "4", "http://www.xyz.de/4", 2010, 1, 12, "Title", SCORE3);
 		String path5 = updateArticle(site, "5", "http://www.abc.de/5", 2010, 1, 12, "Title", SCORE5);
-		String path6 = updateArticle(site, "6", "http://www.abc.de/6", 2010, 1, 12, "Title", SCORE4);
+		updateArticle(site, "6", "http://www.abc.de/6", 2010, 1, 12, "Title", UNRELATED);
 	
 		List<String> sites = new ArrayList<String>();
 		sites.add(site.getName());
 		List<EntityKey> related = articleSearchService.findRelatedArticles(sites, path1);
-		Assert.assertEquals(5, related.size());
+		Assert.assertEquals(3, related.size());
+		Assert.assertTrue(related.contains(new EntityKey(null, path2)));
+		Assert.assertTrue(related.contains(new EntityKey(null, path3)));
+		Assert.assertTrue(related.contains(new EntityKey(null, path5)));
 	}
 }

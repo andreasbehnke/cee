@@ -31,6 +31,12 @@ public abstract class JcrStoreBase {
 	protected static final String ARTICLE_ID_SELECTOR = "articleId";
 
 	protected static final String ARTICLE_TITLE_SELECTOR = "articleTitle";
+
+	protected static final String OR = "OR ";
+
+	protected static final String WHERE_SITE_NAME_TERM = "s.[news:name] = '%s' ";
+
+	protected static final int DEFAULT_QUERY_LIMIT = 10;
 	
     protected static String getArticlePath(String articleId) {
 		return Text.escapeIllegalJcrChars(articleId);
@@ -141,23 +147,18 @@ public abstract class JcrStoreBase {
 	    }
 	    return pathes;
 	}
-	
-	protected List<EntityKey> buildPathList(NodeIterator iterator) throws RepositoryException {
-		return buildPathList(iterator, null);
-	}
-	
-	protected List<EntityKey> buildPathList(NodeIterator iterator, String skipArticleKey) throws RepositoryException {
-		List<EntityKey> pathes = new ArrayList<EntityKey>();
-		while (iterator.hasNext()) {
-	    	Node node = iterator.nextNode();
-	    	String articlePath = node.getPath();
-	    	articlePath = articlePath.replace(PATH_CONTENT, "");
-	    	if (skipArticleKey != null && articlePath.equalsIgnoreCase(skipArticleKey)) {
-	    		continue;
-	    	}
-	    	String articleTitle = node.getProperty(PROP_TITLE).getString();
-	    	pathes.add(new EntityKey(articleTitle, articlePath));
-	    }
-	    return pathes;
+
+	protected String buildExpression(String formatStr, String operator, List<String> keys) {
+		boolean isFirst = true;
+		StringBuilder buffer = new StringBuilder();
+		for (String key : keys) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				buffer.append(operator);
+			}
+			buffer.append(String.format(formatStr, key));
+		}
+		return buffer.toString();
 	}
 }

@@ -92,7 +92,9 @@ public class SiteParser {
             reader.parse(new InputSource(input));
         } finally {
         	LOG.info("finished parsing site document {}", siteLocation);
-            input.close();
+        	if (input != null) {
+        		input.close();
+        	}
         }
         
         //remove feeds with unknown content type
