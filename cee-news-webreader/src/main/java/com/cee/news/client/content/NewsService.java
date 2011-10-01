@@ -29,7 +29,7 @@ public interface NewsService extends RemoteService {
 	
 	List<EntityKey> getArticlesOfWorkingSet(String workingSetName);
 	
-	List<EntityKey> getRelatedArticles(String articleId);
+	List<EntityKey> getRelatedArticles(String articleId, String workingSetName);
 	
 	String getHtmlDescription(String articleId);
 	

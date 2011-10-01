@@ -55,4 +55,10 @@ public interface ArticleStore {
      */
     List<TextBlock> getContent(String key) throws StoreException;
     
+    /**
+     * Returns the site key of an article
+     * @param articleKey Key of the article
+     * @return Site's key this article belongs to
+     */
+    String getSiteKey(String articleKey);
 }

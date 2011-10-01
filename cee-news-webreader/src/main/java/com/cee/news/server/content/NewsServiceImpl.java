@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cee.news.client.content.NewsService;
+import com.cee.news.client.list.EntityKeyUtil;
 import com.cee.news.model.Article;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
@@ -84,15 +85,29 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	@Override
-	public List<EntityKey> getRelatedArticles(String articleId) {
+	public List<EntityKey> getRelatedArticles(String articleId, String workingSet) {
 		try {
-			//TODO: only search within sites!
-			List<EntityKey> keys = articleSearchService.findRelatedArticles(new ArrayList<String>(), articleId);
+			WorkingSet ws = workingSetStore.getWorkingSet(workingSet);
+			if (ws == null) {
+				throw new IllegalArgumentException("Working set " + workingSet + " not found");
+			}
+			List<EntityKey> sites = ws.getSites();
+			List<EntityKey> relatedSites = null;
+			if (sites.size() == 1) {
+				relatedSites = sites;
+			} else {
+				//remove site of current article
+				relatedSites = new ArrayList<EntityKey>(sites);
+				relatedSites.remove(new EntityKey(null, articleStore.getSiteKey(articleId)));
+			}
+			List<EntityKey> keys = articleSearchService.findRelatedArticles(EntityKeyUtil.extractKeys(relatedSites), articleId);
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Retrieved {} related articles for article {}", keys.size(), articleId);
 			}
 			return keys;
 		} catch (SearchException exception) {
+			throw new RuntimeException(exception);
+		} catch (StoreException exception) {
 			throw new RuntimeException(exception);
 		}
 	}

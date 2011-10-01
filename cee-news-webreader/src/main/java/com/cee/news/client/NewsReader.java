@@ -15,7 +15,6 @@ import com.cee.news.client.list.ListPresenter;
 import com.cee.news.client.list.SelectionChangedEvent;
 import com.cee.news.client.list.SelectionChangedHandler;
 import com.cee.news.client.paging.PagingPresenter;
-import com.cee.news.client.progress.ProgressHandler;
 import com.cee.news.client.progress.ProgressModel;
 import com.cee.news.client.progress.ProgressPresenter;
 import com.cee.news.client.workingset.WorkingSetEditor;
@@ -57,6 +56,8 @@ public class NewsReader implements EntryPoint {
 		}
 	};
 	
+	private String workingSet;
+	
 	public void onModuleLoad() {
 		RootPanel rootPanel = RootPanel.get();
 		
@@ -87,6 +88,7 @@ public class NewsReader implements EntryPoint {
 		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {
+				workingSet = event.getKey();
 				appEventBus.fireEvent(event);
 			}
 		});
@@ -205,7 +207,7 @@ public class NewsReader implements EntryPoint {
 			
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {
-				whatOthersSay.updateFromArticle(event.getKey());
+				whatOthersSay.updateFromArticle(event.getKey(), workingSet);
 			}
 		});
 		

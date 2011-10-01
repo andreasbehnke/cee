@@ -40,13 +40,6 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
                                                                         + "WHERE %s " 
                                                                         + "ORDER BY a.[news:published] DESC";
     
-    private final static String SELECT_RELATED_ARTICLES = //"SELECT s.[news:name] AS " + SITE_NAME_SELECTOR + ", a.[news:id] AS " + ARTICLE_ID_SELECTOR + ", a.[news:title] AS " + ARTICLE_TITLE_SELECTOR + " "
-    													"SELECT * "
-													    + "FROM [news:article] "
-													    //+ "WHERE (%s) AND 
-													    + "WHERE SIMILAR(., '/news:content/%s/news:title') "; 
-													    //+ "ORDER BY a.[news:published] DESC";
-    
     private List<ArticleChangeListener> changeListeners;
     
     public JcrArticleStore() {
@@ -276,5 +269,10 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             throw new StoreException("Could not retrieve text blocks of article", e);
         }
         return content;
+    }
+    
+    @Override
+    public String getSiteKey(String articleKey) {
+    	return articleKey.substring(0, articleKey.indexOf('/'));
     }
 }

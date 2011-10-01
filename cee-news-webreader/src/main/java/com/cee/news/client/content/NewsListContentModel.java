@@ -61,12 +61,12 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
 		});
     }
     
-    public void updateFromArticle(final String articleId) {
-    	updateFromArticle(articleId, null);
+    public void updateFromArticle(final String articleId, final String workingSet) {
+    	updateFromArticle(articleId, workingSet, null);
     }
     
-    public void updateFromArticle(final String articleId, final NotificationCallback callback) {
-    	service.getRelatedArticles(articleId, new AsyncCallback<List<EntityKey>>() {
+    public void updateFromArticle(final String articleId, final String workingSet, final NotificationCallback callback) {
+    	service.getRelatedArticles(articleId, workingSet, new AsyncCallback<List<EntityKey>>() {
 			
 			@Override
 			public void onSuccess(List<EntityKey> result) {
