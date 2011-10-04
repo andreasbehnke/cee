@@ -36,7 +36,7 @@ public abstract class JcrStoreBase {
 
 	protected static final String WHERE_SITE_NAME_TERM = "s.[news:name] = '%s' ";
 
-	protected static final int DEFAULT_QUERY_LIMIT = 10;
+	protected static final int DEFAULT_QUERY_LIMIT = 200;
 	
     protected static String getArticlePath(String articleId) {
 		return Text.escapeIllegalJcrChars(articleId);
