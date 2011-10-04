@@ -214,16 +214,17 @@ public class NewsReader implements EntryPoint {
 			
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {
-				final String articleKey = event.getKey();
-				final String siteKey = ArticleUtil.getSiteKeyFromArticleKey(articleKey);
-				pagingNewsList.updateFromSite(siteKey, new NotificationCallback() {
-					
-					@Override
-					public void finished() {
-						pagingNewsList.setSelectedKey(articleKey);
-						deckPanel.showWidget(NEWS_PANEL_INDEX);
-					}
-				});
+				if (event.isUserAction()) {
+					final String articleKey = event.getKey();
+					final String siteKey = ArticleUtil.getSiteKeyFromArticleKey(articleKey);
+					pagingNewsList.updateFromSite(siteKey, new NotificationCallback() {
+						
+						@Override
+						public void finished() {
+							pagingNewsList.setSelectedKey(articleKey);
+						}
+					});
+				}
 			}
 		});
 		
