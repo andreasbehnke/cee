@@ -5,6 +5,7 @@ import java.util.List;
 import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.list.ContentModel;
 import com.cee.news.client.list.DefaultListModel;
+import com.cee.news.client.list.EntityKeyUtil;
 import com.cee.news.client.util.SafeHtmlUtil;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.safehtml.client.HasSafeHtml;
@@ -97,7 +98,8 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
     }
 
     public void getContentDescription(final HasSafeHtml target, String key) {
-        service.getHtmlDescription(key, new AsyncCallback<String>() {
+    	final EntityKey entityKey = EntityKeyUtil.getEntityKey(keys, key);
+        service.getHtmlDescription(entityKey, new AsyncCallback<String>() {
             public void onSuccess(String result) {
                 target.setHTML(SafeHtmlUtil.sanitize(result) );
             }
@@ -108,7 +110,8 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
     }
 
     public void getContent(final HasSafeHtml target, String key) {
-        service.getHtmlContent(key, new AsyncCallback<String>() {
+    	final EntityKey entityKey = EntityKeyUtil.getEntityKey(keys, key);
+        service.getHtmlContent(entityKey, new AsyncCallback<String>() {
             public void onSuccess(String result) {
             	target.setHTML(SafeHtmlUtil.sanitize(result) );
             }

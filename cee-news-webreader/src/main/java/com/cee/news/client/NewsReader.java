@@ -210,6 +210,22 @@ public class NewsReader implements EntryPoint {
 				whatOthersSay.updateFromArticle(event.getKey(), workingSet);
 			}
 		});
+		whatOthersSay.addSelectionChangedhandler(new SelectionChangedHandler() {
+			
+			@Override
+			public void onSelectionChange(SelectionChangedEvent event) {
+				final String articleKey = event.getKey();
+				final String siteKey = ArticleUtil.getSiteKeyFromArticleKey(articleKey);
+				pagingNewsList.updateFromSite(siteKey, new NotificationCallback() {
+					
+					@Override
+					public void finished() {
+						pagingNewsList.setSelectedKey(articleKey);
+						deckPanel.showWidget(NEWS_PANEL_INDEX);
+					}
+				});
+			}
+		});
 		
 		//trigger update
 		workingSetListModel.update(null);

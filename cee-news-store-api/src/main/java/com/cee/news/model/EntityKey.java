@@ -14,6 +14,8 @@ public class EntityKey implements Serializable {
 	private String name;
 	
 	private String key;
+	
+	private double score = -1;
 
 	public String getName() {
 		return name;
@@ -30,10 +32,27 @@ public class EntityKey implements Serializable {
 	public void setKey(String key) {
 		this.key = key;
 	}
+	
+	/**
+	 * @return Score of the hit if this EntityKey was generated from a related term or fulltext search. Otherwise returns always -1;
+	 */
+	public double getScore() {
+		return score;
+	}
+
+	public void setScore(double score) {
+		this.score = score;
+	}
 
 	public EntityKey(String name, String key) {
 		this.name = name;
 		this.key = key;
+	}
+	
+	public EntityKey(String name, String key, double score) {
+		this.name = name;
+		this.key = key;
+		this.score = score;
 	}
 
 	public EntityKey() {}

@@ -3,12 +3,10 @@ package com.cee.news.store.jcr;
 import static com.cee.news.store.jcr.JcrStoreConstants.PATH_CONTENT;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_TITLE;
 
-import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.query.Query;
@@ -44,7 +42,7 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 				String siteName = articlePath.substring(0, articlePath.indexOf('/'));
 		    	if (sites.contains(siteName)) {
 		    		String articleTitle = node.getProperty(PROP_TITLE).getString() + " : " + score;
-		    		keys.add(new EntityKey(articleTitle, articlePath));
+		    		keys.add(new EntityKey(articleTitle, articlePath, score));
 		    	}
 			}
 	    }
@@ -57,7 +55,7 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 		return null;
 	}
 
-	@Override
+    @Override
 	public List<EntityKey> findRelatedArticles(List<String> sites, String articleKey) throws SearchException {
 		testSession();
 		if (sites == null) {
@@ -68,7 +66,7 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 		}
 		try {
 			QueryManager queryManager = getSession().getWorkspace().getQueryManager();
-	        Query q = queryManager.createQuery(String.format(XPATH_SIMILAR_ARTICLES, articleKey), Query.XPATH);
+			Query q = queryManager.createQuery(String.format(XPATH_SIMILAR_ARTICLES, articleKey), Query.XPATH);
 	        return buildPathList(q.execute().getRows(), sites, articleKey);
 		} catch (RepositoryException e) {
 			throw new SearchException("Could not perform similarity query", e);

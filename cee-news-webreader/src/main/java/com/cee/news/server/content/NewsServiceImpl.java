@@ -114,13 +114,16 @@ public class NewsServiceImpl implements NewsService {
 
 	//TODO: Use Velocity to render simple HTML content
 	@Override
-	public String getHtmlDescription(String articleId) {
+	public String getHtmlDescription(EntityKey articleKey) {
 		try {
-			Article article = articleStore.getArticle(articleId);
+			Article article = articleStore.getArticle(articleKey.getKey());
 			StringBuilder builder = new StringBuilder();
 			builder.append("<h3>").append(article.getTitle()).append("</h3>")
-					.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>")
-					.append("<p>").append(article.getShortText()).append("</p>");
+					.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>");
+			if (articleKey.getScore() != -1) {
+				builder.append("<p>").append(articleKey.getScore()).append("</p>");
+			}
+			builder.append("<p>").append(article.getShortText()).append("</p>");
 			return builder.toString();
 		} catch (StoreException exception) {
 			throw new RuntimeException(exception);
@@ -129,14 +132,14 @@ public class NewsServiceImpl implements NewsService {
 
 	//TODO: Use Velocity to render simple HTML content
 	@Override
-	public String getHtmlContent(String articleId) {
+	public String getHtmlContent(EntityKey articleKey) {
 		try {
 			StringBuilder builder = new StringBuilder();
-			Article article = articleStore.getArticle(articleId);
+			Article article = articleStore.getArticle(articleKey.getKey());
 			builder.append("<h1>").append(article.getTitle()).append("</h1>")
 					.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>")
 					.append("<p><a href=\"").append(article.getLocation()).append("\" target=\"article\">open article</a></p>");
-			List<TextBlock> content = articleStore.getContent(articleId);
+			List<TextBlock> content = articleStore.getContent(articleKey.getKey());
 			for (TextBlock textBlock : content) {
 				builder.append("<p>").append(textBlock.getContent()).append("</p>");
 			}
