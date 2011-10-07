@@ -69,7 +69,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 							startSiteUpdates();
 						}
 					}, 
-					0, 
+					updateSchedulerFixedDelay, 
 					updateSchedulerFixedDelay,
 					TimeUnit.MINUTES);
 		}
