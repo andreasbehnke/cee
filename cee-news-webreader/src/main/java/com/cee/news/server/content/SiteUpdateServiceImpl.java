@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +34,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private static final long serialVersionUID = 8695157160684778713L;
 
-	private static final Logger log = LoggerFactory.getLogger(SiteUpdateServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SiteUpdateServiceImpl.class);
 	
 	private final List<String> sitesInProgress;
 
@@ -41,16 +43,48 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	private WorkingSetStore workingSetStore;
 
 	private final ThreadPoolExecutor pool;
+	
+	private ScheduledExecutorService scheduler;
 
 	private final List<Runnable> runnablesInProgress = new ArrayList<Runnable>();
 
 	private final LinkedBlockingQueue<Runnable> workQueue;
 	
-	public SiteUpdateServiceImpl(int threadPoolSize) {
+	/**
+	 * Creates a new update service. A constructor is provided, because if final fields.
+	 * @param threadPoolSize The maximum thread pool size. This value defines the maximum number of concurrent update commands.
+	 * @param updateSchedulerFixedDelay The delay between site updates in minutes. If set to -1, no scheduler will be started for site updates.
+	 */
+	public SiteUpdateServiceImpl(int threadPoolSize, long updateSchedulerFixedDelay) {
+		sitesInProgress = new ArrayList<String>();
 		workQueue = new LinkedBlockingQueue<Runnable>();
 		pool = new SiteUpdateServiceImpl.Executor(threadPoolSize, threadPoolSize, 0,
 				TimeUnit.MILLISECONDS, workQueue);
-		sitesInProgress = new ArrayList<String>();
+		if (updateSchedulerFixedDelay > -1) {
+			scheduler = new ScheduledThreadPoolExecutor(1);
+			scheduler.scheduleWithFixedDelay(
+					new Runnable() {		
+						@Override
+						public void run() {
+							startSiteUpdates();
+						}
+					}, 
+					0, 
+					updateSchedulerFixedDelay,
+					TimeUnit.MINUTES);
+		}
+	}
+	
+	private void startSiteUpdates() {
+		try {
+			LOG.debug("Scheduler starting site updates");
+			List<EntityKey> sites = siteStore.getSitesOrderedByName();
+			for (EntityKey entityKey : sites) {
+				addSiteToUpdateQueue(entityKey.getKey());
+			}
+		} catch (Throwable t) {
+			LOG.error("Update scheduler encountered an error", t);
+		}
 	}
 
 	public void setSiteStore(SiteStore siteStore) {
@@ -63,7 +97,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	
 	private synchronized void removeSite(String siteName) {
 		if (!sitesInProgress.remove(siteName)) {
-			log.warn("{} could not be removed from list of sites in progress", siteName);
+			LOG.warn("{} could not be removed from list of sites in progress", siteName);
 		}
 	}
 
@@ -74,7 +108,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			try {
 				siteEntity = siteStore.getSite(siteName);
 			} catch (StoreException e) {
-				log.error(COULD_NOT_RETRIEVE_SITE, e);
+				LOG.error(COULD_NOT_RETRIEVE_SITE, e);
 				throw new ServiceException(COULD_NOT_RETRIEVE_SITE);
 			}
 			SiteUpdateCommand command = createSiteUpdateCommand();
@@ -87,6 +121,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 				
 				@Override
 				public void notifyError(Exception ex) {
+					LOG.error("Site update for " + siteName + " encountered an error", ex);
 					//TODO: how to handle error reporting for the user?
 				}
 			});
@@ -128,7 +163,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	@Override
 	public synchronized void clearQueue() {
-		log.info("Clearing work queue");
+		LOG.info("Clearing work queue");
 		workQueue.clear();
 		runnablesInProgress.clear();
 		sitesInProgress.clear();
@@ -156,6 +191,14 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			info.setState(SiteRetrivalState.parserError);
 		}
 		return info;
+	}
+	
+	/**
+	 * Stops execution of the thread pool
+	 */
+	public void shutdown() {
+		pool.shutdownNow();
+		scheduler.shutdownNow(); 
 	}
 
 	/**

@@ -3,132 +3,19 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-	<!-- JCR -->
-
-	<bean id="jcrRepositoryConfig" class="org.apache.jackrabbit.core.config.RepositoryConfig" factory-method="install">
-		<constructor-arg>
-			<bean class="java.io.File">
-				<constructor-arg value="repository.xml" />
-			</bean>
-		</constructor-arg>
-		<constructor-arg>
-			<bean class="java.io.File">
-				<constructor-arg value="repository" />
-			</bean>
-		</constructor-arg>
-	</bean>
-
-	<bean id="jcrRepository" class="org.apache.jackrabbit.core.RepositoryImpl" factory-method="create" destroy-method="shutdown">
-		<constructor-arg ref="jcrRepositoryConfig" />
-	</bean>
-
-	<bean id="jcrPassword" class="java.lang.String">
-		<constructor-arg value="password" />
-	</bean>
-
-	<bean id="jcrCredentials" class="javax.jcr.SimpleCredentials">
-		<constructor-arg value="username" />
-		<constructor-arg>
-			<bean factory-bean="jcrPassword" factory-method="toCharArray" />
-		</constructor-arg>
-	</bean>
-
-	<bean id="jcrSession" factory-bean="jcrRepository" factory-method="login" scope="prototype" destroy-method="logout">
-		<constructor-arg ref="jcrCredentials" />
-	</bean>
+	<import resource="applicationContext.xml"/>
 	
-	<bean id="jcrCommandSession" factory-bean="jcrRepository" factory-method="login" scope="prototype" destroy-method="logout">
-		<constructor-arg ref="jcrCredentials" />
-	</bean>
-
-	<bean class="com.cee.news.store.jcr.JcrStoreInitializer" init-method="registerNodeTypes" scope="singleton">
-		<property name="session">
-			<bean factory-bean="jcrRepository" factory-method="login" destroy-method="logout">
-				<constructor-arg ref="jcrCredentials" />
-			</bean>
+	<!-- Register request scope manually because we are not using the web context -->
+	<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+		<property name="scopes">
+			<map>
+				<entry key="request">
+					<bean class="org.springbyexample.bean.scope.thread.ThreadScope"/>
+				</entry>
+			</map>
 		</property>
 	</bean>
-
-	<!-- Backend Services -->
-	
-	<bean id="siteStore" class="com.cee.news.store.jcr.JcrSiteStore" scope="prototype">
-		<property name="session" ref="jcrSession" />
-	</bean>
-
-	<bean id="articleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="prototype">
-		<property name="session" ref="jcrSession" />
-	</bean>
-	
-	<!-- Store used by the thread pool which executes commands -->
-	
-	<bean id="commandArticleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="prototype">
-		<property name="session" ref="jcrCommandSession" />
-	</bean>
-
-	<bean id="workingSetStore" class="com.cee.news.store.jcr.JcrWorkingSetStore" scope="prototype">
-		<property name="session" ref="jcrSession" />
-	</bean>
-
-	<!-- Parser -->
 	
 	<bean id="webClient" class="com.cee.news.parser.net.ClassResourceWebClient" scope="prototype"/>
-	
-	<bean id="htmlParser" class="org.ccil.cowan.tagsoup.Parser" scope="prototype"/>
-	
-	<bean id="articleParser" class="com.cee.news.parser.impl.BoilerpipeArticleParser" scope="prototype">
-		<property name="webClient" ref="webClient" />
-		<property name="reader" ref="htmlParser"/>
-	</bean>
-	
-	<bean id="feedParser" class="com.cee.news.parser.impl.RomeFeedParser" scope="prototype">
-		<property name="webClient" ref="webClient" />
-	</bean>
 
-	<bean id="siteUpdater" class="com.cee.news.parser.SiteUpdater" scope="prototype">
-		<property name="articleParser" ref="articleParser" />
-		<property name="feedParser" ref="feedParser" />
-		<property name="store" ref="articleStore" />
-		<property name="onlyActiveFeeds" value="true" />
-	</bean>
-
-	<bean id="siteUpdateCommand" class="com.cee.news.server.content.SiteUpdateCommand" scope="prototype">
-		<property name="siteUpdater" ref="siteUpdater" />
-	</bean>
-	
-	<bean id="htmlReader" class="org.ccil.cowan.tagsoup.Parser" scope="prototype" />
-
-	<bean id="feedChecker" class="com.cee.news.parser.impl.RomeFeedChecker">
-		<property name="webClient" ref="webClient" />
-	</bean>
-
-	<bean id="siteParser" class="com.cee.news.parser.SiteParser">
-		<property name="webClient" ref="webClient" />
-    	<property name="reader" ref="htmlReader" />
-		<property name="feedChecker" ref="feedChecker" />
-	</bean>
-
-	<!-- GWT Services -->
-
-	<bean id="gwtNewsService" class="com.cee.news.server.content.NewsServiceImpl" lazy-init="true">
-		<property name="siteStore" ref="siteStore" />
-		<property name="workingSetStore" ref="workingSetStore" />
-		<property name="articleStore" ref="articleStore" />
-	</bean>
-
-	<bean id="gwtSiteService" class="com.cee.news.server.content.SiteServiceImpl" lazy-init="true">
-		<property name="siteStore" ref="siteStore" />
-		<property name="workingSetStore" ref="workingSetStore" />
-	</bean>
-
-	<bean id="gwtWorkingSetService" class="com.cee.news.server.workingset.WorkingSetServiceImpl" lazy-init="true">
-		<property name="workingSetStore" ref="workingSetStore" />
-	</bean>
-
-	<bean id="gwtSiteUpdateService" class="com.cee.news.server.content.SiteUpdateServiceImpl" lazy-init="true">
-		<constructor-arg type="int" value="10" />
-		<property name="siteStore" ref="siteStore" />
-		<property name="workingSetStore" ref="workingSetStore" />
-		<lookup-method name="createSiteUpdateCommand" bean="siteUpdateCommand" />
-		<lookup-method name="createSiteParser" bean="siteParser" />
-	</bean>
 </beans>

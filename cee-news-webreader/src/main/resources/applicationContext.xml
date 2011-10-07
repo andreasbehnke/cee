@@ -3,7 +3,17 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-	<!-- Register thread scope -->
+	<bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:default.properties</value>
+				<value>file:${configFile}</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Register thread scope used by the asynchronous update queue -->
 	<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
 		<property name="scopes">
 			<map>
@@ -19,12 +29,12 @@
 	<bean id="jcrRepositoryConfig" class="org.apache.jackrabbit.core.config.RepositoryConfig" factory-method="install">
 		<constructor-arg>
 			<bean class="java.io.File">
-				<constructor-arg value="repository.xml" />
+				<constructor-arg value="${jcr.repository.config.file}" />
 			</bean>
 		</constructor-arg>
 		<constructor-arg>
 			<bean class="java.io.File">
-				<constructor-arg value="repository" />
+				<constructor-arg value="${jcr.repository.dir}" />
 			</bean>
 		</constructor-arg>
 	</bean>
@@ -34,11 +44,11 @@
 	</bean>
 
 	<bean id="jcrPassword" class="java.lang.String">
-		<constructor-arg value="password" />
+		<constructor-arg value="${jcr.user.password}" />
 	</bean>
 
 	<bean id="jcrCredentials" class="javax.jcr.SimpleCredentials">
-		<constructor-arg value="username" />
+		<constructor-arg value="${jcr.user.name}" />
 		<constructor-arg>
 			<bean factory-bean="jcrPassword" factory-method="toCharArray" />
 		</constructor-arg>
@@ -80,7 +90,6 @@
 	<!-- Store used by the thread pool which executes commands -->
 	<bean id="commandArticleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="thread">
 		<property name="session" ref="jcrCommandSession" />
-		<aop:scoped-proxy />
 	</bean>
 
 	<bean id="workingSetStore" class="com.cee.news.store.jcr.JcrWorkingSetStore" scope="request">
@@ -112,6 +121,7 @@
 		<property name="feedParser" ref="feedParser" />
 		<property name="store" ref="commandArticleStore" />
 		<property name="onlyActiveFeeds" value="true" />
+		<aop:scoped-proxy />
 	</bean>
 
 	<bean id="siteUpdateCommand" class="com.cee.news.server.content.SiteUpdateCommand" scope="prototype">
@@ -148,8 +158,9 @@
 		<property name="workingSetStore" ref="workingSetStore" />
 	</bean>
 
-	<bean id="gwtSiteUpdateService" class="com.cee.news.server.content.SiteUpdateServiceImpl" lazy-init="true">
-		<constructor-arg type="int" value="10" />
+	<bean id="gwtSiteUpdateService" class="com.cee.news.server.content.SiteUpdateServiceImpl" lazy-init="true" destroy-method="shutdown">
+		<constructor-arg index="0" value="${update.service.concurrent.threads}" /><!-- number of concurrent threads -->
+		<constructor-arg index="1" value="${update.service.scheduler.delay}" /><!-- delay between scheduled site updates -->
 		<property name="siteStore" ref="siteStore" />
 		<property name="workingSetStore" ref="workingSetStore" />
 		<lookup-method name="createSiteUpdateCommand" bean="siteUpdateCommand" />

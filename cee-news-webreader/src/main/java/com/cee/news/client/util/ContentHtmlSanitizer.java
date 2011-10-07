@@ -2,138 +2,150 @@ package com.cee.news.client.util;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.safehtml.shared.HtmlSanitizer;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 
 /**
- * Copied from SimpleHtmlSanitizer, only added the "p" tag to tag whitelist
+ * HTML Sanitizer supporting the following tags and attributes:
+ * 
+ * Supported Tags - Supported Attributes:
+ * 
+ * b - class 
+ * em - class 
+ * i - class 
+ * hr - class 
+ * ul - class 
+ * ol - class 
+ * li - class 
+ * p - class 
+ * h[1-6] - class
+ * a - href, target, class 
+ * img - src, class
+ * 
  * @author andreasbehnke
- *
  */
-public final class ContentHtmlSanitizer {
+public final class ContentHtmlSanitizer implements HtmlSanitizer {
+	
+	private static final Set<String> TAG_WHITELIST = 
+		new HashSet<String>(Arrays.asList("b", "em", "i", "h1", "h2", "h3", "h4", "h5", "h6", "hr","ul", "ol", "li","p","a","img"));
 
-	  private static final ContentHtmlSanitizer INSTANCE = new ContentHtmlSanitizer();
+	private static final String[] DEFAULT_ATTRIBUTES = new String[]{"class"};
 
-	  private static final Set<String> TAG_WHITELIST = new HashSet<String>(
-	      Arrays.asList("b", "em", "i", "h1", "h2", "h3", "h4", "h5", "h6", "hr",
-	          "ul", "ol", "li","p"));
+	private static final String[] A_ATTRIBUTES = new String[]{"class", "href", "target"};
 
-	  /**
-	   * Return a singleton ContentHtmlSanitizer instance.
-	   *
-	   * @return the instance
-	   */
-	  public static ContentHtmlSanitizer getInstance() {
-	    return INSTANCE;
-	  }
+	private static final String[] IMG_ATTRIBUTES = new String[]{"class", "src"};
 
-	  /**
-	   * HTML-sanitizes a string.
-	   *
-	   * <p>
-	   * The input string is processed as described above. The result of sanitizing
-	   * the string is guaranteed to be safe to use (with respect to XSS
-	   * vulnerabilities) in HTML contexts, and is returned as an instance of the
-	   * {@link SafeHtml} type.
-	   *
-	   * @param html the input String
-	   * @return a sanitized SafeHtml instance
-	   */
-	  public static SafeHtml sanitizeHtml(String html) {
-	    if (html == null) {
-	      throw new NullPointerException("html is null");
-	    }
-	    return new SafeContentString(simpleSanitize(html));
-	  }
+	@Override
+	public SafeHtml sanitize(String html) {
+		StringBuilder sanitized = new StringBuilder();
 
-	  /*
-	   * Sanitize a string containing simple HTML markup as defined above. The
-	   * approach is as follows: We split the string at each occurence of '<'. Each
-	   * segment thus obtained is inspected to determine if the leading '<' was
-	   * indeed the start of a whitelisted tag or not. If so, the tag is emitted
-	   * unescaped, and the remainder of the segment (which cannot contain any
-	   * additional tags) is emitted in escaped form. Otherwise, the entire segment
-	   * is emitted in escaped form.
-	   *
-	   * In either case, EscapeUtils.htmlEscapeAllowEntities is used to escape,
-	   * which escapes HTML but does not double escape existing syntactially valid
-	   * HTML entities.
-	   */
-	  // TODO(xtof): should this be in a utils class?
-	  private static String simpleSanitize(String text) {
-	    StringBuilder sanitized = new StringBuilder();
+		boolean firstSegment = true;
+		for (String segment : html.split("<", -1)) {
+			if (firstSegment) {
+				firstSegment = false;
+				sanitized
+						.append(SafeHtmlUtils.htmlEscapeAllowEntities(segment));
+				continue;
+			}
 
-	    boolean firstSegment = true;
-	    for (String segment : text.split("<", -1)) {
-	      if (firstSegment) {
-	        /*
-	         *  the first segment is never part of a valid tag; note that if the
-	         *  input string starts with a tag, we will get an empty segment at the
-	         *  beginning.
-	         */
-	        firstSegment = false;
-	        sanitized.append(SafeHtmlUtils.htmlEscapeAllowEntities(segment));
-	        continue;
-	      }
+			int tagStart = 0; // will be 1 if this turns out to be an end tag.
+			int tagEnd = segment.indexOf('>');
+			String tag = null;
+			String tagName = null;
+			String tagAttributes = null;
+			boolean isValidTag = false;
+			if (tagEnd > 0) {
+				if (segment.charAt(0) == '/') {
+					tagStart = 1;
+				}
+				tag = segment.substring(tagStart, tagEnd);
+				int index = 0;
+				int tagLength = tag.length();
+				//find tag name
+				while(index <= tagLength) {
+					if (index == tagLength || tag.charAt(index) == ' ' || tag.charAt(index) == '/') {
+						tagName = tag.substring(0, index).toLowerCase();
+						break;
+					}
+					index++;
+				}
+				if (tagName != null && TAG_WHITELIST.contains(tagName)) {
+					isValidTag = true;
+					tagAttributes = tag.substring(index, tag.length());
+				}
+			}
 
-	      /*
-	       *  determine if the current segment is the start of an attribute-free tag
-	       *  or end-tag in our whitelist
-	       */
-	      int tagStart = 0; // will be 1 if this turns out to be an end tag.
-	      int tagEnd = segment.indexOf('>');
-	      String tag = null;
-	      boolean isValidTag = false;
-	      if (tagEnd > 0) {
-	        if (segment.charAt(0) == '/') {
-	          tagStart = 1;
-	        }
-	        tag = segment.substring(tagStart, tagEnd);
-	        if (TAG_WHITELIST.contains(tag)) {
-	          isValidTag = true;
-	        }
-	      }
+			if (isValidTag) {
+				// append the tag, not escaping it
+				if (tagStart == 0) {
+					sanitized.append('<').append(tagName);
+					String[] validAttributes = null;
+					if (tagName.equalsIgnoreCase("A")) {
+						validAttributes = A_ATTRIBUTES;
+					} else if (tagName.equalsIgnoreCase("IMG")) {
+						validAttributes = IMG_ATTRIBUTES;
+					} else {
+						validAttributes = DEFAULT_ATTRIBUTES;
+					}
+					appendAttributes(sanitized, tagAttributes, Arrays.asList(validAttributes));
+					
+				} else {
+					// we had seen an end-tag
+					sanitized.append("</").append(tagName);
+				}
+				sanitized.append('>').append(SafeHtmlUtils.htmlEscapeAllowEntities(segment.substring(tagEnd + 1)));
+			} else {
+				// just escape the whole segment
+				sanitized.append("&lt;").append(SafeHtmlUtils.htmlEscapeAllowEntities(segment));
+			}
+		}
 
-	      if (isValidTag) {
-	        // append the tag, not escaping it
-	        if (tagStart == 0) {
-	          sanitized.append('<');
-	        } else {
-	          // we had seen an end-tag
-	          sanitized.append("</");
-	        }
-	        sanitized.append(tag).append('>');
-
-	        // append the rest of the segment, escaping it
-	        sanitized.append(SafeHtmlUtils.htmlEscapeAllowEntities(
-	            segment.substring(tagEnd + 1)));
-	      } else {
-	        // just escape the whole segment
-	        sanitized.append("&lt;").append(
-	            SafeHtmlUtils.htmlEscapeAllowEntities(segment));
-	      }
-	    }
-	    return sanitized.toString();
-	  }
-
-	  /*
-	   * Note: We purposely do not provide a method to create a SafeHtml from
-	   * another (arbitrary) SafeHtml via sanitization, as this would permit the
-	   * construction of SafeHtml objects that are not stable in the sense that for
-	   * a {@code SafeHtml s} it may not be true that {@code s.asString()} equals
-	   * {@code SimpleHtmlSanitizer.sanitizeHtml(s.asString()).asString()}. While
-	   * this is not currently an issue, it might become one and result in
-	   * unexpected behavior if this class were to become serializable and enforce
-	   * its class invariant upon deserialization.
-	   */
-
-	  // prevent external instantiation
-	  private ContentHtmlSanitizer() {
-	  }
-
-	  public SafeHtml sanitize(String html) {
-	    return sanitizeHtml(html);
-	  }
+		return new SafeContentString(sanitized.toString());
+	}
+	
+	protected void appendAttributes(StringBuilder sanitized, String segment, List<String> validAttributes) {
+		int lastSpace = -1;
+		int nameStart = 0;
+		int valueStart = -1;
+		int valueEnd = -1;
+		String attributeName = null;
+		String attributeValue = null;
+		for(int index=0; index<segment.length(); index++) {
+			if (segment.charAt(index) == ' ') {
+				lastSpace = index;
+			} else if (segment.charAt(index) == '=') {
+				//found attribute
+				attributeName = segment.substring(nameStart, index).trim().toLowerCase();
+				if (validAttributes.contains(attributeName)) {
+					//found valid attribute, extract attribute value
+					valueStart = -1;
+					valueEnd = -1;
+					while(index<segment.length()) {
+						index++;
+						if (segment.charAt(index) == '\'' || segment.charAt(index) == '"') {
+							valueStart = index + 1;
+							break;
+						}
+					}
+					while(index<segment.length()) {
+						index++;
+						if (segment.charAt(index) == '\'' || segment.charAt(index) == '"') {
+							valueEnd = index;
+							break;
+						}
+					}
+					if (valueStart > -1 && valueEnd > -1) {
+						attributeValue = segment.substring(valueStart, valueEnd);
+						sanitized.append(' ').append(attributeName).append("=\"").append(attributeValue).append("\"");
+					}
+				}
+			} else if(lastSpace == index-1) {
+				nameStart = index;
+			}
+		}
+	}
 }
