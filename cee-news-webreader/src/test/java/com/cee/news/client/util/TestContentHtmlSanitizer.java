@@ -23,7 +23,8 @@ public class TestContentHtmlSanitizer {
 		input += "<h6 class=\"h-class\">H6</h6>";
 		input += "<a id='not allowed' href=\"test.html\" class=\"link-class\" target=\"target\">link text</a>";
 		input += "<img src=\"image.png\" class=\"image-class\"><this is an broken=\"tag\"";
-
+		input += "<br><br/><br class=\"break class\"><br class=\"break class\"/>";
+		
 		String expected = "this is an broken tag&gt;<b class=\"bclass\">bold</b>";
 		expected += "<em class=\"single quotes\">em</em>";
 		expected += "<i class=\"single quotes\">i</i>";
@@ -38,18 +39,34 @@ public class TestContentHtmlSanitizer {
 		expected += "<h6 class=\"h-class\">H6</h6>";
 		expected += "<a href=\"test.html\" class=\"link-class\" target=\"target\">link text</a>";
 		expected += "<img src=\"image.png\" class=\"image-class\">&lt;this is an broken=&quot;tag&quot;";
+		expected += "<br><br><br class=\"break class\"><br class=\"break class\">";
 		
-		String result = new ContentHtmlSanitizer().sanitize(input).asString();
+		String result = new ContentHtmlSanitizer(true).sanitize(input).asString();
 		Assert.assertEquals(expected, result);
 	}
 	
 	@Test
 	public void testAppendAttributes() {
-		ContentHtmlSanitizer sanitizer = new ContentHtmlSanitizer();
+		ContentHtmlSanitizer sanitizer = new ContentHtmlSanitizer(true);
 		StringBuilder sanitized = new StringBuilder();
 		
 		sanitizer.appendAttributes(sanitized, "a=\"a value\" ab ='another' abc= \"another\" cde=\"cde\"", Arrays.asList("ab","cde"));
 		Assert.assertEquals(" ab=\"another\" cde=\"cde\"", sanitized.toString());
-		
+	}
+	
+	@Test
+	public void testEscapeIllegalTags() {
+		String input = "<div>Test123</div>";
+		String expected = "&lt;div&gt;Test123&lt;/div&gt;";
+		String result = new ContentHtmlSanitizer(true).sanitize(input).asString();
+		Assert.assertEquals(expected, result);
+	}
+	
+	@Test
+	public void testRemoveIllegalTags() {
+		String input = "<div>Test123</div>";
+		String expected = "Test123";
+		String result = new ContentHtmlSanitizer(false).sanitize(input).asString();
+		Assert.assertEquals(expected, result);
 	}
 }

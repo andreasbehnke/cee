@@ -31,13 +31,19 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 public final class ContentHtmlSanitizer implements HtmlSanitizer {
 	
 	private static final Set<String> TAG_WHITELIST = 
-		new HashSet<String>(Arrays.asList("b", "em", "i", "h1", "h2", "h3", "h4", "h5", "h6", "hr","ul", "ol", "li","p","a","img"));
+		new HashSet<String>(Arrays.asList("b", "em", "i", "h1", "h2", "h3", "h4", "h5", "h6", "hr","ul", "ol", "li", "p", "a", "img", "br"));
 
 	private static final String[] DEFAULT_ATTRIBUTES = new String[]{"class"};
 
 	private static final String[] A_ATTRIBUTES = new String[]{"class", "href", "target"};
 
 	private static final String[] IMG_ATTRIBUTES = new String[]{"class", "src"};
+
+	private final boolean escapeIllegalTags;
+	
+	public ContentHtmlSanitizer(boolean escapeIllegalTags) {
+		this.escapeIllegalTags = escapeIllegalTags;
+	}
 
 	@Override
 	public SafeHtml sanitize(String html) {
@@ -47,8 +53,7 @@ public final class ContentHtmlSanitizer implements HtmlSanitizer {
 		for (String segment : html.split("<", -1)) {
 			if (firstSegment) {
 				firstSegment = false;
-				sanitized
-						.append(SafeHtmlUtils.htmlEscapeAllowEntities(segment));
+				sanitized.append(SafeHtmlUtils.htmlEscapeAllowEntities(segment));
 				continue;
 			}
 
@@ -99,8 +104,12 @@ public final class ContentHtmlSanitizer implements HtmlSanitizer {
 				}
 				sanitized.append('>').append(SafeHtmlUtils.htmlEscapeAllowEntities(segment.substring(tagEnd + 1)));
 			} else {
-				// just escape the whole segment
-				sanitized.append("&lt;").append(SafeHtmlUtils.htmlEscapeAllowEntities(segment));
+				if (escapeIllegalTags) {
+					// just escape the whole segment
+					sanitized.append("&lt;").append(SafeHtmlUtils.htmlEscapeAllowEntities(segment));
+				} else {
+					sanitized.append(segment.substring(tagEnd + 1));
+				}
 			}
 		}
 
