@@ -57,4 +57,9 @@ public interface SiteUpdateService extends RemoteService {
 	 * a progress bar.
 	 */
 	int getUpdateTasks();
+	
+	/**
+	 * Starts the scheduler which triggers the site updates periodically
+	 */
+	void startUpdateScheduler();
 }

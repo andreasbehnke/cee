@@ -159,8 +159,10 @@
 	</bean>
 
 	<bean id="gwtSiteUpdateService" class="com.cee.news.server.content.SiteUpdateServiceImpl" lazy-init="true" destroy-method="shutdown">
-		<constructor-arg index="0" value="${update.service.concurrent.threads}" /><!-- number of concurrent threads -->
-		<constructor-arg index="1" value="${update.service.scheduler.delay}" /><!-- delay between scheduled site updates -->
+		<property name="corePoolSize" value="${update.service.core.pool.size}" />
+		<property name="maxPoolSize" value="${update.service.max.pool.size}" />
+		<property name="keepAliveTime" value="${update.service.keep.alive.time}" />		
+		<property name="updateSchedulerFixedDelay" value="${update.service.scheduler.fixed.delay}" />		
 		<property name="siteStore" ref="siteStore" />
 		<property name="workingSetStore" ref="workingSetStore" />
 		<lookup-method name="createSiteUpdateCommand" bean="siteUpdateCommand" />

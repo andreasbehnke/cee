@@ -30,63 +30,34 @@ import com.cee.news.store.WorkingSetStore;
 
 public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
-	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site";
-
 	private static final long serialVersionUID = 8695157160684778713L;
 
+	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site";
+	
 	private static final Logger LOG = LoggerFactory.getLogger(SiteUpdateServiceImpl.class);
 	
-	private final List<String> sitesInProgress;
+	private int corePoolSize; 
+	
+	private int maxPoolSize;
+	
+	private long keepAliveTime;
+	
+	private long updateSchedulerFixedDelay;
+	
+	private ThreadPoolExecutor pool;
+	
+	private List<String> sitesInProgress = new ArrayList<String>();
 
 	private SiteStore siteStore;
 
 	private WorkingSetStore workingSetStore;
 
-	private final ThreadPoolExecutor pool;
-	
 	private ScheduledExecutorService scheduler;
 
-	private final List<Runnable> runnablesInProgress = new ArrayList<Runnable>();
+	private List<Runnable> runnablesInProgress = new ArrayList<Runnable>();
 
-	private final LinkedBlockingQueue<Runnable> workQueue;
+	private LinkedBlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();
 	
-	/**
-	 * Creates a new update service. A constructor is provided, because if final fields.
-	 * @param threadPoolSize The maximum thread pool size. This value defines the maximum number of concurrent update commands.
-	 * @param updateSchedulerFixedDelay The delay between site updates in minutes. If set to -1, no scheduler will be started for site updates.
-	 */
-	public SiteUpdateServiceImpl(int threadPoolSize, long updateSchedulerFixedDelay) {
-		sitesInProgress = new ArrayList<String>();
-		workQueue = new LinkedBlockingQueue<Runnable>();
-		pool = new SiteUpdateServiceImpl.Executor(threadPoolSize, threadPoolSize, 0,
-				TimeUnit.MILLISECONDS, workQueue);
-		if (updateSchedulerFixedDelay > -1) {
-			scheduler = new ScheduledThreadPoolExecutor(1);
-			scheduler.scheduleWithFixedDelay(
-					new Runnable() {		
-						@Override
-						public void run() {
-							startSiteUpdates();
-						}
-					}, 
-					updateSchedulerFixedDelay, 
-					updateSchedulerFixedDelay,
-					TimeUnit.MINUTES);
-		}
-	}
-	
-	private void startSiteUpdates() {
-		try {
-			LOG.debug("Scheduler starting site updates");
-			List<EntityKey> sites = siteStore.getSitesOrderedByName();
-			for (EntityKey entityKey : sites) {
-				addSiteToUpdateQueue(entityKey.getKey());
-			}
-		} catch (Throwable t) {
-			LOG.error("Update scheduler encountered an error", t);
-		}
-	}
-
 	public void setSiteStore(SiteStore siteStore) {
 		this.siteStore = siteStore;
 	}
@@ -94,15 +65,84 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	public void setWorkingSetStore(WorkingSetStore workingSetStore) {
 		this.workingSetStore = workingSetStore;
 	}
+
+	/**
+	 * @return the minimum thread pool size
+	 */
+	public int getCorePoolSize() {
+		return corePoolSize;
+	}
+
+	public void setCorePoolSize(int corePoolSize) {
+		this.corePoolSize = corePoolSize;
+	}
+
+	/**
+	 * @return the maximum thread pool size
+	 */
+	public int getMaxPoolSize() {
+		return maxPoolSize;
+	}
+
+	public void setMaxPoolSize(int maxPoolSize) {
+		this.maxPoolSize = maxPoolSize;
+	}
+
+	/**
+	 * @return time in milliseconds an unused thread is kept alive if the pool size exceeds the core pool size
+	 */
+	public long getKeepAliveTime() {
+		return keepAliveTime;
+	}
+
+	public void setKeepAliveTime(long keepAliveTime) {
+		this.keepAliveTime = keepAliveTime;
+	}
+
+	/**
+	 * @return delay in seconds between update scheduler runs
+	 */
+	public long getUpdateSchedulerFixedDelay() {
+		return updateSchedulerFixedDelay;
+	}
+
+	public void setUpdateSchedulerFixedDelay(long updateSchedulerFixedDelay) {
+		this.updateSchedulerFixedDelay = updateSchedulerFixedDelay;
+	}
 	
+	private synchronized void ensureThreadPool() {
+		if (pool == null) {
+			pool = new ThreadPoolExecutor(
+					corePoolSize, 
+					maxPoolSize, 
+					keepAliveTime,
+					TimeUnit.MILLISECONDS, 
+					workQueue) {
+				
+					@Override
+					protected void afterExecute(Runnable r, Throwable t) {
+						super.afterExecute(r, t);
+						SiteUpdateServiceImpl.this.removeRunnable(r);
+					}
+			};
+		}
+	}
+
 	private synchronized void removeSite(String siteName) {
 		if (!sitesInProgress.remove(siteName)) {
 			LOG.warn("{} could not be removed from list of sites in progress", siteName);
 		}
 	}
+	
+	private synchronized void removeRunnable(Runnable runnable) {
+		if (!runnablesInProgress.remove(runnable)) {
+			LOG.warn("{} could not be removed from list of runnables", runnable);
+		}
+	}
 
 	@Override
 	public synchronized int addSiteToUpdateQueue(final String siteName) {
+		ensureThreadPool();
 		if (!sitesInProgress.contains(siteName)) {
 			Site siteEntity = null;
 			try {
@@ -193,12 +233,46 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 		return info;
 	}
 	
+	@Override
+	public synchronized void startUpdateScheduler() {
+		if (scheduler == null) {
+			LOG.info("Starting update scheduler with a delay of {}.", updateSchedulerFixedDelay);
+			scheduler = new ScheduledThreadPoolExecutor(1);
+			scheduler.scheduleWithFixedDelay(
+					new Runnable() {		
+						@Override
+						public void run() {
+							startSiteUpdates();
+						}
+					}, 
+					updateSchedulerFixedDelay, 
+					updateSchedulerFixedDelay,
+					TimeUnit.MINUTES);
+		}
+	}
+
+	private void startSiteUpdates() {
+		try {
+			LOG.info("Scheduler starting site updates");
+			List<EntityKey> sites = siteStore.getSitesOrderedByName();
+			for (EntityKey entityKey : sites) {
+				addSiteToUpdateQueue(entityKey.getKey());
+			}
+		} catch (Throwable t) {
+			LOG.error("Update scheduler encountered an error", t);
+		}
+	}
+
 	/**
 	 * Stops execution of the thread pool
 	 */
-	public void shutdown() {
-		pool.shutdownNow();
-		scheduler.shutdownNow(); 
+	public synchronized void shutdown() {
+		if (pool != null) {
+			pool.shutdownNow();
+		}
+		if (scheduler != null) {
+			scheduler.shutdownNow();
+		}
 	}
 
 	/**
@@ -210,17 +284,4 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	 * @return A site parser prepared with all dependencies
 	 */
 	protected abstract SiteParser createSiteParser();
-
-	private class Executor extends ThreadPoolExecutor {
-
-		public Executor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,BlockingQueue<Runnable> workQueue) {
-			super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
-		}
-		
-		@Override
-		protected void afterExecute(Runnable r, Throwable t) {
-			SiteUpdateServiceImpl.this.runnablesInProgress.remove(r);
-			super.afterExecute(r, t);
-		}
-	}
 }

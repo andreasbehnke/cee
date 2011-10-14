@@ -77,7 +77,7 @@ public class NewsReader implements EntryPoint {
 		deckPanel.add(startPanel);
 		startPanel.setSize("100%", "100%");
 		
-		NewsPanel newsPanel = new NewsPanel();
+		final NewsPanel newsPanel = new NewsPanel();
 		deckPanel.add(newsPanel);
 		newsPanel.setSize("100%", "100%");
 		deckPanel.showWidget(START_PANEL_INDEX);
@@ -182,6 +182,7 @@ public class NewsReader implements EntryPoint {
 				if (event.isUserAction()) {
 					final String articleKey = event.getKey();
 					final String siteKey = ArticleUtil.getSiteKeyFromArticleKey(articleKey);
+					newsPanel.getSiteNameLabel().setText(siteKey);
 					pagingNewsList.updateFromSite(siteKey, new NotificationCallback() {
 						
 						@Override
@@ -217,6 +218,7 @@ public class NewsReader implements EntryPoint {
 				if (event.isUserAction()) {
 					final String articleKey = event.getKey();
 					final String siteKey = ArticleUtil.getSiteKeyFromArticleKey(articleKey);
+					newsPanel.getSiteNameLabel().setText(siteKey);
 					pagingNewsList.updateFromSite(siteKey, new NotificationCallback() {
 						
 						@Override
@@ -231,5 +233,8 @@ public class NewsReader implements EntryPoint {
 		//trigger update
 		workingSetListModel.update(null);
 		siteAddRemoveListModel.update(null);
+		
+		//start the background scheduler
+		siteUpdateService.startUpdateScheduler(null);
 	}
 }
