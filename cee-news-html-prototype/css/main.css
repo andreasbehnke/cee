@@ -1,7 +1,22 @@
-BODY {margin: 0px,0px,0px,0px}
+BODY          {font-family: sans-serif;}
 
-.debug .panel {border-style: solid; border-width: 1px}
-.head   {left: 0px; right: 0px; top: 0px;    height: 25px; position: absolute;}
-.left   {left: 0px; right: 50%; top: 25px;   bottom: 25px; position: absolute;}
-.right  {left: 50%; right: 0px; top: 25px;   bottom: 25px; position: absolute;}
-.bottom {left: 0px; right: 0px; bottom: 0px; height: 25px; position: absolute;}
+.head         {left: 0px; right: 0px; top: 0px;    height: 25px; position: absolute;}
+.left         {left: 0px; right: 50%; top: 25px;   bottom: 25px; position: absolute;}
+.right        {left: 50%; right: 0px; top: 25px;   bottom: 25px; position: absolute;}
+.bottom       {left: 0px; right: 0px; bottom: 0px; height: 25px; position: absolute;}
+
+.column1_row3 {width: 99.5%; height: 33%; float: none;}
+.column2_row3 {width: 46.0%; height: 33%; float: left;}
+.column3_row3 {width: 30.0%; height: 33%; float: left;}
+
+.debug .panel:HOVER 
+              {border-style: solid; border-width: 1px; border-color: red;}
+
+.vertical-scroll
+              {overflow-y: scroll; overflow-x: hidden;}
+
+.clickable:HOVER 
+              {border-style: solid; border-radius: 10px; border-width: 1px; border-color: #000000 } /* box-shadow: 10px 10px 12px 0px #C0C0FF;}*/
+
+.teaser       {overflow: hidden; padding: 8px}
+.teaser H1    {margin: 4px; font-weight: normal; font-size: 16pt;}
