@@ -86,14 +86,20 @@
 		<property name="session" ref="jcrSession" />
 		<aop:scoped-proxy />
 	</bean>
-	
-	<!-- Store used by the thread pool which executes commands -->
-	<bean id="commandArticleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="thread">
-		<property name="session" ref="jcrCommandSession" />
-	</bean>
 
 	<bean id="workingSetStore" class="com.cee.news.store.jcr.JcrWorkingSetStore" scope="request">
 		<property name="session" ref="jcrSession" />
+		<aop:scoped-proxy />
+	</bean>
+		
+	<!-- Store used by the thread pool which executes commands -->
+	<bean id="commandArticleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="thread">
+		<property name="session" ref="jcrCommandSession" />
+		<aop:scoped-proxy />
+	</bean>
+
+	<bean id="commandSiteStore" class="com.cee.news.store.jcr.JcrSiteStore" scope="thread">
+		<property name="session" ref="jcrCommandSession" />
 		<aop:scoped-proxy />
 	</bean>
 
@@ -121,7 +127,6 @@
 		<property name="feedParser" ref="feedParser" />
 		<property name="store" ref="commandArticleStore" />
 		<property name="onlyActiveFeeds" value="true" />
-		<aop:scoped-proxy />
 	</bean>
 
 	<bean id="siteUpdateCommand" class="com.cee.news.server.content.SiteUpdateCommand" scope="prototype">
@@ -163,7 +168,7 @@
 		<property name="maxPoolSize" value="${update.service.max.pool.size}" />
 		<property name="keepAliveTime" value="${update.service.keep.alive.time}" />		
 		<property name="updateSchedulerFixedDelay" value="${update.service.scheduler.fixed.delay}" />		
-		<property name="siteStore" ref="siteStore" />
+		<property name="siteStore" ref="commandSiteStore" />
 		<property name="workingSetStore" ref="workingSetStore" />
 		<lookup-method name="createSiteUpdateCommand" bean="siteUpdateCommand" />
 		<lookup-method name="createSiteParser" bean="siteParser" />
