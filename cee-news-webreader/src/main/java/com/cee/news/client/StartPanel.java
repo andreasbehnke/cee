@@ -2,20 +2,19 @@ package com.cee.news.client;
 
 import com.cee.news.client.list.ListPanel;
 import com.cee.news.client.list.ListView;
-import com.cee.news.client.workingset.WorkingSetSelectionPanel;
+import com.cee.news.client.progress.ProgressView;
+import com.cee.news.client.progress.TextProgressView;
 import com.cee.news.client.workingset.WorkingSetSelectionView;
+import com.cee.news.client.workingset.ui.WorkingSetSelection;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.LayoutPanel;
-import com.cee.news.client.progress.ProgressView;
-import com.cee.news.client.progress.TextProgressView;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 public class StartPanel extends Composite implements StartView {
     
 	private final ListPanel listPanelLatestArticles;
-    private final WorkingSetSelectionPanel workingSetSelectionPanel;
+    private final WorkingSetSelection workingSetSelection;
     private final ListPanel listPanelSites;
 	private TextProgressView progressView;
     
@@ -24,10 +23,10 @@ public class StartPanel extends Composite implements StartView {
         initWidget(layoutPanel);
         layoutPanel.setSize("781px", "441px");
         
-        workingSetSelectionPanel = new WorkingSetSelectionPanel();
-        layoutPanel.add(workingSetSelectionPanel);
-        layoutPanel.setWidgetLeftWidth(workingSetSelectionPanel, 0.0, Unit.PX, 626.0, Unit.PX);
-        layoutPanel.setWidgetTopHeight(workingSetSelectionPanel, 0.0, Unit.PX, 24.0, Unit.PX);
+        workingSetSelection = new WorkingSetSelection();
+        layoutPanel.add(workingSetSelection);
+        layoutPanel.setWidgetLeftWidth(workingSetSelection, 0.0, Unit.PX, 626.0, Unit.PX);
+        layoutPanel.setWidgetTopHeight(workingSetSelection, 0.0, Unit.PX, 24.0, Unit.PX);
         
         listPanelSites = new ListPanel();
         layoutPanel.add(listPanelSites);
@@ -67,7 +66,7 @@ public class StartPanel extends Composite implements StartView {
 	 */
     @Override
 	public WorkingSetSelectionView getWorkingSetSelectionView() {
-        return workingSetSelectionPanel;
+        return workingSetSelection;
     }
     /* (non-Javadoc)
 	 * @see com.cee.news.client.StartView#getSitesListView()

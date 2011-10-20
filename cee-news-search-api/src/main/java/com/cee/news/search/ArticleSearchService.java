@@ -3,7 +3,6 @@ package com.cee.news.search;
 import java.util.List;
 
 import com.cee.news.model.EntityKey;
-import com.cee.news.model.WorkingSet;
 
 /**
  * The search service provides methods for fulltext search and for finding similar articles

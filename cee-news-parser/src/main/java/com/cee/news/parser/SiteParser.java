@@ -1,7 +1,7 @@
 package com.cee.news.parser;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ import org.xml.sax.XMLReader;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 import com.cee.news.parser.net.WebClient;
+import com.cee.news.parser.net.WebResponse;
 
 /**
  * Extracts feed URLs from the header of a HTML document.
@@ -27,7 +28,7 @@ public class SiteParser {
 
     private WebClient webClient;
     
-    private XMLReader reader;
+    private XMLReader xmlReader;
     
     private FeedChecker feedChecker;
 
@@ -37,7 +38,7 @@ public class SiteParser {
      *            The XMLReader instance used to parse HTML content
      */
     public void setReader(XMLReader reader) {
-        this.reader = reader;
+        this.xmlReader = reader;
     }
     
     /**
@@ -56,8 +57,8 @@ public class SiteParser {
 
     public SiteParser() {}
     
-    public SiteParser(XMLReader reader, FeedChecker feedChecker, WebClient webClient) {
-        this.reader = reader;
+    public SiteParser(XMLReader xmlReader, FeedChecker feedChecker, WebClient webClient) {
+        this.xmlReader = xmlReader;
         this.feedChecker = feedChecker;
         this.webClient = webClient;
     }
@@ -76,7 +77,7 @@ public class SiteParser {
      *             If the input source could not be parsed
      */
     public Site parse(URL siteLocation) throws IOException, SAXException {
-        if (reader == null) {
+        if (xmlReader == null) {
             throw new IllegalStateException("reader property has not been set");
         }
         if (feedChecker == null) {
@@ -84,16 +85,19 @@ public class SiteParser {
         }
 
         SiteHandler siteHandler = new SiteHandler(siteLocation);
-        reader.setContentHandler(siteHandler);
+        xmlReader.setContentHandler(siteHandler);
 
-        InputStream input = webClient.openStream(siteLocation);
+        WebResponse webResponse = webClient.openWebResponse(siteLocation);
+        Reader reader = null;
         try {
+        	reader = webResponse.getReader();
+        	InputSource is = new InputSource(reader);
         	LOG.info("start parsing site document {}", siteLocation);
-            reader.parse(new InputSource(input));
+            xmlReader.parse(is);
         } finally {
         	LOG.info("finished parsing site document {}", siteLocation);
-        	if (input != null) {
-        		input.close();
+        	if (reader != null) {
+        		reader.close();
         	}
         }
         

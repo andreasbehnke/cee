@@ -1,0 +1,9 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.dom.client">
+	<g:FlowPanel styleName="toolbar">
+		<g:Label>Select Working Set:</g:Label>
+		<g:ListBox ui:field="listBox" styleName="uielement" />
+		<g:Button ui:field="newButton" text="New" styleName="uielement" />
+		<g:Button ui:field="editButton" text="Edit" styleName="uielement" />
+	</g:FlowPanel>
+</ui:UiBinder>

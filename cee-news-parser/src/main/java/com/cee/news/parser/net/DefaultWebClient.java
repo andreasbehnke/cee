@@ -2,6 +2,7 @@ package com.cee.news.parser.net;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
@@ -78,20 +79,27 @@ public class DefaultWebClient implements WebClient {
         } else {
         	LOG.debug("open standard response for {}", location);
             return new WebResponse() {
-                public InputStream openStream() throws IOException {
+            	@Override
+            	public InputStream getStream() throws IOException {
                     return DefaultWebClient.this.openStream(location);
                 }
                 
                 @Override
-                public Reader openReader() throws IOException {
-                	// TODO Auto-generated method stub
-                	return null;
+                public Reader getReader() throws IOException {
+                	return new InputStreamReader(getStream());
                 }
 
+                @Override
                 public String getContentType() {
                     return null;
                 }
+                
+                @Override
+                public String getContentEncoding() {
+                	return null;
+                }
 
+                @Override
                 public long getContentLength() {
                     return -1;
                 }
@@ -103,20 +111,27 @@ public class DefaultWebClient implements WebClient {
         final HttpEntity entity = getHttpEntity(location);
         return new WebResponse() {
 
-            public InputStream openStream() throws IOException {
+        	@Override
+            public InputStream getStream() throws IOException {
                 return entity.getContent();
             }
             
             @Override
-            public Reader openReader() throws IOException {
-            	// TODO Auto-generated method stub
-            	return null;
+            public Reader getReader() throws IOException {
+            	return new InputStreamReader(getStream(), getContentEncoding());
             }
 
+            @Override
             public String getContentType() {
                 return entity.getContentType().getValue();
             }
+            
+            @Override
+            public String getContentEncoding() {
+            	return entity.getContentEncoding().getValue();
+            }
 
+            @Override
             public long getContentLength() {
                 return entity.getContentLength();
             }

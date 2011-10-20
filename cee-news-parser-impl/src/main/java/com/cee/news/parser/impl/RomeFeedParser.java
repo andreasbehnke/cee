@@ -8,10 +8,10 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.cee.news.model.Article;
-import com.cee.news.parser.net.WebClient;
-import com.cee.news.parser.net.WebResponse;
 import com.cee.news.parser.FeedParser;
 import com.cee.news.parser.ParserException;
+import com.cee.news.parser.net.WebClient;
+import com.cee.news.parser.net.WebResponse;
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -40,7 +40,7 @@ public class RomeFeedParser implements FeedParser {
 
     private SyndFeed readFeed(final URL feedLocation) throws IllegalArgumentException, FeedException, IOException {
         WebResponse response = webClient.openWebResponse(feedLocation);
-        XmlReader reader = new XmlReader(response.openStream(), response.getContentType());
+        XmlReader reader = new XmlReader(response.getStream(), response.getContentType());
         try {
             return new SyndFeedInput().build(reader);
         } finally {

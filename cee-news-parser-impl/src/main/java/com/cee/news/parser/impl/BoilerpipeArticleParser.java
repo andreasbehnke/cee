@@ -1,6 +1,7 @@
 package com.cee.news.parser.impl;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.net.URL;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import com.cee.news.model.Article;
 import com.cee.news.parser.ArticleParser;
 import com.cee.news.parser.ParserException;
 import com.cee.news.parser.net.WebClient;
+import com.cee.news.parser.net.WebResponse;
 
 import de.l3s.boilerpipe.BoilerpipeInput;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
@@ -28,14 +30,14 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(BoilerpipeArticleParser.class);
     
-    private XMLReader reader;
+    private XMLReader xmlReader;
     
     private WebClient webClient;
 
     public BoilerpipeArticleParser() {}
     
-    public BoilerpipeArticleParser(XMLReader reader, WebClient webClient) {
-        this.reader = reader;
+    public BoilerpipeArticleParser(XMLReader xmlReader, WebClient webClient) {
+        this.xmlReader = xmlReader;
     	this.webClient = webClient;
     }
     
@@ -50,21 +52,24 @@ public class BoilerpipeArticleParser implements ArticleParser {
      * @param reader Reader used to read HTML content from input stream
      */
     public void setReader(XMLReader reader) {
-		this.reader = reader;
+		this.xmlReader = reader;
 	}
 
 	/* (non-Javadoc)
      * @see com.cee.newsdiff.parser.ArticleParser#parse(com.cee.newsdiff.model.Article)
      */
     public Article parse(Article article) throws ParserException, IOException {
+    	Reader textReader = null;
         try {
         	LOG.info("start parsing article content of {}", article.getTitle());
         	BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
         	
         	//TODO register tag action for none text content like media and so on
-        	
-        	reader.setContentHandler(boilerpipeHandler);
-        	reader.parse(new InputSource(webClient.openStream(new URL(article.getLocation()))));
+        	WebResponse response = webClient.openWebResponse(new URL(article.getLocation()));
+        	textReader = response.getReader();
+        	xmlReader.setContentHandler(boilerpipeHandler);
+        	InputSource is = new InputSource(textReader);
+        	xmlReader.parse(is);
         	TextDocument textDoc = boilerpipeHandler.toTextDocument();
         	LOG.debug("extracting main content from {}", article.getTitle());
             ArticleExtractor.INSTANCE.process(textDoc);
@@ -84,6 +89,10 @@ public class BoilerpipeArticleParser implements ArticleParser {
             throw new ParserException(e);
         } catch (SAXException e) {
             throw new ParserException(e);
+        } finally {
+        	if (textReader != null) {
+        		textReader.close();
+        	}
         }
     }
 

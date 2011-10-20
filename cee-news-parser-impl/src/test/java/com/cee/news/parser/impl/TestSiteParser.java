@@ -13,6 +13,7 @@ import org.xml.sax.SAXException;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 import com.cee.news.parser.SiteParser;
+import com.cee.news.parser.net.ClassResourceWebClient;
 import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.WebResponse;
 
@@ -20,16 +21,8 @@ public class TestSiteParser {
 
 	@Test
 	public void testParse() throws IOException, SAXException {
-		URL siteLocation = getClass().getResource("spiegel.html");
-		WebClient webClient = new WebClient() {
-			public InputStream openStream(URL location) throws IOException {
-				return location.openStream();
-			}
-
-			public WebResponse openWebResponse(URL location) {
-				return null;
-			}
-		};
+		URL siteLocation = new URL("http://www.test.com/com/cee/news/parser/impl/spiegel.html");
+		WebClient webClient = new ClassResourceWebClient();
 		SiteParser parser = new SiteParser(new Parser(), new RomeFeedChecker(
 				webClient), webClient);
 		Site site = parser.parse(siteLocation);

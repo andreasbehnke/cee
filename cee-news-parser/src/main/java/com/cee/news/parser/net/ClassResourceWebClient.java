@@ -37,17 +37,22 @@ public class ClassResourceWebClient implements WebClient {
 		return new WebResponse() {
 			
 			@Override
-			public InputStream openStream() throws IOException {
+			public InputStream getStream() throws IOException {
 				return ClassResourceWebClient.this.openStream(location);
 			}
 			
 			@Override
-			public Reader openReader() throws IOException {
+			public Reader getReader() throws IOException {
 				return new InputStreamReader(ClassResourceWebClient.this.openStream(location));
 			}
 			
 			@Override
 			public String getContentType() {
+				return null;
+			}
+			
+			@Override
+			public String getContentEncoding() {
 				return null;
 			}
 			

@@ -6,11 +6,13 @@ import java.io.Reader;
 
 public interface WebResponse {
     
-    InputStream openStream() throws IOException;
+    InputStream getStream() throws IOException;
     
-    Reader openReader() throws IOException;
+    Reader getReader() throws IOException;
 
     String getContentType();
+    
+    String getContentEncoding();
     
     long getContentLength();
 }

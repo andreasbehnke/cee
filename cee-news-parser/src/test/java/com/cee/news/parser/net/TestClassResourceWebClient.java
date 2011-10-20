@@ -20,7 +20,6 @@ public class TestClassResourceWebClient {
 		ClassResourceWebClient webClient = new ClassResourceWebClient();
 		InputStream is = webClient.openStream(new URL(TESTSITE_URL));
 		
-		
 		Reader reader = new InputStreamReader(is);
 		char[] buffer = new char[12];
 		Assert.assertEquals(12, reader.read(buffer));

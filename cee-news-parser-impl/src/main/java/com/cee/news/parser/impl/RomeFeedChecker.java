@@ -1,6 +1,8 @@
 package com.cee.news.parser.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 
 import org.jdom.Document;
@@ -8,6 +10,7 @@ import org.jdom.JDOMException;
 import org.xml.sax.InputSource;
 
 import com.cee.news.parser.net.WebClient;
+import com.cee.news.parser.net.WebResponse;
 import com.cee.news.parser.FeedChecker;
 import com.sun.syndication.io.SAXBuilder;
 import com.sun.syndication.io.WireFeedInput;
@@ -43,16 +46,20 @@ public class RomeFeedChecker extends WireFeedInput implements FeedChecker {
     public boolean isSupportedFeed(final URL feedLocation) throws IOException {
         SAXBuilder saxBuilder = createSAXBuilder();
         
-        InputSource is = new InputSource(webClient.openStream(feedLocation));
+        WebResponse response = webClient.openWebResponse(feedLocation);
         Document document = null;
+        //Reader reader = null;
+        InputStream is = null;
         try {
-            document = saxBuilder.build(is);
+        	is = response.getStream();
+        	document = saxBuilder.build(new InputSource(is));
         } catch (JDOMException e) {
             return false;
         } finally {
-            is.getByteStream().close();
+        	if (is != null)
+        		is.close();
         }
         WireFeedParser parser = feedParsers.getParserFor(document);
         return parser != null;
-    }    
+    }
 }
