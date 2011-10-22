@@ -13,13 +13,14 @@ import org.junit.Test;
 import com.cee.news.model.Article;
 import com.cee.news.parser.FeedParser;
 import com.cee.news.parser.ParserException;
-import com.cee.news.parser.net.DefaultWebClient;
+import com.cee.news.parser.net.XmlStreamReaderFactory;
+import com.cee.news.parser.net.impl.DefaultWebClient;
 
 public class TestRomeFeedParser {
 
     @Test
     public void testParse() throws ParserException, IOException {
-        FeedParser parser = new RomeFeedParser(new DefaultWebClient(new DefaultHttpClient()));
+        FeedParser parser = new RomeFeedParser(new DefaultWebClient(new DefaultHttpClient(), new XmlStreamReaderFactory()));
         List<Article> articles = parser.parse(getClass().getResource("spiegelNachrichten.rss"));
         
         assertEquals(7, articles.size());

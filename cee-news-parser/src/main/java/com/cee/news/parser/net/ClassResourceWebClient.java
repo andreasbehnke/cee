@@ -13,21 +13,6 @@ import java.net.URL;
  * is used for testing purposes.
  */
 public class ClassResourceWebClient implements WebClient {
-
-	/**
-	 * Only the path part of the URL is interpreted for retrieving resource from class path
-	 * @see com.cee.news.parser.net.WebClient#openStream(java.net.URL)
-	 */
-	@Override
-	public InputStream openStream(final URL location) throws IOException {
-		String path = location.getPath();
-		InputStream is = getClass().getResourceAsStream(path);
-		if (is == null) {
-			throw new FileNotFoundException(path);
-		}
-		return is;
-	}
-
 	/**
 	 * Only the path part of the URL is interpreted for retrieving resource from class path
 	 * @see com.cee.news.parser.net.WebClient#openWebResponse(java.net.URL)
@@ -38,12 +23,17 @@ public class ClassResourceWebClient implements WebClient {
 			
 			@Override
 			public InputStream getStream() throws IOException {
-				return ClassResourceWebClient.this.openStream(location);
+				String path = location.getPath();
+				InputStream is = getClass().getResourceAsStream(path);
+				if (is == null) {
+					throw new FileNotFoundException(path);
+				}
+				return is;
 			}
 			
 			@Override
 			public Reader getReader() throws IOException {
-				return new InputStreamReader(ClassResourceWebClient.this.openStream(location));
+				return new InputStreamReader(getStream());
 			}
 			
 			@Override

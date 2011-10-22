@@ -15,13 +15,13 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * @author andreasbehnke
  *
  */
-public class WorkingSetSelection extends Widget implements WorkingSetSelectionView {
+public class WorkingSetSelection extends SimplePanel implements WorkingSetSelectionView {
 
 	private static WorkingSetSelectionUiBinder uiBinder = GWT
 			.create(WorkingSetSelectionUiBinder.class);
@@ -40,7 +40,7 @@ public class WorkingSetSelection extends Widget implements WorkingSetSelectionVi
 	ListBox listBox;
 	
 	public WorkingSetSelection() {
-		setElement(uiBinder.createAndBindUi(this).getElement());
+		setWidget(uiBinder.createAndBindUi(this));
 	}
 
 	@Override

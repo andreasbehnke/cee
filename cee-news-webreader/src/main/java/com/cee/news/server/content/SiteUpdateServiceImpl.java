@@ -5,10 +5,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +29,10 @@ import com.cee.news.store.StoreException;
 import com.cee.news.store.WorkingSetStore;
 
 public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
+
+	private static final String UPDATE_SCHEDULER_THREAD_PREFIX = "updateScheduler";
+
+	private static final String SITE_UPDATER_THREAD_PREFIX = "siteUpdater";
 
 	private static final long serialVersionUID = 8695157160684778713L;
 
@@ -125,6 +129,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 						SiteUpdateServiceImpl.this.removeRunnable(r);
 					}
 			};
+			pool.setThreadFactory( new PrefixCountThreadFactory(SITE_UPDATER_THREAD_PREFIX) );
 		}
 	}
 
@@ -237,7 +242,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	public synchronized void startUpdateScheduler() {
 		if (scheduler == null) {
 			LOG.info("Starting update scheduler with a delay of {}.", updateSchedulerFixedDelay);
-			scheduler = new ScheduledThreadPoolExecutor(1);
+			scheduler = new ScheduledThreadPoolExecutor(1, new PrefixCountThreadFactory(UPDATE_SCHEDULER_THREAD_PREFIX));
 			scheduler.scheduleWithFixedDelay(
 					new Runnable() {		
 						@Override

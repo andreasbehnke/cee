@@ -14,10 +14,10 @@ public interface FeedParser {
 
     /**
      * Read all articles from syndication feed
-     * @param feedLocation
-     * @return
-     * @throws ParserException
-     * @throws IOException
+     * @param feedLocation The URL of the feed
+     * @return List of articles, article title, date and description are set.
+     * @throws ParserException If the feed could not be parsed
+     * @throws IOException If the feeds stream could not be opened
      */
     List<Article> parse(final URL feedLocation) throws ParserException, IOException;
 

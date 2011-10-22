@@ -23,6 +23,28 @@ import com.cee.news.model.Site;
  */
 public class SiteHandler extends DefaultHandler {
 	
+	private static final String CONTENT_ATTRIBUTE = "content";
+
+	private static final String DESCRIPTION_ATTRIBUTE = "description";
+
+	private static final String NAME_ATTRIBUTE = "name";
+
+	private static final String META_ELEMENT = "meta";
+
+	private static final String HREF_ATTRIBUTE = "href";
+
+	private static final String TYPE_ATTRIBUTE = "type";
+
+	private static final String TITLE_ATTRIBUTE = "title";
+
+	private static final String ALTERNATE_CONTENT = "alternate";
+
+	private static final String REL_ATTRIBUTE = "rel";
+
+	private static final String LINK_ELEMENT = "link";
+
+	private static final String HEAD_ELEMENT = "head";
+
 	private static final Logger LOG = LoggerFactory.getLogger(SiteHandler.class);
 
     private enum States {
@@ -51,18 +73,18 @@ public class SiteHandler extends DefaultHandler {
         characterBuffer.setLength(0);// reset the character buffer
         switch (state) {
         case start:
-            if (localName.equalsIgnoreCase("head")) {
+            if (localName.equalsIgnoreCase(HEAD_ELEMENT)) {
             	LOG.debug("found document head");
                 state = States.header;
             }
             break;
         case header:
-            if (localName.equalsIgnoreCase("link")) {
-                String rel = attributes.getValue("rel");
-                if (rel != null && rel.equalsIgnoreCase("alternate")) {
-                    String title = attributes.getValue("title");
-                    String type = attributes.getValue("type");
-                    String href = attributes.getValue("href");
+            if (localName.equalsIgnoreCase(LINK_ELEMENT)) {
+                String rel = attributes.getValue(REL_ATTRIBUTE);
+                if (rel != null && rel.equalsIgnoreCase(ALTERNATE_CONTENT)) {
+                    String title = attributes.getValue(TITLE_ATTRIBUTE);
+                    String type = attributes.getValue(TYPE_ATTRIBUTE);
+                    String href = attributes.getValue(HREF_ATTRIBUTE);
                     if (href != null) {
                     	if (LOG.isDebugEnabled()) {
                     		LOG.debug("found feed {} of type {} at {}", new Object[]{title, type, href});
@@ -77,11 +99,11 @@ public class SiteHandler extends DefaultHandler {
                         site.getFeeds().add(new Feed(location.toExternalForm(), title, type));
                     }
                 }
-            } else if (localName.equalsIgnoreCase("meta")) {
-                String name = attributes.getValue("name");
-                if (name != null && name.equalsIgnoreCase("description")) {
+            } else if (localName.equalsIgnoreCase(META_ELEMENT)) {
+                String name = attributes.getValue(NAME_ATTRIBUTE);
+                if (name != null && name.equalsIgnoreCase(DESCRIPTION_ATTRIBUTE)) {
                 	LOG.debug("found sites description");
-                    site.setDescription(attributes.getValue("content"));
+                    site.setDescription(attributes.getValue(CONTENT_ATTRIBUTE));
                 }
             }
             break;
@@ -93,14 +115,14 @@ public class SiteHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (state == States.header) {
-            if (localName.equalsIgnoreCase("head")) {
+            if (localName.equalsIgnoreCase(HEAD_ELEMENT)) {
                 state = States.finished;
                 LOG.debug("finished document");
                 // TODO: what is the best practice to stop the XMLReader from
                 // parsing
                 // further HTML code? Documentation says, an exception should be
                 // thrown...
-            } else if (localName.equalsIgnoreCase("title")) {
+            } else if (localName.equalsIgnoreCase(TITLE_ATTRIBUTE)) {
             	LOG.debug("found sites title");
                 site.setTitle(characterBuffer.toString());
             }
@@ -110,7 +132,6 @@ public class SiteHandler extends DefaultHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-        // TODO what is the best way to handle this character chunks?
         characterBuffer.append(ch, start, length);
     }
 }

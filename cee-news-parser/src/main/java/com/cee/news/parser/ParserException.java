@@ -1,5 +1,8 @@
 package com.cee.news.parser;
 
+/**
+ * Thrown if the parsing of remote content fails
+ */
 public class ParserException extends Exception {
 
     private static final long serialVersionUID = 1981475052956331372L;

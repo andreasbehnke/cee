@@ -18,7 +18,7 @@ public class TestClassResourceWebClient {
 	@Test
 	public void testOpenStream() throws MalformedURLException, IOException {
 		ClassResourceWebClient webClient = new ClassResourceWebClient();
-		InputStream is = webClient.openStream(new URL(TESTSITE_URL));
+		InputStream is = webClient.openWebResponse(new URL(TESTSITE_URL)).getStream();
 		
 		Reader reader = new InputStreamReader(is);
 		char[] buffer = new char[12];

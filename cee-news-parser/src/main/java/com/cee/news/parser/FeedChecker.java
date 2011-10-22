@@ -11,7 +11,7 @@ public interface FeedChecker {
     /**
      * @param feedLocation The location of the feed
      * @return true, if the feed is supported
-     * @throws IOException If an IO error occured while reading remote location
+     * @throws IOException If an IO error occurred while reading remote location
      */
     public boolean isSupportedFeed(URL feedLocation) throws IOException;
     
