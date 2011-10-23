@@ -1,9 +1,9 @@
 package com.cee.news.parser.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 import org.ccil.cowan.tagsoup.Parser;
@@ -15,7 +15,6 @@ import com.cee.news.model.Site;
 import com.cee.news.parser.SiteParser;
 import com.cee.news.parser.net.ClassResourceWebClient;
 import com.cee.news.parser.net.WebClient;
-import com.cee.news.parser.net.WebResponse;
 
 public class TestSiteParser {
 

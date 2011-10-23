@@ -31,10 +31,6 @@
 			<groupId>net.java.dev.rome</groupId>
 			<artifactId>rome</artifactId>
 		</dependency>
-		<!-- dependency>
-			<groupId>net.sourceforge.nekohtml</groupId>
-			<artifactId>nekohtml</artifactId>
-		</dependency -->
 		
 		<!-- testing -->
 		<dependency>
@@ -48,11 +44,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.sourceforge.nekohtml</groupId>
-			<artifactId>nekohtml</artifactId>
-			<scope>test</scope>
-		</dependency>
-				<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<scope>test</scope>

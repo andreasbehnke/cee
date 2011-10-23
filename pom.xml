@@ -177,6 +177,18 @@
 				<version>${gwt.version}</version>
 			</dependency>
 			<dependency>
+			    <groupId>com.sourceallies.beanoh</groupId>
+			    <artifactId>beanoh</artifactId>
+			    <version>1.0.0</version>
+			    <exclusions>
+			    	<!-- Excluce old 3.0.0 spring version and some ugly stuff -->
+			    	<exclusion>
+			    		<groupId>org.springframework</groupId>
+			    		<artifactId>*</artifactId>
+			    	</exclusion>
+			    </exclusions>
+			</dependency>
+			<dependency>
 				<groupId>de.l3s.boilerpipe</groupId>
 				<artifactId>boilerpipe</artifactId>
 				<version>1.1.0</version>
