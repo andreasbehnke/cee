@@ -7,7 +7,7 @@ import com.sourceallies.beanoh.BeanohTestCase;
 public class TestSpringConfiguration extends BeanohTestCase {
 	
     @Test
-    public void testSomething() {  
+    public void testContext() {  
         assertContextLoading();  
     }
 }
