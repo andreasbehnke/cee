@@ -9,23 +9,26 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.cee.news.client.content.SiteData;
-import com.cee.news.client.content.SiteUpdateService;
 import com.cee.news.client.content.SiteData.SiteRetrivalState;
+import com.cee.news.client.content.SiteUpdateService;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
+import com.cee.news.store.ArticleStore;
 import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
-import com.cee.news.store.jcr.JcrArticleStore;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"/testContext.xml"})
+@DirtiesContext(classMode=ClassMode.AFTER_CLASS)
 public class TestSiteUpdateService {
-
+	
 	private static final String SITE_URL = "http://www.test.com/content/index.html";
 
 	private static final String SITE_MALFORMED_URL = "xyz://www.test.com/content/index.html";
@@ -49,7 +52,7 @@ public class TestSiteUpdateService {
 	
 	@Autowired
 	@Qualifier("articleStore")
-	private JcrArticleStore articleStore;
+	private ArticleStore articleStore;
 	
 	protected Site createSite() {
 		Site site = new Site();

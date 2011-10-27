@@ -5,4 +5,7 @@
 
 	<import resource="../../../../../applicationContext.xml"/>
 
+	<bean class="com.cee.news.server.content.DeleteRepositoryHook" scope="singleton" destroy-method="deleteRepository">
+		<property name="repository" ref="jcrRepository" />
+	</bean>
 </beans>

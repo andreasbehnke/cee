@@ -18,4 +18,8 @@
 	
 	<bean id="webClient" class="com.cee.news.parser.net.ClassResourceWebClient" scope="prototype"/>
 
+	<bean class="com.cee.news.server.content.DeleteRepositoryHook" scope="singleton" destroy-method="deleteRepository">
+		<property name="repository" ref="jcrRepository" />
+	</bean>
+
 </beans>

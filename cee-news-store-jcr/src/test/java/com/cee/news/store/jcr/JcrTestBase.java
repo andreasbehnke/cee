@@ -21,7 +21,7 @@ import com.cee.news.store.StoreException;
 
 public abstract class JcrTestBase {
     
-    private final static String TEST_REPOSITORY_DIR = "testRepository";
+    private final static String TEST_REPOSITORY_DIR = "repository";
     
     private static Repository repository;
     
@@ -43,7 +43,9 @@ public abstract class JcrTestBase {
                 deleteFile(new File(file, child));
             }
         }
-        file.delete();
+        if (!file.delete()) {
+        	throw new RuntimeException("Could not delete repository!");
+        }
     }
     
     private static void deleteTestRepository() {

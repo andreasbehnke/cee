@@ -70,7 +70,7 @@ public abstract class JcrStoreBase {
         }
     }
     
-    protected Session getSession() {
+    public Session getSession() {
         return session;
     }
 

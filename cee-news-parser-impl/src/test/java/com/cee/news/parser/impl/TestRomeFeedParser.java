@@ -13,8 +13,8 @@ import org.junit.Test;
 import com.cee.news.model.Article;
 import com.cee.news.parser.FeedParser;
 import com.cee.news.parser.ParserException;
-import com.cee.news.parser.net.XmlStreamReaderFactory;
 import com.cee.news.parser.net.impl.DefaultWebClient;
+import com.cee.news.parser.net.impl.XmlStreamReaderFactory;
 
 public class TestRomeFeedParser {
 

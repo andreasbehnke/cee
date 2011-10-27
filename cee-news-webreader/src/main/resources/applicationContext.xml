@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+<beans 
+	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+						http://www.springframework.org/schema/aop 	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd" >
 
 	<bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="ignoreResourceNotFound" value="true" />
@@ -105,9 +108,12 @@
 
 	<!-- Parser -->
 	
-	<bean id="webClient" class="com.cee.news.parser.net.DefaultWebClient" scope="prototype">
+	<bean id="webClient" class="com.cee.news.parser.net.impl.DefaultWebClient" scope="prototype">
 		<property name="httpClient">
-			<bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient" scope="prototype" />
+			<bean class="org.apache.http.impl.client.DefaultHttpClient" scope="prototype" />
+		</property>
+		<property name="readerFactory">
+			<bean class="com.cee.news.parser.net.impl.XmlStreamReaderFactory" />
 		</property>
 	</bean>
 	
