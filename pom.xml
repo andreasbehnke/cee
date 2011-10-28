@@ -159,7 +159,7 @@
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
-				<version>1.4</version>
+				<version>2.1</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.gwt</groupId>
@@ -177,16 +177,31 @@
 				<version>${gwt.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>com.sourceallies.beanoh</groupId>
-			    <artifactId>beanoh</artifactId>
-			    <version>1.0.0</version>
-			    <exclusions>
-			    	<!-- Excluce old 3.0.0 spring version and some ugly stuff -->
-			    	<exclusion>
-			    		<groupId>org.springframework</groupId>
-			    		<artifactId>*</artifactId>
-			    	</exclusion>
-			    </exclusions>
+				<groupId>com.sourceallies.beanoh</groupId>
+				<artifactId>beanoh</artifactId>
+				<version>1.0.0</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-beans</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-context</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-core</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-test</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-web</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>de.l3s.boilerpipe</groupId>
@@ -226,6 +241,10 @@
 					<exclusion>
 						<groupId>org.slf4j</groupId>
 						<artifactId>jcl-over-slf4j</artifactId>
+					</exclusion>
+					<exclusion>
+						 <groupId>rome</groupId>
+						 <artifactId>rome</artifactId>
 					</exclusion>
 				</exclusions>
 			</dependency>
