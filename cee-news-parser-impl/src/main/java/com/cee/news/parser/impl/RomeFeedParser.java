@@ -48,11 +48,7 @@ public class RomeFeedParser implements FeedParser {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.cee.newsdiff.parser.FeedParser#parse(java.net.URL)
-     */
+    @Override
     public List<Article> parse(final URL feedLocation) throws ParserException, IOException {
         List<Article> articles = new ArrayList<Article>();
 

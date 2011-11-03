@@ -23,17 +23,13 @@ public interface SiteService extends RemoteService {
 	
 	/**
 	 * Retrieve the sites formatted title
-	 * @param name The name of the site
-	 * @return The HTML formatted site title
 	 */
-	String getHtmlTitle(String name);
+	String getHtmlTitle(String key);
 	
 	/**
 	 * Retrieve the sites formatted description
-	 * @param name The name of the site
-	 * @return The HTML formatted site description
 	 */
-	String getHtmlDescription(String name);
+	String getHtmlDescription(String key);
 	
 	/**
 	 * Guesses a unique site name for a given site name.

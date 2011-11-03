@@ -44,6 +44,7 @@ public class SiteServiceImpl implements SiteService {
 		this.workingSetStore = workingSetStore;
 	}
 
+	@Override
 	public List<EntityKey> getSites() {
 		try {
 			return siteStore.getSitesOrderedByName();
@@ -64,11 +65,12 @@ public class SiteServiceImpl implements SiteService {
 	}
 
 	//TODO: Use Velocity Template Engine
-	public String getHtmlTitle(String siteName) {
+	@Override
+	public String getHtmlTitle(String siteKey) {
 		try {
-			Site site = siteStore.getSite(siteName);
+			Site site = siteStore.getSite(siteKey);
 			String title = site.getTitle();
-			return (title == null ? siteName : title);
+			return (title == null ? site.getName() : title);
 		} catch (StoreException e) {
 			log.error(COULD_NOT_RETRIEVE_SITE_TITLE, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_TITLE);
@@ -76,9 +78,10 @@ public class SiteServiceImpl implements SiteService {
 	}
 
 	//TODO: Use Velocity Template Engine
-	public String getHtmlDescription(String siteName) {
+	@Override
+	public String getHtmlDescription(String siteKey) {
 		try {
-			Site site = siteStore.getSite(siteName);
+			Site site = siteStore.getSite(siteKey);
 			StringBuilder builder = new StringBuilder();
 			String title = site.getTitle();
 			String description = site.getDescription();

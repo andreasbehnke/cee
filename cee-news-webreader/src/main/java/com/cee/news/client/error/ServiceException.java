@@ -1,7 +1,7 @@
 package com.cee.news.client.error;
 
 /**
- * Runtime exception thrown by the GWT service layer which has not cause, because of serialization problems.
+ * Runtime exception thrown by the GWT service layer which has no cause, because of serialization problems.
  */
 public class ServiceException extends RuntimeException {
 

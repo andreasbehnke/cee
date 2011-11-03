@@ -33,10 +33,10 @@ public interface SiteUpdateService extends RemoteService {
 	 * Adds update task for given site to the update queue.
 	 * If the queue already contains a task for the site, no additional
 	 * task will be added.
-	 * @param site The site to update
+	 * @param siteKey The site to update
 	 * @return Number of update commands in the queue
 	 */
-	int addSiteToUpdateQueue(String site);
+	int addSiteToUpdateQueue(String siteKey);
 	
 	/**
 	 * Adds update tasks for each given site to the update queue.

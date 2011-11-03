@@ -57,12 +57,13 @@ public class NewsServiceImpl implements NewsService {
 		return SimpleDateFormat.getDateInstance().format(calendar.getTime());
 	}
 	
-	public List<EntityKey> getArticlesOfSite(String siteName) {
+	@Override
+	public List<EntityKey> getArticlesOfSite(String siteKey) {
 		try {
-			Site site = siteStore.getSite(siteName);
+			Site site = siteStore.getSite(siteKey);
 			List<EntityKey> keys = articleStore.getArticlesOrderedByDate(site);
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Retrieved {} articles for site {}", keys.size(), siteName);
+				LOG.debug("Retrieved {} articles for site {}", keys.size(), siteKey);
 			}
 			return keys;
 		} catch (StoreException exception) {

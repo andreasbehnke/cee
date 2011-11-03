@@ -25,7 +25,7 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
     private static final long EXPECTED_COUNT = 3;
     private static final String UNKOWN_WORKING_SET = "unkown";
     private static final String EXPECTED_NAME = "abc";
-    private static final EntityKey SITE_A = new EntityKey("siteA", "siteA");
+    private static final EntityKey SITE_A = new EntityKey("http://googlewebtoolkit.blogspot.com", "http%3A%2F%2Fgooglewebtoolkit.blogspot.com");
     private static final EntityKey SITE_B = new EntityKey("siteB", "siteB");
     private static final EntityKey SITE_C = new EntityKey("siteC", "siteC");
     private static final String TESTWORKINGSET = "testworkingset";
@@ -45,6 +45,8 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
         assertEquals(TESTWORKINGSET, ws.getName());
         assertEquals(3, ws.getSites().size());
         assertTrue(ws.getSites().contains(SITE_A));
+        int indexOfSiteA = ws.getSites().indexOf(SITE_A);
+        assertEquals(SITE_A.getName(), ws.getSites().get(indexOfSiteA).getName());
         assertTrue(ws.getSites().contains(SITE_B));
         assertTrue(ws.getSites().contains(SITE_C));
         

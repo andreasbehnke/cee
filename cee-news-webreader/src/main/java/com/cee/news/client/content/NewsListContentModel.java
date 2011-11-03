@@ -22,12 +22,12 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
     
     private final NewsServiceAsync service = NewsService.Util.getInstance();
     
-    public void updateFromSite(final String siteLocation) {
-    	updateFromSite(siteLocation, null);
+    public void updateFromSite(final String siteKey) {
+    	updateFromSite(siteKey, null);
     }
     
-    public void updateFromSite(final String siteLocation, final NotificationCallback callback) {
-        service.getArticlesOfSite(siteLocation, new AsyncCallback<List<EntityKey>>() {
+    public void updateFromSite(final String siteKey, final NotificationCallback callback) {
+        service.getArticlesOfSite(siteKey, new AsyncCallback<List<EntityKey>>() {
             public void onSuccess(List<EntityKey> result) {
                 setKeys(result);
                 if(callback != null) {

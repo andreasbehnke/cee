@@ -35,7 +35,9 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private static final long serialVersionUID = 8695157160684778713L;
 
-	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site";
+	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site: {}";
+	
+	private static final String COULD_NOT_RETRIEVE_SITE_MSG = "Could not retrieve site";
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SiteUpdateServiceImpl.class);
 	
@@ -145,32 +147,34 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	}
 
 	@Override
-	public synchronized int addSiteToUpdateQueue(final String siteName) {
+	public synchronized int addSiteToUpdateQueue(final String siteKey) {
 		ensureThreadPool();
-		if (!sitesInProgress.contains(siteName)) {
+		if (!sitesInProgress.contains(siteKey)) {
 			Site siteEntity = null;
 			try {
-				siteEntity = siteStore.getSite(siteName);
+				siteEntity = siteStore.getSite(siteKey);
 			} catch (StoreException e) {
+				LOG.error(COULD_NOT_RETRIEVE_SITE, siteKey);
 				LOG.error(COULD_NOT_RETRIEVE_SITE, e);
-				throw new ServiceException(COULD_NOT_RETRIEVE_SITE);
+				
+				throw new ServiceException(COULD_NOT_RETRIEVE_SITE_MSG);
 			}
 			SiteUpdateCommand command = createSiteUpdateCommand();
 			command.addCommandCallback(new CommandCallback() {
 				
 				@Override
 				public void notifyFinished() {
-					removeSite(siteName);
+					removeSite(siteKey);
 				}
 				
 				@Override
 				public void notifyError(Exception ex) {
-					LOG.error("Site update for " + siteName + " encountered an error", ex);
+					LOG.error("Site update for " + siteKey + " encountered an error", ex);
 					//TODO: how to handle error reporting for the user?
 				}
 			});
 			command.setSite(siteEntity);
-			sitesInProgress.add(siteName);
+			sitesInProgress.add(siteKey);
 			runnablesInProgress.add(command);
 			pool.execute(command);
 		}
@@ -184,7 +188,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			if (ws == null)
 				throw new IllegalArgumentException("Unknown working set: " + workingSetName);
 			for (EntityKey siteKey : ws.getSites()) {
-				addSiteToUpdateQueue(siteKey.getName());
+				addSiteToUpdateQueue(siteKey.getKey());
 			}
 			return sitesInProgress.size();
 		} catch (StoreException se) {

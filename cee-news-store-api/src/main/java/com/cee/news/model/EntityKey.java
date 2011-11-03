@@ -84,7 +84,7 @@ public class EntityKey implements Serializable {
 
 	@Override
 	public String toString() {
-		return "[" + key + ":" + name + "]";
+		return "[key=" + key + ";name=" + name + "]";
 	}
 
 	public static List<String> extractNames(List<EntityKey> input) {

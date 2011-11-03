@@ -18,6 +18,7 @@ import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
+import org.apache.jackrabbit.util.Text;
 import org.slf4j.LoggerFactory;
 
 import org.slf4j.Logger;
@@ -123,7 +124,7 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
             workingSet.setName(wsNode.getProperty(PROP_NAME).getString());
             List<EntityKey> sites = new ArrayList<EntityKey>();
             for (Value value : wsNode.getProperty(PROP_SITES).getValues()) {
-                sites.add(new EntityKey(value.getString(), value.getString()));
+                sites.add(new EntityKey(Text.unescapeIllegalJcrChars(value.getString()), value.getString()));
             }
             workingSet.setSites(sites);
             LOG.debug("Found working set {}", name);
