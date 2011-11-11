@@ -162,6 +162,12 @@
 				<version>2.1</version>
 			</dependency>
 			<dependency>
+				<scope>test</scope>
+				<groupId>com.github.robfletcher</groupId>
+				<artifactId>betamax</artifactId>
+				<version>1.0</version>
+			</dependency>
+			<dependency>
 				<groupId>com.google.gwt</groupId>
 				<artifactId>gwt-dev</artifactId>
 				<version>${gwt.version}</version>
@@ -231,7 +237,7 @@
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
-				<version>4.0.3</version>
+				<version>4.1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.jackrabbit</groupId>
@@ -257,6 +263,12 @@
 				<groupId>org.ccil.cowan.tagsoup</groupId>
 				<artifactId>tagsoup</artifactId>
 				<version>1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.groovy</groupId>
+				<artifactId>groovy-all</artifactId>
+				<version>1.8.0</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>

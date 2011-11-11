@@ -38,6 +38,11 @@
 		
 		<!-- testing -->
 		<dependency>
+			<scope>test</scope>
+			<groupId>com.github.robfletcher</groupId>
+			<artifactId>betamax</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
@@ -45,6 +50,11 @@
 		<dependency>
 			<groupId>org.ccil.cowan.tagsoup</groupId>
 			<artifactId>tagsoup</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
