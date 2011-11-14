@@ -235,8 +235,10 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			info.setState(SiteRetrivalState.ok);
 		} catch (IOException e) {
 			info.setState(SiteRetrivalState.ioError);
+			LOG.error("Could not retrieve site", e);
 		} catch (SAXException e) {
 			info.setState(SiteRetrivalState.parserError);
+			LOG.error("Could not retrieve site", e);
 		}
 		return info;
 	}
