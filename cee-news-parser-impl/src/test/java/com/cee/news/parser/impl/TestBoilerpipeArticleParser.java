@@ -46,4 +46,15 @@ public class TestBoilerpipeArticleParser {
         parser.parse(article);
         assertTrue(article.getContent().get(0).getContent().contains("Kein Referendum, kein Rücktritt, keine Lösung"));
 	}
+	
+	@Betamax(tape = "issue144", mode = TapeMode.READ_ONLY)
+	@Test
+	public void testParseRegressionIssue144() throws ParserException, IOException {
+		Article article = new Article();
+        article.setLocation("http://www.spiegel.de/wirtschaft/unternehmen/0,1518,797729,00.html");
+        
+        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(HttpClientFactory.createHttpClient(), new XmlStreamReaderFactory()));
+        parser.parse(article);
+        assertTrue(article.getContent().get(0).getContent().contains("die Polizei durchsucht das Büro"));
+	}
 }
