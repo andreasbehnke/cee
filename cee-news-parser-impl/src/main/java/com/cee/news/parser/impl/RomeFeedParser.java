@@ -1,6 +1,7 @@
 package com.cee.news.parser.impl;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class RomeFeedParser implements FeedParser {
 
     private SyndFeed readFeed(final URL feedLocation) throws IllegalArgumentException, FeedException, IOException {
         WebResponse response = webClient.openWebResponse(feedLocation);
-        XmlReader reader = new XmlReader(response.getStream(), response.getContentType());
+        Reader reader = response.getReader();
         try {
             return new SyndFeedInput().build(reader);
         } finally {
