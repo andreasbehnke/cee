@@ -166,7 +166,9 @@ public class NewsReader implements EntryPoint {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {
 				if (event.isUserAction()) {
-					pagingNewsList.updateFromSite(event.getKey(), new NotificationCallback() {
+					final String siteKey = event.getKey();
+					newsPanel.getSiteNameLabel().setText(siteKey);
+					pagingNewsList.updateFromSite(siteKey, new NotificationCallback() {
 
 						@Override
 						public void finished() {

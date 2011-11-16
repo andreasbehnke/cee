@@ -51,9 +51,9 @@ public class NewsPanel extends Composite implements NewsView {
         layoutPanel.setWidgetRightWidth(nlnlblNewInlinelabel, 178.0, Unit.PX, 149.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(nlnlblNewInlinelabel, 30.0, Unit.PX, 16.0, Unit.PX);
         
-        siteNameLabel = new Label("");
+        siteNameLabel = new InlineLabel();
         layoutPanel.add(siteNameLabel);
-        layoutPanel.setWidgetLeftWidth(siteNameLabel, 111.0, Unit.PX, 56.0, Unit.PX);
+        layoutPanel.setWidgetLeftRight(siteNameLabel, 84.0, Unit.PX, 333.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(siteNameLabel, 30.0, Unit.PX, 16.0, Unit.PX);
     }
 
