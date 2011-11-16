@@ -77,22 +77,18 @@
 	
 	<bean id="siteStore" class="com.cee.news.store.jcr.JcrSiteStore" scope="request">
 		<property name="session" ref="jcrSession" />
-		<aop:scoped-proxy />
 	</bean>
 
 	<bean id="articleStore" class="com.cee.news.store.jcr.JcrArticleStore" scope="request">
 		<property name="session" ref="jcrSession" />
-		<aop:scoped-proxy />
 	</bean>
 	
 	<bean id="articleSearchService" class="com.cee.news.store.jcr.JcrArticleSearchService" scope="request">
 		<property name="session" ref="jcrSession" />
-		<aop:scoped-proxy />
 	</bean>
 
 	<bean id="workingSetStore" class="com.cee.news.store.jcr.JcrWorkingSetStore" scope="request">
 		<property name="session" ref="jcrSession" />
-		<aop:scoped-proxy />
 	</bean>
 		
 	<!-- Store used by the thread pool which executes commands -->
@@ -153,19 +149,19 @@
 
 	<!-- GWT Services -->
 
-	<bean id="gwtNewsService" class="com.cee.news.server.content.NewsServiceImpl" lazy-init="true">
+	<bean id="gwtNewsService" class="com.cee.news.server.content.NewsServiceImpl" scope="request">
 		<property name="siteStore" ref="siteStore" />
 		<property name="workingSetStore" ref="workingSetStore" />
 		<property name="articleStore" ref="articleStore" />
 		<property name="articleSearchService" ref="articleSearchService" />
 	</bean>
 
-	<bean id="gwtSiteService" class="com.cee.news.server.content.SiteServiceImpl" lazy-init="true">
+	<bean id="gwtSiteService" class="com.cee.news.server.content.SiteServiceImpl" scope="request">
 		<property name="siteStore" ref="siteStore" />
 		<property name="workingSetStore" ref="workingSetStore" />
 	</bean>
 
-	<bean id="gwtWorkingSetService" class="com.cee.news.server.workingset.WorkingSetServiceImpl" lazy-init="true">
+	<bean id="gwtWorkingSetService" class="com.cee.news.server.workingset.WorkingSetServiceImpl" scope="request">
 		<property name="workingSetStore" ref="workingSetStore" />
 	</bean>
 
