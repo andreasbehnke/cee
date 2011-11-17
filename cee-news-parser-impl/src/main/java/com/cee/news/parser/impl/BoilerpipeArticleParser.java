@@ -73,8 +73,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
         	xmlReader.parse(is);
         	TextDocument textDoc = boilerpipeHandler.toTextDocument();
         	LOG.debug("extracting main content from {}", article.getTitle());
-            //ArticleExtractor.INSTANCE.process(textDoc);
-        	ArticleExtractor.INSTANCE.process(textDoc);
+            ArticleExtractor.INSTANCE.process(textDoc);
             List<com.cee.news.model.TextBlock> content = article.getContent();
             for (TextBlock block : textDoc.getTextBlocks()) {
                 if (block.isContent()) {
