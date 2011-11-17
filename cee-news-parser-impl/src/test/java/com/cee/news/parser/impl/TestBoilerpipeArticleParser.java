@@ -70,4 +70,15 @@ public class TestBoilerpipeArticleParser {
         parser.parse(article);
         assertTrue(article.getContent().get(0).getContent().contains("täglich"));
 	}
+	
+	@Betamax(tape = "issue146", mode = TapeMode.READ_ONLY)
+	@Test
+	public void testParseRegressionIssue146() throws ParserException, IOException {
+		Article article = new Article();
+        article.setLocation("	http://www.tagesspiegel.de/politik/troika-sieht-portugal-auf-gutem-weg/5859778.html");
+        
+        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(HttpClientFactory.createHttpClient(), new XmlStreamReaderFactory()));
+        parser.parse(article);
+        assertTrue(article.getContent().get(0).getContent().contains("Die Portugiesen selbst sind weniger optimistisch"));
+	}
 }
