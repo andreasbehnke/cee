@@ -59,8 +59,8 @@ public class TestBoilerpipeArticleParser {
         assertTrue(article.getContent().get(0).getContent().contains("die Polizei durchsucht das Büro"));
 	}
 	
-	@Ignore("This server seems to send mime type with charset randomly")
-	@Betamax(tape = "issue145", mode = TapeMode.READ_WRITE)
+	@Ignore("The server does not send a UTF-8 Content-Type header, betamax is also unable to detect the charset encoding...")
+	//@Betamax(tape = "issue145", mode = TapeMode.READ_WRITE)
 	@Test
 	public void testParseRegressionIssue145() throws ParserException, IOException {
 		Article article = new Article();
@@ -68,6 +68,6 @@ public class TestBoilerpipeArticleParser {
         
         ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(HttpClientFactory.createHttpClient(), new XmlStreamReaderFactory()));
         parser.parse(article);
-        assertTrue(article.getContent().get(0).getContent().contains("Springprüfung"));
+        assertTrue(article.getContent().get(0).getContent().contains("täglich"));
 	}
 }

@@ -11,11 +11,10 @@ public class XmlStreamReaderFactory implements ReaderFactory {
 
 	@Override
 	public Reader createReader(InputStream inputStream, String contentTypeHint, String characterEncodingHint) throws IOException {
-		if (characterEncodingHint == null && contentTypeHint == null) {
-			return new XmlStreamReader(inputStream, true);
-		} else {
-			return new XmlStreamReader(inputStream, contentTypeHint, true, characterEncodingHint);
+		if (characterEncodingHint == null) {
+			characterEncodingHint = "UTF-8";
 		}
+		return new XmlStreamReader(inputStream, contentTypeHint, true, characterEncodingHint);
 	}
 
 }
