@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import org.ccil.cowan.tagsoup.Parser;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -56,5 +57,17 @@ public class TestBoilerpipeArticleParser {
         ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(HttpClientFactory.createHttpClient(), new XmlStreamReaderFactory()));
         parser.parse(article);
         assertTrue(article.getContent().get(0).getContent().contains("die Polizei durchsucht das Büro"));
+	}
+	
+	@Ignore("This server seems to send mime type with charset randomly")
+	@Betamax(tape = "issue145", mode = TapeMode.READ_WRITE)
+	@Test
+	public void testParseRegressionIssue145() throws ParserException, IOException {
+		Article article = new Article();
+        article.setLocation("http://www.swr.de/nachrichten/-/id=396/nid=396/did=8892142/1aevpcg/index.html");
+        
+        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(HttpClientFactory.createHttpClient(), new XmlStreamReaderFactory()));
+        parser.parse(article);
+        assertTrue(article.getContent().get(0).getContent().contains("Springprüfung"));
 	}
 }
