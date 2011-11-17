@@ -71,6 +71,7 @@ public class TestBoilerpipeArticleParser {
         assertTrue(article.getContent().get(0).getContent().contains("täglich"));
 	}
 	
+	@Ignore("Does not run on build server!")
 	@Betamax(tape = "issue146", mode = TapeMode.READ_ONLY)
 	@Test
 	public void testParseRegressionIssue146() throws ParserException, IOException {
