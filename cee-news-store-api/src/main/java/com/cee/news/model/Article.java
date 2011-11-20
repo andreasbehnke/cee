@@ -57,6 +57,17 @@ public class Article {
     public void setContent(List<TextBlock> content) {
         this.content = content;
     }
+    
+    public String getContentText() {
+    	if (content == null) {
+    		return "";
+    	}
+    	StringBuilder buffer = new StringBuilder();
+    	for (TextBlock block : content) {
+			buffer.append(block.getContent()).append('\n');
+		}
+    	return buffer.toString();
+    }
 
     public Calendar getPublishedDate() {
         return publishedDate;
