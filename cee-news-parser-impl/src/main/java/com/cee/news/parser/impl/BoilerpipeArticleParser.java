@@ -65,7 +65,6 @@ public class BoilerpipeArticleParser implements ArticleParser {
         	LOG.info("start parsing article content of {}", article.getTitle());
         	BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
         	
-        	//TODO register tag action for none text content like media and so on
         	WebResponse response = webClient.openWebResponse(new URL(article.getLocation()));
         	textReader = response.getReader();
         	xmlReader.setContentHandler(boilerpipeHandler);
@@ -77,8 +76,10 @@ public class BoilerpipeArticleParser implements ArticleParser {
             List<com.cee.news.model.TextBlock> content = article.getContent();
             for (TextBlock block : textDoc.getTextBlocks()) {
                 if (block.isContent()) {
-                    content.add(new com.cee.news.model.TextBlock(block.getText(), block.getNumWords()));
-                    
+                	String[] paragraphs = block.getText().split("\n");
+                	for (String paragraph : paragraphs) {
+                		content.add(new com.cee.news.model.TextBlock(paragraph, block.getNumWords()));
+					}
                 }
             }
             if (content.size() < 1) {
@@ -96,5 +97,4 @@ public class BoilerpipeArticleParser implements ArticleParser {
         	}
         }
     }
-
 }
