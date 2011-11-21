@@ -30,7 +30,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         
         assertEquals("site1", listener.createdSiteName);
         assertEquals("1", listener.createdArticleId);
-        Article article = articleStore.getArticle(path);
+        Article article = articleStore.getArticle(path, false);
         assertEquals("1", article.getExternalId());
         assertEquals("http://www.abc.de/1", article.getLocation());
         assertEquals(2010, article.getPublishedDate().get(Calendar.YEAR));
@@ -51,8 +51,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         
         assertEquals("site2", listener.createdSiteName);
         assertEquals("1", listener.createdArticleId);
-        Article article = articleStore.getArticle(path);
-        article.setContent(articleStore.getContent(path));
+        Article article = articleStore.getArticle(path, true);
         assertEquals(2, article.getContent().size());
         Set<String> content = new HashSet<String>();
         content.add(article.getContent().get(0).getContent());
@@ -65,16 +64,14 @@ public class TestJcrArticleStore extends JcrTestBase {
         
         assertEquals("site2", listener.changedSiteName);
         assertEquals("1", listener.changedArticleId);
-        article = articleStore.getArticle(path);
-        article.setContent(articleStore.getContent(path));
+        article = articleStore.getArticle(path, true);
         assertEquals(1, article.getContent().size());
         assertEquals(article.getContent().get(0).getContent(), "Another hello world!");
         
         article.getContent().add(new TextBlock("XYZ", 1));
         articleStore.update(site, article);
         
-        article = articleStore.getArticle(path);
-        article.setContent(articleStore.getContent(path));
+        article = articleStore.getArticle(path, true);
         assertEquals(2, article.getContent().size());
         content = new HashSet<String>();
         content.add(article.getContent().get(0).getContent());
@@ -118,27 +115,37 @@ public class TestJcrArticleStore extends JcrTestBase {
         assertEquals(path3, articles.get(3).getKey());
     }
     
-/*    @Test
-    public void testGetRelatedArticlesOrderedByRelevance() throws StoreException, RepositoryException {
-    	Site site = createSite("http://www.abc.de");
-    	String path1 = updateArticle(site, "1", "http://www.abc.de/1", 2010, 1, 12, "Exception Store Car Cars Store Taxi", "Title");
-    	String path2 = updateArticle(site, "2", "http://www.abc.de/2", 2010, 1, 12, "Exception Store Car Cars Store Taxi", "Title");
-    	String path3 = updateArticle(site, "3", "http://www.abc.de/3", 2010, 1, 12, "Exception Store Car Cars Store Taxi", "Title");
-    	String path4 = updateArticle(site, "4", "http://www.abc.de/4", 2010, 1, 12, "Exception Store Car Cars Store Taxi", "Title");
-    	String path5 = updateArticle(site, "5", "http://www.abc.de/5", 2010, 1, 12, "Exception Store Car Cars Store Taxi", "Title");
-    	String path6 = updateArticle(site, "6", "http://www.abc.de/6", 2010, 1, 12, "Exception Store Car Cars Store Taxi", "Title");
-
-    	articleStore.dumpContent();
-    	
-    	List<EntityKey> related = articleStore.selectSimilarArticles(path1);
-    	for (EntityKey entityKey : related) {
-			System.out.println(entityKey);
-		}
-    }*/
-
+    @Test
+    public void testGetArticles() throws StoreException {
+    	Site site = createSite("site5");
+    	List<TextBlock> text = new ArrayList<TextBlock>();
+        text.add(new TextBlock("Hello world!", 2));
+        text.add(new TextBlock("Another hello world!", 3));
+        String key1 = updateArticle(site, "1", "http://www.abc.de/1", 2010, 1, 12, "Short Text", "Title", text);
+        text = new ArrayList<TextBlock>();
+        text.add(new TextBlock("A second hello world!", 2));
+        text.add(new TextBlock("Another second hello world!", 3));
+        String key2 = updateArticle(site, "2", "http://www.abc.de/2", 2012, 1, 12, "Short Text", "Title", text);
+        
+        List<String> keys = new ArrayList<String>();
+        keys.add(key1);
+        keys.add(key2);
+        List<Article> articles = articleStore.getArticles(keys, true);
+        
+        assertEquals(2, articles.size());
+        assertEquals("1", articles.get(0).getExternalId());
+        assertEquals(2, articles.get(0).getContent().size());
+        assertEquals("Hello world!", articles.get(0).getContent().get(0).getContent());
+        assertEquals("Another hello world!", articles.get(0).getContent().get(1).getContent());
+        assertEquals("2", articles.get(1).getExternalId());
+        assertEquals(2, articles.get(1).getContent().size());
+        assertEquals("A second hello world!", articles.get(1).getContent().get(0).getContent());
+        assertEquals("Another second hello world!", articles.get(1).getContent().get(1).getContent());
+    }
+    
     @Test
     public void testGetContent() throws StoreException, MalformedURLException {
-        Site site = createSite("site5");
+        Site site = createSite("site6");
         
         List<TextBlock> content = new ArrayList<TextBlock>();
         content.add(new TextBlock("This are four words", 4));
@@ -146,7 +153,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         content.add(new TextBlock("Hello world!", 2));
         String path = updateArticle(site, "1", "http://www.abc.de/1", 2012, 12, 23, null, null, content);
         
-        content = articleStore.getContent(path);
+        content = articleStore.getArticle(path, true).getContent();
         assertEquals(3, content.size());
         assertEquals("This are four words", content.get(0).getContent());
         assertEquals(4, content.get(0).getNumWords());

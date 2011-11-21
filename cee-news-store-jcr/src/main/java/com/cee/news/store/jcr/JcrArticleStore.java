@@ -3,7 +3,16 @@
  */
 package com.cee.news.store.jcr;
 
-import static com.cee.news.store.jcr.JcrStoreConstants.*;
+import static com.cee.news.store.jcr.JcrStoreConstants.NODE_ARTICLE;
+import static com.cee.news.store.jcr.JcrStoreConstants.NODE_CONTENT;
+import static com.cee.news.store.jcr.JcrStoreConstants.NODE_TEXTBLOCK;
+import static com.cee.news.store.jcr.JcrStoreConstants.PROP_CONTENT;
+import static com.cee.news.store.jcr.JcrStoreConstants.PROP_ID;
+import static com.cee.news.store.jcr.JcrStoreConstants.PROP_LOCATION;
+import static com.cee.news.store.jcr.JcrStoreConstants.PROP_PUBLISHED;
+import static com.cee.news.store.jcr.JcrStoreConstants.PROP_SHORT_TEXT;
+import static com.cee.news.store.jcr.JcrStoreConstants.PROP_TITLE;
+import static com.cee.news.store.jcr.JcrStoreConstants.PROP_WORDS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,29 +157,48 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
     }
     
-    protected void fireArticleChanged(Site site, Article article) {
-    	if (changeListeners == null) return;
-    	for (ArticleChangeListener changeListener : changeListeners) {
-			changeListener.onArticleChanged(site, article);
-		}
+    protected List<TextBlock> createContentFromNode(Node articleNode) throws StoreException {
+    	List<TextBlock> content = new ArrayList<TextBlock>();
+        try {
+            NodeIterator iter = articleNode.getNodes(NODE_CONTENT);
+            while (iter.hasNext()) {
+                Node textNode = iter.nextNode();
+                content.add(new TextBlock(textNode.getProperty(PROP_CONTENT).getString(), (int) textNode.getProperty(PROP_WORDS).getLong()));
+            }
+        } catch (RepositoryException e) {
+            throw new StoreException("Could not retrieve text blocks of article", e);
+        }
+        return content;
     }
     
-    protected void fireArticleCreated(Site site, Article article) {
-    	if (changeListeners == null) return;
-    	for (ArticleChangeListener changeListener : changeListeners) {
-			changeListener.onArticleCreated(site, article);
-		}
-    }
-    
-    @Override
-    public void addArticleChangeListener(ArticleChangeListener listener) {
-    	if (changeListeners == null) {
-    		changeListeners = new ArrayList<ArticleChangeListener>();
-    	}
-    	changeListeners.add(listener);
+    protected Article createArticleFromNode(Node articleNode, boolean deep) throws StoreException {
+    	if (articleNode == null) {
+            return null;
+        } else {
+            Article article = new Article();
+            try {
+                article.setExternalId(articleNode.getProperty(PROP_ID).getString());
+                article.setLocation(articleNode.getProperty(PROP_LOCATION).getString());
+                article.setPublishedDate(articleNode.getProperty(PROP_PUBLISHED).getDate());
+                if (articleNode.hasProperty(PROP_TITLE)) {
+                	article.setTitle(articleNode.getProperty(PROP_TITLE).getString());
+                }
+                if (articleNode.hasProperty(PROP_SHORT_TEXT)) {
+                	article.setShortText(articleNode.getProperty(PROP_SHORT_TEXT).getString());
+                }
+                if (deep) {
+                	article.setContent(createContentFromNode(articleNode));
+                }
+                
+            } catch (RepositoryException e) {
+                throw new StoreException("Could not set article properties", e);
+            }
+            return article;
+        }
     }
 
-    public Article getArticle(String articlePath) throws StoreException {
+    @Override
+    public Article getArticle(String articlePath, boolean withContent) throws StoreException {
         if (articlePath == null) {
             throw new IllegalArgumentException("Parameter articlePath must not be null");
         }
@@ -181,21 +209,21 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             throw new StoreException("Could not retrive article node", e);
         }
 
-        if (articleNode == null) {
-            return null;
-        } else {
-            Article article = new Article();
-            try {
-                article.setExternalId(articleNode.getProperty(PROP_ID).getString());
-                article.setLocation(articleNode.getProperty(PROP_LOCATION).getString());
-                article.setPublishedDate(articleNode.getProperty(PROP_PUBLISHED).getDate());
-                article.setShortText(articleNode.getProperty(PROP_SHORT_TEXT).getString());
-                article.setTitle(articleNode.getProperty(PROP_TITLE).getString());
-            } catch (RepositoryException e) {
-                throw new StoreException("Could not set article properties", e);
-            }
-            return article;
-        }
+        return createArticleFromNode(articleNode, withContent);
+    }
+    
+    @Override
+    public List<Article> getArticles(List<String> keys, boolean withContent) throws StoreException {
+    	try {
+    		List<Article> articles = new ArrayList<Article>();
+    		for (String path : keys) {
+    			Node articleNode = getArticleNodeByPath(path);
+    			articles.add(createArticleFromNode(articleNode, withContent));
+    		}
+    		return articles;
+    	} catch(RepositoryException e) {
+    		throw new StoreException("Could not retrieve articles", e);
+    	}
     }
     
     protected RowIterator getArticlesOfSitesOrderedByPublication(List<String> siteNames) throws RepositoryException {
@@ -208,6 +236,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         return q.execute().getRows();
     }
     
+    @Override
     public List<EntityKey> getArticlesOrderedByDate(Site site) throws StoreException {
         if (site == null) {
             throw new IllegalArgumentException("Parameter site must not be null");
@@ -239,40 +268,30 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
     }
     
-    public List<EntityKey> getRelatedArticlesOrderedByRelevance(String articleKey, WorkingSet workingSet) throws StoreException {
-    	// TODO Auto-generated method stub
-    	return null;
-    }
-    
-    @Override
-    public List<TextBlock> getContent(String articlePath) throws StoreException {
-        if (articlePath == null) {
-            throw new IllegalArgumentException("Parameter path must not be null");
-        }
-        Node articleNode = null;
-        try {
-            articleNode = getArticleNodeByPath(articlePath);
-        } catch (RepositoryException e) {
-            throw new StoreException("Could not retrieve article node", e);
-        }
-        if (articleNode == null) {
-            throw new StoreException("Unknown article");
-        }
-        List<TextBlock> content = new ArrayList<TextBlock>();
-        try {
-            NodeIterator iter = articleNode.getNodes(NODE_CONTENT);
-            while (iter.hasNext()) {
-                Node textNode = iter.nextNode();
-                content.add(new TextBlock(textNode.getProperty(PROP_CONTENT).getString(), (int) textNode.getProperty(PROP_WORDS).getLong()));
-            }
-        } catch (RepositoryException e) {
-            throw new StoreException("Could not retrieve text blocks of article", e);
-        }
-        return content;
-    }
-    
     @Override
     public String getSiteKey(String articleKey) {
     	return articleKey.substring(0, articleKey.indexOf('/'));
+    }
+    
+    protected void fireArticleChanged(Site site, Article article) {
+    	if (changeListeners == null) return;
+    	for (ArticleChangeListener changeListener : changeListeners) {
+			changeListener.onArticleChanged(site, article);
+		}
+    }
+    
+    protected void fireArticleCreated(Site site, Article article) {
+    	if (changeListeners == null) return;
+    	for (ArticleChangeListener changeListener : changeListeners) {
+			changeListener.onArticleCreated(site, article);
+		}
+    }
+    
+    @Override
+    public void addArticleChangeListener(ArticleChangeListener listener) {
+    	if (changeListeners == null) {
+    		changeListeners = new ArrayList<ArticleChangeListener>();
+    	}
+    	changeListeners.add(listener);
     }
 }

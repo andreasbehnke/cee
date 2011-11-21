@@ -30,9 +30,18 @@ public interface ArticleStore {
     /**
      * Get article by unique id
      * @param key The key of the article
+     * @param withContent If the content should be retrieved
      * @return Article found in repository
      */
-    Article getArticle(String key) throws StoreException;
+    Article getArticle(String key, boolean withContent) throws StoreException;
+    
+    /**
+     * Retrieves an article and it's content for the given keys
+     * @param keys List of primary keys
+     * @param withContent If the content should be retrieved
+     * @return List of articles and their content
+     */
+    List<Article> getArticles(List<String> keys, boolean withContent) throws StoreException;
     
     /**
      * Returns a list of unique identifiers of all site's articles
@@ -47,13 +56,6 @@ public interface ArticleStore {
      * @return List of all article identifiers
      */
     List<EntityKey> getArticlesOrderedByDate(WorkingSet workingSet) throws StoreException;
-    
-    /**
-     * Returns the contents of the article with given id
-     * @param key Identifier of article
-     * @return The text blocks of this article
-     */
-    List<TextBlock> getContent(String key) throws StoreException;
     
     /**
      * Returns the site key of an article

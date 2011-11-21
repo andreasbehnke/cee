@@ -1,17 +1,14 @@
 package com.cee.news.store.jcr;
 
-import static com.cee.news.store.jcr.JcrStoreConstants.*;
+import static com.cee.news.store.jcr.JcrStoreConstants.NODE_CONTENT;
+import static com.cee.news.store.jcr.JcrStoreConstants.SLASH;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.Value;
 import javax.jcr.query.Row;
 import javax.jcr.query.RowIterator;
 
@@ -36,20 +33,10 @@ public abstract class JcrStoreBase {
 
 	protected static final String WHERE_SITE_NAME_TERM = "s.[news:name] = '%s' ";
 
+	protected static final String WHERE_ARTICLE_PATH_TERM = "PATH(a) = '%s' ";
+	
 	protected static final int DEFAULT_QUERY_LIMIT = 200;
 	
-    protected static String getArticlePath(String articleId) {
-		return Text.escapeIllegalJcrChars(articleId);
-	}
-
-	protected static String getArticlePath(String siteName, String articleId) {
-		return new StringBuilder(300)
-			.append(JcrSiteStore.getSitePath(siteName))
-			.append(SLASH)
-			.append(getArticlePath(articleId))
-			.toString();
-	}
-
 	private Session session;
 
     private Node content;
@@ -98,43 +85,17 @@ public abstract class JcrStoreBase {
     	return getNodeOrNull(getContent(), relPath);
     }
     
-    public void dumpContent() throws RepositoryException {
-    	dumpNode(getContent());
-    }
-    
-    /** Recursively outputs the contents of the given node. */
-    public void dumpNode(Node node) throws RepositoryException {
-        // First output the node path
-        System.out.println(node.getPath());
-        // Skip the virtual (and large!) jcr:system subtree
-        /*if (node.getName().equals("jcr:system")) {
-            return;
-        }*/
+    protected static String getArticlePath(String articleId) {
+		return Text.escapeIllegalJcrChars(articleId);
+	}
 
-        // Then output the properties
-        PropertyIterator properties = node.getProperties();
-        while (properties.hasNext()) {
-            Property property = properties.nextProperty();
-            if (property.getDefinition().isMultiple()) {
-                // A multi-valued property, print all values
-                Value[] values = property.getValues();
-                for (int i = 0; i < values.length; i++) {
-                    System.out.println(
-                        property.getPath() + " = " + values[i].getString());
-                }
-            } else {
-                // A single-valued property
-                System.out.println(
-                    property.getPath() + " = " + property.getString());
-            }
-        }
-
-        // Finally output all the child nodes recursively
-        NodeIterator nodes = node.getNodes();
-        while (nodes.hasNext()) {
-            dumpNode(nodes.nextNode());
-        }
-    }
+	protected static String getArticlePath(String siteName, String articleId) {
+		return new StringBuilder(300)
+			.append(JcrSiteStore.getSitePath(siteName))
+			.append(SLASH)
+			.append(getArticlePath(articleId))
+			.toString();
+	}
 
 	protected List<EntityKey> buildPathList(RowIterator iterator) throws RepositoryException {
 		List<EntityKey> pathes = new ArrayList<EntityKey>();

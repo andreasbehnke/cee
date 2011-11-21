@@ -34,7 +34,6 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 		List<EntityKey> keys = new ArrayList<EntityKey>();
 		while (iterator.hasNext() && keys.size() < DEFAULT_QUERY_LIMIT) {
 			Row row = iterator.nextRow();
-			System.out.println(row.toString());
 			double score = row.getScore();
 			Node node = row.getNode();
 			String articlePath = node.getPath().replace(PATH_CONTENT, "");

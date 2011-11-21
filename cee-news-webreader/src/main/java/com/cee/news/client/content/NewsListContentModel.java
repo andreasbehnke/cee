@@ -99,24 +99,24 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
 
     public void getContentDescription(final HasSafeHtml target, String key) {
     	final EntityKey entityKey = EntityKeyUtil.getEntityKey(keys, key);
-        service.getHtmlDescription(entityKey, new AsyncCallback<String>() {
-            public void onSuccess(String result) {
-                target.setHTML(SafeHtmlUtil.sanitize(result) );
+        service.getHtmlDescription(entityKey, new AsyncCallback<EntityContent>() {
+            public void onSuccess(EntityContent result) {
+                target.setHTML(SafeHtmlUtil.sanitize(result.getHtmlContent()) );
             }
             public void onFailure(Throwable caught) {
-                fireErrorEvent(caught, "Could not load description!");//TODO: i18n
+                fireErrorEvent(caught, "Could not load description!");
             }
         });
     }
 
     public void getContent(final HasSafeHtml target, String key) {
     	final EntityKey entityKey = EntityKeyUtil.getEntityKey(keys, key);
-        service.getHtmlContent(entityKey, new AsyncCallback<String>() {
-            public void onSuccess(String result) {
-            	target.setHTML(SafeHtmlUtil.sanitize(result) );
+        service.getHtmlContent(entityKey, new AsyncCallback<EntityContent>() {
+            public void onSuccess(EntityContent result) {
+            	target.setHTML(SafeHtmlUtil.sanitize(result.getHtmlContent()) );
             }
             public void onFailure(Throwable caught) {
-                fireErrorEvent(caught, "Could not load content!");//TODO: i18n
+                fireErrorEvent(caught, "Could not load content!");
             }
         });
     }

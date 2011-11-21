@@ -8,7 +8,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cee.news.client.content.EntityContent;
 import com.cee.news.client.content.NewsService;
+import com.cee.news.client.error.ServiceException;
 import com.cee.news.client.list.EntityKeyUtil;
 import com.cee.news.model.Article;
 import com.cee.news.model.EntityKey;
@@ -16,10 +18,8 @@ import com.cee.news.model.Site;
 import com.cee.news.model.TextBlock;
 import com.cee.news.model.WorkingSet;
 import com.cee.news.search.ArticleSearchService;
-import com.cee.news.search.SearchException;
 import com.cee.news.store.ArticleStore;
 import com.cee.news.store.SiteStore;
-import com.cee.news.store.StoreException;
 import com.cee.news.store.WorkingSetStore;
 
 public class NewsServiceImpl implements NewsService {
@@ -66,8 +66,9 @@ public class NewsServiceImpl implements NewsService {
 				LOG.debug("Retrieved {} articles for site {}", keys.size(), siteKey);
 			}
 			return keys;
-		} catch (StoreException exception) {
-			throw new RuntimeException(exception);
+		} catch (Exception exception) {
+			LOG.error("Could not retrieve articles of site " + siteKey, exception);
+			throw new ServiceException(exception.toString());
 		}
 	}
 	
@@ -80,8 +81,9 @@ public class NewsServiceImpl implements NewsService {
 				LOG.debug("Retrieved {} articles for working set {}", keys.size(), workingSetName);
 			}
 			return keys;
-		} catch (StoreException exception) {
-			throw new RuntimeException(exception);
+		} catch (Exception exception) {
+			LOG.error("Could not retrieve articles of working set " + workingSetName, exception);
+			throw new ServiceException(exception.toString());
 		}
 	}
 	
@@ -106,18 +108,17 @@ public class NewsServiceImpl implements NewsService {
 				LOG.debug("Retrieved {} related articles for article {}", keys.size(), articleId);
 			}
 			return keys;
-		} catch (SearchException exception) {
-			throw new RuntimeException(exception);
-		} catch (StoreException exception) {
-			throw new RuntimeException(exception);
+		} catch (Exception exception) {
+			LOG.error("Could not retrieve related articles for " + articleId, exception);
+			throw new ServiceException(exception.toString());
 		}
 	}
 
 	//TODO: Use Velocity to render simple HTML content
 	@Override
-	public String getHtmlDescription(EntityKey articleKey) {
+	public EntityContent getHtmlDescription(EntityKey articleKey) {
 		try {
-			Article article = articleStore.getArticle(articleKey.getKey());
+			Article article = articleStore.getArticle(articleKey.getKey(), false);
 			StringBuilder builder = new StringBuilder();
 			builder.append("<h3>").append(article.getTitle()).append("</h3>")
 					.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>");
@@ -125,28 +126,29 @@ public class NewsServiceImpl implements NewsService {
 				builder.append("<p>").append(articleKey.getScore()).append("</p>");
 			}
 			builder.append("<p>").append(article.getShortText()).append("</p>");
-			return builder.toString();
-		} catch (StoreException exception) {
-			throw new RuntimeException(exception);
+			return new EntityContent(articleKey, builder.toString());
+		} catch (Exception exception) {
+			LOG.error("Could not retrieve content for " + articleKey, exception);
+			throw new ServiceException(exception.toString());
 		}
 	}
 
 	//TODO: Use Velocity to render simple HTML content
 	@Override
-	public String getHtmlContent(EntityKey articleKey) {
+	public EntityContent getHtmlContent(EntityKey articleKey) {
 		try {
 			StringBuilder builder = new StringBuilder();
-			Article article = articleStore.getArticle(articleKey.getKey());
+			Article article = articleStore.getArticle(articleKey.getKey(), true);
 			builder.append("<h1>").append(article.getTitle()).append("</h1>")
 					.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>")
 					.append("<p><a href=\"").append(article.getLocation()).append("\" target=\"article\">open article</a></p>");
-			List<TextBlock> content = articleStore.getContent(articleKey.getKey());
-			for (TextBlock textBlock : content) {
+			for (TextBlock textBlock : article.getContent()) {
 				builder.append("<p>").append(textBlock.getContent()).append("</p>");
 			}
-			return builder.toString();
-		} catch (StoreException exception) {
-			throw new RuntimeException(exception);
+			return new EntityContent(articleKey, builder.toString());
+		} catch (Exception exception) {
+			LOG.error("Could not retrieve content for " + articleKey, exception);
+			throw new ServiceException(exception.toString());
 		}
 	}
 }
