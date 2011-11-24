@@ -2,6 +2,7 @@ package com.cee.news.client.content;
 
 import java.util.List;
 
+import com.cee.news.client.list.EntityContent;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -33,5 +34,9 @@ public interface NewsService extends RemoteService {
 	
 	EntityContent getHtmlDescription(EntityKey articleKey);
 	
+	List<EntityContent> getHtmlDescriptions(List<EntityKey> keys);
+	
 	EntityContent getHtmlContent(EntityKey articleKey);
+	
+	List<EntityContent> getHtmlContents(List<EntityKey> keys);
 }

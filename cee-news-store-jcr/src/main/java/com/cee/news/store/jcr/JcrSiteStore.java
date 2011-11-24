@@ -72,6 +72,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         feedNode.setProperty(PROP_ACTIVE, feed.isActive());
     }
 
+    @Override
     public EntityKey update(Site site) throws StoreException {
         if (site == null) {
             throw new IllegalArgumentException("Parameter site must not be null");
@@ -124,6 +125,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         }
     }
 
+    @Override
     public Site getSite(String key) throws StoreException {
         if (key == null) {
             throw new IllegalArgumentException("Parameter key must not be null");
@@ -165,6 +167,15 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         LOG.debug("Found site node for {}", key);
         return site;
     }
+    
+    @Override
+    public List<Site> getSites(List<String> keys) throws StoreException {
+    	List<Site> sites = new ArrayList<Site>();
+    	for (String key : keys) {
+			sites.add(getSite(key));
+		}
+    	return sites;
+    }
 
     protected NodeIterator getSiteNodesOrderedByName() throws RepositoryException {
         testSession();
@@ -173,6 +184,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         return q.execute().getNodes();
     }
 
+    @Override
     public List<EntityKey> getSitesOrderedByName() throws StoreException {
         try {
             List<EntityKey> sites = new ArrayList<EntityKey>();

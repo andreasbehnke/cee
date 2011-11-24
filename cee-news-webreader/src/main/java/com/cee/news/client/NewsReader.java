@@ -11,6 +11,7 @@ import com.cee.news.client.content.SiteUpdateServiceAsync;
 import com.cee.news.client.error.ErrorDialog;
 import com.cee.news.client.error.ErrorEvent;
 import com.cee.news.client.error.ErrorHandler;
+import com.cee.news.client.list.CellListPresenter;
 import com.cee.news.client.list.ListPresenter;
 import com.cee.news.client.list.SelectionChangedEvent;
 import com.cee.news.client.list.SelectionChangedHandler;
@@ -116,7 +117,7 @@ public class NewsReader implements EntryPoint {
 		
 		//Latest Article List
 		final NewsListContentModel latestArticlesOfWorkingSet = new NewsListContentModel();
-		new ListPresenter(latestArticlesOfWorkingSet, latestArticlesOfWorkingSet, startPanel.getLatestArticlesListView());
+		new CellListPresenter(startPanel.getCellListLatestArticles(), latestArticlesOfWorkingSet, latestArticlesOfWorkingSet);
 		appEventBus.addHandler(SelectionChangedEvent.TYPE, new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {
@@ -130,7 +131,8 @@ public class NewsReader implements EntryPoint {
 		//Site List
 		final SiteListContentModel sitesOfWorkingSetModel = new SiteListContentModel();
 		sitesOfWorkingSetModel.addErrorHandler(globalErrorHandler);
-		new ListPresenter(sitesOfWorkingSetModel, sitesOfWorkingSetModel, startPanel.getSitesListView());
+		
+		new CellListPresenter(startPanel.getCellListSites(), sitesOfWorkingSetModel, sitesOfWorkingSetModel);
 		appEventBus.addHandler(SelectionChangedEvent.TYPE, new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {

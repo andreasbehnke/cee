@@ -8,9 +8,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cee.news.client.content.EntityContent;
 import com.cee.news.client.content.NewsService;
 import com.cee.news.client.error.ServiceException;
+import com.cee.news.client.list.EntityContent;
 import com.cee.news.client.list.EntityKeyUtil;
 import com.cee.news.model.Article;
 import com.cee.news.model.EntityKey;
@@ -55,6 +55,28 @@ public class NewsServiceImpl implements NewsService {
 	// TODO localized date format
 	protected String formatDate(Calendar calendar) {
 		return SimpleDateFormat.getDateInstance().format(calendar.getTime());
+	}
+	
+	protected EntityContent renderDescription(Article article, EntityKey articleKey) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("<h3>").append(article.getTitle()).append("</h3>")
+				.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>");
+		if (articleKey.getScore() != -1) {
+			builder.append("<p>").append(articleKey.getScore()).append("</p>");
+		}
+		builder.append("<p>").append(article.getShortText()).append("</p>");
+		return new EntityContent(articleKey, builder.toString());
+	}
+
+	protected EntityContent renderContent(Article article, EntityKey articleKey) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("<h1>").append(article.getTitle()).append("</h1>")
+			.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>")
+			.append("<p><a href=\"").append(article.getLocation()).append("\" target=\"article\">open article</a></p>");
+		for (TextBlock textBlock : article.getContent()) {
+			builder.append("<p>").append(textBlock.getContent()).append("</p>");
+		}
+		return new EntityContent(articleKey, builder.toString());
 	}
 	
 	@Override
@@ -113,41 +135,55 @@ public class NewsServiceImpl implements NewsService {
 			throw new ServiceException(exception.toString());
 		}
 	}
-
-	//TODO: Use Velocity to render simple HTML content
+	
 	@Override
 	public EntityContent getHtmlDescription(EntityKey articleKey) {
 		try {
 			Article article = articleStore.getArticle(articleKey.getKey(), false);
-			StringBuilder builder = new StringBuilder();
-			builder.append("<h3>").append(article.getTitle()).append("</h3>")
-					.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>");
-			if (articleKey.getScore() != -1) {
-				builder.append("<p>").append(articleKey.getScore()).append("</p>");
-			}
-			builder.append("<p>").append(article.getShortText()).append("</p>");
-			return new EntityContent(articleKey, builder.toString());
+			return renderDescription(article, articleKey);
 		} catch (Exception exception) {
 			LOG.error("Could not retrieve content for " + articleKey, exception);
 			throw new ServiceException(exception.toString());
 		}
 	}
-
-	//TODO: Use Velocity to render simple HTML content
+	
+	@Override
+	public List<EntityContent> getHtmlDescriptions(List<EntityKey> keys) {
+		try {
+			List<EntityContent> descriptions = new ArrayList<EntityContent>();
+			for (EntityKey key : keys) {
+				Article article = articleStore.getArticle(key.getKey(), false);
+				descriptions.add(renderDescription(article, key));
+			}
+			return descriptions;
+		} catch (Exception exception) {
+			LOG.error("Could not retrieve contents for key list", exception);
+			throw new ServiceException(exception.toString());
+		}
+	}
+	
 	@Override
 	public EntityContent getHtmlContent(EntityKey articleKey) {
 		try {
-			StringBuilder builder = new StringBuilder();
 			Article article = articleStore.getArticle(articleKey.getKey(), true);
-			builder.append("<h1>").append(article.getTitle()).append("</h1>")
-					.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>")
-					.append("<p><a href=\"").append(article.getLocation()).append("\" target=\"article\">open article</a></p>");
-			for (TextBlock textBlock : article.getContent()) {
-				builder.append("<p>").append(textBlock.getContent()).append("</p>");
-			}
-			return new EntityContent(articleKey, builder.toString());
+			return renderContent(article, articleKey);
 		} catch (Exception exception) {
 			LOG.error("Could not retrieve content for " + articleKey, exception);
+			throw new ServiceException(exception.toString());
+		}
+	}
+	
+	@Override
+	public List<EntityContent> getHtmlContents(List<EntityKey> keys) {
+		try {
+			List<EntityContent> contents = new ArrayList<EntityContent>();
+			for (EntityKey key : keys) {
+				Article article = articleStore.getArticle(key.getKey(), false);
+				contents.add(renderContent(article, key));
+			}
+			return contents;
+		} catch (Exception exception) {
+			LOG.error("Could not retrieve contents for key list", exception);
 			throw new ServiceException(exception.toString());
 		}
 	}

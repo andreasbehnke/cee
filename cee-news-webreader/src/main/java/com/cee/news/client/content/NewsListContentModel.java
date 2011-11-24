@@ -5,6 +5,8 @@ import java.util.List;
 import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.list.ContentModel;
 import com.cee.news.client.list.DefaultListModel;
+import com.cee.news.client.list.EntityContent;
+import com.cee.news.client.list.EntityContentModel;
 import com.cee.news.client.list.EntityKeyUtil;
 import com.cee.news.client.util.SafeHtmlUtil;
 import com.cee.news.model.EntityKey;
@@ -18,7 +20,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  **/
  
  //TODO Test methods!
-public class NewsListContentModel extends DefaultListModel implements ContentModel {
+public class NewsListContentModel extends DefaultListModel implements ContentModel, EntityContentModel {
     
     private final NewsServiceAsync service = NewsService.Util.getInstance();
     
@@ -84,6 +86,7 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
 		});
     }
 
+    @Override
     public void getContentTitle(final HasSafeHtml target, String key) {
         if (keys == null) {
             throw new IllegalStateException("Headlines have not been set yet!");
@@ -97,6 +100,7 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
         throw new IllegalArgumentException("Could not find headline for key " + key);
     }
 
+    @Override
     public void getContentDescription(final HasSafeHtml target, String key) {
     	final EntityKey entityKey = EntityKeyUtil.getEntityKey(keys, key);
         service.getHtmlDescription(entityKey, new AsyncCallback<EntityContent>() {
@@ -109,6 +113,7 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
         });
     }
 
+    @Override
     public void getContent(final HasSafeHtml target, String key) {
     	final EntityKey entityKey = EntityKeyUtil.getEntityKey(keys, key);
         service.getHtmlContent(entityKey, new AsyncCallback<EntityContent>() {
@@ -119,5 +124,10 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
                 fireErrorEvent(caught, "Could not load content!");
             }
         });
+    }
+
+    @Override
+    public void getContent(List<EntityKey> keys, AsyncCallback<List<EntityContent>> callback) {
+    	service.getHtmlDescriptions(keys, callback);
     }
 }

@@ -32,7 +32,14 @@ public interface SiteStore {
     Site getSite(String key) throws StoreException;
     
     /**
-     * @return List of URL referencing 
+     * Retrieves the sites references by the given keys
+     * @param keys The sites primary keys
+     * @return List of sites
+     */
+    List<Site> getSites(List<String> keys) throws StoreException;
+    
+    /**
+     * @return List of site keys ordered by name
      */
     List<EntityKey> getSitesOrderedByName() throws StoreException;
 }

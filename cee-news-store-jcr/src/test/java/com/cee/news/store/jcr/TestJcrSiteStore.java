@@ -1,6 +1,9 @@
 package com.cee.news.store.jcr;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -14,8 +17,8 @@ import javax.jcr.RepositoryException;
 import org.apache.jackrabbit.util.Text;
 import org.junit.Test;
 
-import com.cee.news.model.Feed;
 import com.cee.news.model.EntityKey;
+import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 import com.cee.news.store.StoreException;
 
@@ -88,8 +91,33 @@ public class TestJcrSiteStore extends JcrTestBase {
     }
     
     @Test
-    public void testGetSite() throws StoreException, MalformedURLException {
+    public void testGetSiteMissing() throws StoreException, MalformedURLException {
         assertNull(siteStore.getSite(Text.escapeIllegalJcrChars("http://www.blablabla.de")));
+    }
+    
+    @Test
+    public void testGetSites() throws StoreException, MalformedURLException {
+    	Site site = new Site();
+        site.setDescription("Description");
+        site.setLocation("http://www.site1.de");
+        site.setName("http://www.site1.de");
+        site.setTitle("Title");
+        String key1 = siteStore.update(site).getKey();
+        site = new Site();
+        site.setDescription("Description");
+        site.setLocation("http://www.site2.de");
+        site.setName("http://www.site2.de");
+        site.setTitle("Title");
+        String key2 = siteStore.update(site).getKey();
+        
+        List<String> keys = new ArrayList<String>();
+        keys.add(key2);
+        keys.add(key1);
+        
+        List<Site> sites = siteStore.getSites(keys);
+        assertEquals(2, sites.size());
+        assertEquals("http://www.site2.de", sites.get(0).getName());
+        assertEquals("http://www.site1.de", sites.get(1).getName());
     }
 
     @Test

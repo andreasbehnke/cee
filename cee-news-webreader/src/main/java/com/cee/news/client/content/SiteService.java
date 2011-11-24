@@ -3,6 +3,7 @@ package com.cee.news.client.content;
 import java.util.List;
 
 import com.cee.news.client.async.EntityUpdateResult;
+import com.cee.news.client.list.EntityContent;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -22,14 +23,14 @@ public interface SiteService extends RemoteService {
 	List<EntityKey> getSitesOfWorkingSet(String workingSetName);
 	
 	/**
-	 * Retrieve the sites formatted title
-	 */
-	String getHtmlTitle(String key);
-	
-	/**
 	 * Retrieve the sites formatted description
 	 */
-	String getHtmlDescription(String key);
+	EntityContent getHtmlDescription(EntityKey key);
+	
+	/**
+	 * Retrieve formatted site description for the given site keys
+	 */
+	List<EntityContent> getHtmlDescriptions(List<EntityKey> keys);
 	
 	/**
 	 * Guesses a unique site name for a given site name.

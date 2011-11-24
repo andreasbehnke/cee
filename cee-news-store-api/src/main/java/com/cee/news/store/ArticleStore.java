@@ -5,7 +5,6 @@ import java.util.List;
 import com.cee.news.model.Article;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
-import com.cee.news.model.TextBlock;
 import com.cee.news.model.WorkingSet;
 
 /**

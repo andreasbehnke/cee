@@ -214,16 +214,11 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
     
     @Override
     public List<Article> getArticles(List<String> keys, boolean withContent) throws StoreException {
-    	try {
-    		List<Article> articles = new ArrayList<Article>();
-    		for (String path : keys) {
-    			Node articleNode = getArticleNodeByPath(path);
-    			articles.add(createArticleFromNode(articleNode, withContent));
-    		}
-    		return articles;
-    	} catch(RepositoryException e) {
-    		throw new StoreException("Could not retrieve articles", e);
+    	List<Article> articles = new ArrayList<Article>();
+    	for (String path : keys) {
+    		articles.add(getArticle(path, true));
     	}
+    	return articles;
     }
     
     protected RowIterator getArticlesOfSitesOrderedByPublication(List<String> siteNames) throws RepositoryException {

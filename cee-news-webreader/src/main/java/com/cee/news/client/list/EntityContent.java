@@ -1,4 +1,4 @@
-package com.cee.news.client.content;
+package com.cee.news.client.list;
 
 import java.io.Serializable;
 

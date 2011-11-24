@@ -1,16 +1,17 @@
 package com.cee.news.client;
 
-import com.cee.news.client.list.ListView;
+import com.cee.news.client.list.EntityContent;
 import com.cee.news.client.progress.ProgressView;
 import com.cee.news.client.workingset.WorkingSetSelectionView;
+import com.google.gwt.user.cellview.client.CellList;
 
 public interface StartView {
 
-	ListView getLatestArticlesListView();
+	CellList<EntityContent> getCellListLatestArticles();
 
 	WorkingSetSelectionView getWorkingSetSelectionView();
 
-	ListView getSitesListView();
+	CellList<EntityContent> getCellListSites();
 
 	ProgressView getProgressView();
 
