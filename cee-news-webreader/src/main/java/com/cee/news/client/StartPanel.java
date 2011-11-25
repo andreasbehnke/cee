@@ -59,16 +59,12 @@ public class StartPanel extends Composite implements StartView {
         layoutPanel.setWidgetLeftRight(cellListLatestArticles, 366.0, Unit.PX, 0.0, Unit.PX);
         layoutPanel.setWidgetTopBottom(cellListLatestArticles, 52.0, Unit.PX, 0.0, Unit.PX);
     }
-    /* (non-Javadoc)
-	 * @see com.cee.news.client.StartView#getLatestArticlesListView()
-	 */
+
     @Override
     public CellList<EntityContent> getCellListLatestArticles() {
 		return cellListLatestArticles;
 	}
-    /* (non-Javadoc)
-	 * @see com.cee.news.client.StartView#getWorkingSetSelectionView()
-	 */
+
     @Override
 	public WorkingSetSelectionView getWorkingSetSelectionView() {
         return workingSetSelection;
@@ -81,7 +77,6 @@ public class StartPanel extends Composite implements StartView {
     
     @Override
     public CellList<EntityContent> getCellListSites() {
-    	// TODO Auto-generated method stub
-    	return null;
+    	return cellListSites;
     }
 }

@@ -44,6 +44,8 @@ public class EntityKey implements Serializable {
 		this.score = score;
 	}
 
+	public EntityKey() {}
+	
 	public EntityKey(String name, String key) {
 		this.name = name;
 		this.key = key;
@@ -55,8 +57,6 @@ public class EntityKey implements Serializable {
 		this.score = score;
 	}
 
-	public EntityKey() {}
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

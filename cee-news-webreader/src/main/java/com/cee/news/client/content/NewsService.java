@@ -1,5 +1,6 @@
 package com.cee.news.client.content;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.cee.news.client.list.EntityContent;
@@ -38,5 +39,5 @@ public interface NewsService extends RemoteService {
 	
 	EntityContent getHtmlContent(EntityKey articleKey);
 	
-	List<EntityContent> getHtmlContents(List<EntityKey> keys);
+	List<EntityContent> getHtmlContents(ArrayList<EntityKey> keys);
 }

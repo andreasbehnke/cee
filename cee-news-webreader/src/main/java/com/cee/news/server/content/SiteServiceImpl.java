@@ -88,7 +88,7 @@ public class SiteServiceImpl implements SiteService {
 	}
 	
 	@Override
-	public List<EntityContent> getHtmlDescriptions(List<EntityKey> keys) {
+	public List<EntityContent> getHtmlDescriptions(ArrayList<EntityKey> keys) {
 		try {
 			List<EntityContent> descriptions = new ArrayList<EntityContent>();
 			for (EntityKey key : keys) {

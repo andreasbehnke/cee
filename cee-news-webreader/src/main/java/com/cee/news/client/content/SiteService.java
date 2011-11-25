@@ -1,5 +1,6 @@
 package com.cee.news.client.content;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.cee.news.client.async.EntityUpdateResult;
@@ -30,7 +31,7 @@ public interface SiteService extends RemoteService {
 	/**
 	 * Retrieve formatted site description for the given site keys
 	 */
-	List<EntityContent> getHtmlDescriptions(List<EntityKey> keys);
+	List<EntityContent> getHtmlDescriptions(ArrayList<EntityKey> keys);
 	
 	/**
 	 * Guesses a unique site name for a given site name.

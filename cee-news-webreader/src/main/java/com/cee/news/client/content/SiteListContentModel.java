@@ -1,5 +1,6 @@
 package com.cee.news.client.content;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.cee.news.client.async.NotificationCallback;
@@ -95,7 +96,7 @@ public class SiteListContentModel extends DefaultListModel implements ContentMod
 	}
 	
 	@Override
-	public void getContent(List<EntityKey> keys, AsyncCallback<List<EntityContent>> callback) {
+	public void getContent(ArrayList<EntityKey> keys, AsyncCallback<List<EntityContent>> callback) {
 		service.getHtmlDescriptions(keys, callback);
 	}
 }

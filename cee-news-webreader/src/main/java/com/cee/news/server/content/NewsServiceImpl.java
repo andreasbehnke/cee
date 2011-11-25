@@ -174,7 +174,7 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	@Override
-	public List<EntityContent> getHtmlContents(List<EntityKey> keys) {
+	public List<EntityContent> getHtmlContents(ArrayList<EntityKey> keys) {
 		try {
 			List<EntityContent> contents = new ArrayList<EntityContent>();
 			for (EntityKey key : keys) {

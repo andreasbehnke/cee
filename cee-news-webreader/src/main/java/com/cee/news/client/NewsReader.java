@@ -71,6 +71,7 @@ public class NewsReader implements EntryPoint {
 		
 		final DeckPanel deckPanel = new DeckPanel();
 		layoutPanel.add(deckPanel);
+		deckPanel.setSize("100%", "100%");
 		layoutPanel.setWidgetLeftRight(deckPanel, 0.0, Unit.PX, 0.0, Unit.PX);
 		layoutPanel.setWidgetTopBottom(deckPanel, 0.0, Unit.PX, 0.0, Unit.PX);
 		
@@ -117,13 +118,15 @@ public class NewsReader implements EntryPoint {
 		
 		//Latest Article List
 		final NewsListContentModel latestArticlesOfWorkingSet = new NewsListContentModel();
-		new CellListPresenter(startPanel.getCellListLatestArticles(), latestArticlesOfWorkingSet, latestArticlesOfWorkingSet);
+		latestArticlesOfWorkingSet.addErrorHandler(globalErrorHandler);
+		final CellListPresenter newsListPresenter = new CellListPresenter(startPanel.getCellListLatestArticles(), latestArticlesOfWorkingSet, latestArticlesOfWorkingSet);
 		appEventBus.addHandler(SelectionChangedEvent.TYPE, new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {
 				latestArticlesOfWorkingSet.updateFromWorkingSet(event.getKey());
 			}
 		});
+		newsListPresenter.addErrorHandler(globalErrorHandler);
 		final ProgressUpdateHandler progressUpdateHandler = new ProgressUpdateHandler(latestArticlesOfWorkingSet);
 		appEventBus.addHandler(SelectionChangedEvent.TYPE, progressUpdateHandler);
 		progressModel.addProgressHandler(progressUpdateHandler);
@@ -132,13 +135,14 @@ public class NewsReader implements EntryPoint {
 		final SiteListContentModel sitesOfWorkingSetModel = new SiteListContentModel();
 		sitesOfWorkingSetModel.addErrorHandler(globalErrorHandler);
 		
-		new CellListPresenter(startPanel.getCellListSites(), sitesOfWorkingSetModel, sitesOfWorkingSetModel);
+		final CellListPresenter siteListPresenter = new CellListPresenter(startPanel.getCellListSites(), sitesOfWorkingSetModel, sitesOfWorkingSetModel);
 		appEventBus.addHandler(SelectionChangedEvent.TYPE, new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent event) {
 				sitesOfWorkingSetModel.update(null, event.getKey());
 			}
 		});
+		siteListPresenter.addErrorHandler(globalErrorHandler);
 
 		//New & Edit Working Set Workflow
 		final NewSiteWizardView newSiteWizard = new NewSiteWizard();

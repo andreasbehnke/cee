@@ -1,5 +1,6 @@
 package com.cee.news.client.list;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.cee.news.client.error.ErrorSourceBase;
@@ -19,17 +20,23 @@ public class CellListPresenter extends ErrorSourceBase {
 			@Override
 			public void onContentListChanged(ListChangedEvent event) {
 				keys = event.getLinks();
-				cellList.setRowCount(keys.size(), true);
+				int count = keys.size();
+				int rangeLength = (count < 20) ? count : 20;
+				cellList.setRowCount(count, true);
+				cellList.setVisibleRangeAndClearData(new Range(0, rangeLength), true);
 			}
 		});
 		
 		final AsyncDataProvider<EntityContent> dataProvider = new AsyncDataProvider<EntityContent>() {
 			@Override
 			protected void onRangeChanged(HasData<EntityContent> display) {
+				if (keys == null) {
+					return;
+				}
 				final Range range = display.getVisibleRange();
 				final int start = range.getStart();
 				final int end = start + range.getLength();
-				List<EntityKey> keysInRange = keys.subList(start, end);
+				ArrayList<EntityKey> keysInRange = new ArrayList<EntityKey>(keys.subList(start, end));
 				entityContentModel.getContent(keysInRange, new AsyncCallback<List<EntityContent>>() {
 					
 					@Override
