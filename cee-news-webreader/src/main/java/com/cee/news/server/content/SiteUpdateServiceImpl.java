@@ -24,10 +24,13 @@ import com.cee.news.model.Site;
 import com.cee.news.model.WorkingSet;
 import com.cee.news.parser.SiteParser;
 import com.cee.news.store.SiteStore;
-import com.cee.news.store.StoreException;
 import com.cee.news.store.WorkingSetStore;
 
 public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
+
+	private static final String COULD_NOT_RETRIEVE_SITE2 = "Could not retrieve site";
+
+	private static final String COULD_NOT_ADD_SITE_OF_WORKING_SET_TO_UPDATE_QUEUE = "Could not add site of working set to update queue";
 
 	private static final String UPDATE_SCHEDULER_THREAD_PREFIX = "updateScheduler";
 
@@ -37,7 +40,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site: {}";
 	
-	private static final String COULD_NOT_RETRIEVE_SITE_MSG = "Could not retrieve site";
+	private static final String COULD_NOT_RETRIEVE_SITE_MSG = COULD_NOT_RETRIEVE_SITE2;
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SiteUpdateServiceImpl.class);
 	
@@ -153,7 +156,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			Site siteEntity = null;
 			try {
 				siteEntity = siteStore.getSite(siteKey);
-			} catch (StoreException e) {
+			} catch (Exception e) {
 				LOG.error(COULD_NOT_RETRIEVE_SITE, siteKey);
 				LOG.error(COULD_NOT_RETRIEVE_SITE, e);
 				
@@ -191,8 +194,9 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 				addSiteToUpdateQueue(siteKey.getKey());
 			}
 			return sitesInProgress.size();
-		} catch (StoreException se) {
-			throw new ServiceException(se.toString());
+		} catch (Exception e) {
+			LOG.error(COULD_NOT_ADD_SITE_OF_WORKING_SET_TO_UPDATE_QUEUE, e);
+			throw new ServiceException(e.toString());
 		}
 	}
 
@@ -235,10 +239,13 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			info.setState(SiteRetrivalState.ok);
 		} catch (IOException e) {
 			info.setState(SiteRetrivalState.ioError);
-			LOG.error("Could not retrieve site", e);
+			LOG.error(COULD_NOT_RETRIEVE_SITE2, e);
 		} catch (SAXException e) {
 			info.setState(SiteRetrivalState.parserError);
-			LOG.error("Could not retrieve site", e);
+			LOG.error(COULD_NOT_RETRIEVE_SITE2, e);
+		} catch (Exception e) {
+			LOG.error(COULD_NOT_RETRIEVE_SITE2, e);
+			throw new ServiceException(COULD_NOT_RETRIEVE_SITE2);
 		}
 		return info;
 	}
