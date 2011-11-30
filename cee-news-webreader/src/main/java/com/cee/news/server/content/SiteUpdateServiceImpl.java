@@ -28,7 +28,7 @@ import com.cee.news.store.WorkingSetStore;
 
 public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
-	private static final String COULD_NOT_RETRIEVE_SITE2 = "Could not retrieve site";
+	private static final long serialVersionUID = 8695157160684778713L;
 
 	private static final String COULD_NOT_ADD_SITE_OF_WORKING_SET_TO_UPDATE_QUEUE = "Could not add site of working set to update queue";
 
@@ -36,12 +36,10 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private static final String SITE_UPDATER_THREAD_PREFIX = "siteUpdater";
 
-	private static final long serialVersionUID = 8695157160684778713L;
-
 	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site: {}";
 	
-	private static final String COULD_NOT_RETRIEVE_SITE_MSG = COULD_NOT_RETRIEVE_SITE2;
-	
+	private static final String COULD_NOT_RETRIEVE_SITE_MSG = "Could not retrieve site";
+
 	private static final Logger LOG = LoggerFactory.getLogger(SiteUpdateServiceImpl.class);
 	
 	private int corePoolSize; 
@@ -239,13 +237,13 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			info.setState(SiteRetrivalState.ok);
 		} catch (IOException e) {
 			info.setState(SiteRetrivalState.ioError);
-			LOG.error(COULD_NOT_RETRIEVE_SITE2, e);
+			LOG.error(COULD_NOT_RETRIEVE_SITE_MSG, e);
 		} catch (SAXException e) {
 			info.setState(SiteRetrivalState.parserError);
-			LOG.error(COULD_NOT_RETRIEVE_SITE2, e);
+			LOG.error(COULD_NOT_RETRIEVE_SITE_MSG, e);
 		} catch (Exception e) {
-			LOG.error(COULD_NOT_RETRIEVE_SITE2, e);
-			throw new ServiceException(COULD_NOT_RETRIEVE_SITE2);
+			LOG.error(COULD_NOT_RETRIEVE_SITE_MSG, e);
+			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_MSG);
 		}
 		return info;
 	}

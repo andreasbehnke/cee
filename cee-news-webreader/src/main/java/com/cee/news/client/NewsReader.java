@@ -12,7 +12,6 @@ import com.cee.news.client.error.ErrorDialog;
 import com.cee.news.client.error.ErrorEvent;
 import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.list.CellListPresenter;
-import com.cee.news.client.list.ListPresenter;
 import com.cee.news.client.list.SelectionChangedEvent;
 import com.cee.news.client.list.SelectionChangedHandler;
 import com.cee.news.client.paging.PagingPresenter;
@@ -211,7 +210,7 @@ public class NewsReader implements EntryPoint {
 		
 		//What others say view
 		final NewsListContentModel whatOthersSay = new NewsListContentModel();
-		new ListPresenter(whatOthersSay, whatOthersSay, newsPanel.getWhatOthersSayListView());
+		new CellListPresenter(newsPanel.getWhatOthersSayCellList(), whatOthersSay, whatOthersSay);
 		pagingNewsList.addSelectionChangedhandler(new SelectionChangedHandler() {
 			
 			@Override

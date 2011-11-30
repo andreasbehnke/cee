@@ -10,6 +10,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 public class CellListPresenter extends ErrorSourceBase {
 	
@@ -54,7 +56,15 @@ public class CellListPresenter extends ErrorSourceBase {
 				});
 			}
 		};
-		
 		dataProvider.addDataDisplay(cellList);
+		
+		final SingleSelectionModel<EntityContent> selectionModel = new SingleSelectionModel<EntityContent>();
+		cellList.setSelectionModel(selectionModel);
+		selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+			@Override
+			public void onSelectionChange(SelectionChangeEvent event) {
+				listModel.userSelectedKey(selectionModel.getSelectedObject().getKey().getKey());
+			}
+		});
 	}
 }
