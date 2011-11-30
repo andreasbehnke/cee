@@ -66,7 +66,7 @@ public class NewsReader implements EntryPoint {
 		
 		LayoutPanel layoutPanel = new LayoutPanel();
 		rootPanel.add(layoutPanel, 0, 0);
-		layoutPanel.setSize("813px", "600px");
+		layoutPanel.setSize("100%", "100%");
 		
 		final DeckPanel deckPanel = new DeckPanel();
 		layoutPanel.add(deckPanel);
