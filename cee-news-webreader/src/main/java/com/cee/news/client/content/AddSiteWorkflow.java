@@ -46,6 +46,7 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 	}
 
 	public void start() {
+		clearErrorMessage();
 		wizard.showPageLocationInput();
 		wizard.setButtonsEnabled(true);
 		wizard.center();
@@ -53,6 +54,7 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 
 	public void validateLocationInput(String location) {
 		wizard.setButtonsEnabled(false);
+		clearErrorMessage();
 		if (location.isEmpty()) {
 			showErrorMessage("Provide a site URL");
 			return;
@@ -116,6 +118,7 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 	}
 	
 	private void showFeedSelection() {
+		clearErrorMessage();
 		wizard.getSiteNameInput().setValue(site.getName());
 		wizard.setFeeds(site.getFeeds());
 		wizard.showPageFeedSelection();
@@ -124,6 +127,7 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 
 	private void storeSite() {
 		wizard.setButtonsEnabled(false);
+		clearErrorMessage();
 		site.setName(wizard.getSiteNameInput().getValue());
 		siteService.update(site, new AsyncCallback<EntityUpdateResult>() {
 			
@@ -143,6 +147,11 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 			}
 		});
 	}
+	
+	private void clearErrorMessage() {
+		wizard.getErrorText().setText("");
+	}
+	
 	private void showErrorMessage(String message) {
 		wizard.getErrorText().setText(message);
 		wizard.setButtonsEnabled(true);

@@ -15,7 +15,6 @@ import com.cee.news.client.list.EntityContent;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
 import com.cee.news.store.SiteStore;
-import com.cee.news.store.StoreException;
 import com.cee.news.store.WorkingSetStore;
 
 public class SiteServiceImpl implements SiteService {
@@ -48,7 +47,7 @@ public class SiteServiceImpl implements SiteService {
 	public List<EntityKey> getSites() {
 		try {
 			return siteStore.getSitesOrderedByName();
-		} catch (StoreException e) {
+		} catch (Exception e) {
 			log.error(COULD_NOT_RETRIEVE_SITE_LIST, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_LIST);
 		}
@@ -58,7 +57,7 @@ public class SiteServiceImpl implements SiteService {
 	public List<EntityKey> getSitesOfWorkingSet(String workingSetName) {
 		try {
 			return workingSetStore.getWorkingSet(workingSetName).getSites();
-		} catch (StoreException e) {
+		} catch (Exception e) {
 			log.error(COULD_NOT_RETRIEVE_SITE_LIST, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_LIST);
 		}
@@ -81,7 +80,7 @@ public class SiteServiceImpl implements SiteService {
 		try {
 			Site site = siteStore.getSite(siteKey.getKey());
 			return renderDescription(siteKey, site);
-		} catch (StoreException e) {
+		} catch (Exception e) {
 			log.error(COULD_NOT_RETRIEVE_SITE_DESCRIPTION, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_DESCRIPTION);
 		}
@@ -96,7 +95,7 @@ public class SiteServiceImpl implements SiteService {
 				descriptions.add(renderDescription(key, site));
 			}
 			return descriptions;
-		} catch (StoreException e) {
+		} catch (Exception e) {
 			log.error(COULD_NOT_RETRIEVE_SITE_DESCRIPTION, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_DESCRIPTION);
 		}
@@ -121,7 +120,7 @@ public class SiteServiceImpl implements SiteService {
 				guessName = name + " " + counter;
 				counter++;
 			}
-		} catch (StoreException e) {
+		} catch (Exception e) {
 			log.error(COULD_NOT_GUESS_SITE_NAME, e);
 			throw new ServiceException(COULD_NOT_GUESS_SITE_NAME);
 		}
@@ -136,7 +135,7 @@ public class SiteServiceImpl implements SiteService {
 			}
 			EntityKey key = siteStore.update(SiteConverter.createFromSiteData(siteData));
 			return new EntityUpdateResult(State.ok, key);
-		} catch (StoreException e) {
+		} catch (Exception e) {
 			log.error(COULD_NOT_UPDATE_SITE, e);
 			throw new ServiceException(COULD_NOT_UPDATE_SITE);
 		}

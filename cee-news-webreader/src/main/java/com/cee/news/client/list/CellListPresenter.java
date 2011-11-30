@@ -14,11 +14,14 @@ import com.google.gwt.view.client.Range;
 public class CellListPresenter extends ErrorSourceBase {
 	
 	private List<EntityKey> keys;
+	
+	private int offset;
 
 	public CellListPresenter(final CellList<EntityContent> cellList, final ListModel listModel, final EntityContentModel entityContentModel) {
 		listModel.addListChangedHandler(new ListChangedHandler() {
 			@Override
 			public void onContentListChanged(ListChangedEvent event) {
+				offset = 0;
 				keys = event.getLinks();
 				int count = keys.size();
 				int rangeLength = (count < 20) ? count : 20;
@@ -34,14 +37,14 @@ public class CellListPresenter extends ErrorSourceBase {
 					return;
 				}
 				final Range range = display.getVisibleRange();
-				final int start = range.getStart();
-				final int end = start + range.getLength();
-				ArrayList<EntityKey> keysInRange = new ArrayList<EntityKey>(keys.subList(start, end));
+				final int end = range.getLength();
+				ArrayList<EntityKey> keysInRange = new ArrayList<EntityKey>(keys.subList(offset, end));
 				entityContentModel.getContent(keysInRange, new AsyncCallback<List<EntityContent>>() {
 					
 					@Override
 					public void onSuccess(List<EntityContent> result) {
-						cellList.setRowData(start, result);
+						cellList.setRowData(offset, result);
+						offset = end;
 					}
 					
 					@Override

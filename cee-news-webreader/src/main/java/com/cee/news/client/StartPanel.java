@@ -3,6 +3,7 @@ package com.cee.news.client;
 import com.cee.news.client.list.EntityContent;
 import com.cee.news.client.list.EntityContentCell;
 import com.cee.news.client.list.EntityContentKeyProvider;
+import com.cee.news.client.list.ScrollLoader;
 import com.cee.news.client.progress.ProgressView;
 import com.cee.news.client.progress.TextProgressView;
 import com.cee.news.client.workingset.WorkingSetSelectionView;
@@ -34,9 +35,11 @@ public class StartPanel extends Composite implements StartView {
         layoutPanel.setWidgetTopHeight(workingSetSelection, 0.0, Unit.PX, 24.0, Unit.PX);
         
         cellListSites = new CellList<EntityContent>(new EntityContentCell(), new EntityContentKeyProvider());
-        layoutPanel.add(cellListSites);
-        layoutPanel.setWidgetLeftWidth(cellListSites, 0.0, Unit.PX, 360.0, Unit.PX);
-        layoutPanel.setWidgetTopBottom(cellListSites, 52.0, Unit.PX, 0.0, Unit.PX);
+        ScrollLoader sitesPager = new ScrollLoader();
+        sitesPager.setDisplay(cellListSites);
+        layoutPanel.add(sitesPager);
+        layoutPanel.setWidgetLeftWidth(sitesPager, 0.0, Unit.PX, 360.0, Unit.PX);
+        layoutPanel.setWidgetTopBottom(sitesPager, 52.0, Unit.PX, 0.0, Unit.PX);
         
         InlineLabel nlnlblSites = new InlineLabel("Sites:");
         layoutPanel.add(nlnlblSites);
@@ -55,9 +58,11 @@ public class StartPanel extends Composite implements StartView {
         layoutPanel.setWidgetTopHeight(progressView, 30.0, Unit.PX, 16.0, Unit.PX);
         
         cellListLatestArticles = new CellList<EntityContent>(new EntityContentCell());
-        layoutPanel.add(cellListLatestArticles);
-        layoutPanel.setWidgetLeftRight(cellListLatestArticles, 366.0, Unit.PX, 0.0, Unit.PX);
-        layoutPanel.setWidgetTopBottom(cellListLatestArticles, 52.0, Unit.PX, 0.0, Unit.PX);
+        ScrollLoader articlesPager = new ScrollLoader();
+        articlesPager.setDisplay(cellListLatestArticles);
+        layoutPanel.add(articlesPager);
+        layoutPanel.setWidgetLeftRight(articlesPager, 366.0, Unit.PX, 0.0, Unit.PX);
+        layoutPanel.setWidgetTopBottom(articlesPager, 52.0, Unit.PX, 0.0, Unit.PX);
     }
 
     @Override
