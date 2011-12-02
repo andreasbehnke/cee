@@ -11,27 +11,34 @@ public abstract class AbstractCommand implements Command {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractCommand.class);
 	
+	private static final String CLEARED_ALL_THREAD_SCOPED_RESOURCES_FOR_THREAD = "Cleared all thread scoped resources for thread {}";
+
+	private static final String ERROR_RUNNING_COMMAND = "Error running command";
+
 	private List<CommandCallback> callbacks = new ArrayList<CommandCallback>();
 	
 	protected abstract void runInternal();
 	
-	@Override
-	public void run() {
+	private void runWithErrorNotification() {
 		try {
-			new ThreadScopeRunnable(new Runnable() {
-				@Override
-				public void run() {
-					runInternal();
-				}
-			}).run();
-			LOG.debug("Cleared all thread scoped resources for thread {}", Thread.currentThread().getName());
-			
+			runInternal();
 		} catch (Exception ex) {
-			LOG.error("Error running command", ex);
+			LOG.error(ERROR_RUNNING_COMMAND, ex);
 			fireError(ex);
 		} finally {
 			fireFinished();
 		}
+	}
+	
+	@Override
+	public void run() {
+		new ThreadScopeRunnable(new Runnable() {
+			@Override
+			public void run() {
+				runWithErrorNotification();
+			}
+		}).run();
+		LOG.debug(CLEARED_ALL_THREAD_SCOPED_RESOURCES_FOR_THREAD, Thread.currentThread().getName());
 	}
 	
 	@Override

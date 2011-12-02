@@ -94,6 +94,11 @@ public class PagingPanel extends Composite implements PagingView {
     public HasSafeHtml getMainContent() {
         return mainContent;
     }
+    
+    @Override
+    public void resetMainContentScrollPosition() {
+    	scrollPanelMainContent.scrollToTop();
+    }
 
     public void setJumpToLinks(List<EntityKey> links) {
         comboBoxJumpTo.clear();

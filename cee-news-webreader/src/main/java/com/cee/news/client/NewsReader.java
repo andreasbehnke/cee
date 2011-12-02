@@ -1,5 +1,7 @@
 package com.cee.news.client;
 
+import java.util.List;
+
 import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.content.ArticleUtil;
 import com.cee.news.client.content.NewSiteWizard;
@@ -22,6 +24,7 @@ import com.cee.news.client.workingset.WorkingSetListModel;
 import com.cee.news.client.workingset.WorkingSetSelectionPresenter;
 import com.cee.news.client.workingset.WorkingSetSelectionView;
 import com.cee.news.client.workingset.WorkingSetWorkflow;
+import com.cee.news.model.EntityKey;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -169,7 +172,7 @@ public class NewsReader implements EntryPoint {
 		new PagingPresenter(pagingNewsList, pagingNewsList, newsPanel.getPagingView());
 		sitesOfWorkingSetModel.addSelectionChangedhandler(new SelectionChangedHandler() {
 			@Override
-			public void onSelectionChange(SelectionChangedEvent event) {
+			public void onSelectionChange(final SelectionChangedEvent event) {
 				if (event.isUserAction()) {
 					final String siteKey = event.getKey();
 					newsPanel.getSiteNameLabel().setText(siteKey);
@@ -178,6 +181,10 @@ public class NewsReader implements EntryPoint {
 						@Override
 						public void finished() {
 							deckPanel.showWidget(NEWS_PANEL_INDEX);
+							List<EntityKey> articles = pagingNewsList.getKeys();
+							if (articles != null && articles.size() > 0) {
+								pagingNewsList.setSelectedKey(articles.get(0).getKey());
+							}
 						}
 					});
 				}

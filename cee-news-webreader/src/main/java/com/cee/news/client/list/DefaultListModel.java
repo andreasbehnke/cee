@@ -21,7 +21,7 @@ public abstract class DefaultListModel extends ErrorSourceBase implements MultiS
 	protected String selectedKey;
     
     protected Set<String> selectedKeys = new HashSet<String>();
-    
+
     @Override
     public String getSelectedKey() {
         return selectedKey;
@@ -87,20 +87,14 @@ public abstract class DefaultListModel extends ErrorSourceBase implements MultiS
         return handlerManager.addHandler(ListChangedEvent.TYPE, handler);
     }
     
+    @Override
+    public List<EntityKey> getKeys() {
+    	return keys;
+    }
+    
     protected void setKeys(List<EntityKey> keys) {
     	this.keys = keys;
     	fireContentListChanged(keys);
-        if (keys != null && !keys.isEmpty()) {
-        	setSelectedKey(keys.get(0).getKey());
-        }
-        Set<String> newSelectedKeys = new HashSet<String>();
-        for (String key : selectedKeys) {
-			if (EntityKeyUtil.containsEntityKey(keys,key)) {
-				newSelectedKeys.add(key);
-			}
-		}
-        this.selectedKeys = newSelectedKeys;
-        fireSelectionListChanged();
     }
     
     protected void fireContentListChanged(List<EntityKey> links) {

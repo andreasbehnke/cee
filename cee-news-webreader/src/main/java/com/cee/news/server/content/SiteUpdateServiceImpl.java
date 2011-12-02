@@ -28,20 +28,32 @@ import com.cee.news.store.WorkingSetStore;
 
 public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
-	private static final long serialVersionUID = 8695157160684778713L;
+	private static final Logger LOG = LoggerFactory.getLogger(SiteUpdateServiceImpl.class);
+	
+	private static final String STARTING_SITE_UPDATES_ENCOUNTERED_AN_ERROR = "Starting site updates encontered an error";
+
+	private static final String SCHEDULER_STARTING_SITE_UPDATES = "Scheduler starting site updates";
+
+	private static final String STARTING_UPDATE_SCHEDULER_WITH_A_DELAY_OF = "Starting update scheduler with a delay of {}.";
+
+	private static final String CLEARING_WORK_QUEUE = "Clearing work queue";
+
+	private static final String UNKNOWN_WORKING_SET = "Unknown working set: {}";
+
+	private static final String COULD_NOT_BE_REMOVED_FROM_LIST_OF_RUNNABLES = "{} could not be removed from list of runnables";
+
+	private static final String COULD_NOT_BE_REMOVED_FROM_LIST_OF_SITES_IN_PROGRESS = "{} could not be removed from list of sites in progress";
+
+	private static final String SITE_UPDATE_ENCOUNTERED_AN_ERROR = "Site update {} encountered an error";
 
 	private static final String COULD_NOT_ADD_SITE_OF_WORKING_SET_TO_UPDATE_QUEUE = "Could not add site of working set to update queue";
+
+	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site: {}";
 
 	private static final String UPDATE_SCHEDULER_THREAD_PREFIX = "updateScheduler";
 
 	private static final String SITE_UPDATER_THREAD_PREFIX = "siteUpdater";
 
-	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site: {}";
-	
-	private static final String COULD_NOT_RETRIEVE_SITE_MSG = "Could not retrieve site";
-
-	private static final Logger LOG = LoggerFactory.getLogger(SiteUpdateServiceImpl.class);
-	
 	private int corePoolSize; 
 	
 	private int maxPoolSize;
@@ -137,13 +149,13 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private synchronized void removeSite(String siteName) {
 		if (!sitesInProgress.remove(siteName)) {
-			LOG.warn("{} could not be removed from list of sites in progress", siteName);
+			LOG.warn(COULD_NOT_BE_REMOVED_FROM_LIST_OF_SITES_IN_PROGRESS, siteName);
 		}
 	}
 	
 	private synchronized void removeRunnable(Runnable runnable) {
 		if (!runnablesInProgress.remove(runnable)) {
-			LOG.warn("{} could not be removed from list of runnables", runnable);
+			LOG.warn(COULD_NOT_BE_REMOVED_FROM_LIST_OF_RUNNABLES, runnable);
 		}
 	}
 
@@ -155,23 +167,20 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			try {
 				siteEntity = siteStore.getSite(siteKey);
 			} catch (Exception e) {
-				LOG.error(COULD_NOT_RETRIEVE_SITE, siteKey);
-				LOG.error(COULD_NOT_RETRIEVE_SITE, e);
-				
-				throw new ServiceException(COULD_NOT_RETRIEVE_SITE_MSG);
+				String message = String.format(COULD_NOT_RETRIEVE_SITE, siteKey);
+				LOG.error(message, e);
+				throw new ServiceException(message);
 			}
 			SiteUpdateCommand command = createSiteUpdateCommand();
 			command.addCommandCallback(new CommandCallback() {
-				
 				@Override
 				public void notifyFinished() {
 					removeSite(siteKey);
 				}
-				
 				@Override
 				public void notifyError(Exception ex) {
-					LOG.error("Site update for " + siteKey + " encountered an error", ex);
-					//TODO: how to handle error reporting for the user?
+					String message = String.format(SITE_UPDATE_ENCOUNTERED_AN_ERROR, siteKey);
+					LOG.error(message, ex);
 				}
 			});
 			command.setSite(siteEntity);
@@ -187,14 +196,14 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 		try {
 			WorkingSet ws = workingSetStore.getWorkingSet(workingSetName);
 			if (ws == null)
-				throw new IllegalArgumentException("Unknown working set: " + workingSetName);
+				throw new IllegalArgumentException(String.format(UNKNOWN_WORKING_SET, workingSetName));
 			for (EntityKey siteKey : ws.getSites()) {
 				addSiteToUpdateQueue(siteKey.getKey());
 			}
 			return sitesInProgress.size();
 		} catch (Exception e) {
 			LOG.error(COULD_NOT_ADD_SITE_OF_WORKING_SET_TO_UPDATE_QUEUE, e);
-			throw new ServiceException(e.toString());
+			throw new ServiceException(COULD_NOT_ADD_SITE_OF_WORKING_SET_TO_UPDATE_QUEUE);
 		}
 	}
 
@@ -213,7 +222,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	@Override
 	public synchronized void clearQueue() {
-		LOG.info("Clearing work queue");
+		LOG.info(CLEARING_WORK_QUEUE);
 		workQueue.clear();
 		runnablesInProgress.clear();
 		sitesInProgress.clear();
@@ -237,13 +246,14 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			info.setState(SiteRetrivalState.ok);
 		} catch (IOException e) {
 			info.setState(SiteRetrivalState.ioError);
-			LOG.error(COULD_NOT_RETRIEVE_SITE_MSG, e);
+			LOG.error(String.format(COULD_NOT_RETRIEVE_SITE, location), e);
 		} catch (SAXException e) {
 			info.setState(SiteRetrivalState.parserError);
-			LOG.error(COULD_NOT_RETRIEVE_SITE_MSG, e);
+			LOG.error(String.format(COULD_NOT_RETRIEVE_SITE, location), e);
 		} catch (Exception e) {
-			LOG.error(COULD_NOT_RETRIEVE_SITE_MSG, e);
-			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_MSG);
+			String message = String.format(COULD_NOT_RETRIEVE_SITE, location);
+			LOG.error(message, e);
+			throw new ServiceException(message);
 		}
 		return info;
 	}
@@ -251,7 +261,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	@Override
 	public synchronized void startUpdateScheduler() {
 		if (scheduler == null) {
-			LOG.info("Starting update scheduler with a delay of {}.", updateSchedulerFixedDelay);
+			LOG.info(STARTING_UPDATE_SCHEDULER_WITH_A_DELAY_OF, updateSchedulerFixedDelay);
 			scheduler = new ScheduledThreadPoolExecutor(1, new PrefixCountThreadFactory(UPDATE_SCHEDULER_THREAD_PREFIX));
 			scheduler.scheduleWithFixedDelay(
 					new Runnable() {		
@@ -268,13 +278,13 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private void startSiteUpdates() {
 		try {
-			LOG.info("Scheduler starting site updates");
+			LOG.info(SCHEDULER_STARTING_SITE_UPDATES);
 			List<EntityKey> sites = siteStore.getSitesOrderedByName();
 			for (EntityKey entityKey : sites) {
 				addSiteToUpdateQueue(entityKey.getKey());
 			}
 		} catch (Throwable t) {
-			LOG.error("Update scheduler encountered an error", t);
+			LOG.error(STARTING_SITE_UPDATES_ENCOUNTERED_AN_ERROR, t);
 		}
 	}
 

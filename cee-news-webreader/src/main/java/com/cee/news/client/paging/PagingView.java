@@ -49,6 +49,11 @@ public interface PagingView {
     HasSafeHtml getMainContent();
     
     /**
+     * Resets the scroll position to 0
+     */
+    void resetMainContentScrollPosition();
+    
+    /**
      * @param links The list of links which should be displayed in e.g. a selection box
      */
     void setJumpToLinks(List<EntityKey> links);

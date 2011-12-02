@@ -90,6 +90,7 @@ public class PagingPresenter {
             contentModel.getContentTitle(view.getNextContent(), nextKey);
         }
         contentModel.getContent(view.getMainContent(), key);
+        view.resetMainContentScrollPosition();
     }
     
     protected void increment() {

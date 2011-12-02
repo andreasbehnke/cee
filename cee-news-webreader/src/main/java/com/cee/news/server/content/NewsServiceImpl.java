@@ -25,9 +25,25 @@ import com.cee.news.store.WorkingSetStore;
 public class NewsServiceImpl implements NewsService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NewsServiceImpl.class);
-	
-	private static final long serialVersionUID = -1910608040966050631L;
 
+	private static final String COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST = "Could not retrieve contents for key list";
+
+	private static final String COULD_NOT_RETRIEVE_CONTENT_FOR = "Could not retrieve content for {}";
+
+	private static final String COULD_NOT_RETRIEVE_RELATED_ARTICLES_FOR = "Could not retrieve related articles for {}";
+
+	private static final String RETRIEVED_RELATED_ARTICLES_FOR_ARTICLE = "Retrieved {} related articles for article {}";
+
+	private static final String WORKING_SET_NOT_FOUND = "Working set {} not found";
+
+	private static final String COULD_NOT_RETRIEVE_ARTICLES_OF_WORKING_SET = "Could not retrieve articles of working set {}";
+
+	private static final String RETRIEVED_ARTICLES_FOR_WORKING_SET = "Retrieved {} articles for working set {}";
+
+	private static final String RETRIEVED_ARTICLES_FOR_SITE = "Retrieved {} articles for site {}";
+
+	private static final String COULD_NOT_RETRIEVE_ARTICLES_OF_SITE = "Could not retrieve articles of site {}";
+	
 	private ArticleStore articleStore;
 
 	private ArticleSearchService articleSearchService;
@@ -85,12 +101,13 @@ public class NewsServiceImpl implements NewsService {
 			Site site = siteStore.getSite(siteKey);
 			List<EntityKey> keys = articleStore.getArticlesOrderedByDate(site);
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Retrieved {} articles for site {}", keys.size(), siteKey);
+				LOG.debug(RETRIEVED_ARTICLES_FOR_SITE, keys.size(), siteKey);
 			}
 			return keys;
 		} catch (Exception exception) {
-			LOG.error("Could not retrieve articles of site " + siteKey, exception);
-			throw new ServiceException(exception.toString());
+			String message = String.format(COULD_NOT_RETRIEVE_ARTICLES_OF_SITE, siteKey);
+			LOG.error(message , exception);
+			throw new ServiceException(message);
 		}
 	}
 	
@@ -100,12 +117,13 @@ public class NewsServiceImpl implements NewsService {
 			WorkingSet workingSet = workingSetStore.getWorkingSet(workingSetName);
 			List<EntityKey> keys = articleStore.getArticlesOrderedByDate(workingSet);
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Retrieved {} articles for working set {}", keys.size(), workingSetName);
+				LOG.debug(RETRIEVED_ARTICLES_FOR_WORKING_SET, keys.size(), workingSetName);
 			}
 			return keys;
 		} catch (Exception exception) {
-			LOG.error("Could not retrieve articles of working set " + workingSetName, exception);
-			throw new ServiceException(exception.toString());
+			String message = String.format(COULD_NOT_RETRIEVE_ARTICLES_OF_WORKING_SET, workingSetName);
+			LOG.error(message, exception);
+			throw new ServiceException(message);
 		}
 	}
 	
@@ -114,7 +132,7 @@ public class NewsServiceImpl implements NewsService {
 		try {
 			WorkingSet ws = workingSetStore.getWorkingSet(workingSet);
 			if (ws == null) {
-				throw new IllegalArgumentException("Working set " + workingSet + " not found");
+				throw new IllegalArgumentException(String.format(WORKING_SET_NOT_FOUND, workingSet));
 			}
 			List<EntityKey> sites = ws.getSites();
 			List<EntityKey> relatedSites = null;
@@ -127,12 +145,13 @@ public class NewsServiceImpl implements NewsService {
 			}
 			List<EntityKey> keys = articleSearchService.findRelatedArticles(EntityKeyUtil.extractKeys(relatedSites), articleId);
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Retrieved {} related articles for article {}", keys.size(), articleId);
+				LOG.debug(RETRIEVED_RELATED_ARTICLES_FOR_ARTICLE, keys.size(), articleId);
 			}
 			return keys;
 		} catch (Exception exception) {
-			LOG.error("Could not retrieve related articles for " + articleId, exception);
-			throw new ServiceException(exception.toString());
+			String message = String.format(COULD_NOT_RETRIEVE_RELATED_ARTICLES_FOR, articleId);
+			LOG.error(message, exception);
+			throw new ServiceException(message);
 		}
 	}
 	
@@ -142,8 +161,9 @@ public class NewsServiceImpl implements NewsService {
 			Article article = articleStore.getArticle(articleKey.getKey(), false);
 			return renderDescription(article, articleKey);
 		} catch (Exception exception) {
-			LOG.error("Could not retrieve content for " + articleKey, exception);
-			throw new ServiceException(exception.toString());
+			String message = String.format(COULD_NOT_RETRIEVE_CONTENT_FOR, articleKey);
+			LOG.error(message, exception);
+			throw new ServiceException(message);
 		}
 	}
 	
@@ -157,8 +177,8 @@ public class NewsServiceImpl implements NewsService {
 			}
 			return descriptions;
 		} catch (Exception exception) {
-			LOG.error("Could not retrieve contents for key list", exception);
-			throw new ServiceException(exception.toString());
+			LOG.error(COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST, exception);
+			throw new ServiceException(COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST);
 		}
 	}
 	
@@ -168,8 +188,9 @@ public class NewsServiceImpl implements NewsService {
 			Article article = articleStore.getArticle(articleKey.getKey(), true);
 			return renderContent(article, articleKey);
 		} catch (Exception exception) {
-			LOG.error("Could not retrieve content for " + articleKey, exception);
-			throw new ServiceException(exception.toString());
+			String message = String.format(COULD_NOT_RETRIEVE_CONTENT_FOR, articleKey);
+			LOG.error(message, exception);
+			throw new ServiceException(message);
 		}
 	}
 	
@@ -183,8 +204,8 @@ public class NewsServiceImpl implements NewsService {
 			}
 			return contents;
 		} catch (Exception exception) {
-			LOG.error("Could not retrieve contents for key list", exception);
-			throw new ServiceException(exception.toString());
+			LOG.error(COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST, exception);
+			throw new ServiceException(COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST);
 		}
 	}
 }

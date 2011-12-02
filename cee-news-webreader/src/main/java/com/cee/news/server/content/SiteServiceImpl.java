@@ -19,6 +19,8 @@ import com.cee.news.store.WorkingSetStore;
 
 public class SiteServiceImpl implements SiteService {
 
+	private static final Logger LOG = LoggerFactory.getLogger(SiteServiceImpl.class);
+
 	private static final String PREFIX_HTTP_WWW = "http://www.";
 
 	private static final String COULD_NOT_GUESS_SITE_NAME = "Could not guess site name";
@@ -28,8 +30,6 @@ public class SiteServiceImpl implements SiteService {
 	private static final String COULD_NOT_RETRIEVE_SITE_LIST = "Could not retrieve site list";
 
 	private static final String COULD_NOT_UPDATE_SITE = "Could not update site";
-
-	private static final Logger log = LoggerFactory.getLogger(SiteServiceImpl.class);
 
 	private SiteStore siteStore;
 	
@@ -48,7 +48,7 @@ public class SiteServiceImpl implements SiteService {
 		try {
 			return siteStore.getSitesOrderedByName();
 		} catch (Exception e) {
-			log.error(COULD_NOT_RETRIEVE_SITE_LIST, e);
+			LOG.error(COULD_NOT_RETRIEVE_SITE_LIST, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_LIST);
 		}
 	}
@@ -58,7 +58,7 @@ public class SiteServiceImpl implements SiteService {
 		try {
 			return workingSetStore.getWorkingSet(workingSetName).getSites();
 		} catch (Exception e) {
-			log.error(COULD_NOT_RETRIEVE_SITE_LIST, e);
+			LOG.error(COULD_NOT_RETRIEVE_SITE_LIST, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_LIST);
 		}
 	}
@@ -81,7 +81,7 @@ public class SiteServiceImpl implements SiteService {
 			Site site = siteStore.getSite(siteKey.getKey());
 			return renderDescription(siteKey, site);
 		} catch (Exception e) {
-			log.error(COULD_NOT_RETRIEVE_SITE_DESCRIPTION, e);
+			LOG.error(COULD_NOT_RETRIEVE_SITE_DESCRIPTION, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_DESCRIPTION);
 		}
 	}
@@ -96,7 +96,7 @@ public class SiteServiceImpl implements SiteService {
 			}
 			return descriptions;
 		} catch (Exception e) {
-			log.error(COULD_NOT_RETRIEVE_SITE_DESCRIPTION, e);
+			LOG.error(COULD_NOT_RETRIEVE_SITE_DESCRIPTION, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_DESCRIPTION);
 		}
 	}
@@ -121,7 +121,7 @@ public class SiteServiceImpl implements SiteService {
 				counter++;
 			}
 		} catch (Exception e) {
-			log.error(COULD_NOT_GUESS_SITE_NAME, e);
+			LOG.error(COULD_NOT_GUESS_SITE_NAME, e);
 			throw new ServiceException(COULD_NOT_GUESS_SITE_NAME);
 		}
 		return guessName;
@@ -136,7 +136,7 @@ public class SiteServiceImpl implements SiteService {
 			EntityKey key = siteStore.update(SiteConverter.createFromSiteData(siteData));
 			return new EntityUpdateResult(State.ok, key);
 		} catch (Exception e) {
-			log.error(COULD_NOT_UPDATE_SITE, e);
+			LOG.error(COULD_NOT_UPDATE_SITE, e);
 			throw new ServiceException(COULD_NOT_UPDATE_SITE);
 		}
 	}
