@@ -17,6 +17,12 @@
 	</bean>
 	
 	<bean id="webClient" class="com.cee.news.parser.net.ClassResourceWebClient" scope="prototype"/>
+	
+	<!-- configure JCR to use in memory file manager -->
+	<bean id="jcrRepositoryConfig" class="org.apache.jackrabbit.core.config.RepositoryConfig" factory-method="create">
+		<constructor-arg value="classpath:repository.xml" type="java.io.InputStream" />
+		<constructor-arg value="repository" />
+	</bean>
 
 	<bean class="com.cee.news.server.content.DeleteRepositoryHook" scope="singleton" destroy-method="deleteRepository">
 		<property name="repository" ref="jcrRepository" />
