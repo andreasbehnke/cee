@@ -34,7 +34,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private static final String SCHEDULER_STARTING_SITE_UPDATES = "Scheduler starting site updates";
 
-	private static final String STARTING_UPDATE_SCHEDULER_WITH_A_DELAY_OF = "Starting update scheduler with a delay of {}.";
+	private static final String STARTING_UPDATE_SCHEDULER_WITH_A_DELAY_OF = "Starting update scheduler with an initial delay of {} minutes and a periodic delay of {} minutes.";
 
 	private static final String CLEARING_WORK_QUEUE = "Clearing work queue";
 
@@ -59,6 +59,8 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	private int maxPoolSize;
 	
 	private long keepAliveTime;
+
+	private long updateSchedulerInitialDelay;
 	
 	private long updateSchedulerFixedDelay;
 	
@@ -116,9 +118,20 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	public void setKeepAliveTime(long keepAliveTime) {
 		this.keepAliveTime = keepAliveTime;
 	}
-
+	
 	/**
-	 * @return delay in seconds between update scheduler runs
+	 * @return initial delay in minutes for the first update scheduler run
+	 */
+	public long getUpdateSchedulerInitialDelay() {
+        return updateSchedulerInitialDelay;
+    }
+
+    public void setUpdateSchedulerInitialDelay(long updateSchedulerInitialDelay) {
+        this.updateSchedulerInitialDelay = updateSchedulerInitialDelay;
+    }
+
+    /**
+	 * @return delay in minutes between update scheduler runs
 	 */
 	public long getUpdateSchedulerFixedDelay() {
 		return updateSchedulerFixedDelay;
@@ -261,7 +274,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	@Override
 	public synchronized void startUpdateScheduler() {
 		if (scheduler == null) {
-			LOG.info(STARTING_UPDATE_SCHEDULER_WITH_A_DELAY_OF, updateSchedulerFixedDelay);
+			LOG.info(STARTING_UPDATE_SCHEDULER_WITH_A_DELAY_OF, updateSchedulerInitialDelay, updateSchedulerFixedDelay);
 			scheduler = new ScheduledThreadPoolExecutor(1, new PrefixCountThreadFactory(UPDATE_SCHEDULER_THREAD_PREFIX));
 			scheduler.scheduleWithFixedDelay(
 					new Runnable() {		
@@ -270,7 +283,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 							startSiteUpdates();
 						}
 					}, 
-					updateSchedulerFixedDelay, 
+					updateSchedulerInitialDelay, 
 					updateSchedulerFixedDelay,
 					TimeUnit.MINUTES);
 		}

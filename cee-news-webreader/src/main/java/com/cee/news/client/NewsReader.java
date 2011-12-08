@@ -247,17 +247,5 @@ public class NewsReader implements EntryPoint {
 		//trigger update
 		workingSetListModel.update(null);
 		siteAddRemoveListModel.update(null);
-		
-		//start the background scheduler
-		siteUpdateService.startUpdateScheduler(new AsyncCallback<Void>() {
-			
-			@Override
-			public void onSuccess(Void result) {}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				appEventBus.fireEvent(new ErrorEvent(caught, "Could not start scheduler"));
-			}
-		});
 	}
 }
