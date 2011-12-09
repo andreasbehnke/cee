@@ -115,6 +115,13 @@
 	<bean id="articleParser" class="com.cee.news.parser.impl.BoilerpipeArticleParser" scope="prototype">
 		<property name="webClient" ref="webClient" />
 		<property name="reader" ref="htmlParser"/>
+		<property name="filters">
+			<list>
+				<bean class="com.cee.news.parser.impl.MinWordCountArticleFilter">
+					<property name="minWordCount" value="30" />
+				</bean>
+			</list>
+		</property>
 	</bean>
 	
 	<bean id="feedParser" class="com.cee.news.parser.impl.RomeFeedParser" scope="prototype">

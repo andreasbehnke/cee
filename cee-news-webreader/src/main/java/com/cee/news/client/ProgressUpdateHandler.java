@@ -12,8 +12,6 @@ public class ProgressUpdateHandler implements ProgressHandler,
 	
 	private String selectedWorkingSet;
 	
-	private int lastPercentComplete = 0;
-	
 	public ProgressUpdateHandler(NewsListContentModel listModel) {
 		this.listModel = listModel;
 	}
@@ -25,8 +23,7 @@ public class ProgressUpdateHandler implements ProgressHandler,
 
 	@Override
 	public void onProgress(int percentComplete) {
-		if (lastPercentComplete != percentComplete) {
-			lastPercentComplete = percentComplete;
+		if (percentComplete == 100) {
 			listModel.updateFromWorkingSet(selectedWorkingSet);
 		}
 	}

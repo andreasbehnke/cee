@@ -12,6 +12,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import com.cee.news.model.Article;
+import com.cee.news.parser.ArticleFilter;
 import com.cee.news.parser.ArticleParser;
 import com.cee.news.parser.ParserException;
 import com.cee.news.parser.net.WebClient;
@@ -34,6 +35,8 @@ public class BoilerpipeArticleParser implements ArticleParser {
     private XMLReader xmlReader;
     
     private WebClient webClient;
+    
+    private List<ArticleFilter> filters;
 
     public BoilerpipeArticleParser() {}
     
@@ -55,10 +58,18 @@ public class BoilerpipeArticleParser implements ArticleParser {
     public void setReader(XMLReader reader) {
 		this.xmlReader = reader;
 	}
+    
+    @Override
+	public List<ArticleFilter> getFilters() {
+        return filters;
+    }
 
-	/* (non-Javadoc)
-     * @see com.cee.newsdiff.parser.ArticleParser#parse(com.cee.newsdiff.model.Article)
-     */
+    @Override
+    public void setFilters(List<ArticleFilter> filters) {
+        this.filters = filters;
+    }
+
+    @Override
     public Article parse(Article article) throws ParserException, IOException {
     	Reader textReader = null;
         try {
@@ -82,8 +93,9 @@ public class BoilerpipeArticleParser implements ArticleParser {
 					}
                 }
             }
-            if (content.size() < 1) {
-            	LOG.warn("no main content found for {}", article.getTitle());
+            if (!accept(article)) {
+            	LOG.warn("article with poor content quality found: {}", article.getTitle());
+            	return null;
             }
             LOG.info("finished parsing article content of {}, found {} textblocks", article.getTitle(), content.size());
             return article;
@@ -96,5 +108,14 @@ public class BoilerpipeArticleParser implements ArticleParser {
         		textReader.close();
         	}
         }
+    }
+    
+    private boolean accept(Article article) {
+        if (filters != null) {
+            for (ArticleFilter filter : filters) {
+                if (!filter.accept(article)) return false;
+            }
+        }
+        return true;
     }
 }

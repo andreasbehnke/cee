@@ -131,8 +131,10 @@ public class SiteUpdater {
         for (Article article : articles) {
         	try {
             	article = articleParser.parse(article);
-            	store.update(site, article);
-        		articleCount++;
+            	if (article != null) {
+            	    store.update(site, article);
+            	    articleCount++;
+            	}
         	} catch(ParserException e) {
         		LOG.error("could not parse article {}", article.getTitle(), e);
         	} catch (IOException e) {

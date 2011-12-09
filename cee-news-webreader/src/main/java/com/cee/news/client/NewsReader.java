@@ -245,7 +245,17 @@ public class NewsReader implements EntryPoint {
 		});
 		
 		//trigger update
-		workingSetListModel.update(null);
 		siteAddRemoveListModel.update(null);
+		workingSetListModel.update(new NotificationCallback() {
+            
+            @Override
+            public void finished() {
+                if (workingSetListModel.getContentCount() > 0) {
+                    EntityKey firstWorkingSet = workingSetListModel.getKeys().get(0);
+                    workingSetListModel.setSelectedKey(firstWorkingSet.getKey());
+                }
+            }
+        });
+        
 	}
 }
