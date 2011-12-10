@@ -3,7 +3,7 @@
 
 	<groupId>com.cee</groupId>
 	<artifactId>cee</artifactId>
-	<version>1.5-SNAPSHOT</version>
+	<version>1.4-SNAPSHOT</version>
 	<name>Content Extraction Engine</name>
 	<description>Framework for extracting content from documents and websites</description>
 	<packaging>pom</packaging>
