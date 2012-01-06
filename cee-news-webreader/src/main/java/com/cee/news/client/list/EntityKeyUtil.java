@@ -24,7 +24,7 @@ public final class EntityKeyUtil {
 				return entityKey;
 			}
 		}
-    	throw new IllegalArgumentException("Unknown key: " + key);
+    	return null;
     }
 
     public static int getIndexOfEntityKey(List<EntityKey> keys, String key) {
@@ -33,7 +33,7 @@ public final class EntityKeyUtil {
 				return i;
 			}
 		}
-    	throw new IllegalArgumentException("Unknown key: " + key);
+    	return -1;
     }
 
     public static List<String> extractKeys(List<EntityKey> keys) {

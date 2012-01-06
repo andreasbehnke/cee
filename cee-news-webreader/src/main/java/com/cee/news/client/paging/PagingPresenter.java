@@ -74,21 +74,27 @@ public class PagingPresenter {
     
     protected void onSelectionChanged(String key) {
     	int index = EntityKeyUtil.getIndexOfEntityKey(keys, key);
-    	view.setJumpToSelectedIndex(index);
-        if (index == 0) {
-            view.setPreviousEnabled(false);
-        } else {
-            view.setPreviousEnabled(true);
-            String prevKey = keys.get(index - 1).getKey();
-            contentModel.getContentTitle(view.getPreviousContent(), prevKey);
-        }
-        if (index == listModel.getContentCount() - 1) {
-            view.setNextEnabled(false);
-        } else {
-            view.setNextEnabled(true);
-            String nextKey = keys.get(index + 1).getKey();
-            contentModel.getContentTitle(view.getNextContent(), nextKey);
-        }
+    	if (index == -1) {
+    	    //the key is no element of this list. display article and disable next / prev buttons
+    	    view.setPreviousEnabled(false);
+    	    view.setNextEnabled(false);
+    	} else {
+        	view.setJumpToSelectedIndex(index);
+            if (index == 0) {
+                view.setPreviousEnabled(false);
+            } else {
+                view.setPreviousEnabled(true);
+                String prevKey = keys.get(index - 1).getKey();
+                contentModel.getContentTitle(view.getPreviousContent(), prevKey);
+            }
+            if (index == listModel.getContentCount() - 1) {
+                view.setNextEnabled(false);
+            } else {
+                view.setNextEnabled(true);
+                String nextKey = keys.get(index + 1).getKey();
+                contentModel.getContentTitle(view.getNextContent(), nextKey);
+            }
+    	}
         contentModel.getContent(view.getMainContent(), key);
         view.resetMainContentScrollPosition();
     }
