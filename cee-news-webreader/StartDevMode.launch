@@ -18,7 +18,7 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.google.gwt.eclipse.core.moduleClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-war D:\cee\workspace\cee\cee-news-webreader-jetty7\target\cee-news-webreader-jetty7-1.4-SNAPSHOT -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -startupUrl NewsReader.html -logLevel INFO -codeServerPort 9997 -port 8888 com.cee.news.NewsReader"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-war D:\cee\workspace\cee\cee-news-webreader-jetty7\target\cee-news-webreader-jetty7-1.5-SNAPSHOT -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -startupUrl NewsReader.html -logLevel INFO -codeServerPort 9997 -port 8888 com.cee.news.NewsReader"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="cee-news-webreader"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx512m"/>
 </launchConfiguration>
