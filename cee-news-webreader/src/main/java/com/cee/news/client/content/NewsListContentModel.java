@@ -8,7 +8,6 @@ import com.cee.news.client.list.ContentModel;
 import com.cee.news.client.list.DefaultListModel;
 import com.cee.news.client.list.EntityContent;
 import com.cee.news.client.list.EntityContentModel;
-import com.cee.news.client.list.EntityKeyUtil;
 import com.cee.news.client.util.SafeHtmlUtil;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.safehtml.client.HasSafeHtml;
@@ -35,6 +34,24 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
                 setKeys(result);
                 if(callback != null) {
                 	callback.finished();
+                }
+            }
+            public void onFailure(Throwable caught) {
+                fireErrorEvent(caught, "Could not load headlines!");//TODO: i18n
+            }
+        });
+    }
+    
+    public void updateFromSites(final List<String> siteKeys) {
+        updateFromSites(siteKeys, null);
+    }
+        
+    public void updateFromSites(final List<String> siteKeys, final NotificationCallback callback) {
+        service.getArticlesOfSites(siteKeys, new AsyncCallback<List<EntityKey>>() {
+            public void onSuccess(List<EntityKey> result) {
+                setKeys(result);
+                if(callback != null) {
+                    callback.finished();
                 }
             }
             public void onFailure(Throwable caught) {
@@ -103,7 +120,7 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
 
     @Override
     public void getContentDescription(final HasSafeHtml target, String key) {
-    	final EntityKey entityKey = EntityKeyUtil.getEntityKey(keys, key);
+    	final EntityKey entityKey = new EntityKey(null, key);
         service.getHtmlDescription(entityKey, new AsyncCallback<EntityContent>() {
             public void onSuccess(EntityContent result) {
                 target.setHTML(SafeHtmlUtil.sanitize(result.getHtmlContent()) );
@@ -116,7 +133,7 @@ public class NewsListContentModel extends DefaultListModel implements ContentMod
 
     @Override
     public void getContent(final HasSafeHtml target, String key) {
-    	final EntityKey entityKey = EntityKeyUtil.getEntityKey(keys, key);
+        final EntityKey entityKey = new EntityKey(null, key);
         service.getHtmlContent(entityKey, new AsyncCallback<EntityContent>() {
             public void onSuccess(EntityContent result) {
             	target.setHTML(SafeHtmlUtil.sanitize(result.getHtmlContent()) );

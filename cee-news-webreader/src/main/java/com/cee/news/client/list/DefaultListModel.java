@@ -1,6 +1,7 @@
 package com.cee.news.client.list;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * event handlers and the content selection. Implementations must call fireContentListChanged(List<LinkValue> links)
  * after initialization and every time the underlying model changes.
  */
-public abstract class DefaultListModel extends ErrorSourceBase implements MultiSelectListModel {
+public abstract class DefaultListModel extends ErrorSourceBase implements MultiSelectListModel{
 
 	protected List<EntityKey> keys;
     
@@ -60,7 +61,7 @@ public abstract class DefaultListModel extends ErrorSourceBase implements MultiS
     }
     
     @Override
-    public void setSelections(List<String> selectedKeys) {
+    public void setSelections(Collection<String> selectedKeys) {
     	this.selectedKeys.clear();
     	this.selectedKeys.addAll(selectedKeys);
     	fireSelectionListChanged();

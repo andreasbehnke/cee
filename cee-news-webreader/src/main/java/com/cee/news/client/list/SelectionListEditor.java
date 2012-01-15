@@ -32,6 +32,6 @@ public class SelectionListEditor implements LeafValueEditor<List<EntityKey>>, Se
 
 	@Override
 	public void onSelectionListChanged(SelectionListChangedEvent event) {
-		selections = event.getLinks();
+		selections = event.getKeys();
 	}
 }

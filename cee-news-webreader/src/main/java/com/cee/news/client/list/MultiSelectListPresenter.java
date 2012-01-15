@@ -38,7 +38,7 @@ public class MultiSelectListPresenter {
         multiModel.addSelectionListChangedHandler(new SelectionListChangedHandler() {
             
             public void onSelectionListChanged(SelectionListChangedEvent event) {
-                fillSelectionList(event.getLinks());
+                fillSelectionList(event.getKeys());
             }
         });
     }

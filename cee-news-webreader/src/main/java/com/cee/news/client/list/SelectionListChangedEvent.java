@@ -11,15 +11,15 @@ import com.google.gwt.event.shared.GwtEvent;
 public class SelectionListChangedEvent extends GwtEvent<SelectionListChangedHandler> {
 
     public final static GwtEvent.Type<SelectionListChangedHandler> TYPE = new Type<SelectionListChangedHandler>();
-    
-    private final List<EntityKey> links;
-    
-    public SelectionListChangedEvent(List<EntityKey> links) {
-        this.links = links;
+
+    private final List<EntityKey> keys;
+
+    public SelectionListChangedEvent(List<EntityKey> keys) {
+        this.keys = keys;
     }
 
-    public List<EntityKey> getLinks() {
-        return links;
+    public List<EntityKey> getKeys() {
+        return keys;
     }
 
     @Override

@@ -21,6 +21,10 @@ public class SiteListContentModel extends DefaultListModel implements ContentMod
 
     private SiteServiceAsync service = SiteServiceAsync.Util.getInstance();
     
+    public void update() {
+        update((NotificationCallback)null);
+    }
+    
     public void update(final NotificationCallback callback) {
         service.getSites(new AsyncCallback<List<EntityKey>>() {
             
@@ -37,7 +41,11 @@ public class SiteListContentModel extends DefaultListModel implements ContentMod
         });
     }
     
-    public void update(final NotificationCallback callback, String workingSetName) {
+    public void update(String workingSetName) {
+        update(workingSetName, null);
+    }
+    
+    public void update(String workingSetName, final NotificationCallback callback) {
     	service.getSitesOfWorkingSet(workingSetName, new AsyncCallback<List<EntityKey>>() {
 			
 			@Override

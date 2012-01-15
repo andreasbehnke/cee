@@ -5,8 +5,14 @@ import java.util.List;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.cellview.client.CellList;
 
-
+/**
+ * 
+ * @author andreasbehnke
+ * @deprecated use {@link CellListPresenter} and {@link CellList}
+ */
+@Deprecated
 public class ListPresenter {
 
     private final ListView view;

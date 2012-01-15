@@ -246,6 +246,25 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
     }
     
     @Override
+    public List<EntityKey> getArticlesOrderedByDate(List<Site> sites) throws StoreException {
+        if (sites == null) {
+            throw new IllegalArgumentException("Parameter sites must not be null");
+        }
+        if (sites.isEmpty()) {
+            return new ArrayList<EntityKey>();
+        }
+        try {
+            List<String> siteNames = new ArrayList<>();
+            for (Site site : sites) {
+                siteNames.add(site.getName());
+            }
+            return buildPathList(getArticlesOfSitesOrderedByPublication(siteNames));
+        } catch (RepositoryException e) {
+            throw new StoreException("Could not retrieve articles", e);
+        }
+    }
+    
+    @Override
     public List<EntityKey> getArticlesOrderedByDate(WorkingSet workingSet) throws StoreException {
     	if (workingSet == null) {
             throw new IllegalArgumentException("Parameter workingSet must not be null");

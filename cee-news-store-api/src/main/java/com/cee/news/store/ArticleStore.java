@@ -50,6 +50,13 @@ public interface ArticleStore {
     List<EntityKey> getArticlesOrderedByDate(Site site) throws StoreException;
     
     /**
+     * Returns a list of unique identifiers of all site's articles
+     * @param sites The sites from which to retrieve identifiers
+     * @return List of article identifiers
+     */
+    List<EntityKey> getArticlesOrderedByDate(List<Site> sites) throws StoreException;
+    
+    /**
      * Returns a list of unique identifiers of all working set's articles
      * @param workingSet The working set to retrieve all articles from
      * @return List of all article identifiers

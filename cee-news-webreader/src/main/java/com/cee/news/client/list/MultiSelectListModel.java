@@ -1,6 +1,6 @@
 package com.cee.news.client.list;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -25,7 +25,7 @@ public interface MultiSelectListModel extends ListModel {
      * Set the selected keys
      * @param selections List containing the selected keys
      */
-    void setSelections(List<String> selections);
+    void setSelections(Collection<String> selections);
     
     /**
      * Clears the current selection

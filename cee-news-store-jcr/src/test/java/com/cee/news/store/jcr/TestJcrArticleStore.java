@@ -101,6 +101,18 @@ public class TestJcrArticleStore extends JcrTestBase {
         assertEquals(1, articles.size());
         assertEquals(path4, articles.get(0).getKey());
         
+        assertEquals(0, articleStore.getArticlesOrderedByDate(new ArrayList<Site>()).size());
+        
+        List<Site> sites = new ArrayList<>();
+        sites.add(site2);
+        sites.add(site);
+        articles = articleStore.getArticlesOrderedByDate(sites);
+        assertEquals(4, articles.size());
+        assertEquals(path4, articles.get(0).getKey());
+        assertEquals(path2, articles.get(1).getKey());
+        assertEquals(path1, articles.get(2).getKey());
+        assertEquals(path3, articles.get(3).getKey());
+        
         WorkingSet workingSet = new WorkingSet();
         workingSet.setName("Default");
         workingSet.getSites().add(new EntityKey(site.getName(), JcrSiteStore.getSitePath(site.getName())));
