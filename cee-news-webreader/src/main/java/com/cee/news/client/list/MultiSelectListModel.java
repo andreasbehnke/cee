@@ -7,25 +7,25 @@ import com.google.gwt.event.shared.HandlerRegistration;
 /**
  * Model of a selectable list. Multiple elements of the content list can be selected.
  */
-public interface MultiSelectListModel extends ListModel {
+public interface MultiSelectListModel<K> extends ListModel<K> {
     
     /**
      * Adds the element with key to the selection list
      * @param key The key of the element to be added
      */
-    void addSelection(String key);
+    void addSelection(K key);
     
     /**
      * Removes the element with key from the selection list
      * @param key The key of the element to be removed
      */
-    void removeSelection(String key);
+    void removeSelection(K key);
     
     /**
      * Set the selected keys
      * @param selections List containing the selected keys
      */
-    void setSelections(Collection<String> selections);
+    void setSelections(Collection<K> selections);
     
     /**
      * Clears the current selection
@@ -35,5 +35,5 @@ public interface MultiSelectListModel extends ListModel {
     /**
      * @param handler will be notified if the selection list is changed.
      */
-    HandlerRegistration addSelectionListChangedHandler(SelectionListChangedHandler handler);
+    HandlerRegistration addSelectionListChangedHandler(SelectionListChangedHandler<K> handler);
 }

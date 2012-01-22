@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class EntityKey implements Serializable {
 	
-	private static final long serialVersionUID = -8676630329141286676L;
+	private static final long serialVersionUID = -8676630329141286696L;
 
 	private String name;
 	
@@ -17,6 +17,8 @@ public class EntityKey implements Serializable {
 	
 	private double score = -1;
 
+	private String htmlContent;
+	
 	public String getName() {
 		return name;
 	}
@@ -43,8 +45,16 @@ public class EntityKey implements Serializable {
 	public void setScore(double score) {
 		this.score = score;
 	}
+	
+	public String getHtmlContent() {
+        return htmlContent;
+    }
 
-	public EntityKey() {}
+    public void setHtmlContent(String htmlContent) {
+        this.htmlContent = htmlContent;
+    }
+
+    public EntityKey() {}
 	
 	public EntityKey(String name, String key) {
 		this.name = name;

@@ -5,15 +5,20 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * Event fired if the selection of content changed
  */
-public class SelectionChangedEvent extends GwtEvent<SelectionChangedHandler> {
+public class SelectionChangedEvent<K> extends GwtEvent<SelectionChangedHandler<K>> {
     
-    public static final GwtEvent.Type<SelectionChangedHandler> TYPE = new Type<SelectionChangedHandler>();
+    public final static GwtEvent.Type<SelectionChangedHandler<?>> TYPE = new Type<SelectionChangedHandler<?>>();
     
-    private final String key;
+    private final K key;
     
     private final boolean userAction;
     
-    public SelectionChangedEvent(String key, boolean userAction) {
+    public SelectionChangedEvent() {
+        key = null;
+        userAction = false;
+    }
+    
+    public SelectionChangedEvent(K key, boolean userAction) {
         this.key = key;
         this.userAction = userAction;
     }
@@ -21,7 +26,7 @@ public class SelectionChangedEvent extends GwtEvent<SelectionChangedHandler> {
     /**
      * @return Primary key of the selected entity
      */
-    public String getKey() {
+    public K getKey() {
         return key;
     }
     
@@ -32,13 +37,14 @@ public class SelectionChangedEvent extends GwtEvent<SelectionChangedHandler> {
 		return userAction;
 	}
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
-    public com.google.gwt.event.shared.GwtEvent.Type<SelectionChangedHandler> getAssociatedType() {
-        return TYPE;
+    public GwtEvent.Type<SelectionChangedHandler<K>> getAssociatedType() {
+        return (GwtEvent.Type)TYPE;
     }
 
     @Override
-    protected void dispatch(SelectionChangedHandler handler) {
+    protected void dispatch(SelectionChangedHandler<K> handler) {
         handler.onSelectionChange(this);
     }    
 }

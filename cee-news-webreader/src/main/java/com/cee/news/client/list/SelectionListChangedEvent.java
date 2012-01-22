@@ -2,33 +2,37 @@ package com.cee.news.client.list;
 
 import java.util.List;
 
-import com.cee.news.model.EntityKey;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event fired if the content list of the {@link PagingContentModel} changed
  */
-public class SelectionListChangedEvent extends GwtEvent<SelectionListChangedHandler> {
+public class SelectionListChangedEvent<K> extends GwtEvent<SelectionListChangedHandler<K>> {
 
-    public final static GwtEvent.Type<SelectionListChangedHandler> TYPE = new Type<SelectionListChangedHandler>();
+    public static final GwtEvent.Type<SelectionListChangedHandler<?>> TYPE = new Type<SelectionListChangedHandler<?>>();
 
-    private final List<EntityKey> keys;
+    private final List<K> keys;
 
-    public SelectionListChangedEvent(List<EntityKey> keys) {
+    public SelectionListChangedEvent() {
+        keys = null;
+    }
+    
+    public SelectionListChangedEvent(List<K> keys) {
         this.keys = keys;
     }
 
-    public List<EntityKey> getKeys() {
+    public List<K> getKeys() {
         return keys;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public GwtEvent.Type<SelectionListChangedHandler> getAssociatedType() {
-        return TYPE;
+    public GwtEvent.Type<SelectionListChangedHandler<K>> getAssociatedType() {
+        return (GwtEvent.Type)TYPE;
     }
 
     @Override
-    protected void dispatch(SelectionListChangedHandler handler) {
+    protected void dispatch(SelectionListChangedHandler<K> handler) {
         handler.onSelectionListChanged(this);
     }
 }

@@ -61,7 +61,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 					
 					@Override
 					public void finished() {
-						siteListModel.addSelection(event.getEntityKey().getKey());
+						siteListModel.addSelection(event.getEntityKey());
 					}
 				});
 			}
@@ -127,7 +127,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 						
 						@Override
 						public void finished() {
-							workingSetListModel.setSelectedKey(result.getKey().getKey());
+							workingSetListModel.setSelectedKey(result.getKey());
 						}
 					});
 					break;

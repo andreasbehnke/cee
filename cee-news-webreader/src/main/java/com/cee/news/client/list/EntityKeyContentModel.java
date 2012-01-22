@@ -6,11 +6,11 @@ import java.util.List;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface EntityContentModel {
+public interface EntityKeyContentModel {
 
 	/**
 	 * Get rendered content for given entity keys
 	 */
-	void getContent(ArrayList<EntityKey> keys, AsyncCallback<List<EntityContent>> callback);
+	void getContent(ArrayList<EntityKey> keys, AsyncCallback<List<EntityKey>> callback);
 	
 }

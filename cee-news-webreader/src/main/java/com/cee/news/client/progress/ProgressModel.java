@@ -1,6 +1,5 @@
 package com.cee.news.client.progress;
 
-import com.cee.news.client.content.SiteUpdateService;
 import com.cee.news.client.content.SiteUpdateServiceAsync;
 import com.cee.news.client.error.ErrorSourceBase;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -11,7 +10,7 @@ public class ProgressModel extends ErrorSourceBase {
 	
 	private static final int SCHEDULER_DELAY = 1000;
 
-	private final SiteUpdateServiceAsync siteUpdateService = SiteUpdateService.Util.getInstance();
+	private final SiteUpdateServiceAsync siteUpdateService = SiteUpdateServiceAsync.Util.getInstance();
 
 	private int max = -1;
 	

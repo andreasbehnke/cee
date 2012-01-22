@@ -6,9 +6,7 @@ import java.util.List;
 import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.list.ContentModel;
 import com.cee.news.client.list.DefaultListModel;
-import com.cee.news.client.list.EntityContent;
-import com.cee.news.client.list.EntityContentModel;
-import com.cee.news.client.list.EntityKeyUtil;
+import com.cee.news.client.list.EntityKeyContentModel;
 import com.cee.news.client.util.SafeHtmlUtil;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.safehtml.client.HasSafeHtml;
@@ -17,7 +15,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 /**
  * List content model implementation for sites
  */
-public class SiteListContentModel extends DefaultListModel implements ContentModel, EntityContentModel {
+public class SiteListContentModel extends DefaultListModel<EntityKey> implements ContentModel<EntityKey>, EntityKeyContentModel {
 
     private SiteServiceAsync service = SiteServiceAsync.Util.getInstance();
     
@@ -29,7 +27,7 @@ public class SiteListContentModel extends DefaultListModel implements ContentMod
         service.getSites(new AsyncCallback<List<EntityKey>>() {
             
             public void onSuccess(List<EntityKey> result) {
-                setKeys(result);
+                setValues(result);
                 if (callback != null) {
                 	callback.finished();
                 }
@@ -50,7 +48,7 @@ public class SiteListContentModel extends DefaultListModel implements ContentMod
 			
 			@Override
 			public void onSuccess(List<EntityKey> result) {
-				setKeys(result);
+				setValues(result);
 				if (callback != null) {
                 	callback.finished();
                 }
@@ -63,32 +61,17 @@ public class SiteListContentModel extends DefaultListModel implements ContentMod
 		});
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cee.news.client.list.ListContentModel#getContentTitle(com.google.
-     * gwt.safehtml.client.HasSafeHtml, int)
-     */
     @Override
-    public void getContentTitle(final HasSafeHtml target, String key) {
-    	String title = EntityKeyUtil.getEntityKey(keys, key).getName();
+    public void getContentTitle(final HasSafeHtml target, EntityKey key) {
+    	String title = key.getName();
         target.setHTML(SafeHtmlUtil.sanitize(title));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.cee.news.client.list.ListContentModel#getContentDescription(com.google
-     * .gwt.safehtml.client.HasSafeHtml, int)
-     */
     @Override
-    public void getContentDescription(final HasSafeHtml target, String key) {
-    	EntityKey entityKey = EntityKeyUtil.getEntityKey(keys, key);
-        service.getHtmlDescription(entityKey, new AsyncCallback<EntityContent>() {
+    public void getContentDescription(final HasSafeHtml target, EntityKey key) {
+    	service.getHtmlDescription(key, new AsyncCallback<EntityKey>() {
             
-            public void onSuccess(EntityContent result) {
+            public void onSuccess(EntityKey result) {
                 target.setHTML(SafeHtmlUtil.sanitize(result.getHtmlContent()));
             }
             
@@ -99,12 +82,12 @@ public class SiteListContentModel extends DefaultListModel implements ContentMod
     }
 
 	@Override
-	public void getContent(HasSafeHtml target, String key) {
+	public void getContent(HasSafeHtml target, EntityKey key) {
 		//no main content available for sites
 	}
 	
 	@Override
-	public void getContent(ArrayList<EntityKey> keys, AsyncCallback<List<EntityContent>> callback) {
+	public void getContent(ArrayList<EntityKey> keys, AsyncCallback<List<EntityKey>> callback) {
 		service.getHtmlDescriptions(keys, callback);
 	}
 }

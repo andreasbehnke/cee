@@ -1,13 +1,14 @@
 package com.cee.news.client;
 
-import com.cee.news.client.list.EntityContent;
-import com.cee.news.client.list.EntityContentCell;
-import com.cee.news.client.list.EntityContentKeyProvider;
+import com.cee.news.client.content.SourceSelectionPanel;
+import com.cee.news.client.content.SourceSelectionView;
+import com.cee.news.client.list.EntityKeyCell;
 import com.cee.news.client.list.ScrollLoader;
 import com.cee.news.client.progress.ProgressView;
 import com.cee.news.client.progress.TextProgressView;
 import com.cee.news.client.workingset.WorkingSetSelectionView;
 import com.cee.news.client.workingset.ui.WorkingSetSelection;
+import com.cee.news.model.EntityKey;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Composite;
@@ -20,9 +21,9 @@ public class StartPanel extends Composite implements StartView {
     
     private final TextProgressView progressView;
     
-    private final CellList<EntityContent> cellListSites;
+    private final SourceSelectionView sourceSelectionView;
     
-    private final CellList<EntityContent> cellListLatestArticles;
+    private final CellList<EntityKey> cellListLatestArticles;
     
     public StartPanel() {
     	LayoutPanel layoutPanel = new LayoutPanel();
@@ -34,12 +35,10 @@ public class StartPanel extends Composite implements StartView {
         layoutPanel.setWidgetLeftWidth(workingSetSelection, 0.0, Unit.PX, 626.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(workingSetSelection, 0.0, Unit.PX, 24.0, Unit.PX);
         
-        cellListSites = new CellList<EntityContent>(new EntityContentCell(), new EntityContentKeyProvider());
-        ScrollLoader sitesPager = new ScrollLoader();
-        sitesPager.setDisplay(cellListSites);
-        layoutPanel.add(sitesPager);
-        layoutPanel.setWidgetLeftWidth(sitesPager, 0.0, Unit.PX, 360.0, Unit.PX);
-        layoutPanel.setWidgetTopBottom(sitesPager, 52.0, Unit.PX, 0.0, Unit.PX);
+        sourceSelectionView = new SourceSelectionPanel();
+        layoutPanel.add(sourceSelectionView);
+        layoutPanel.setWidgetLeftWidth(sourceSelectionView, 0.0, Unit.PX, 360.0, Unit.PX);
+        layoutPanel.setWidgetTopBottom(sourceSelectionView, 52.0, Unit.PX, 0.0, Unit.PX);
         
         InlineLabel nlnlblSites = new InlineLabel("Sites:");
         layoutPanel.add(nlnlblSites);
@@ -57,7 +56,7 @@ public class StartPanel extends Composite implements StartView {
         layoutPanel.setWidgetLeftRight(progressView, 447.0, Unit.PX, 0.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(progressView, 30.0, Unit.PX, 16.0, Unit.PX);
         
-        cellListLatestArticles = new CellList<EntityContent>(new EntityContentCell());
+        cellListLatestArticles = new CellList<EntityKey>(new EntityKeyCell());
         ScrollLoader articlesPager = new ScrollLoader();
         articlesPager.setDisplay(cellListLatestArticles);
         layoutPanel.add(articlesPager);
@@ -66,7 +65,7 @@ public class StartPanel extends Composite implements StartView {
     }
 
     @Override
-    public CellList<EntityContent> getCellListLatestArticles() {
+    public CellList<EntityKey> getCellListLatestArticles() {
 		return cellListLatestArticles;
 	}
 
@@ -81,7 +80,7 @@ public class StartPanel extends Composite implements StartView {
     }
     
     @Override
-    public CellList<EntityContent> getCellListSites() {
-    	return cellListSites;
+    public SourceSelectionView getSourceSelectionView() {
+        return sourceSelectionView;
     }
 }

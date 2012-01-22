@@ -19,16 +19,16 @@ public abstract class CellListPresenter extends ErrorSourceBase {
 	
 	private int offset;
 	
-	public CellListPresenter(final CellList<EntityContent> cellList, final ListModel listModel, final EntityContentModel entityContentModel) {
-	    this(cellList, listModel, entityContentModel, DEFAULT_VISIBLE_RANGE);
+	public CellListPresenter(final CellList<EntityKey> cellList, final ListModel<EntityKey> listModel, final EntityKeyContentModel contentModel) {
+	    this(cellList, listModel, contentModel, DEFAULT_VISIBLE_RANGE);
 	}
 	
-	public CellListPresenter(final CellList<EntityContent> cellList, final ListModel listModel, final EntityContentModel entityContentModel, int visibleRange) {
-		listModel.addListChangedHandler(new ListChangedHandler() {
+	public CellListPresenter(final CellList<EntityKey> cellList, final ListModel<EntityKey> listModel, final EntityKeyContentModel contentModel, int visibleRange) {
+		listModel.addListChangedHandler(new ListChangedHandler<EntityKey>() {
 			@Override
-			public void onContentListChanged(ListChangedEvent event) {
+			public void onContentListChanged(ListChangedEvent<EntityKey> event) {
 				offset = 0;
-				keys = event.getLinks();
+				keys = event.getValues();
 				int count = keys.size();
 				int rangeLength = (count < 20) ? count : 20;
 				cellList.setRowCount(count, true);
@@ -36,19 +36,19 @@ public abstract class CellListPresenter extends ErrorSourceBase {
 			}
 		});
 		
-		final AsyncDataProvider<EntityContent> dataProvider = new AsyncDataProvider<EntityContent>() {
+		final AsyncDataProvider<EntityKey> dataProvider = new AsyncDataProvider<EntityKey>() {
 			@Override
-			protected void onRangeChanged(HasData<EntityContent> display) {
+			protected void onRangeChanged(HasData<EntityKey> display) {
 				if (keys == null) {
 					return;
 				}
 				final Range range = display.getVisibleRange();
 				final int end = range.getLength();
 				ArrayList<EntityKey> keysInRange = new ArrayList<EntityKey>(keys.subList(offset, end));
-				entityContentModel.getContent(keysInRange, new AsyncCallback<List<EntityContent>>() {
+				contentModel.getContent(keysInRange, new AsyncCallback<List<EntityKey>>() {
 					
 					@Override
-					public void onSuccess(List<EntityContent> result) {
+					public void onSuccess(List<EntityKey> result) {
 						cellList.setRowData(offset, result);
 						offset = end;
 					}

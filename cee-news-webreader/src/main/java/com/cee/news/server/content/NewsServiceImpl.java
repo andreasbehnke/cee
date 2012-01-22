@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import com.cee.news.client.content.NewsService;
 import com.cee.news.client.error.ServiceException;
-import com.cee.news.client.list.EntityContent;
 import com.cee.news.client.list.EntityKeyUtil;
 import com.cee.news.model.Article;
 import com.cee.news.model.EntityKey;
@@ -77,7 +76,7 @@ public class NewsServiceImpl implements NewsService {
 		return SimpleDateFormat.getDateInstance().format(calendar.getTime());
 	}
 	
-	protected EntityContent renderDescription(Article article, EntityKey articleKey) {
+	protected EntityKey renderDescription(Article article, EntityKey articleKey) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<h3>").append(article.getTitle()).append("</h3>")
 				.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>");
@@ -85,10 +84,11 @@ public class NewsServiceImpl implements NewsService {
 			builder.append("<p>").append(articleKey.getScore()).append("</p>");
 		}
 		builder.append("<p>").append(article.getShortText()).append("</p>");
-		return new EntityContent(articleKey, builder.toString());
+		articleKey.setHtmlContent(builder.toString());
+		return articleKey;
 	}
 
-	protected EntityContent renderContent(Article article, EntityKey articleKey) {
+	protected EntityKey renderContent(Article article, EntityKey articleKey) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<h1>").append(article.getTitle()).append("</h1>")
 			.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>")
@@ -96,7 +96,8 @@ public class NewsServiceImpl implements NewsService {
 		for (TextBlock textBlock : article.getContent()) {
 			builder.append("<p>").append(textBlock.getContent()).append("</p>");
 		}
-		return new EntityContent(articleKey, builder.toString());
+		articleKey.setHtmlContent(builder.toString());
+        return articleKey;
 	}
 	
 	@Override
@@ -190,7 +191,7 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	@Override
-	public EntityContent getHtmlDescription(EntityKey articleKey) {
+	public EntityKey getHtmlDescription(EntityKey articleKey) {
 	    if (articleKey == null) {
             throw new IllegalArgumentException("Parameter articleKey must not be null");
         }
@@ -205,17 +206,16 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	@Override
-	public List<EntityContent> getHtmlDescriptions(List<EntityKey> keys) {
+	public List<EntityKey> getHtmlDescriptions(List<EntityKey> keys) {
 	    if (keys == null) {
             throw new IllegalArgumentException("Parameter keys must not be null");
         }
 	    try {
-			List<EntityContent> descriptions = new ArrayList<EntityContent>();
 			for (EntityKey key : keys) {
 				Article article = articleStore.getArticle(key.getKey(), false);
-				descriptions.add(renderDescription(article, key));
+				renderDescription(article, key);
 			}
-			return descriptions;
+			return keys;
 		} catch (Exception exception) {
 			LOG.error(COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST, exception);
 			throw new ServiceException(COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST);
@@ -223,7 +223,7 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	@Override
-	public EntityContent getHtmlContent(EntityKey articleKey) {
+	public EntityKey getHtmlContent(EntityKey articleKey) {
 	    if (articleKey == null) {
             throw new IllegalArgumentException("Parameter articleKey must not be null");
         }
@@ -238,17 +238,16 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	@Override
-	public List<EntityContent> getHtmlContents(ArrayList<EntityKey> keys) {
+	public List<EntityKey> getHtmlContents(ArrayList<EntityKey> keys) {
 	    if (keys == null) {
             throw new IllegalArgumentException("Parameter keys must not be null");
         }
 	    try {
-			List<EntityContent> contents = new ArrayList<EntityContent>();
 			for (EntityKey key : keys) {
 				Article article = articleStore.getArticle(key.getKey(), false);
-				contents.add(renderContent(article, key));
+				renderContent(article, key);
 			}
-			return contents;
+			return keys;
 		} catch (Exception exception) {
 			LOG.error(COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST, exception);
 			throw new ServiceException(COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST);

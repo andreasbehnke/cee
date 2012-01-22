@@ -2,15 +2,19 @@ package com.cee.news.client.list;
 
 import java.util.List;
 
-import com.cee.news.model.EntityKey;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public interface ListModel {
+public interface ListModel<K> {
 	
-	/**
+    /**
      * @return the list of all keys
      */
-    List<EntityKey> getKeys();
+    List<K> getKeys();
+    
+    /**
+     * @return the key at index position
+     */
+    K getKey(int index);
 
     /**
      * @return The number of content available
@@ -18,14 +22,19 @@ public interface ListModel {
     int getContentCount();
     
     /**
+     * @return index of key or -1 if key is no element of this model
+     */
+    int getIndexOf(K key);
+    
+    /**
      * @return The primary key of the current content
      */
-    String getSelectedKey();
+    K getSelectedKey();
 
     /**
      * @param key the current selected entity
      */
-    void setSelectedKey(String key);
+    void setSelectedKey(K key);
     
     /**
      * This method is called by presenters if the user selected an item
@@ -33,18 +42,18 @@ public interface ListModel {
      * of the generated event is set to true.
      * @param key The key of the user selected item
      */
-    void userSelectedKey(String key);
+    void userSelectedKey(K key);
 
     /**
      * @param handler will be notified about changes of the selected index
      * @return 
      */
-    HandlerRegistration addSelectionChangedhandler(SelectionChangedHandler handler);
+    HandlerRegistration addSelectionChangedhandler(SelectionChangedHandler<K> handler);
 
     /**
      * @param handler will be notified if the content model list is changed.
      * @return 
      */
-    HandlerRegistration addListChangedHandler(ListChangedHandler handler);
+    HandlerRegistration addListChangedHandler(ListChangedHandler<K> handler);
 
 }

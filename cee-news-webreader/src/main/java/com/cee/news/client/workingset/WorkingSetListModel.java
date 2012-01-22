@@ -7,7 +7,7 @@ import com.cee.news.client.list.DefaultListModel;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class WorkingSetListModel extends DefaultListModel {
+public class WorkingSetListModel extends DefaultListModel<EntityKey> {
     
     private final WorkingSetServiceAsync workingSetService = WorkingSetServiceAsync.Util.getInstance();
     
@@ -21,7 +21,7 @@ public class WorkingSetListModel extends DefaultListModel {
 
 			@Override
 			public void onSuccess(List<EntityKey> result) {
-				setKeys(result);
+				setValues(result);
 				if (callback != null) {
 					callback.finished();
 				}

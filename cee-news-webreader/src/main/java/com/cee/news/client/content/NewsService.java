@@ -3,9 +3,7 @@ package com.cee.news.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cee.news.client.list.EntityContent;
 import com.cee.news.model.EntityKey;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -14,20 +12,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("services/gwtNewsService")
 public interface NewsService extends RemoteService {
-	/**
-	 * Utility class for simplifying access to the instance of async service.
-	 */
-	public static class Util {
-		private static NewsServiceAsync instance;
-		public static NewsServiceAsync getInstance(){
-			if (instance == null) {
-				instance = GWT.create(NewsService.class);
-			}
-			return instance;
-		}
-	}
-	
-	List<EntityKey> getArticlesOfSite(String siteKey);
+
+    List<EntityKey> getArticlesOfSite(String siteKey);
 	
 	List<EntityKey> getArticlesOfSites(List<String> siteKeys);
     
@@ -35,11 +21,11 @@ public interface NewsService extends RemoteService {
 	
 	List<EntityKey> getRelatedArticles(String articleId, String workingSetName);
 	
-	EntityContent getHtmlDescription(EntityKey articleKey);
+	EntityKey getHtmlDescription(EntityKey articleKey);
 	
-	List<EntityContent> getHtmlDescriptions(List<EntityKey> keys);
+	List<EntityKey> getHtmlDescriptions(List<EntityKey> keys);
 	
-	EntityContent getHtmlContent(EntityKey articleKey);
+	EntityKey getHtmlContent(EntityKey articleKey);
 	
-	List<EntityContent> getHtmlContents(ArrayList<EntityKey> keys);
+	List<EntityKey> getHtmlContents(ArrayList<EntityKey> keys);
 }

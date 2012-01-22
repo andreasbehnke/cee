@@ -6,14 +6,15 @@ import com.cee.news.client.content.NewSiteWizard;
 import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.content.NewsListContentModel;
 import com.cee.news.client.content.SiteListContentModel;
-import com.cee.news.client.content.SiteUpdateService;
 import com.cee.news.client.content.SiteUpdateServiceAsync;
+import com.cee.news.client.content.SourceSelectionPresenter;
+import com.cee.news.client.content.SourceSelectionView;
 import com.cee.news.client.error.ErrorDialog;
 import com.cee.news.client.error.ErrorEvent;
 import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.list.CellListPresenter;
+import com.cee.news.client.list.EntityKeyLinkResolver;
 import com.cee.news.client.list.EntityKeyUtil;
-import com.cee.news.client.list.MultiSelectionCellListPresenter;
 import com.cee.news.client.list.SelectionChangedEvent;
 import com.cee.news.client.list.SelectionChangedHandler;
 import com.cee.news.client.list.SelectionListChangedEvent;
@@ -76,13 +77,13 @@ public class NewsReader implements EntryPoint {
 		final WorkingSetSelectionView workingSetSelectionView = startPanel.getWorkingSetSelectionView();
 		
 		//Site Update Service
-		final SiteUpdateServiceAsync siteUpdateService = SiteUpdateService.Util.getInstance();
+		final SiteUpdateServiceAsync siteUpdateService = SiteUpdateServiceAsync.Util.getInstance();
 		final ProgressModel progressModel = new ProgressModel();
 		new ProgressPresenter(progressModel, startPanel.getProgressView());
-		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler() {
+		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
 			@Override
-			public void onSelectionChange(SelectionChangedEvent event) {
-				siteUpdateService.addSitesOfWorkingSetToUpdateQueue(event.getKey(), new AsyncCallback<Integer>() {
+			public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
+				siteUpdateService.addSitesOfWorkingSetToUpdateQueue(event.getKey().getKey(), new AsyncCallback<Integer>() {
 					@Override
 					public void onSuccess(Integer result) {
 						progressModel.startMonitor();
@@ -99,10 +100,10 @@ public class NewsReader implements EntryPoint {
 		final NewsListContentModel filteredContentList = new NewsListContentModel();
 		filteredContentList.addErrorHandler(errorHandler);
 		final CellListPresenter newsListPresenter = new SingleSelectionCellListPresenter(startPanel.getCellListLatestArticles(), filteredContentList, filteredContentList);
-		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler() {
+		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
 			@Override
-			public void onSelectionChange(SelectionChangedEvent event) {
-				filteredContentList.updateFromWorkingSet(event.getKey());
+			public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
+				filteredContentList.updateFromWorkingSet(event.getKey().getKey());
 			}
 		});
 		newsListPresenter.addErrorHandler(errorHandler);
@@ -113,16 +114,15 @@ public class NewsReader implements EntryPoint {
 		//Site List
 		final SiteListContentModel sitesOfWorkingSetModel = new SiteListContentModel();
 		sitesOfWorkingSetModel.addErrorHandler(errorHandler);
+		final SourceSelectionView sourceSelectionView = startPanel.getSourceSelectionView();
+		new SourceSelectionPresenter(sourceSelectionView, sitesOfWorkingSetModel, errorHandler);
+		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
+            @Override
+            public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
+                sitesOfWorkingSetModel.update(event.getKey().getKey());
+            }
+        });
 		
-		final MultiSelectionCellListPresenter siteListPresenter = new MultiSelectionCellListPresenter(startPanel.getCellListSites(), sitesOfWorkingSetModel, sitesOfWorkingSetModel);
-		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler() {
-			@Override
-			public void onSelectionChange(SelectionChangedEvent event) {
-				sitesOfWorkingSetModel.update(event.getKey());
-			}
-		});
-		siteListPresenter.addErrorHandler(errorHandler);
-
 		//New & Edit Working Set Workflow
 		final NewSiteWizardView newSiteWizard = new NewSiteWizard();
 		final SiteListContentModel siteAddRemoveListModel = new SiteListContentModel();
@@ -140,15 +140,15 @@ public class NewsReader implements EntryPoint {
 		workingSetSelectionView.getEditButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				workingSetWorkflow.editWorkingSet(workingSetListModel.getSelectedKey());
+				workingSetWorkflow.editWorkingSet(workingSetListModel.getSelectedKey().getKey());
 			}
 		});
 		
 		//News Paging View
-		new PagingPresenter(filteredContentList, filteredContentList, newsPanel.getPagingView());
-		sitesOfWorkingSetModel.addSelectionListChangedHandler(new SelectionListChangedHandler() {
+		new PagingPresenter<EntityKey>(filteredContentList, filteredContentList, new EntityKeyLinkResolver(), newsPanel.getPagingView());
+		sitesOfWorkingSetModel.addSelectionListChangedHandler(new SelectionListChangedHandler<EntityKey>() {
             @Override
-            public void onSelectionListChanged(SelectionListChangedEvent event) {
+            public void onSelectionListChanged(SelectionListChangedEvent<EntityKey> event) {
                 filteredContentList.updateFromSites(EntityKeyUtil.extractKeys(event.getKeys()));
             }
         });
@@ -162,11 +162,11 @@ public class NewsReader implements EntryPoint {
 		//What others say view
 		final NewsListContentModel whatOthersSay = new NewsListContentModel();
 		new SingleSelectionCellListPresenter(newsPanel.getWhatOthersSayCellList(), whatOthersSay, whatOthersSay);
-		filteredContentList.addSelectionChangedhandler(new SelectionChangedHandler() {
+		filteredContentList.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
 			
 			@Override
-			public void onSelectionChange(SelectionChangedEvent event) {
-				whatOthersSay.updateFromArticle(event.getKey(), workingSetListModel.getSelectedKey(), new NotificationCallback() {
+			public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
+				whatOthersSay.updateFromArticle(event.getKey().getKey(), workingSetListModel.getSelectedKey().getKey(), new NotificationCallback() {
                     @Override
                     public void finished() {
                         deckPanel.showWidget(NEWS_PANEL_INDEX);
@@ -174,11 +174,11 @@ public class NewsReader implements EntryPoint {
                 });
 			}
 		});
-		whatOthersSay.addSelectionChangedhandler(new SelectionChangedHandler() {
+		whatOthersSay.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
 			@Override
-			public void onSelectionChange(SelectionChangedEvent event) {
+			public void onSelectionChange(final SelectionChangedEvent<EntityKey> event) {
 				if (event.isUserAction()) {
-					final String articleKey = event.getKey();
+					final String articleKey = event.getKey().getKey();
 					final String siteKey = ArticleUtil.getSiteKeyFromArticleKey(articleKey);
 					newsPanel.getSiteNameLabel().setText(siteKey);
 					
@@ -188,7 +188,7 @@ public class NewsReader implements EntryPoint {
 						
 						@Override
 						public void finished() {
-						    filteredContentList.setSelectedKey(articleKey);
+						    filteredContentList.setSelectedKey(event.getKey());
 						}
 					});
 				}
@@ -203,7 +203,7 @@ public class NewsReader implements EntryPoint {
             public void finished() {
                 if (workingSetListModel.getContentCount() > 0) {
                     EntityKey firstWorkingSet = workingSetListModel.getKeys().get(0);
-                    workingSetListModel.setSelectedKey(firstWorkingSet.getKey());
+                    workingSetListModel.setSelectedKey(firstWorkingSet);
                 }
             }
         });

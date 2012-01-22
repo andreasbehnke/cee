@@ -5,85 +5,80 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.cee.news.model.EntityKey;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HasEnabled;
 
-public class MultiSelectListPresenter {
+public class MultiSelectListPresenter<K> {
     
-    private final MultiSelectListModel multiModel;
+    private final MultiSelectListModel<K> multiModel;
     
-    private final ContentModel contentModel;
+    private final ContentModel<K> contentModel;
     
     private final ListView sourceView;
     
     private final ListView selectionView;
     
-    private final Map<String, HasEnabled> sourceItems;
+    private final Map<K, HasEnabled> sourceItems;
 
-    public MultiSelectListPresenter(final MultiSelectListModel multiModel, final ContentModel contentModel, final ListView sourceView, final ListView selectionView) {
+    public MultiSelectListPresenter(final MultiSelectListModel<K> multiModel, final ContentModel<K> contentModel, final ListView sourceView, final ListView selectionView) {
         this.multiModel = multiModel;
         this.contentModel = contentModel;
         this.sourceView = sourceView;
         this.selectionView = selectionView;
-        this.sourceItems = new HashMap<String, HasEnabled>();
+        this.sourceItems = new HashMap<K, HasEnabled>();
         
-        multiModel.addListChangedHandler(new ListChangedHandler() {
-            public void onContentListChanged(ListChangedEvent event) {
-                fillSourceList(event.getLinks());
+        multiModel.addListChangedHandler(new ListChangedHandler<K>() {
+            public void onContentListChanged(ListChangedEvent<K> event) {
+                fillSourceList(event.getValues());
             }
         });
         
-        multiModel.addSelectionListChangedHandler(new SelectionListChangedHandler() {
-            
-            public void onSelectionListChanged(SelectionListChangedEvent event) {
+        multiModel.addSelectionListChangedHandler(new SelectionListChangedHandler<K>() {
+            public void onSelectionListChanged(SelectionListChangedEvent<K> event) {
                 fillSelectionList(event.getKeys());
             }
         });
     }
     
-    protected void fillSourceList(List<EntityKey> links) {
+    protected void fillSourceList(List<K> keys) {
         sourceView.removeAll();
         sourceItems.clear();
-        for (final EntityKey link : links) {
-            String key = link.getKey();
+        for (final K key : keys) {
             ListItemView item = sourceView.addItem();
             contentModel.getContentDescription(item, key);
             item.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
-                    addSelection(link);
+                    addSelection(key);
                 }
             });
-            sourceItems.put(link.getKey(), item);
+            sourceItems.put(key, item);
         }
     }
     
-    protected void fillSelectionList(List<EntityKey> links) {
+    protected void fillSelectionList(List<K> keys) {
         selectionView.removeAll();
-        for (Entry<String, HasEnabled> entry : sourceItems.entrySet()) {
+        for (Entry<K, HasEnabled> entry : sourceItems.entrySet()) {
 			entry.getValue().setEnabled(true);
 		}
-        for (final EntityKey link : links) {
+        for (final K key : keys) {
             ListItemView item = selectionView.addItem();
-            contentModel.getContentDescription(item, link.getKey());
+            contentModel.getContentDescription(item, key);
             item.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
-                    removeSelection(link);
+                    removeSelection(key);
                 }
             });
-            sourceItems.get(link.getKey()).setEnabled(false);
+            sourceItems.get(key).setEnabled(false);
         }
     }
     
-    protected void addSelection(EntityKey link) {
-        String key = link.getKey();
+    protected void addSelection(K key) {
         multiModel.addSelection(key);
         sourceItems.get(key).setEnabled(false);
     }
 
-    protected void removeSelection(EntityKey link) {
-        String key = link.getKey();
+    protected void removeSelection(K key) {
         multiModel.removeSelection(key);
         sourceItems.get(key).setEnabled(true);
     }

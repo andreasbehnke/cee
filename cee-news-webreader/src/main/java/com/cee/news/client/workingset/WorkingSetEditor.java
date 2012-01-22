@@ -33,7 +33,7 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
 	
 	private SimpleEditor<Boolean> isNewEditor;
 	
-	private SelectionListEditor sitesEditor;
+	private SelectionListEditor<EntityKey> sitesEditor;
 
 	private Button buttonSave;
 
@@ -41,7 +41,7 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
 
 	private Button buttonAddNewSite;
 
-    public WorkingSetEditor(final MultiSelectListModel siteListModel, final ContentModel siteContentModel) {
+    public WorkingSetEditor(final MultiSelectListModel<EntityKey> siteListModel, final ContentModel<EntityKey> siteContentModel) {
     	setText("Edit Working Set");
         LayoutPanel layoutPanel = new LayoutPanel();
         setWidget(layoutPanel);
@@ -67,7 +67,7 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
         layoutPanel.setWidgetRightWidth(listPanelSelectedSites, 0.0, Unit.PX, 50.0, Unit.PCT);
         layoutPanel.setWidgetTopBottom(listPanelSelectedSites, 65.0, Unit.PX, 86.0, Unit.PX);
         
-        new MultiSelectListPresenter(siteListModel, siteContentModel, listPanelSites, listPanelSelectedSites);
+        new MultiSelectListPresenter<EntityKey>(siteListModel, siteContentModel, listPanelSites, listPanelSelectedSites);
         
         InlineLabel nlnlblAvailableSites = new InlineLabel("Available Sites:");
         layoutPanel.add(nlnlblAvailableSites);
@@ -111,7 +111,7 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
         layoutPanel.setWidgetLeftRight(labelErrorMessage, 0.0, Unit.PX, 0.0, Unit.PX);
         layoutPanel.setWidgetBottomHeight(labelErrorMessage, 31.0, Unit.PX, 19.0, Unit.PX);
         
-        sitesEditor = new SelectionListEditor(siteListModel);
+        sitesEditor = new SelectionListEditor<EntityKey>(siteListModel);
         oldNameEditor = SimpleEditor.of();
         isNewEditor = SimpleEditor.of();
     }

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.cee.news.client.error.ErrorSourceBase;
-import com.cee.news.model.EntityKey;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
@@ -15,27 +14,27 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * event handlers and the content selection. Implementations must call fireContentListChanged(List<LinkValue> links)
  * after initialization and every time the underlying model changes.
  */
-public abstract class DefaultListModel extends ErrorSourceBase implements MultiSelectListModel{
+public abstract class DefaultListModel<K> extends ErrorSourceBase implements MultiSelectListModel<K> {
 
-	protected List<EntityKey> keys;
+	protected List<K> keys;
     
-	protected String selectedKey;
+	protected K selectedKey;
     
-    protected Set<String> selectedKeys = new HashSet<String>();
+    protected Set<K> selectedKeys = new HashSet<K>();
 
     @Override
-    public String getSelectedKey() {
+    public K getSelectedKey() {
         return selectedKey;
     }
 
     @Override
-    public void setSelectedKey(String key) {
+    public void setSelectedKey(K key) {
         this.selectedKey = key;
         fireSelectionChanged(false);
     }
     
     @Override
-    public void userSelectedKey(String key) {
+    public void userSelectedKey(K key) {
     	this.selectedKey = key;
         fireSelectionChanged(true);
     }
@@ -49,19 +48,35 @@ public abstract class DefaultListModel extends ErrorSourceBase implements MultiS
     }
     
     @Override
-    public void addSelection(String key) {
+    public int getIndexOf(K key) {
+        if (keys == null) {
+            return -1;
+        }
+        return keys.indexOf(key);
+    };
+    
+    @Override
+    public K getKey(int index) {
+        if (keys == null) {
+            return null;
+        }
+        return keys.get(index);
+    }
+    
+    @Override
+    public void addSelection(K key) {
         selectedKeys.add(key);
         fireSelectionListChanged();
     }
     
     @Override
-    public void removeSelection(String key) {
+    public void removeSelection(K key) {
         selectedKeys.remove(key);
         fireSelectionListChanged();
     }
     
     @Override
-    public void setSelections(Collection<String> selectedKeys) {
+    public void setSelections(Collection<K> selectedKeys) {
     	this.selectedKeys.clear();
     	this.selectedKeys.addAll(selectedKeys);
     	fireSelectionListChanged();
@@ -74,43 +89,39 @@ public abstract class DefaultListModel extends ErrorSourceBase implements MultiS
     }
     
     @Override
-    public HandlerRegistration addSelectionListChangedHandler(SelectionListChangedHandler handler) {
+    public HandlerRegistration addSelectionListChangedHandler(SelectionListChangedHandler<K> handler) {
         return handlerManager.addHandler(SelectionListChangedEvent.TYPE, handler);
     }
     
     @Override
-    public HandlerRegistration addSelectionChangedhandler(SelectionChangedHandler handler) {
+    public HandlerRegistration addSelectionChangedhandler(SelectionChangedHandler<K> handler) {
         return handlerManager.addHandler(SelectionChangedEvent.TYPE, handler);
     }
 
     @Override
-    public HandlerRegistration addListChangedHandler(ListChangedHandler handler) {
+    public HandlerRegistration addListChangedHandler(ListChangedHandler<K> handler) {
         return handlerManager.addHandler(ListChangedEvent.TYPE, handler);
     }
     
     @Override
-    public List<EntityKey> getKeys() {
+    public List<K> getKeys() {
     	return keys;
     }
     
-    protected void setKeys(List<EntityKey> keys) {
+    protected void setValues(List<K> keys) {
     	this.keys = keys;
     	fireContentListChanged(keys);
     }
     
-    protected void fireContentListChanged(List<EntityKey> links) {
-        handlerManager.fireEvent(new ListChangedEvent(links));
+    protected void fireContentListChanged(List<K> links) {
+        handlerManager.fireEvent(new ListChangedEvent<K>(links));
     }
     
     protected void fireSelectionChanged(boolean userAction) {
-        handlerManager.fireEvent(new SelectionChangedEvent(selectedKey, userAction));
+        handlerManager.fireEvent(new SelectionChangedEvent<K>(selectedKey, userAction));
     }
     
     protected void fireSelectionListChanged() {
-        List<EntityKey> selectionLinks = new ArrayList<EntityKey>();
-        for (String key : selectedKeys) {
-            selectionLinks.add(EntityKeyUtil.getEntityKey(keys, key));
-        }
-        handlerManager.fireEvent(new SelectionListChangedEvent(selectionLinks));
+        handlerManager.fireEvent(new SelectionListChangedEvent<K>(new ArrayList<K>(selectedKeys)));
     }
 }

@@ -11,7 +11,6 @@ import com.cee.news.client.async.EntityUpdateResult.State;
 import com.cee.news.client.content.SiteData;
 import com.cee.news.client.content.SiteService;
 import com.cee.news.client.error.ServiceException;
-import com.cee.news.client.list.EntityContent;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
 import com.cee.news.store.SiteStore;
@@ -63,7 +62,7 @@ public class SiteServiceImpl implements SiteService {
 		}
 	}
 
-	protected EntityContent renderDescription(EntityKey key, Site site) {
+	protected EntityKey renderDescription(EntityKey key, Site site) {
 		StringBuilder builder = new StringBuilder();
 		String title = site.getTitle();
 		String description = site.getDescription();
@@ -72,11 +71,12 @@ public class SiteServiceImpl implements SiteService {
 		if (description != null) {
 			builder.append("<p>").append(site.getDescription()).append("</p>");
 		}
-		return new EntityContent(key, builder.toString());
+		key.setHtmlContent(builder.toString());
+		return key;
 	}
 	
 	@Override
-	public EntityContent getHtmlDescription(EntityKey siteKey) {
+	public EntityKey getHtmlDescription(EntityKey siteKey) {
 		try {
 			Site site = siteStore.getSite(siteKey.getKey());
 			return renderDescription(siteKey, site);
@@ -87,14 +87,13 @@ public class SiteServiceImpl implements SiteService {
 	}
 	
 	@Override
-	public List<EntityContent> getHtmlDescriptions(ArrayList<EntityKey> keys) {
+	public List<EntityKey> getHtmlDescriptions(ArrayList<EntityKey> keys) {
 		try {
-			List<EntityContent> descriptions = new ArrayList<EntityContent>();
 			for (EntityKey key : keys) {
 				Site site = siteStore.getSite(key.getKey());
-				descriptions.add(renderDescription(key, site));
+				renderDescription(key, site);
 			}
-			return descriptions;
+			return keys;
 		} catch (Exception e) {
 			LOG.error(COULD_NOT_RETRIEVE_SITE_DESCRIPTION, e);
 			throw new ServiceException(COULD_NOT_RETRIEVE_SITE_DESCRIPTION);
