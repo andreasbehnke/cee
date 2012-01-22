@@ -1,7 +1,6 @@
 package com.cee.news.client.content;
 
 import com.cee.news.client.error.ErrorHandler;
-import com.cee.news.client.list.MultiSelectionCellListPresenter;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
