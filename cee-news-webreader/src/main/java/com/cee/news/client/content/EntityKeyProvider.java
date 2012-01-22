@@ -1,4 +1,4 @@
-package com.cee.news.client.list;
+package com.cee.news.client.content;
 
 import com.cee.news.model.EntityKey;
 import com.google.gwt.view.client.ProvidesKey;

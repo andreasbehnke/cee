@@ -8,9 +8,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cee.news.client.content.EntityKeyUtil;
 import com.cee.news.client.content.NewsService;
 import com.cee.news.client.error.ServiceException;
-import com.cee.news.client.list.EntityKeyUtil;
 import com.cee.news.model.Article;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;

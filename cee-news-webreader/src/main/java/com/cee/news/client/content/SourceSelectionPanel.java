@@ -1,7 +1,5 @@
 package com.cee.news.client.content;
 
-import com.cee.news.client.list.EntityKeyCell;
-import com.cee.news.client.list.EntityKeyProvider;
 import com.cee.news.client.list.ScrollLoader;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.dom.client.Style.Unit;

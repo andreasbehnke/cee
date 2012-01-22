@@ -1,4 +1,4 @@
-package com.cee.news.client.list;
+package com.cee.news.client.content;
 
 import java.util.ArrayList;
 import java.util.List;

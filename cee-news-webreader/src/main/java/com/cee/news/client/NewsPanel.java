@@ -1,7 +1,7 @@
 package com.cee.news.client;
 
-import com.cee.news.client.list.EntityKeyCell;
-import com.cee.news.client.list.EntityKeyProvider;
+import com.cee.news.client.content.EntityKeyCell;
+import com.cee.news.client.content.EntityKeyProvider;
 import com.cee.news.client.list.ScrollLoader;
 import com.cee.news.client.paging.PagingPanel;
 import com.cee.news.client.paging.PagingView;

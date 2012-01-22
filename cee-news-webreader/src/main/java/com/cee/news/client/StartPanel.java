@@ -1,8 +1,8 @@
 package com.cee.news.client;
 
+import com.cee.news.client.content.EntityKeyCell;
 import com.cee.news.client.content.SourceSelectionPanel;
 import com.cee.news.client.content.SourceSelectionView;
-import com.cee.news.client.list.EntityKeyCell;
 import com.cee.news.client.list.ScrollLoader;
 import com.cee.news.client.progress.ProgressView;
 import com.cee.news.client.progress.TextProgressView;

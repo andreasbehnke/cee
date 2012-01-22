@@ -1,9 +1,12 @@
-package com.cee.news.client.list;
+package com.cee.news.client.content;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.cee.news.client.error.ErrorSourceBase;
+import com.cee.news.client.list.ListChangedEvent;
+import com.cee.news.client.list.ListChangedHandler;
+import com.cee.news.client.list.ListModel;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
