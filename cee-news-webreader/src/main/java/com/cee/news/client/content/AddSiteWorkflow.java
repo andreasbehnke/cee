@@ -15,13 +15,13 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 
 	private static final String HTTP_SCHEME = "http://";
 
-	private final NewSiteWizardView wizard;
+	protected final NewSiteWizardView wizard;
 
-	private final SiteUpdateServiceAsync siteUpdateService = SiteUpdateServiceAsync.Util.getInstance();
+	protected final SiteUpdateServiceAsync siteUpdateService = SiteUpdateServiceAsync.Util.getInstance();
 
-	private final SiteServiceAsync siteService = SiteServiceAsync.Util.getInstance();
+	protected final SiteServiceAsync siteService = SiteServiceAsync.Util.getInstance();
 	
-	private SiteData site;
+	protected SiteData site;
 
 	public AddSiteWorkflow(final NewSiteWizardView wizard) {
 		this.wizard = wizard;
@@ -138,7 +138,7 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 					return;
 				}
 				wizard.hide();
-				fireSiteAdded(result.getKey());
+	            fireSiteAdded(result.getKey());
 			}
 			
 			@Override

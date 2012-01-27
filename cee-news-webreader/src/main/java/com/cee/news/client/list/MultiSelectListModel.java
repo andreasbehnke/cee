@@ -5,7 +5,7 @@ import java.util.Collection;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * Model of a selectable list. Multiple elements of the content list can be selected.
+ * Model of a list with selection support. Multiple elements of the content list can be selected.
  */
 public interface MultiSelectListModel<K> extends ListModel<K> {
     

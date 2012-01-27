@@ -74,7 +74,7 @@ public class NewsPanel extends Composite implements NewsView {
 	 * @see com.cee.news.client.NewsView#getPagingView()
 	 */
 	@Override
-	public PagingView getPagingView() {
+	public PagingView getNewsPagingView() {
 		return pagingView;
 	}
 

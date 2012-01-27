@@ -1,6 +1,7 @@
 package com.cee.news.client;
 
 import com.cee.news.client.async.NotificationCallback;
+import com.cee.news.client.content.AddSiteToWorkingSet;
 import com.cee.news.client.content.ArticleUtil;
 import com.cee.news.client.content.CellListPresenter;
 import com.cee.news.client.content.EntityKeyLinkResolver;
@@ -13,7 +14,6 @@ import com.cee.news.client.content.SiteListContentModel;
 import com.cee.news.client.content.SiteUpdateServiceAsync;
 import com.cee.news.client.content.SourceSelectionPresenter;
 import com.cee.news.client.content.SourceSelectionView;
-import com.cee.news.client.error.ErrorDialog;
 import com.cee.news.client.error.ErrorEvent;
 import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.list.SelectionChangedEvent;
@@ -30,56 +30,29 @@ import com.cee.news.client.workingset.WorkingSetSelectionView;
 import com.cee.news.client.workingset.WorkingSetWorkflow;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.DeckPanel;
-import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class NewsReader implements EntryPoint {
 	
-	private static final int NEWS_PANEL_INDEX = 1;
-
-	private static final int START_PANEL_INDEX = 0;
-	
 	public void onModuleLoad() {
-		RootPanel rootPanel = RootPanel.get();
-		
-		final ErrorHandler errorHandler = new ErrorDialog();
-		
-		LayoutPanel layoutPanel = new LayoutPanel();
-		rootPanel.add(layoutPanel, 0, 0);
-		layoutPanel.setSize("100%", "100%");
-		
-		final DeckPanel deckPanel = new DeckPanel();
-		layoutPanel.add(deckPanel);
-		deckPanel.setSize("100%", "100%");
-		layoutPanel.setWidgetLeftRight(deckPanel, 0.0, Unit.PX, 0.0, Unit.PX);
-		layoutPanel.setWidgetTopBottom(deckPanel, 0.0, Unit.PX, 0.0, Unit.PX);
-		
-		StartPanel startPanel = new StartPanel();
-		deckPanel.add(startPanel);
-		startPanel.setSize("100%", "100%");
-		
-		final NewsPanel newsPanel = new NewsPanel();
-		deckPanel.add(newsPanel);
-		newsPanel.setSize("100%", "100%");
-		deckPanel.showWidget(START_PANEL_INDEX);
-		
+	    final ClientFactory clientFactory = GWT.create(ClientFactory.class);
+		final ErrorHandler errorHandler = clientFactory.getGlobalErrorHandler();
+	    
 		//Working Set Selection
 		final WorkingSetListModel workingSetListModel = new WorkingSetListModel();
 		workingSetListModel.addErrorHandler(errorHandler);
-		final WorkingSetSelectionView workingSetSelectionView = startPanel.getWorkingSetSelectionView();
+		final WorkingSetSelectionView workingSetSelectionView = clientFactory.getWorkingSetSelectionView();
 		
 		//Site Update Service
 		final SiteUpdateServiceAsync siteUpdateService = SiteUpdateServiceAsync.Util.getInstance();
 		final ProgressModel progressModel = new ProgressModel();
-		new ProgressPresenter(progressModel, startPanel.getProgressView());
+		new ProgressPresenter(progressModel, clientFactory.getProgressView());
 		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
 			@Override
 			public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
@@ -99,22 +72,13 @@ public class NewsReader implements EntryPoint {
 		//Filtered content list
 		final NewsListContentModel filteredContentList = new NewsListContentModel();
 		filteredContentList.addErrorHandler(errorHandler);
-		final CellListPresenter newsListPresenter = new SingleSelectionCellListPresenter(startPanel.getCellListLatestArticles(), filteredContentList, filteredContentList);
-		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
-			@Override
-			public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
-				filteredContentList.updateFromWorkingSet(event.getKey().getKey());
-			}
-		});
+		final CellListPresenter newsListPresenter = new SingleSelectionCellListPresenter(clientFactory.getCellListLatestArticles(), filteredContentList, filteredContentList);
 		newsListPresenter.addErrorHandler(errorHandler);
-		final ProgressUpdateHandler progressUpdateHandler = new ProgressUpdateHandler(filteredContentList);
-		workingSetListModel.addSelectionChangedhandler(progressUpdateHandler);
-		progressModel.addProgressHandler(progressUpdateHandler);
 		
 		//Site List
 		final SiteListContentModel sitesOfWorkingSetModel = new SiteListContentModel();
 		sitesOfWorkingSetModel.addErrorHandler(errorHandler);
-		final SourceSelectionView sourceSelectionView = startPanel.getSourceSelectionView();
+		final SourceSelectionView sourceSelectionView = clientFactory.getSourceSelectionView();
 		new SourceSelectionPresenter(sourceSelectionView, sitesOfWorkingSetModel, errorHandler);
 		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
             @Override
@@ -144,24 +108,35 @@ public class NewsReader implements EntryPoint {
 			}
 		});
 		
+		//Add Source to Working Set Workflow
+		final NewSiteWizardView addSiteWizard = new NewSiteWizard();
+        final AddSiteToWorkingSet addSiteToWorkingSet = new AddSiteToWorkingSet(addSiteWizard, workingSetListModel);
+		addSiteToWorkingSet.addErrorHandler(errorHandler);
+		sourceSelectionView.getAddButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                addSiteToWorkingSet.start();
+            }
+        });
+        
 		//News Paging View
-		new PagingPresenter<EntityKey>(filteredContentList, filteredContentList, new EntityKeyLinkResolver(), newsPanel.getPagingView());
+		new PagingPresenter<EntityKey>(filteredContentList, filteredContentList, new EntityKeyLinkResolver(), clientFactory.getNewsPagingView());
 		sitesOfWorkingSetModel.addSelectionListChangedHandler(new SelectionListChangedHandler<EntityKey>() {
             @Override
             public void onSelectionListChanged(SelectionListChangedEvent<EntityKey> event) {
                 filteredContentList.updateFromSites(EntityKeyUtil.extractKeys(event.getKeys()));
             }
         });
-		newsPanel.getButtonGoToStart().addClickHandler(new ClickHandler() {
+		clientFactory.getButtonGoToStart().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				deckPanel.showWidget(START_PANEL_INDEX);
+			    clientFactory.getPageSwitchView().showStartPage();
 			}
 		});
 		
 		//What others say view
 		final NewsListContentModel whatOthersSay = new NewsListContentModel();
-		new SingleSelectionCellListPresenter(newsPanel.getWhatOthersSayCellList(), whatOthersSay, whatOthersSay);
+		new SingleSelectionCellListPresenter(clientFactory.getWhatOthersSayCellList(), whatOthersSay, whatOthersSay);
 		filteredContentList.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
 			
 			@Override
@@ -169,7 +144,7 @@ public class NewsReader implements EntryPoint {
 				whatOthersSay.updateFromArticle(event.getKey().getKey(), workingSetListModel.getSelectedKey().getKey(), new NotificationCallback() {
                     @Override
                     public void finished() {
-                        deckPanel.showWidget(NEWS_PANEL_INDEX);
+                        clientFactory.getPageSwitchView().showNewsPage();
                     }
                 });
 			}
@@ -180,7 +155,7 @@ public class NewsReader implements EntryPoint {
 				if (event.isUserAction()) {
 					final String articleKey = event.getKey().getKey();
 					final String siteKey = ArticleUtil.getSiteKeyFromArticleKey(articleKey);
-					newsPanel.getSiteNameLabel().setText(siteKey);
+					clientFactory.getSiteNameLabel().setText(siteKey);
 					
 					//TODO should we update the site?
 					

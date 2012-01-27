@@ -83,4 +83,12 @@ public class WorkingSetServiceImpl implements WorkingSetService {
             throw new ServiceException(COULD_NOT_UPDATE_WORKING_SET);
         }
     }
+    
+    @Override
+    public WorkingSetData addSiteToWorkingSet(String workingSetName, EntityKey siteKey) {
+        WorkingSetData workingSet = getWorkingSet(workingSetName);
+        workingSet.getSites().add(siteKey);
+        update(workingSet);
+        return workingSet;
+    }
 }

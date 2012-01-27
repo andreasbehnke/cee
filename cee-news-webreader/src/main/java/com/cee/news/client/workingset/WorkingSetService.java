@@ -15,4 +15,6 @@ public interface WorkingSetService extends RemoteService {
 	WorkingSetData getWorkingSet(String name);
 	
 	EntityUpdateResult update(WorkingSetData workingSet);
+	
+	WorkingSetData addSiteToWorkingSet(String workingSetName, EntityKey siteKey);
 }
