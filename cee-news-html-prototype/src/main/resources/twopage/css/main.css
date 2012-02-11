@@ -1,0 +1,398 @@
+/*** Font Styles ***/
+BODY {
+	font-family: sans-serif;
+	font-size: 10pt;
+}
+
+P {
+	margin: 0px;
+}
+
+H1,H2,H3,H4,H5,H6 {
+	margin: 0px;
+	padding: 0px;
+	font-weight: normal;
+}
+
+H1 {
+	font-size: 22pt;
+}
+
+H2 {
+	font-size: 18pt;
+}
+
+H3 {
+	font-size: 16pt;
+}
+
+.content {
+	font-size: 12pt;
+}
+
+/* teaser */
+.teaser {
+	overflow: hidden;
+	padding: 8px
+}
+
+.teaser H1 {
+	font-size: 14pt;
+	margin-top: 8px;
+	margin-bottom: 4px;
+}
+
+/*** columns ***/
+.column1 {
+	width: 99%;
+	height: 150px;
+	float: none;
+}
+
+.column2 {
+	width: 49%;
+	min-width: 250px;
+	height: 150px;
+	float: left;
+}
+
+.column3 {
+	width: 30%;
+	min-width: 250px;
+	height: 150px;
+	float: left;
+}
+
+/*** Positioning ***/
+.top {
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	height: 40px;
+	z-index: 100;
+}
+
+.left {
+	left: 0px;
+	width: 280px;
+	top: 40px;
+	bottom: 0px;
+	z-index: 99;
+}
+
+.center {
+	z-index: 98;
+}
+
+
+#labelResult {
+	position: absolute;
+	top: 70px;
+	left: 280px;
+}
+
+#buttonRefresh {
+	position: absolute;
+	top: 50px;
+	right: 40px;
+}
+
+.content {
+	position: absolute;
+	top: 96px;
+	left: 280px;
+	right: 40px;
+}
+
+
+/* search panel */
+.search {
+	position: fixed;
+}
+
+.search .workingSetSelection {
+	left: 30px;
+	top: 9px;
+	width: 150px;
+	position: absolute;
+}
+
+.search .icon.editSet {
+	left: 192px;
+	top: 6px;
+	position: absolute;
+}
+
+.search .icon.addSet {
+	left: 218px;
+	top: 6px;
+	position: absolute;
+}
+
+.search .icon.deleteSet {
+	left: 244px;
+	top: 6px;
+	position: absolute;
+}
+
+.search .searchField {
+	left: 320px;
+	top: 9px;
+	right: 40px;
+	position: absolute;
+}
+
+.search .searchField INPUT {
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	position: absolute;
+}
+
+.search .icon.search {
+	top: -3px;
+	right: -3px;
+	position: absolute;
+}
+
+/* source filter */
+.sources {
+	position: fixed;
+}
+
+.sources .label {
+	top: 30px;
+	left: 30px;
+	position: absolute;
+}
+
+.sources .list {
+	top: 56px;
+	bottom: 100px;
+	left: 30px;
+	right: 30px;
+	position: absolute;
+	left: 30px;
+}
+
+.sources .icon.selectAll {
+	left: 30px;
+	bottom: 74px;
+	position: absolute;
+}
+
+.sources .icon.selectNone {
+	left: 56px;
+	bottom: 74px;
+	position: absolute;
+}
+
+.sources .icon.add {
+	left: 82px;
+	bottom: 74px;
+	position: absolute;
+}
+
+/* pager */
+.pager {
+	position: fixed;
+}
+
+.pager .link.navLeft {
+	left: 30px;
+	top: 3px;
+	width: 70px;
+	position: absolute;
+}
+
+.pager .articleSelection {
+	left: 320px;
+	top: 9px;
+	right: 92px;
+	position: absolute;
+}
+
+.pager .articleSelection select {
+	width: 100%;
+}
+
+.pager .navLeft {
+	top: 6px;
+	right: 66px;
+	position: absolute;
+}
+
+.pager .navRight {
+	top: 6px;
+	right: 40px;
+	position: absolute;
+}
+
+/* what others say panel */
+.related {
+	position: absolute;
+	padding-top: 30px;
+	padding-left: 30px;
+}
+
+
+/*** UI elements ***/
+.clickable, .checked, .unchecked {
+	cursor: pointer;
+}
+
+.clickable {
+	margin: 1px;
+}
+
+.clickable:HOVER {
+	margin: 0px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #c0c0c0;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
+.checked {
+	padding-left: 26px;
+}
+
+.unchecked {
+	padding-left: 26px;
+	color: gray;
+}
+
+.list {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #c0c0c0;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
+.listItem {
+	line-height: 30px;
+	vertical-align: baseline;
+}
+
+.verticalScroll {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+/* icons */
+.icon {
+	cursor: pointer;
+	border: none;
+	position: relative;
+	background-color: transparent;
+}
+
+.link {
+	cursor: pointer;
+	line-height: 30px;
+    vertical-align: baseline;
+    text-decoration: underline;
+}
+
+/* icons 24 * 24 pixels */
+button.icon24 {
+	width: 24px;
+}
+
+.icon24 {
+	background-image: url("../images/icons24.png");
+	background-repeat: no-repeat;
+	height: 24px;
+}
+
+.icon24.editSet {
+	background-position: 0px -60px;
+}
+
+.icon24.addSet {
+	background-position: 0px -84px;
+}
+
+.icon24.deleteSet {
+	background-position: 0px -108px;
+}
+
+.icon24.search {
+	background-position: 0px -132px;
+}
+
+.icon24.delete {
+	background-position: 0px -156px;
+}
+
+.icon24.refresh {
+	background-position: 0px -180px;
+}
+
+.icon24.selectAll {
+	background-position: 0px -204px;
+}
+
+.icon24.selectNone {
+	background-position: 0px -228px;
+}
+
+.icon24.add {
+	background-position: 0px -252px;
+}
+
+.icon24.navLeft {
+	background-position: 0px -276px;
+}
+
+.icon24.navRight {
+	background-position: 0px -300px;
+}
+
+/* icons 30 * 24 pixels */
+.link.icon30 {
+	padding-left: 26px;
+}
+
+.icon30 {
+	background-image: url("../images/icons24.png");
+	background-repeat: no-repeat;
+	height: 30px;
+}
+
+.icon30.unchecked {
+	background-position: 0px -324px;
+}
+
+.icon30.checked {
+	background-position: 0px -354px;
+}
+
+.icon30.navLeft {
+	background-position: 0px 0px;
+}
+
+.icon30.navRight {
+	background-position: 0px -60px;
+}
+
+/** background **/
+.top {
+	background: #f6f8f9; /* Old browsers */
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background:
+		url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Y2ZjhmOSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2U1ZWJlZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUxJSIgc3RvcC1jb2xvcj0iI2Q3ZGVlMyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmNWY3ZjkiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9
+		100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f6f8f9),
+		color-stop(50%, #e5ebee), color-stop(51%, #d7dee3),
+		color-stop(100%, #f5f7f9) ); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%,
+		#f5f7f9 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9
+		100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9
+		100%); /* IE10+ */
+	background: linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9 100%);
+}
