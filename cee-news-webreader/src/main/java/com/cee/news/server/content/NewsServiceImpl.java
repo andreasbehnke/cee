@@ -46,6 +46,8 @@ public class NewsServiceImpl implements NewsService {
 	private static final String COULD_NOT_RETRIEVE_ARTICLES_OF_SITE = "Could not retrieve articles of site %s";
 	
 	private static final String COULD_NOT_RETRIEVE_ARTICLES_OF_SITES = "Could not retrieve articles of sites";
+	
+	private static final String COULD_NOT_FIND_ARTICLES_FOR_SEARCH = "Could not find articles for search %s";
     
     private ArticleStore articleStore;
 
@@ -188,6 +190,23 @@ public class NewsServiceImpl implements NewsService {
 			LOG.error(message, exception);
 			throw new ServiceException(message);
 		}
+	}
+	
+	@Override
+	public List<EntityKey> findArticles(List<String> siteKeys, String searchQuery) {
+	    if (siteKeys == null) {
+	        throw new IllegalArgumentException("Missing parameter siteKeys");
+	    }
+	    if (searchQuery == null) {
+	        throw new IllegalArgumentException("Missing parameter searchQuery");
+	    }
+	    try {
+            return articleSearchService.findArticles(siteKeys, searchQuery);
+        } catch (Exception exception) {
+            String message = String.format(COULD_NOT_FIND_ARTICLES_FOR_SEARCH, searchQuery);
+            LOG.error(message, exception);
+            throw new ServiceException(message);
+        }
 	}
 	
 	@Override

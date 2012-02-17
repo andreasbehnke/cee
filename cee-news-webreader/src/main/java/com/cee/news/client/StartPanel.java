@@ -14,6 +14,8 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.cee.news.client.search.SearchPanel;
+import com.cee.news.client.search.SearchView;
 
 public class StartPanel extends Composite implements StartView {
     
@@ -23,17 +25,19 @@ public class StartPanel extends Composite implements StartView {
     
     private final SourceSelectionView sourceSelectionView;
     
-    private final CellList<EntityKey> cellListLatestArticles;
+    private SearchView searchView;
     
+    private final CellList<EntityKey> cellListLatestArticles;
+
     public StartPanel() {
     	LayoutPanel layoutPanel = new LayoutPanel();
         initWidget(layoutPanel);
-        layoutPanel.setSize("781px", "441px");
+        layoutPanel.setSize("818px", "493px");
         
         workingSetSelection = new WorkingSetSelection();
         layoutPanel.add(workingSetSelection);
-        layoutPanel.setWidgetLeftWidth(workingSetSelection, 0.0, Unit.PX, 626.0, Unit.PX);
-        layoutPanel.setWidgetTopHeight(workingSetSelection, 0.0, Unit.PX, 24.0, Unit.PX);
+        layoutPanel.setWidgetLeftWidth(workingSetSelection, 0.0, Unit.PX, 297.0, Unit.PX);
+        layoutPanel.setWidgetTopHeight(workingSetSelection, 0.0, Unit.PX, 30.0, Unit.PX);
         
         sourceSelectionView = new SourceSelectionPanel();
         layoutPanel.add(sourceSelectionView);
@@ -62,6 +66,11 @@ public class StartPanel extends Composite implements StartView {
         layoutPanel.add(articlesPager);
         layoutPanel.setWidgetLeftRight(articlesPager, 366.0, Unit.PX, 0.0, Unit.PX);
         layoutPanel.setWidgetTopBottom(articlesPager, 52.0, Unit.PX, 0.0, Unit.PX);
+        
+        searchView = new SearchPanel();
+        layoutPanel.add(searchView);
+        layoutPanel.setWidgetLeftRight(searchView, 303.0, Unit.PX, 0.0, Unit.PX);
+        layoutPanel.setWidgetTopHeight(searchView, 0.0, Unit.PX, 24.0, Unit.PX);
     }
 
     @Override
@@ -72,6 +81,11 @@ public class StartPanel extends Composite implements StartView {
     @Override
 	public WorkingSetSelectionView getWorkingSetSelectionView() {
         return workingSetSelection;
+    }
+    
+    @Override
+    public SearchView getSearchView() {
+        return searchView;
     }
     
     @Override

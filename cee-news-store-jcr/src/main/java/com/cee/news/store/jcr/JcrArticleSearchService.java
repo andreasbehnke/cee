@@ -21,6 +21,8 @@ import com.cee.news.store.StoreException;
 
 public class JcrArticleSearchService extends JcrStoreBase implements ArticleSearchService {
 
+    private static final String SQL2_SEARCH_ARTICLES = "SELECT [news:article].* from [news:article] WHERE CONTAINS([news:article].*,'%s')";
+    
 	private static final String XPATH_SIMILAR_ARTICLES = "//element(*, news:article)[rep:similar(., '/news:content/%s')] order by @jcr:score descending";
 	
 	public JcrArticleSearchService() {
@@ -37,7 +39,7 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 			double score = row.getScore();
 			Node node = row.getNode();
 			String articlePath = node.getPath().replace(PATH_CONTENT, "");
-			if (!comparedArticleKey.equals(articlePath)) {
+			if (comparedArticleKey == null || !comparedArticleKey.equals(articlePath)) {
 				String siteName = articlePath.substring(0, articlePath.indexOf('/'));
 		    	if (sites.contains(siteName)) {
 		    		String articleTitle = node.getProperty(PROP_TITLE).getString() + " : " + score;
@@ -50,8 +52,20 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 	
 	@Override
 	public List<EntityKey> findArticles(List<String> sites, String fulltextSearchQuery) throws SearchException {
-		// TODO Auto-generated method stub
-		return null;
+	    testSession();
+        if (sites == null) {
+            throw new IllegalArgumentException("Parameter sites must not be null");
+        }
+        if (fulltextSearchQuery == null) {
+            throw new IllegalArgumentException("Parameter fulltextSearchQuery must not be null");
+        }
+        try {
+            QueryManager queryManager = getSession().getWorkspace().getQueryManager();
+            Query q = queryManager.createQuery(String.format(SQL2_SEARCH_ARTICLES, "%" + fulltextSearchQuery + "%"), Query.JCR_SQL2);
+            return buildPathList(q.execute().getRows(), sites, null);
+        } catch (RepositoryException e) {
+            throw new SearchException("Could not perform search query", e);
+        }
 	}
 
     @Override

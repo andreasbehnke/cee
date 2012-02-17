@@ -18,11 +18,11 @@ public class SiteListContentModel extends DefaultListModel<EntityKey> implements
 
     private SiteServiceAsync service = SiteServiceAsync.Util.getInstance();
     
-    public void update() {
-        update((NotificationCallback)null);
+    public void findAllSites() {
+        findAllSites((NotificationCallback)null);
     }
     
-    public void update(final NotificationCallback callback) {
+    public void findAllSites(final NotificationCallback callback) {
         service.getSites(new AsyncCallback<List<EntityKey>>() {
             
             public void onSuccess(List<EntityKey> result) {
@@ -38,11 +38,11 @@ public class SiteListContentModel extends DefaultListModel<EntityKey> implements
         });
     }
     
-    public void update(String workingSetName) {
-        update(workingSetName, null);
+    public void findSitesOfWorkingSet(String workingSetName) {
+        findSitesOfWorkingSet(workingSetName, null);
     }
     
-    public void update(String workingSetName, final NotificationCallback callback) {
+    public void findSitesOfWorkingSet(String workingSetName, final NotificationCallback callback) {
     	service.getSitesOfWorkingSet(workingSetName, new AsyncCallback<List<EntityKey>>() {
 			
 			@Override

@@ -21,6 +21,8 @@ public interface NewsService extends RemoteService {
 	
 	List<EntityKey> getRelatedArticles(String articleId, String workingSetName);
 	
+	List<EntityKey> findArticles(List<String> siteKeys, String searchQuery);
+	
 	EntityKey getHtmlDescription(EntityKey articleKey);
 	
 	List<EntityKey> getHtmlDescriptions(List<EntityKey> keys);

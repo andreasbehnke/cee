@@ -23,6 +23,7 @@ import com.cee.news.client.list.SelectionListChangedHandler;
 import com.cee.news.client.paging.PagingPresenter;
 import com.cee.news.client.progress.ProgressModel;
 import com.cee.news.client.progress.ProgressPresenter;
+import com.cee.news.client.search.SearchPresenter;
 import com.cee.news.client.workingset.WorkingSetEditor;
 import com.cee.news.client.workingset.WorkingSetListModel;
 import com.cee.news.client.workingset.WorkingSetSelectionPresenter;
@@ -83,9 +84,12 @@ public class NewsReader implements EntryPoint {
 		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
             @Override
             public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
-                sitesOfWorkingSetModel.update(event.getKey().getKey());
+                sitesOfWorkingSetModel.findSitesOfWorkingSet(event.getKey().getKey());
             }
         });
+		
+		//Search
+		new SearchPresenter(filteredContentList, sitesOfWorkingSetModel, clientFactory.getSearchView());
 		
 		//New & Edit Working Set Workflow
 		final NewSiteWizardView newSiteWizard = new NewSiteWizard();
@@ -124,7 +128,7 @@ public class NewsReader implements EntryPoint {
 		sitesOfWorkingSetModel.addSelectionListChangedHandler(new SelectionListChangedHandler<EntityKey>() {
             @Override
             public void onSelectionListChanged(SelectionListChangedEvent<EntityKey> event) {
-                filteredContentList.updateFromSites(EntityKeyUtil.extractKeys(event.getKeys()));
+                filteredContentList.getNewsOfSites(EntityKeyUtil.extractKeys(event.getKeys()));
             }
         });
 		clientFactory.getButtonGoToStart().addClickHandler(new ClickHandler() {
@@ -141,7 +145,7 @@ public class NewsReader implements EntryPoint {
 			
 			@Override
 			public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
-				whatOthersSay.updateFromArticle(event.getKey().getKey(), workingSetListModel.getSelectedKey().getKey(), new NotificationCallback() {
+				whatOthersSay.getRelatedArticles(event.getKey().getKey(), workingSetListModel.getSelectedKey().getKey(), new NotificationCallback() {
                     @Override
                     public void finished() {
                         clientFactory.getPageSwitchView().showNewsPage();
@@ -159,7 +163,7 @@ public class NewsReader implements EntryPoint {
 					
 					//TODO should we update the site?
 					
-					filteredContentList.updateFromSite(siteKey, new NotificationCallback() {
+					filteredContentList.getNewsOfSite(siteKey, new NotificationCallback() {
 						
 						@Override
 						public void finished() {
@@ -171,8 +175,8 @@ public class NewsReader implements EntryPoint {
 		});
 		
 		//trigger update
-		siteAddRemoveListModel.update();
-		workingSetListModel.update(new NotificationCallback() {
+		siteAddRemoveListModel.findAllSites();
+		workingSetListModel.findAllWorkingSets(new NotificationCallback() {
             
             @Override
             public void finished() {

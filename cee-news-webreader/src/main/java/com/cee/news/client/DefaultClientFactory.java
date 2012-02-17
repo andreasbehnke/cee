@@ -4,6 +4,7 @@ import com.cee.news.client.content.SourceSelectionView;
 import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.paging.PagingView;
 import com.cee.news.client.progress.ProgressView;
+import com.cee.news.client.search.SearchView;
 import com.cee.news.client.workingset.WorkingSetSelectionView;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -25,6 +26,11 @@ public abstract class DefaultClientFactory implements ClientFactory {
     @Override
     public WorkingSetSelectionView getWorkingSetSelectionView() {
         return getStartView().getWorkingSetSelectionView();
+    }
+    
+    @Override
+    public SearchView getSearchView() {
+        return getStartView().getSearchView();
     }
 
     @Override

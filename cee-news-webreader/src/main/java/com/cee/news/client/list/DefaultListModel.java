@@ -76,6 +76,11 @@ public abstract class DefaultListModel<K> extends ErrorSourceBase implements Mul
     }
     
     @Override
+    public Collection<K> getSelections() {
+        return selectedKeys;
+    }
+    
+    @Override
     public void setSelections(Collection<K> selectedKeys) {
     	this.selectedKeys.clear();
     	this.selectedKeys.addAll(selectedKeys);

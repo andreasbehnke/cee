@@ -1,3 +1,8 @@
+/*** reset ***/
+BODY {
+	margin: 0px;
+}
+
 /*** Font Styles ***/
 BODY {
 	font-family: sans-serif;
@@ -30,10 +35,19 @@ H3 {
 	font-size: 12pt;
 }
 
+.content H1 {
+	margin-top: 8px;
+	margin-bottom: 4px;
+}
+
 /* teaser */
 .teaser {
 	overflow: hidden;
 	padding: 8px
+}
+
+.teaser:HOVER {
+	padding: 7px;
 }
 
 .teaser H1 {
@@ -44,26 +58,28 @@ H3 {
 
 /*** columns ***/
 .column1 {
-	width: 99%;
-	height: 150px;
+	width: 100%;
+	min-width: 250px;
+	height: 120px;
 	float: none;
 }
 
 .column2 {
 	width: 49%;
 	min-width: 250px;
-	height: 150px;
+	height: 120px;
 	float: left;
 }
 
 .column3 {
 	width: 30%;
 	min-width: 250px;
-	height: 150px;
+	height: 120px;
 	float: left;
 }
 
 /*** Positioning ***/
+
 .top {
 	left: 0px;
 	right: 0px;
@@ -74,75 +90,83 @@ H3 {
 
 .left {
 	left: 0px;
-	width: 280px;
+	width: 320px;
 	top: 40px;
 	bottom: 0px;
 	z-index: 99;
 }
 
+.left .label {
+	top: 30px;
+	left: 38px;
+	position: absolute;
+}
+
+.left .list {
+	top: 56px;
+	left: 30px;
+	right: 30px;
+	position: absolute;
+}
+
 .center {
-	z-index: 98;
+	position: absolute;
+	top: 96px;
+	left: 320px;
+	right: 40px;z-index: 98;
 }
 
 
-#labelResult {
+#label-result {
 	position: absolute;
 	top: 70px;
-	left: 280px;
+	left: 328px;
 }
 
-#buttonRefresh {
+#button-refresh {
 	position: absolute;
 	top: 50px;
 	right: 40px;
 }
-
-.content {
-	position: absolute;
-	top: 96px;
-	left: 280px;
-	right: 40px;
-}
-
 
 /* search panel */
 .search {
 	position: fixed;
 }
 
-.search .workingSetSelection {
+.search .workingset-selection {
 	left: 30px;
 	top: 9px;
 	width: 150px;
 	position: absolute;
 }
 
-.search .icon.editSet {
+.search .icon.edit-set {
 	left: 192px;
 	top: 6px;
 	position: absolute;
 }
 
-.search .icon.addSet {
+.search .icon.add-set {
 	left: 218px;
 	top: 6px;
 	position: absolute;
 }
 
-.search .icon.deleteSet {
+.search .icon.delete-set {
 	left: 244px;
 	top: 6px;
 	position: absolute;
 }
 
-.search .searchField {
+.search .search-field {
 	left: 320px;
 	top: 9px;
 	right: 40px;
 	position: absolute;
 }
 
-.search .searchField INPUT {
+.search .search-field INPUT {
 	left: 0px;
 	top: 0px;
 	width: 100%;
@@ -160,28 +184,17 @@ H3 {
 	position: fixed;
 }
 
-.sources .label {
-	top: 30px;
-	left: 30px;
-	position: absolute;
-}
-
 .sources .list {
-	top: 56px;
 	bottom: 100px;
-	left: 30px;
-	right: 30px;
-	position: absolute;
-	left: 30px;
 }
 
-.sources .icon.selectAll {
+.sources .icon.select-all {
 	left: 30px;
 	bottom: 74px;
 	position: absolute;
 }
 
-.sources .icon.selectNone {
+.sources .icon.select-none {
 	left: 56px;
 	bottom: 74px;
 	position: absolute;
@@ -198,60 +211,83 @@ H3 {
 	position: fixed;
 }
 
-.pager .link.navLeft {
+.pager .link.nav-left {
 	left: 30px;
 	top: 3px;
 	width: 70px;
 	position: absolute;
 }
 
-.pager .articleSelection {
+.pager .article-selection {
 	left: 320px;
 	top: 9px;
 	right: 92px;
 	position: absolute;
 }
 
-.pager .articleSelection select {
+.pager .article-selection select {
 	width: 100%;
 }
 
-.pager .navLeft {
+.pager .nav-left {
 	top: 6px;
 	right: 66px;
 	position: absolute;
 }
 
-.pager .navRight {
+.pager .nav-right {
 	top: 6px;
 	right: 40px;
 	position: absolute;
 }
 
-/* what others say panel */
-.related {
-	position: absolute;
-	padding-top: 30px;
-	padding-left: 30px;
+/* main content */
+.content {
+	padding: 8px;
 }
 
+.center.content {
+	top: 70px;
+}
+
+/* what others say panel */
+
+.related {
+	position: absolute;
+}
 
 /*** UI elements ***/
 .clickable, .checked, .unchecked {
 	cursor: pointer;
 }
 
-.clickable {
-	margin: 1px;
+.checked:HOVER, .unchecked:HOVER {
+	background-color: #f6f8f9;
 }
 
 .clickable:HOVER {
-	margin: 0px;
 	border-style: solid;
 	border-width: 1px;
 	border-color: #c0c0c0;
 	-moz-border-radius: 6px;
 	border-radius: 6px;
+	
+	background: #f6f8f9; /* Old browsers */
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background:
+		url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Y2ZjhmOSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2U1ZWJlZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUxJSIgc3RvcC1jb2xvcj0iI2Q3ZGVlMyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmNWY3ZjkiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9
+		100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f6f8f9),
+		color-stop(50%, #e5ebee), color-stop(51%, #d7dee3),
+		color-stop(100%, #f5f7f9) ); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%,
+		#f5f7f9 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9
+		100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9
+		100%); /* IE10+ */
+	background: linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9 100%);
 }
 
 .checked {
@@ -263,7 +299,7 @@ H3 {
 	color: gray;
 }
 
-.list {
+.border {
 	border-style: solid;
 	border-width: 1px;
 	border-color: #c0c0c0;
@@ -271,12 +307,12 @@ H3 {
 	border-radius: 6px;
 }
 
-.listItem {
+.list-item {
 	line-height: 30px;
 	vertical-align: baseline;
 }
 
-.verticalScroll {
+.vertical-scroll {
 	overflow-y: auto;
 	overflow-x: hidden;
 }
@@ -306,15 +342,15 @@ button.icon24 {
 	height: 24px;
 }
 
-.icon24.editSet {
+.icon24.edit-set {
 	background-position: 0px -60px;
 }
 
-.icon24.addSet {
+.icon24.add-set {
 	background-position: 0px -84px;
 }
 
-.icon24.deleteSet {
+.icon24.delete-set {
 	background-position: 0px -108px;
 }
 
@@ -330,11 +366,11 @@ button.icon24 {
 	background-position: 0px -180px;
 }
 
-.icon24.selectAll {
+.icon24.select-all {
 	background-position: 0px -204px;
 }
 
-.icon24.selectNone {
+.icon24.select-none {
 	background-position: 0px -228px;
 }
 
@@ -342,11 +378,11 @@ button.icon24 {
 	background-position: 0px -252px;
 }
 
-.icon24.navLeft {
+.icon24.nav-left {
 	background-position: 0px -276px;
 }
 
-.icon24.navRight {
+.icon24.nav-right {
 	background-position: 0px -300px;
 }
 
@@ -369,11 +405,11 @@ button.icon24 {
 	background-position: 0px -354px;
 }
 
-.icon30.navLeft {
+.icon30.nav-left {
 	background-position: 0px 0px;
 }
 
-.icon30.navRight {
+.icon30.nav-right {
 	background-position: 0px -60px;
 }
 

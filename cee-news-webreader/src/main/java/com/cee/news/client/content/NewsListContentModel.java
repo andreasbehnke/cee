@@ -15,11 +15,11 @@ public class NewsListContentModel extends DefaultListModel<EntityKey> implements
     
     private final NewsServiceAsync service = NewsServiceAsync.Util.getInstance();
     
-    public void updateFromSite(final String siteKey) {
-    	updateFromSite(siteKey, null);
+    public void getNewsOfSite(final String siteKey) {
+    	getNewsOfSite(siteKey, null);
     }
     
-    public void updateFromSite(final String siteKey, final NotificationCallback callback) {
+    public void getNewsOfSite(final String siteKey, final NotificationCallback callback) {
         service.getArticlesOfSite(siteKey, new AsyncCallback<List<EntityKey>>() {
             public void onSuccess(List<EntityKey> result) {
                 setValues(result);
@@ -33,11 +33,11 @@ public class NewsListContentModel extends DefaultListModel<EntityKey> implements
         });
     }
     
-    public void updateFromSites(final List<String> siteKeys) {
-        updateFromSites(siteKeys, null);
+    public void getNewsOfSites(final List<String> siteKeys) {
+        getNewsOfSites(siteKeys, null);
     }
         
-    public void updateFromSites(final List<String> siteKeys, final NotificationCallback callback) {
+    public void getNewsOfSites(final List<String> siteKeys, final NotificationCallback callback) {
         service.getArticlesOfSites(siteKeys, new AsyncCallback<List<EntityKey>>() {
             public void onSuccess(List<EntityKey> result) {
                 setValues(result);
@@ -51,11 +51,11 @@ public class NewsListContentModel extends DefaultListModel<EntityKey> implements
         });
     }
     
-    public void updateFromWorkingSet(final String workingSetName) {
-    	updateFromWorkingSet(workingSetName, null);
+    public void getNewsOfWorkingSet(final String workingSetName) {
+    	getNewsOfWorkingSet(workingSetName, null);
     }
     
-    public void updateFromWorkingSet(final String workingSetName, final NotificationCallback callback) {
+    public void getNewsOfWorkingSet(final String workingSetName, final NotificationCallback callback) {
     	service.getArticlesOfWorkingSet(workingSetName, new AsyncCallback<List<EntityKey>>() {
 			
 			@Override
@@ -73,11 +73,11 @@ public class NewsListContentModel extends DefaultListModel<EntityKey> implements
 		});
     }
     
-    public void updateFromArticle(final String articleId, final String workingSet) {
-    	updateFromArticle(articleId, workingSet, null);
+    public void getRelatedArticles(final String articleId, final String workingSet) {
+    	getRelatedArticles(articleId, workingSet, null);
     }
     
-    public void updateFromArticle(final String articleId, final String workingSet, final NotificationCallback callback) {
+    public void getRelatedArticles(final String articleId, final String workingSet, final NotificationCallback callback) {
     	service.getRelatedArticles(articleId, workingSet, new AsyncCallback<List<EntityKey>>() {
 			
 			@Override
@@ -93,6 +93,28 @@ public class NewsListContentModel extends DefaultListModel<EntityKey> implements
 				fireErrorEvent(caught, "Could not load related articles!");//TODO: i18n
 			}
 		});
+    }
+    
+    public void findArticles(final List<String> siteKeys, final String searchQuery) {
+        findArticles(siteKeys, searchQuery, null);
+    }
+    
+    public void findArticles(final List<String> siteKeys, final String searchQuery, final NotificationCallback callback) {
+        service.findArticles(siteKeys, searchQuery, new AsyncCallback<List<EntityKey>>() {
+            
+            @Override
+            public void onSuccess(List<EntityKey> result) {
+                setValues(result);
+                if (callback != null) {
+                    callback.finished();
+                }
+            }
+            
+            @Override
+            public void onFailure(Throwable caught) {
+                fireErrorEvent(caught, "Could not find articles!");//TODO: i18n
+            }
+        });
     }
 
     @Override

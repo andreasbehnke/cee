@@ -21,6 +21,8 @@ public interface MultiSelectListModel<K> extends ListModel<K> {
      */
     void removeSelection(K key);
     
+    Collection<K> getSelections();
+    
     /**
      * Set the selected keys
      * @param selections List containing the selected keys

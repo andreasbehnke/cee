@@ -57,7 +57,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 		addSiteWorkflow.addSiteAddedHandler(new SiteAddedHandler() {
 			@Override
 			public void onSiteAdded(final SiteAddedEvent event) {
-				siteListModel.update(new NotificationCallback() {
+				siteListModel.findAllSites(new NotificationCallback() {
 					
 					@Override
 					public void finished() {
@@ -123,7 +123,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 					break;
 				case ok:
 					editor.hide();
-					workingSetListModel.update(new NotificationCallback() {
+					workingSetListModel.findAllWorkingSets(new NotificationCallback() {
 						
 						@Override
 						public void finished() {
