@@ -11,18 +11,14 @@ import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.content.NewsListContentModel;
 import com.cee.news.client.content.SingleSelectionCellListPresenter;
 import com.cee.news.client.content.SiteListContentModel;
-import com.cee.news.client.content.SiteUpdateServiceAsync;
 import com.cee.news.client.content.SourceSelectionPresenter;
 import com.cee.news.client.content.SourceSelectionView;
-import com.cee.news.client.error.ErrorEvent;
 import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.list.SelectionChangedEvent;
 import com.cee.news.client.list.SelectionChangedHandler;
 import com.cee.news.client.list.SelectionListChangedEvent;
 import com.cee.news.client.list.SelectionListChangedHandler;
 import com.cee.news.client.paging.PagingPresenter;
-import com.cee.news.client.progress.ProgressModel;
-import com.cee.news.client.progress.ProgressPresenter;
 import com.cee.news.client.search.SearchPresenter;
 import com.cee.news.client.workingset.WorkingSetEditor;
 import com.cee.news.client.workingset.WorkingSetListModel;
@@ -34,7 +30,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -50,26 +45,6 @@ public class NewsReader implements EntryPoint {
 		workingSetListModel.addErrorHandler(errorHandler);
 		final WorkingSetSelectionView workingSetSelectionView = clientFactory.getWorkingSetSelectionView();
 		
-		//Site Update Service
-		final SiteUpdateServiceAsync siteUpdateService = SiteUpdateServiceAsync.Util.getInstance();
-		final ProgressModel progressModel = new ProgressModel();
-		new ProgressPresenter(progressModel, clientFactory.getProgressView());
-		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
-			@Override
-			public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
-				siteUpdateService.addSitesOfWorkingSetToUpdateQueue(event.getKey().getKey(), new AsyncCallback<Integer>() {
-					@Override
-					public void onSuccess(Integer result) {
-						progressModel.startMonitor();
-					}
-					@Override
-					public void onFailure(Throwable caught) {
-					    errorHandler.onError(new ErrorEvent(caught, "Could not queue commands for working set update"));
-					}
-				});
-			}
-		});
-		
 		//Filtered content list
 		final NewsListContentModel filteredContentList = new NewsListContentModel();
 		filteredContentList.addErrorHandler(errorHandler);
@@ -84,12 +59,18 @@ public class NewsReader implements EntryPoint {
 		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
             @Override
             public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
-                sitesOfWorkingSetModel.findSitesOfWorkingSet(event.getKey().getKey());
+                sitesOfWorkingSetModel.findSitesOfWorkingSet(event.getKey().getKey(), new NotificationCallback() {
+                    
+                    @Override
+                    public void finished() {
+                        sitesOfWorkingSetModel.setSelections(sitesOfWorkingSetModel.getKeys());
+                    }
+                });
             }
         });
 		
 		//Search
-		new SearchPresenter(filteredContentList, sitesOfWorkingSetModel, clientFactory.getSearchView());
+		new SearchPresenter(filteredContentList, clientFactory.getSearchView());
 		
 		//New & Edit Working Set Workflow
 		final NewSiteWizardView newSiteWizard = new NewSiteWizard();

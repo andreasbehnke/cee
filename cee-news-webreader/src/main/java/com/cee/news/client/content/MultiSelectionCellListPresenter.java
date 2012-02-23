@@ -29,11 +29,7 @@ public class MultiSelectionCellListPresenter extends CellListPresenter {
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
-                Collection<EntityKey> selectedKeys = new ArrayList<EntityKey>();
-                for (EntityKey key : selectionModel.getSelectedSet()) {
-                    selectedKeys.add(key);
-                }
-                listModel.setSelections(selectedKeys);
+                listModel.setSelections(selectionModel.getSelectedSet());
             }
         }); 
     }
