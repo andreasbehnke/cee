@@ -9,6 +9,7 @@ import com.cee.news.client.content.EntityKeyUtil;
 import com.cee.news.client.content.NewSiteWizard;
 import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.content.NewsListContentModel;
+import com.cee.news.client.content.RelatedArticlesContentModel;
 import com.cee.news.client.content.SingleSelectionCellListPresenter;
 import com.cee.news.client.content.SiteListContentModel;
 import com.cee.news.client.content.SourceSelectionPresenter;
@@ -31,9 +32,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
-/**
- * Entry point classes define <code>onModuleLoad()</code>.
- */
 public class NewsReader implements EntryPoint {
 	
 	public void onModuleLoad() {
@@ -43,24 +41,29 @@ public class NewsReader implements EntryPoint {
 		//Working Set Selection
 		final WorkingSetListModel workingSetListModel = new WorkingSetListModel();
 		workingSetListModel.addErrorHandler(errorHandler);
-		final WorkingSetSelectionView workingSetSelectionView = clientFactory.getWorkingSetSelectionView();
+		final WorkingSetSelectionView workingSetSelectionView = clientFactory.getStartView().getWorkingSetSelectionView();
 		
 		//Filtered content list
 		final NewsListContentModel filteredContentList = new NewsListContentModel();
 		filteredContentList.addErrorHandler(errorHandler);
-		final CellListPresenter newsListPresenter = new SingleSelectionCellListPresenter(clientFactory.getCellListLatestArticles(), filteredContentList, filteredContentList);
+		final CellListPresenter newsListPresenter = new SingleSelectionCellListPresenter(clientFactory.getStartView().getCellListLatestArticles(), filteredContentList, filteredContentList);
 		newsListPresenter.addErrorHandler(errorHandler);
+		clientFactory.getStartView().getButtonRefresh().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                filteredContentList.refresh();
+            }
+        });
 		
 		//Site List
 		final SiteListContentModel sitesOfWorkingSetModel = new SiteListContentModel();
 		sitesOfWorkingSetModel.addErrorHandler(errorHandler);
-		final SourceSelectionView sourceSelectionView = clientFactory.getSourceSelectionView();
+		final SourceSelectionView sourceSelectionView = clientFactory.getStartView().getSourceSelectionView();
 		new SourceSelectionPresenter(sourceSelectionView, sitesOfWorkingSetModel, errorHandler);
 		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
             @Override
             public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
-                sitesOfWorkingSetModel.findSitesOfWorkingSet(event.getKey().getKey(), new NotificationCallback() {
-                    
+                sitesOfWorkingSetModel.findSitesOfWorkingSet(event.getKey().getKey(), new NotificationCallback() {      
                     @Override
                     public void finished() {
                         sitesOfWorkingSetModel.setSelections(sitesOfWorkingSetModel.getKeys());
@@ -70,7 +73,7 @@ public class NewsReader implements EntryPoint {
         });
 		
 		//Search
-		new SearchPresenter(filteredContentList, clientFactory.getSearchView());
+		new SearchPresenter(filteredContentList, clientFactory.getStartView().getSearchView());
 		
 		//New & Edit Working Set Workflow
 		final NewSiteWizardView newSiteWizard = new NewSiteWizard();
@@ -105,14 +108,14 @@ public class NewsReader implements EntryPoint {
         });
         
 		//News Paging View
-		new PagingPresenter<EntityKey>(filteredContentList, filteredContentList, new EntityKeyLinkResolver(), clientFactory.getNewsPagingView());
+		new PagingPresenter<EntityKey>(filteredContentList, filteredContentList, new EntityKeyLinkResolver(), clientFactory.getNewsView().getNewsPagingView());
 		sitesOfWorkingSetModel.addSelectionListChangedHandler(new SelectionListChangedHandler<EntityKey>() {
             @Override
             public void onSelectionListChanged(SelectionListChangedEvent<EntityKey> event) {
                 filteredContentList.getNewsOfSites(EntityKeyUtil.extractKeys(event.getKeys()));
             }
         });
-		clientFactory.getButtonGoToStart().addClickHandler(new ClickHandler() {
+		clientFactory.getNewsView().getButtonGoToStart().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 			    clientFactory.getPageSwitchView().showStartPage();
@@ -120,10 +123,9 @@ public class NewsReader implements EntryPoint {
 		});
 		
 		//What others say view
-		final NewsListContentModel whatOthersSay = new NewsListContentModel();
-		new SingleSelectionCellListPresenter(clientFactory.getWhatOthersSayCellList(), whatOthersSay, whatOthersSay);
+		final RelatedArticlesContentModel whatOthersSay = new RelatedArticlesContentModel();
+		new SingleSelectionCellListPresenter(clientFactory.getNewsView().getWhatOthersSayCellList(), whatOthersSay, whatOthersSay);
 		filteredContentList.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
-			
 			@Override
 			public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
 				whatOthersSay.getRelatedArticles(event.getKey().getKey(), workingSetListModel.getSelectedKey().getKey(), new NotificationCallback() {
@@ -140,12 +142,8 @@ public class NewsReader implements EntryPoint {
 				if (event.isUserAction()) {
 					final String articleKey = event.getKey().getKey();
 					final String siteKey = ArticleUtil.getSiteKeyFromArticleKey(articleKey);
-					clientFactory.getSiteNameLabel().setText(siteKey);
-					
-					//TODO should we update the site?
-					
+					clientFactory.getNewsView().getSiteNameLabel().setText(siteKey);
 					filteredContentList.getNewsOfSite(siteKey, new NotificationCallback() {
-						
 						@Override
 						public void finished() {
 						    filteredContentList.setSelectedKey(event.getKey());
@@ -154,11 +152,21 @@ public class NewsReader implements EntryPoint {
 				}
 			}
 		});
+		clientFactory.getNewsView().getButtonRefresh().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                filteredContentList.refresh(new NotificationCallback() {
+                    @Override
+                    public void finished() {
+                        whatOthersSay.refresh();
+                    }
+                });
+            }
+        });
 		
 		//trigger update
 		siteAddRemoveListModel.findAllSites();
 		workingSetListModel.findAllWorkingSets(new NotificationCallback() {
-            
             @Override
             public void finished() {
                 if (workingSetListModel.getContentCount() > 0) {

@@ -15,14 +15,22 @@
 
 	<properties>
 		<!-- Convenience property to set the GWT version -->
-		<gwtVersion>${gwt.version}</gwtVersion>
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+		<gwtModule>com.cee.news.NewsReader</gwtModule>
+		<gwtDraftCompile>false</gwtDraftCompile>
 	</properties>
-
-	<repositories>
-	</repositories>
-	<dependencies>
 	
+	<profiles>
+		<profile>
+			<id>development</id>
+			<properties>
+				<gwtModule>com.cee.news.DevNewsReader</gwtModule>
+				<gwtDraftCompile>true</gwtDraftCompile>
+			</properties>
+		</profile>
+	</profiles>
+
+	<dependencies>
 		<!-- internal -->
 		<dependency>
 			<groupId>com.cee</groupId>
@@ -79,6 +87,12 @@
 			<groupId>com.sourceallies.beanoh</groupId>
 			<artifactId>beanoh</artifactId>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xercesImpl</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -150,6 +164,8 @@
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
 					<!-- i18nMessagesBundle>com.cee.news.client.Messages</i18nMessagesBundle -->
 					<encoding>${source.encoding}</encoding>
+					<module>${gwtModule}</module>
+					<draftCompile>${gwtDraftCompile}</draftCompile>
 				</configuration>
 			</plugin>
 

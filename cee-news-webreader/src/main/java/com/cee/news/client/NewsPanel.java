@@ -22,6 +22,7 @@ public class NewsPanel extends Composite implements NewsView {
 	private PagingPanel pagingView;
 	private CellList<EntityKey> whatOthersSayCellList;
 	private Label siteNameLabel;
+    private Button buttonRefresh;
 
 	public NewsPanel() {
         
@@ -60,6 +61,11 @@ public class NewsPanel extends Composite implements NewsView {
         layoutPanel.add(siteNameLabel);
         layoutPanel.setWidgetLeftRight(siteNameLabel, 84.0, Unit.PX, 333.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(siteNameLabel, 30.0, Unit.PX, 16.0, Unit.PX);
+        
+        buttonRefresh = new Button("Refresh");
+        layoutPanel.add(buttonRefresh);
+        layoutPanel.setWidgetRightWidth(buttonRefresh, 0.0, Unit.PX, 78.0, Unit.PX);
+        layoutPanel.setWidgetTopHeight(buttonRefresh, 0.0, Unit.PX, 24.0, Unit.PX);
     }
 
 	/* (non-Javadoc)
@@ -86,5 +92,10 @@ public class NewsPanel extends Composite implements NewsView {
 	@Override
 	public HasText getSiteNameLabel() {
 		return siteNameLabel;
+	}
+	
+	@Override
+	public HasClickHandlers getButtonRefresh() {
+	    return buttonRefresh;
 	}
 }

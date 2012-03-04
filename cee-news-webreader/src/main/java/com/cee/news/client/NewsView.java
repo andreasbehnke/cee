@@ -9,12 +9,13 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 public interface NewsView extends IsWidget {
 
-	public HasText getSiteNameLabel();
+	HasText getSiteNameLabel();
 
-	public HasClickHandlers getButtonGoToStart();
+	HasClickHandlers getButtonGoToStart();
 
-	public PagingView getNewsPagingView();
+	PagingView getNewsPagingView();
 
-	public CellList<EntityKey> getWhatOthersSayCellList();
+	CellList<EntityKey> getWhatOthersSayCellList();
 
+	HasClickHandlers getButtonRefresh();
 }

@@ -10,12 +10,14 @@ import com.cee.news.client.workingset.WorkingSetSelectionView;
 import com.cee.news.client.workingset.ui.WorkingSetSelection;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.cee.news.client.search.SearchPanel;
 import com.cee.news.client.search.SearchView;
+import com.google.gwt.user.client.ui.Button;
 
 public class StartPanel extends Composite implements StartView {
     
@@ -29,6 +31,8 @@ public class StartPanel extends Composite implements StartView {
     
     private final CellList<EntityKey> cellListLatestArticles;
 
+    private Button buttonRefresh;
+
     public StartPanel() {
     	LayoutPanel layoutPanel = new LayoutPanel();
         initWidget(layoutPanel);
@@ -36,7 +40,7 @@ public class StartPanel extends Composite implements StartView {
         
         workingSetSelection = new WorkingSetSelection();
         layoutPanel.add(workingSetSelection);
-        layoutPanel.setWidgetLeftWidth(workingSetSelection, 0.0, Unit.PX, 297.0, Unit.PX);
+        layoutPanel.setWidgetLeftWidth(workingSetSelection, 0.0, Unit.PX, 376.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(workingSetSelection, 0.0, Unit.PX, 30.0, Unit.PX);
         
         sourceSelectionView = new SourceSelectionPanel();
@@ -67,6 +71,12 @@ public class StartPanel extends Composite implements StartView {
         layoutPanel.setWidgetLeftRight(articlesPager, 366.0, Unit.PX, 0.0, Unit.PX);
         layoutPanel.setWidgetTopBottom(articlesPager, 52.0, Unit.PX, 0.0, Unit.PX);
         
+        buttonRefresh = new Button("Refresh");
+        buttonRefresh.setText("Refresh");
+        layoutPanel.add(buttonRefresh);
+        layoutPanel.setWidgetRightWidth(buttonRefresh, 0.0, Unit.PX, 78.0, Unit.PX);
+        layoutPanel.setWidgetTopHeight(buttonRefresh, 6.0, Unit.PX, 24.0, Unit.PX);
+        
         searchView = new SearchPanel();
         layoutPanel.add(searchView);
         layoutPanel.setWidgetLeftRight(searchView, 303.0, Unit.PX, 0.0, Unit.PX);
@@ -96,5 +106,10 @@ public class StartPanel extends Composite implements StartView {
     @Override
     public SourceSelectionView getSourceSelectionView() {
         return sourceSelectionView;
+    }
+    
+    @Override
+    public HasClickHandlers getButtonRefresh() {
+        return buttonRefresh;
     }
 }
