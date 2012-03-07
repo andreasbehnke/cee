@@ -38,17 +38,17 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private static final String CLEARING_WORK_QUEUE = "Clearing work queue";
 
-	private static final String UNKNOWN_WORKING_SET = "Unknown working set: {}";
+	private static final String UNKNOWN_WORKING_SET = "Unknown working set: %s";
 
 	private static final String COULD_NOT_BE_REMOVED_FROM_LIST_OF_RUNNABLES = "{} could not be removed from list of runnables";
 
 	private static final String COULD_NOT_BE_REMOVED_FROM_LIST_OF_SITES_IN_PROGRESS = "{} could not be removed from list of sites in progress";
 
-	private static final String SITE_UPDATE_ENCOUNTERED_AN_ERROR = "Site update {} encountered an error";
+	private static final String SITE_UPDATE_ENCOUNTERED_AN_ERROR = "Site update %s encountered an error";
 
 	private static final String COULD_NOT_ADD_SITE_OF_WORKING_SET_TO_UPDATE_QUEUE = "Could not add site of working set to update queue";
 
-	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site: {}";
+	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site: %s";
 
 	private static final String UPDATE_SCHEDULER_THREAD_PREFIX = "updateScheduler";
 

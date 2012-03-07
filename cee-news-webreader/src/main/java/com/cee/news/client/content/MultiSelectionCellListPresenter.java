@@ -1,8 +1,5 @@
 package com.cee.news.client.content;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import com.cee.news.client.list.MultiSelectListModel;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.user.cellview.client.CellList;

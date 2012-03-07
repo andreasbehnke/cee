@@ -25,13 +25,27 @@ public class NewsServiceImpl implements NewsService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NewsServiceImpl.class);
 
-	private static final String COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST = "Could not retrieve contents for key list";
+	private static final String PARAMETER_KEYS_MUST_NOT_BE_NULL = "Parameter keys must not be null";
+
+    private static final String PARAMETER_ARTICLE_KEY_MUST_NOT_BE_NULL = "Parameter articleKey must not be null";
+
+    private static final String PARAMETER_SEARCH_QUERY_MUST_NOT_BE_NULL = "Parameter searchQuery must not be null";
+
+    private static final String PARAMETER_ARTICLE_ID_MUST_NOT_BE_NULL = "Parameter articleId must not be null";
+
+    private static final String PARAMETER_WORKING_SET_NAME_MUST_NOT_BE_NULL = "Parameter workingSetName must not be null";
+
+    private static final String PARAMETER_SITE_KEYS_MUST_NOT_BE_NULL = "Parameter siteKeys must not be null";
+
+    private static final String PARAMETER_SITE_KEY_MUST_NOT_BE_NULL = "Parameter siteKey must not be null";
+
+    private static final String COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST = "Could not retrieve contents for key list";
 
 	private static final String COULD_NOT_RETRIEVE_CONTENT_FOR = "Could not retrieve content for %s";
 
 	private static final String COULD_NOT_RETRIEVE_RELATED_ARTICLES_FOR = "Could not retrieve related articles for %s";
 
-	private static final String RETRIEVED_RELATED_ARTICLES_FOR_ARTICLE = "Retrieved %s related articles for article %s";
+	private static final String RETRIEVED_RELATED_ARTICLES_FOR_ARTICLE = "Retrieved {} related articles for article {}";
 
 	private static final String WORKING_SET_NOT_FOUND = "Working set %s not found";
 
@@ -41,7 +55,7 @@ public class NewsServiceImpl implements NewsService {
 
 	private static final String RETRIEVED_ARTICLES_FOR_SITE = "Retrieved %s articles for site %s";
 
-	private static final String RETRIEVED_ARTICLES_FOR_SITES = "Retrieved %s articles for %s sites";
+	private static final String RETRIEVED_ARTICLES_FOR_SITES = "Retrieved {} articles for {} sites";
 	
 	private static final String COULD_NOT_RETRIEVE_ARTICLES_OF_SITE = "Could not retrieve articles of site %s";
 	
@@ -105,14 +119,12 @@ public class NewsServiceImpl implements NewsService {
 	@Override
 	public List<EntityKey> getArticlesOfSite(String siteKey) {
 	    if (siteKey == null) {
-	        throw new IllegalArgumentException("Parameter siteKey must not be null");
+	        throw new IllegalArgumentException(PARAMETER_SITE_KEY_MUST_NOT_BE_NULL);
 	    }
 		try {
 			Site site = siteStore.getSite(siteKey);
 			List<EntityKey> keys = articleStore.getArticlesOrderedByDate(site);
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(RETRIEVED_ARTICLES_FOR_SITE, keys.size(), siteKey);
-			}
+			LOG.debug(RETRIEVED_ARTICLES_FOR_SITE, keys.size(), siteKey);
 			return keys;
 		} catch (Exception exception) {
 			String message = String.format(COULD_NOT_RETRIEVE_ARTICLES_OF_SITE, siteKey);
@@ -124,14 +136,12 @@ public class NewsServiceImpl implements NewsService {
 	@Override
 	public List<EntityKey> getArticlesOfSites(List<String> siteKeys) {
 	    if (siteKeys == null) {
-            throw new IllegalArgumentException("Parameter siteKeys must not be null");
+            throw new IllegalArgumentException(PARAMETER_SITE_KEYS_MUST_NOT_BE_NULL);
         }
 	    try {
             List<Site> sites = siteStore.getSites(siteKeys);
             List<EntityKey> keys = articleStore.getArticlesOrderedByDate(sites);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(RETRIEVED_ARTICLES_FOR_SITES, keys.size(), sites.size());
-            }
+            LOG.debug(RETRIEVED_ARTICLES_FOR_SITES, keys.size(), sites.size());
             return keys;
         } catch (Exception exception) {
             LOG.error(COULD_NOT_RETRIEVE_ARTICLES_OF_SITES , exception);
@@ -142,14 +152,12 @@ public class NewsServiceImpl implements NewsService {
 	@Override
 	public List<EntityKey> getArticlesOfWorkingSet(String workingSetName) {
 	    if (workingSetName == null) {
-            throw new IllegalArgumentException("Parameter workingSetName must not be null");
+            throw new IllegalArgumentException(PARAMETER_WORKING_SET_NAME_MUST_NOT_BE_NULL);
         }
 		try {
 			WorkingSet workingSet = workingSetStore.getWorkingSet(workingSetName);
 			List<EntityKey> keys = articleStore.getArticlesOrderedByDate(workingSet);
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(RETRIEVED_ARTICLES_FOR_WORKING_SET, keys.size(), workingSetName);
-			}
+			LOG.debug(RETRIEVED_ARTICLES_FOR_WORKING_SET, keys.size(), workingSetName);
 			return keys;
 		} catch (Exception exception) {
 			String message = String.format(COULD_NOT_RETRIEVE_ARTICLES_OF_WORKING_SET, workingSetName);
@@ -159,17 +167,17 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	@Override
-	public List<EntityKey> getRelatedArticles(String articleId, String workingSet) {
+	public List<EntityKey> getRelatedArticles(String articleId, String workingSetName) {
 	    if (articleId == null) {
-            throw new IllegalArgumentException("Parameter articleId must not be null");
+            throw new IllegalArgumentException(PARAMETER_ARTICLE_ID_MUST_NOT_BE_NULL);
         }
-	    if (workingSet == null) {
-            throw new IllegalArgumentException("Parameter workingSet must not be null");
+	    if (workingSetName == null) {
+            throw new IllegalArgumentException(PARAMETER_WORKING_SET_NAME_MUST_NOT_BE_NULL);
         }
         try {
-			WorkingSet ws = workingSetStore.getWorkingSet(workingSet);
+			WorkingSet ws = workingSetStore.getWorkingSet(workingSetName);
 			if (ws == null) {
-				throw new IllegalArgumentException(String.format(WORKING_SET_NOT_FOUND, workingSet));
+				throw new IllegalArgumentException(String.format(WORKING_SET_NOT_FOUND, workingSetName));
 			}
 			List<EntityKey> sites = ws.getSites();
 			List<EntityKey> relatedSites = null;
@@ -181,9 +189,7 @@ public class NewsServiceImpl implements NewsService {
 				relatedSites.remove(new EntityKey(null, articleStore.getSiteKey(articleId)));
 			}
 			List<EntityKey> keys = articleSearchService.findRelatedArticles(EntityKeyUtil.extractKeys(relatedSites), articleId);
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(RETRIEVED_RELATED_ARTICLES_FOR_ARTICLE, keys.size(), articleId);
-			}
+			LOG.debug(RETRIEVED_RELATED_ARTICLES_FOR_ARTICLE, keys.size(), articleId);
 			return keys;
 		} catch (Exception exception) {
 			String message = String.format(COULD_NOT_RETRIEVE_RELATED_ARTICLES_FOR, articleId);
@@ -195,10 +201,10 @@ public class NewsServiceImpl implements NewsService {
 	@Override
 	public List<EntityKey> findArticles(List<String> siteKeys, String searchQuery) {
 	    if (siteKeys == null) {
-	        throw new IllegalArgumentException("Missing parameter siteKeys");
+	        throw new IllegalArgumentException(PARAMETER_SITE_KEYS_MUST_NOT_BE_NULL);
 	    }
 	    if (searchQuery == null) {
-	        throw new IllegalArgumentException("Missing parameter searchQuery");
+	        throw new IllegalArgumentException(PARAMETER_SEARCH_QUERY_MUST_NOT_BE_NULL);
 	    }
 	    try {
             return articleSearchService.findArticles(siteKeys, searchQuery);
@@ -212,7 +218,7 @@ public class NewsServiceImpl implements NewsService {
 	@Override
 	public EntityKey getHtmlDescription(EntityKey articleKey) {
 	    if (articleKey == null) {
-            throw new IllegalArgumentException("Parameter articleKey must not be null");
+            throw new IllegalArgumentException(PARAMETER_ARTICLE_KEY_MUST_NOT_BE_NULL);
         }
 	    try {
 			Article article = articleStore.getArticle(articleKey.getKey(), false);
@@ -227,7 +233,7 @@ public class NewsServiceImpl implements NewsService {
 	@Override
 	public List<EntityKey> getHtmlDescriptions(List<EntityKey> keys) {
 	    if (keys == null) {
-            throw new IllegalArgumentException("Parameter keys must not be null");
+            throw new IllegalArgumentException(PARAMETER_KEYS_MUST_NOT_BE_NULL);
         }
 	    try {
 			for (EntityKey key : keys) {
@@ -244,7 +250,7 @@ public class NewsServiceImpl implements NewsService {
 	@Override
 	public EntityKey getHtmlContent(EntityKey articleKey) {
 	    if (articleKey == null) {
-            throw new IllegalArgumentException("Parameter articleKey must not be null");
+            throw new IllegalArgumentException(PARAMETER_ARTICLE_KEY_MUST_NOT_BE_NULL);
         }
 	    try {
 			Article article = articleStore.getArticle(articleKey.getKey(), true);
@@ -259,7 +265,7 @@ public class NewsServiceImpl implements NewsService {
 	@Override
 	public List<EntityKey> getHtmlContents(ArrayList<EntityKey> keys) {
 	    if (keys == null) {
-            throw new IllegalArgumentException("Parameter keys must not be null");
+            throw new IllegalArgumentException(PARAMETER_KEYS_MUST_NOT_BE_NULL);
         }
 	    try {
 			for (EntityKey key : keys) {
