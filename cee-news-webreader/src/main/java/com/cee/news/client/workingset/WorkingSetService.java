@@ -12,9 +12,9 @@ public interface WorkingSetService extends RemoteService {
 	
 	List<EntityKey> getWorkingSetsOrderedByName();
 	
-	WorkingSetData getWorkingSet(String name);
+	WorkingSetData getWorkingSet(EntityKey workingSetKey);
 	
 	EntityUpdateResult update(WorkingSetData workingSet);
 	
-	WorkingSetData addSiteToWorkingSet(String workingSetName, EntityKey siteKey);
+	WorkingSetData addSiteToWorkingSet(EntityKey workingSetKey, EntityKey siteKey);
 }

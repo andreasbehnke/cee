@@ -2,6 +2,7 @@ package com.cee.news.search;
 
 import java.util.List;
 
+import com.cee.news.model.ArticleKey;
 import com.cee.news.model.EntityKey;
 
 /**
@@ -16,7 +17,7 @@ public interface ArticleSearchService {
 	 * @param fulltextSearchQuery The fulltext query to be used
 	 * @return List of hits
 	 */
-	List<EntityKey> findArticles(List<String> sites, String fulltextSearchQuery) throws SearchException;
+	List<ArticleKey> findArticles(List<EntityKey> sites, String fulltextSearchQuery) throws SearchException;
 	
 	/**
 	 * Searches the index for matching (related) articles
@@ -24,5 +25,5 @@ public interface ArticleSearchService {
 	 * @param articleKey The article key to be compared to
 	 * @return List of related articles
 	 */
-	List<EntityKey> findRelatedArticles(List<String> sites, String articleKey) throws SearchException;
+	List<ArticleKey> findRelatedArticles(List<EntityKey> sites, ArticleKey articleKey) throws SearchException;
 }

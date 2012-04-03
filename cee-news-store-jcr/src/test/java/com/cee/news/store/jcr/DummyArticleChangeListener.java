@@ -1,7 +1,7 @@
 package com.cee.news.store.jcr;
 
 import com.cee.news.model.Article;
-import com.cee.news.model.Site;
+import com.cee.news.model.EntityKey;
 import com.cee.news.store.ArticleChangeListener;
 
 public class DummyArticleChangeListener implements ArticleChangeListener {
@@ -15,13 +15,13 @@ public class DummyArticleChangeListener implements ArticleChangeListener {
 	public String changedArticleId;
 	
 	@Override
-	public void onArticleCreated(Site site, Article article) {
+	public void onArticleCreated(EntityKey site, Article article) {
 		createdSiteName = site.getName();
 		createdArticleId = article.getExternalId();
 	}
 
 	@Override
-	public void onArticleChanged(Site site, Article article) {
+	public void onArticleChanged(EntityKey site, Article article) {
 		changedSiteName = site.getName();
 		changedArticleId = article.getExternalId();			
 	}

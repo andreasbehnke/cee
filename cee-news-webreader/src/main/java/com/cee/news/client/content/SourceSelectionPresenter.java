@@ -11,15 +11,15 @@ import com.google.gwt.view.client.MultiSelectionModel;
 public class SourceSelectionPresenter {
 
     public SourceSelectionPresenter(final SourceSelectionView sourceSelectionView, final SiteListContentModel sitesOfWorkingSetModel, ErrorHandler errorHandler) {
-        final MultiSelectionCellListPresenter siteListPresenter = new MultiSelectionCellListPresenter(sourceSelectionView.getCellListSites(), sitesOfWorkingSetModel, sitesOfWorkingSetModel);
+        final MultiSelectionCellListPresenter<EntityKey> siteListPresenter = new MultiSelectionCellListPresenter<EntityKey>(sourceSelectionView.getCellListSites(), sitesOfWorkingSetModel, sitesOfWorkingSetModel);
         siteListPresenter.addErrorHandler(errorHandler);
-        final MultiSelectionModel<EntityKey> selectionModel = siteListPresenter.getSelectionModel();
+        final MultiSelectionModel<EntityContent<EntityKey>> selectionModel = siteListPresenter.getSelectionModel();
         sourceSelectionView.getSelectAllButton().addClickHandler(new ClickHandler() {
             
             @Override
             public void onClick(ClickEvent event) {
                 for (EntityKey key : sitesOfWorkingSetModel.getKeys()) {
-                    selectionModel.setSelected(key, true);
+                    selectionModel.setSelected(new EntityContent<EntityKey>(key, null), true);
                 }
             }
         });
@@ -35,7 +35,7 @@ public class SourceSelectionPresenter {
             @Override
             public void onContentListChanged(ListChangedEvent<EntityKey> event) {
                 for (EntityKey key : sitesOfWorkingSetModel.getKeys()) {
-                    selectionModel.setSelected(key, true);
+                    selectionModel.setSelected(new EntityContent<EntityKey>(key, null), true);
                 }
             }
         });

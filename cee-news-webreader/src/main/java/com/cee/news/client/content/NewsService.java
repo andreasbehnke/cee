@@ -3,6 +3,7 @@ package com.cee.news.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cee.news.model.ArticleKey;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -13,21 +14,21 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("services/gwtNewsService")
 public interface NewsService extends RemoteService {
 
-    List<EntityKey> getArticlesOfSite(String siteKey);
+    List<ArticleKey> getArticlesOfSite(EntityKey siteKey);
 	
-	List<EntityKey> getArticlesOfSites(List<String> siteKeys);
+	List<ArticleKey> getArticlesOfSites(List<EntityKey> siteKeys);
     
-	List<EntityKey> getArticlesOfWorkingSet(String workingSetName);
+	List<ArticleKey> getArticlesOfWorkingSet(EntityKey workingSetKey);
 	
-	List<EntityKey> getRelatedArticles(String articleId, String workingSetName);
+	List<ArticleKey> getRelatedArticles(ArticleKey articleKey, EntityKey workingSetKey);
 	
-	List<EntityKey> findArticles(List<String> siteKeys, String searchQuery);
+	List<ArticleKey> findArticles(List<EntityKey> siteKeys, String searchQuery);
 	
-	EntityKey getHtmlDescription(EntityKey articleKey);
+	EntityContent<ArticleKey> getHtmlDescription(ArticleKey articleKey);
 	
-	List<EntityKey> getHtmlDescriptions(List<EntityKey> keys);
+	List<EntityContent<ArticleKey>> getHtmlDescriptions(List<ArticleKey> keys);
 	
-	EntityKey getHtmlContent(EntityKey articleKey);
+	EntityContent<ArticleKey>  getHtmlContent(ArticleKey articleKey);
 	
-	List<EntityKey> getHtmlContents(ArrayList<EntityKey> keys);
+	List<EntityContent<ArticleKey>> getHtmlContents(ArrayList<ArticleKey> keys);
 }

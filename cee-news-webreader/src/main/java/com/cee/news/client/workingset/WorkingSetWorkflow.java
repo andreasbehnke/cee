@@ -11,6 +11,7 @@ import com.cee.news.client.content.SiteAddedHandler;
 import com.cee.news.client.content.SiteListContentModel;
 import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.error.ErrorSourceBase;
+import com.cee.news.model.EntityKey;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.EditorError;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -76,8 +77,8 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 		showEditor(workingSetData);
 	}
 	
-	public void editWorkingSet(final String name) {
-		service.getWorkingSet(name, new AsyncCallback<WorkingSetData>() {
+	public void editWorkingSet(final EntityKey workingSetKey) {
+		service.getWorkingSet(workingSetKey, new AsyncCallback<WorkingSetData>() {
 			
 			@Override
 			public void onSuccess(WorkingSetData result) {
@@ -86,7 +87,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 			
 			@Override
 			public void onFailure(Throwable caught) {
-				fireErrorEvent(caught, "Could not retrieve working set \"" + name + "\"");
+				fireErrorEvent(caught, "Could not retrieve working set \"" + workingSetKey + "\"");
 			}
 		});
 	}

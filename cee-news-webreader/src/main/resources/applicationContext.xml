@@ -154,7 +154,6 @@
 	<!-- GWT Services -->
 
 	<bean id="gwtNewsService" class="com.cee.news.server.content.NewsServiceImpl" scope="request">
-		<property name="siteStore" ref="siteStore" />
 		<property name="workingSetStore" ref="workingSetStore" />
 		<property name="articleStore" ref="articleStore" />
 		<property name="articleSearchService" ref="articleSearchService" />
@@ -176,7 +175,6 @@
 		<property name="updateSchedulerInitialDelay" value="${update.service.scheduler.initial.delay}" />		
 		<property name="updateSchedulerFixedDelay" value="${update.service.scheduler.fixed.delay}" />		
 		<property name="siteStore" ref="commandSiteStore" />
-		<property name="workingSetStore" ref="workingSetStore" />
 		<lookup-method name="createSiteUpdateCommand" bean="siteUpdateCommand" />
 		<lookup-method name="createSiteParser" bean="siteParser" />
 	</bean>

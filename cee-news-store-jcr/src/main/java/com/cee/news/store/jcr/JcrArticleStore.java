@@ -25,12 +25,13 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.RowIterator;
 
+import org.apache.jackrabbit.util.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cee.news.model.Article;
+import com.cee.news.model.ArticleKey;
 import com.cee.news.model.EntityKey;
-import com.cee.news.model.Site;
 import com.cee.news.model.TextBlock;
 import com.cee.news.model.WorkingSet;
 import com.cee.news.store.ArticleChangeListener;
@@ -58,24 +59,15 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         setSession(session);
     }
     
-    protected Node getArticleNode(String siteName, String articleName) throws RepositoryException {
-        if (siteName == null) {
-            throw new IllegalArgumentException("Parameter siteName must not be null");
+    protected Node getArticleNode(ArticleKey articleKey) throws RepositoryException {
+        if (articleKey == null) {
+            throw new IllegalArgumentException("Parameter articleKey must not be null");
         }
-        if (articleName == null) {
-            throw new IllegalArgumentException("Parameter articleName must not be null");
-        }
-        return getContentNodeOrNull(getArticlePath(siteName, articleName));
-    }
-    
-    protected Node getArticleNodeByPath(String articlePath) throws RepositoryException {
-        if (articlePath == null) {
-            throw new IllegalArgumentException("Parameter articlePath must not be null");
-        }
-        return getContentNodeOrNull(articlePath);
+        return getContentNodeOrNull(buildArticlePath(articleKey));
     }
 
-    public EntityKey update(Site site, Article article) throws StoreException {
+    @Override
+    public ArticleKey update(EntityKey site, Article article) throws StoreException {
         if (site == null) {
             throw new IllegalArgumentException("Parameter site must not be null");
         }
@@ -83,11 +75,12 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             throw new IllegalArgumentException("Parameter article must not be null");
         }
         Node articleNode = null;
-        String siteName = site.getName();
+        String siteKey = site.getKey();
         String articleId = article.getExternalId();
+        ArticleKey articleKey = new ArticleKey(article.getTitle(), articleId, siteKey);
         
         try {
-            articleNode = getArticleNode(siteName, articleId);
+            articleNode = getArticleNode(articleKey);
         } catch (RepositoryException e) {
             throw new StoreException(article, "Could not retrive article node", e);
         }
@@ -98,7 +91,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         	articleCreated = true;
             Node siteNode = null;
             try {
-                siteNode = getContentNodeOrNull(JcrSiteStore.getSitePath(siteName));
+                siteNode = getContentNodeOrNull(Text.escapeIllegalJcrChars(siteKey));
             } catch (RepositoryException e) {
                 throw new StoreException(site, "Could not find site node", e);
             }
@@ -106,7 +99,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
                 throw new StoreException(site, "Site does not exists");
             }
             try {
-                articleNode = siteNode.addNode(getArticlePath(articleId), NODE_ARTICLE);
+                articleNode = siteNode.addNode(Text.escapeIllegalJcrChars(articleId), NODE_ARTICLE);
             } catch (RepositoryException e) {
                 throw new StoreException(article, "Could not add article to site", e);
             }
@@ -149,12 +142,10 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             } else {
             	fireArticleChanged(site, article);
             }
-            EntityKey key = new EntityKey(article.getTitle(), getArticlePath(siteName, articleId));
-            LOG.debug("Created article {}", key);
-            return key;
         } catch (RepositoryException e) {
             throw new StoreException(site, "Could not save session", e);
         }
+        return articleKey;
     }
     
     protected List<TextBlock> createContentFromNode(Node articleNode) throws StoreException {
@@ -198,13 +189,13 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
     }
 
     @Override
-    public Article getArticle(String articlePath, boolean withContent) throws StoreException {
-        if (articlePath == null) {
-            throw new IllegalArgumentException("Parameter articlePath must not be null");
+    public Article getArticle(ArticleKey articleKey, boolean withContent) throws StoreException {
+        if (articleKey == null) {
+            throw new IllegalArgumentException("Parameter articleKey must not be null");
         }
         Node articleNode = null;
         try {
-            articleNode = getArticleNodeByPath(articlePath);
+            articleNode = getArticleNode(articleKey);
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrive article node", e);
         }
@@ -213,18 +204,18 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
     }
     
     @Override
-    public List<Article> getArticles(List<String> keys, boolean withContent) throws StoreException {
+    public List<Article> getArticles(List<ArticleKey> keys, boolean withContent) throws StoreException {
     	List<Article> articles = new ArrayList<Article>();
-    	for (String path : keys) {
-    		articles.add(getArticle(path, true));
+    	for (ArticleKey key : keys) {
+    		articles.add(getArticle(key, true));
     	}
     	return articles;
     }
     
-    protected RowIterator getArticlesOfSitesOrderedByPublication(List<String> siteNames) throws RepositoryException {
+    protected RowIterator getArticlesOfSitesOrderedByPublication(List<EntityKey> sites) throws RepositoryException {
         testSession();
         QueryManager queryManager = getSession().getWorkspace().getQueryManager();
-        String whereExpression = buildExpression(WHERE_SITE_NAME_TERM, OR, siteNames);
+        String whereExpression = buildExpression(WHERE_SITE_NAME_TERM, OR, sites);
         Query q = queryManager.createQuery(String.format(SELECT_ARTICLES_OF_SITE_ORDERED_BY_DATE, whereExpression), Query.JCR_SQL2);
         q.setOffset(0);
         q.setLimit(DEFAULT_QUERY_LIMIT);
@@ -232,69 +223,57 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
     }
     
     @Override
-    public List<EntityKey> getArticlesOrderedByDate(Site site) throws StoreException {
-        if (site == null) {
-            throw new IllegalArgumentException("Parameter site must not be null");
+    public List<ArticleKey> getArticlesOrderedByDate(EntityKey siteKey) throws StoreException {
+        if (siteKey == null) {
+            throw new IllegalArgumentException("Parameter siteKey must not be null");
         }
         try {
-            List<String> sites = new ArrayList<String>();
-            sites.add(site.getName());
-            return buildPathList(getArticlesOfSitesOrderedByPublication(sites));
+            List<EntityKey> keys = new ArrayList<EntityKey>();
+            keys.add(siteKey);
+            return buildArticleList(getArticlesOfSitesOrderedByPublication(keys));
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrieve articles", e);
         }
     }
     
     @Override
-    public List<EntityKey> getArticlesOrderedByDate(List<Site> sites) throws StoreException {
-        if (sites == null) {
+    public List<ArticleKey> getArticlesOrderedByDate(List<EntityKey> keys) throws StoreException {
+        if (keys == null) {
             throw new IllegalArgumentException("Parameter sites must not be null");
         }
-        if (sites.isEmpty()) {
-            return new ArrayList<EntityKey>();
+        if (keys.isEmpty()) {
+            return new ArrayList<ArticleKey>();
         }
         try {
-            List<String> siteNames = new ArrayList<>();
-            for (Site site : sites) {
-                siteNames.add(site.getName());
-            }
-            return buildPathList(getArticlesOfSitesOrderedByPublication(siteNames));
+            return buildArticleList(getArticlesOfSitesOrderedByPublication(keys));
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrieve articles", e);
         }
     }
     
     @Override
-    public List<EntityKey> getArticlesOrderedByDate(WorkingSet workingSet) throws StoreException {
+    public List<ArticleKey> getArticlesOrderedByDate(WorkingSet workingSet) throws StoreException {
     	if (workingSet == null) {
             throw new IllegalArgumentException("Parameter workingSet must not be null");
         }
     	if (workingSet.getSites() == null || workingSet.getSites().isEmpty()) {
-    		return new ArrayList<EntityKey>();
+    		return new ArrayList<ArticleKey>();
     	}
         try {
-        	return buildPathList(
-        			getArticlesOfSitesOrderedByPublication(
-        					EntityKey.extractNames(
-        							workingSet.getSites())));
+        	return buildArticleList(getArticlesOfSitesOrderedByPublication(workingSet.getSites()));
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrieve articles", e);
         }
     }
     
-    @Override
-    public String getSiteKey(String articleKey) {
-    	return articleKey.substring(0, articleKey.indexOf('/'));
-    }
-    
-    protected void fireArticleChanged(Site site, Article article) {
+    protected void fireArticleChanged(EntityKey site, Article article) {
     	if (changeListeners == null) return;
     	for (ArticleChangeListener changeListener : changeListeners) {
 			changeListener.onArticleChanged(site, article);
 		}
     }
     
-    protected void fireArticleCreated(Site site, Article article) {
+    protected void fireArticleCreated(EntityKey site, Article article) {
     	if (changeListeners == null) return;
     	for (ArticleChangeListener changeListener : changeListeners) {
 			changeListener.onArticleCreated(site, article);

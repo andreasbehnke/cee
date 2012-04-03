@@ -1,30 +1,31 @@
 package com.cee.news.client.content;
 
+import com.cee.news.client.list.CellListContentModel;
+import com.cee.news.client.list.CellListPresenter;
 import com.cee.news.client.list.ListModel;
-import com.cee.news.model.EntityKey;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 
-public class SingleSelectionCellListPresenter extends CellListPresenter {
+public class SingleSelectionCellListPresenter<K> extends CellListPresenter<K> {
 
-    public SingleSelectionCellListPresenter(CellList<EntityKey> cellList, ListModel<EntityKey> listModel, EntityKeyContentModel contentModel, int visibleRange) {
+    public SingleSelectionCellListPresenter(CellList<EntityContent<K>> cellList, ListModel<K> listModel, CellListContentModel<K> contentModel, int visibleRange) {
         super(cellList, listModel, contentModel, visibleRange);
         initSelectionModel(cellList, listModel);
     }
 
-    public SingleSelectionCellListPresenter(CellList<EntityKey> cellList, ListModel<EntityKey> listModel, EntityKeyContentModel contentModel) {
+    public SingleSelectionCellListPresenter(CellList<EntityContent<K>> cellList, ListModel<K> listModel, CellListContentModel<K> contentModel) {
         super(cellList, listModel, contentModel);
         initSelectionModel(cellList, listModel);
     }
     
-    private void initSelectionModel(final CellList<EntityKey> cellList, final ListModel<EntityKey> listModel) {
-        final NoSelectionModel<EntityKey> selectionModel = new NoSelectionModel<EntityKey>();
+    private void initSelectionModel(final CellList<EntityContent<K>> cellList, final ListModel<K> listModel) {
+        final NoSelectionModel<EntityContent<K>> selectionModel = new NoSelectionModel<EntityContent<K>>();
         cellList.setSelectionModel(selectionModel);
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
-                listModel.userSelectedKey(selectionModel.getLastSelectedObject());
+                listModel.userSelectedKey(selectionModel.getLastSelectedObject().getKey());
             }
         });
     }

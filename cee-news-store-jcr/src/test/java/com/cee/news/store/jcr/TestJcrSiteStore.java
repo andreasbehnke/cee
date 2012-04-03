@@ -29,7 +29,7 @@ public class TestJcrSiteStore extends JcrTestBase {
         Site site = new Site();
         site.setDescription("Description");
         site.setLocation("http://www.spiegel.de/blabla/test/test.jsp?id=52643584");
-        site.setName("spiegel.de");
+        site.setName("http://www.spiegel.de");
         site.setTitle("Title");
         List<Feed> feeds = new ArrayList<Feed>();
         Feed feed = new Feed("http://www.spiegel.de/feed1.rss", "feed1", "application/xml");
@@ -37,12 +37,14 @@ public class TestJcrSiteStore extends JcrTestBase {
         feeds.add(feed);
         feeds.add(new Feed("http://www.spiegel.de/feed2.rss", "feed2", "application/rss"));
         site.setFeeds(feeds);
-        siteStore.update(site);
+        EntityKey siteKey = siteStore.update(site);
         
-        site = siteStore.getSite("spiegel.de");
+        assertEquals("http://www.spiegel.de", siteKey.getName());
+        assertEquals("http://www.spiegel.de", siteKey.getKey());
+        site = siteStore.getSite(siteKey);
         assertEquals("Description", site.getDescription());
         assertEquals("http://www.spiegel.de/blabla/test/test.jsp?id=52643584", site.getLocation());
-        assertEquals("spiegel.de", site.getName());
+        assertEquals("http://www.spiegel.de", site.getName());
         assertEquals("Title", site.getTitle());
         feeds = site.getFeeds();
         assertEquals(2, feeds.size());
@@ -66,7 +68,7 @@ public class TestJcrSiteStore extends JcrTestBase {
         site.setFeeds(feeds);
         siteStore.update(site);
         
-        site = siteStore.getSite("spiegel.de");
+        site = siteStore.getSite(siteKey);
         assertEquals("Description123", site.getDescription());
         assertEquals("http://www.spiegel.de/blabla/test/test.jsp?id=52643584", site.getLocation());
         assertEquals("Title123", site.getTitle());
@@ -83,16 +85,16 @@ public class TestJcrSiteStore extends JcrTestBase {
         site = new Site();
         site.setName(name);
         site.setLocation(name);
-        siteStore.update(site);
+        siteKey = siteStore.update(site);
         
-        site = siteStore.getSite(name);
+        site = siteStore.getSite(siteKey);
         assertNull(site.getDescription());
         assertNull(site.getTitle());
     }
     
     @Test
     public void testGetSiteMissing() throws StoreException, MalformedURLException {
-        assertNull(siteStore.getSite(Text.escapeIllegalJcrChars("http://www.blablabla.de")));
+        assertNull(siteStore.getSite(new EntityKey("http://www.blablabla.de","http://www.blablabla.de")));
     }
     
     @Test
@@ -102,15 +104,15 @@ public class TestJcrSiteStore extends JcrTestBase {
         site.setLocation("http://www.site1.de");
         site.setName("http://www.site1.de");
         site.setTitle("Title");
-        String key1 = siteStore.update(site).getKey();
+        EntityKey key1 = siteStore.update(site);
         site = new Site();
         site.setDescription("Description");
         site.setLocation("http://www.site2.de");
         site.setName("http://www.site2.de");
         site.setTitle("Title");
-        String key2 = siteStore.update(site).getKey();
+        EntityKey key2 = siteStore.update(site);
         
-        List<String> keys = new ArrayList<String>();
+        List<EntityKey> keys = new ArrayList<EntityKey>();
         keys.add(key2);
         keys.add(key1);
         
@@ -143,7 +145,7 @@ public class TestJcrSiteStore extends JcrTestBase {
         
         List<EntityKey> sites = siteStore.getSitesOrderedByName();
         assertEquals("http://www.abc.de", sites.get(0).getName());
-        assertEquals(Text.escapeIllegalJcrChars("http://www.abc.de"), sites.get(0).getKey());
+        assertEquals("http://www.abc.de", sites.get(0).getKey());
         assertEquals("http://www.bbb.de", sites.get(1).getName());
         assertEquals("http://www.ccc.de", sites.get(2).getName());
     }

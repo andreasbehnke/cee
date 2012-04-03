@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 public interface SourceSelectionView extends IsWidget {
     
-    CellList<EntityKey> getCellListSites();
+    CellList<EntityContent<EntityKey>> getCellListSites();
 
     HasClickHandlers getSelectAllButton();
     

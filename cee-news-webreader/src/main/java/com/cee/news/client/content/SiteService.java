@@ -17,20 +17,20 @@ public interface SiteService extends RemoteService {
 	List<EntityKey> getSites();
 	
 	/**
-	 * @param workingSetName Unique name of working set
+	 * @param workingSetKey Unique name of working set
 	 * @return List of site names of given working set
 	 */
-	List<EntityKey> getSitesOfWorkingSet(String workingSetName);
+	List<EntityKey> getSitesOfWorkingSet(EntityKey workingSetKey);
 	
 	/**
 	 * Retrieve the sites formatted description
 	 */
-	EntityKey getHtmlDescription(EntityKey key);
+	EntityContent<EntityKey> getHtmlDescription(EntityKey key);
 	
 	/**
 	 * Retrieve formatted site description for the given site keys
 	 */
-	List<EntityKey> getHtmlDescriptions(ArrayList<EntityKey> keys);
+	List<EntityContent<EntityKey>> getHtmlDescriptions(ArrayList<EntityKey> keys);
 	
 	/**
 	 * Guesses a unique site name for a given site name.

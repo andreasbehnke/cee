@@ -29,14 +29,14 @@ public interface SiteStore {
      * @param key The site's key as returned by methods for retrieving site lists
      * @return Site or null if site not found
      */
-    Site getSite(String key) throws StoreException;
+    Site getSite(EntityKey key) throws StoreException;
     
     /**
      * Retrieves the sites references by the given keys
      * @param keys The sites primary keys
      * @return List of sites
      */
-    List<Site> getSites(List<String> keys) throws StoreException;
+    List<Site> getSites(List<EntityKey> keys) throws StoreException;
     
     /**
      * @return List of site keys ordered by name

@@ -17,24 +17,6 @@ public interface SiteUpdateService extends RemoteService {
 	SiteData retrieveSiteData(String location);
 	
 	/**
-	 * Adds update task for given site to the update queue.
-	 * If the queue already contains a task for the site, no additional
-	 * task will be added.
-	 * @param siteKey The site to update
-	 * @return Number of update commands in the queue
-	 */
-	int addSiteToUpdateQueue(String siteKey);
-	
-	/**
-	 * Adds update tasks for each given site to the update queue.
-	 * If the queue already contains a task for a given site, no additional
-	 * task will be added.
-	 * @param workingSetName The sites to update
-	 * @return Number of update commands in the queue
-	 */
-	int addSitesOfWorkingSetToUpdateQueue(String workingSetName);
-	
-	/**
 	 * Removes all commands from queue
 	 */
 	void clearQueue();

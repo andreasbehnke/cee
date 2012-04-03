@@ -1,11 +1,12 @@
 package com.cee.news.client;
 
-import com.cee.news.client.content.EntityKeyCell;
+import com.cee.news.client.content.EntityContent;
+import com.cee.news.client.content.EntityContentCell;
 import com.cee.news.client.content.EntityKeyProvider;
 import com.cee.news.client.list.ScrollLoader;
 import com.cee.news.client.paging.PagingPanel;
 import com.cee.news.client.paging.PagingView;
-import com.cee.news.model.EntityKey;
+import com.cee.news.model.ArticleKey;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.cellview.client.CellList;
@@ -20,7 +21,7 @@ public class NewsPanel extends Composite implements NewsView {
 
     private Button buttonGoToStart;
 	private PagingPanel pagingView;
-	private CellList<EntityKey> whatOthersSayCellList;
+	private CellList<EntityContent<ArticleKey>> whatOthersSayCellList;
 	private Label siteNameLabel;
     private Button buttonRefresh;
 
@@ -40,7 +41,7 @@ public class NewsPanel extends Composite implements NewsView {
         layoutPanel.setWidgetLeftRight(pagingView, 0.0, Unit.PX, 333.0, Unit.PX);
         layoutPanel.setWidgetTopBottom(pagingView, 52.0, Unit.PX, 0.0, Unit.PX);
         
-        whatOthersSayCellList = new CellList<EntityKey>(new EntityKeyCell(), new EntityKeyProvider());
+        whatOthersSayCellList = new CellList<EntityContent<ArticleKey>>(new EntityContentCell<ArticleKey>(), new EntityKeyProvider<ArticleKey>());
         ScrollLoader whatOthersSayScroller = new ScrollLoader();
         whatOthersSayScroller.setDisplay(whatOthersSayCellList);
         layoutPanel.add(whatOthersSayScroller);
@@ -85,7 +86,7 @@ public class NewsPanel extends Composite implements NewsView {
 	}
 
 	@Override
-	public CellList<EntityKey> getWhatOthersSayCellList() {
+	public CellList<EntityContent<ArticleKey>> getWhatOthersSayCellList() {
 		return whatOthersSayCellList;
 	}
 	

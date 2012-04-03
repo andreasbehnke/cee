@@ -1,5 +1,6 @@
 package com.cee.news.client.content;
 
+@Deprecated
 public class ArticleUtil {
 
 	//TODO: Warning, this depends on the concrete ArticleStore implementation JcrArticleStore!

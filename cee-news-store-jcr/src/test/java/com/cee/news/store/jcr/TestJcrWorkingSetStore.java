@@ -25,7 +25,7 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
     private static final long EXPECTED_COUNT = 3;
     private static final String UNKOWN_WORKING_SET = "unkown";
     private static final String EXPECTED_NAME = "abc";
-    private static final EntityKey SITE_A = new EntityKey("http://googlewebtoolkit.blogspot.com", "http%3A%2F%2Fgooglewebtoolkit.blogspot.com");
+    private static final EntityKey SITE_A = new EntityKey("http://googlewebtoolkit.blogspot.com", "http://googlewebtoolkit.blogspot.com");
     private static final EntityKey SITE_B = new EntityKey("siteB", "siteB");
     private static final EntityKey SITE_C = new EntityKey("siteC", "siteC");
     private static final String TESTWORKINGSET = "testworkingset";
@@ -39,22 +39,24 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
         sites.add(SITE_C);
         ws.setSites(sites);
         
-        workingSetStore.update(ws);
-        ws = workingSetStore.getWorkingSet(TESTWORKINGSET);
+        EntityKey key = workingSetStore.update(ws);
+        ws = workingSetStore.getWorkingSet(key);
         
         assertEquals(TESTWORKINGSET, ws.getName());
-        assertEquals(3, ws.getSites().size());
-        assertTrue(ws.getSites().contains(SITE_A));
-        int indexOfSiteA = ws.getSites().indexOf(SITE_A);
-        assertEquals(SITE_A.getName(), ws.getSites().get(indexOfSiteA).getName());
-        assertTrue(ws.getSites().contains(SITE_B));
-        assertTrue(ws.getSites().contains(SITE_C));
+        sites = ws.getSites();
+        assertEquals(3, sites.size());
+        assertTrue(sites.contains(SITE_A));
+        int indexOfSiteA = sites.indexOf(SITE_A);
+        assertEquals(SITE_A.getName(), sites.get(indexOfSiteA).getName());
+        assertEquals(SITE_A.getKey(), sites.get(indexOfSiteA).getKey());
+        assertTrue(sites.contains(SITE_B));
+        assertTrue(sites.contains(SITE_C));
         
         ws.getSites().remove(SITE_B);
         ws.setName(EXPECTED_NAME);
         
-        workingSetStore.update(ws);
-        ws = workingSetStore.getWorkingSet(EXPECTED_NAME);
+        key = workingSetStore.update(ws);
+        ws = workingSetStore.getWorkingSet(key);
         
         assertEquals(EXPECTED_NAME, ws.getName());
         assertEquals(2, ws.getSites().size());
@@ -64,7 +66,7 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
         
     @Test
     public void testGetWorkingSetUnknown() throws StoreException {
-        assertNull( workingSetStore.getWorkingSet(UNKOWN_WORKING_SET) );
+        assertNull( workingSetStore.getWorkingSet(new EntityKey(UNKOWN_WORKING_SET, UNKOWN_WORKING_SET)));
     }
     
     @Test
@@ -89,8 +91,8 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
         ws.setName(OLD_NAME);
         workingSetStore.update(ws);
         workingSetStore.rename(OLD_NAME, NEW_NAME);
-        assertNull(workingSetStore.getWorkingSet(OLD_NAME));
-        assertEquals(NEW_NAME, workingSetStore.getWorkingSet(NEW_NAME).getName());
+        assertNull(workingSetStore.getWorkingSet(new EntityKey(OLD_NAME, OLD_NAME)));
+        assertEquals(NEW_NAME, workingSetStore.getWorkingSet(new EntityKey(NEW_NAME, NEW_NAME)).getName());
     }
     
     @Test

@@ -1,24 +1,21 @@
 package com.cee.news.server.content;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cee.news.client.content.EntityKeyUtil;
+import com.cee.news.client.content.EntityContent;
 import com.cee.news.client.content.NewsService;
 import com.cee.news.client.error.ServiceException;
-import com.cee.news.model.Article;
+import com.cee.news.model.ArticleKey;
 import com.cee.news.model.EntityKey;
-import com.cee.news.model.Site;
-import com.cee.news.model.TextBlock;
 import com.cee.news.model.WorkingSet;
 import com.cee.news.search.ArticleSearchService;
+import com.cee.news.server.content.renderer.NewsContentRenderer;
 import com.cee.news.store.ArticleStore;
-import com.cee.news.store.SiteStore;
+import com.cee.news.store.StoreException;
 import com.cee.news.store.WorkingSetStore;
 
 public class NewsServiceImpl implements NewsService {
@@ -31,9 +28,7 @@ public class NewsServiceImpl implements NewsService {
 
     private static final String PARAMETER_SEARCH_QUERY_MUST_NOT_BE_NULL = "Parameter searchQuery must not be null";
 
-    private static final String PARAMETER_ARTICLE_ID_MUST_NOT_BE_NULL = "Parameter articleId must not be null";
-
-    private static final String PARAMETER_WORKING_SET_NAME_MUST_NOT_BE_NULL = "Parameter workingSetName must not be null";
+    private static final String PARAMETER_WORKING_SET_KEY_MUST_NOT_BE_NULL = "Parameter workingSetKey must not be null";
 
     private static final String PARAMETER_SITE_KEYS_MUST_NOT_BE_NULL = "Parameter siteKeys must not be null";
 
@@ -67,9 +62,9 @@ public class NewsServiceImpl implements NewsService {
 
 	private ArticleSearchService articleSearchService;
 	
-	private SiteStore siteStore;
-
 	private WorkingSetStore workingSetStore;
+	
+	private NewsContentRenderer renderer = new NewsContentRenderer();
 	
 	public void setArticleStore(ArticleStore articleStore) {
 		this.articleStore = articleStore;
@@ -79,51 +74,17 @@ public class NewsServiceImpl implements NewsService {
 		this.articleSearchService = articleSearchService;
 	}
 
-	public void setSiteStore(SiteStore siteStore) {
-		this.siteStore = siteStore;
-	}
-	
 	public void setWorkingSetStore(WorkingSetStore workingSetStore) {
 		this.workingSetStore = workingSetStore;
 	}
-
-	// TODO localized date format
-	protected String formatDate(Calendar calendar) {
-		return SimpleDateFormat.getDateInstance().format(calendar.getTime());
-	}
-	
-	protected EntityKey renderDescription(Article article, EntityKey articleKey) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("<h3>").append(article.getTitle()).append("</h3>")
-				.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>");
-		if (articleKey.getScore() != -1) {
-			builder.append("<p>").append(articleKey.getScore()).append("</p>");
-		}
-		builder.append("<p>").append(article.getShortText()).append("</p>");
-		articleKey.setHtmlContent(builder.toString());
-		return articleKey;
-	}
-
-	protected EntityKey renderContent(Article article, EntityKey articleKey) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("<h1>").append(article.getTitle()).append("</h1>")
-			.append("<p>").append(formatDate(article.getPublishedDate())).append("</p>")
-			.append("<p><a href=\"").append(article.getLocation()).append("\" target=\"article\">open article</a></p>");
-		for (TextBlock textBlock : article.getContent()) {
-			builder.append("<p>").append(textBlock.getContent()).append("</p>");
-		}
-		articleKey.setHtmlContent(builder.toString());
-        return articleKey;
-	}
 	
 	@Override
-	public List<EntityKey> getArticlesOfSite(String siteKey) {
+	public List<ArticleKey> getArticlesOfSite(EntityKey siteKey) {
 	    if (siteKey == null) {
 	        throw new IllegalArgumentException(PARAMETER_SITE_KEY_MUST_NOT_BE_NULL);
 	    }
 		try {
-			Site site = siteStore.getSite(siteKey);
-			List<EntityKey> keys = articleStore.getArticlesOrderedByDate(site);
+			List<ArticleKey> keys = articleStore.getArticlesOrderedByDate(siteKey);
 			LOG.debug(RETRIEVED_ARTICLES_FOR_SITE, keys.size(), siteKey);
 			return keys;
 		} catch (Exception exception) {
@@ -134,14 +95,13 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	@Override
-	public List<EntityKey> getArticlesOfSites(List<String> siteKeys) {
+	public List<ArticleKey> getArticlesOfSites(List<EntityKey> siteKeys) {
 	    if (siteKeys == null) {
             throw new IllegalArgumentException(PARAMETER_SITE_KEYS_MUST_NOT_BE_NULL);
         }
 	    try {
-            List<Site> sites = siteStore.getSites(siteKeys);
-            List<EntityKey> keys = articleStore.getArticlesOrderedByDate(sites);
-            LOG.debug(RETRIEVED_ARTICLES_FOR_SITES, keys.size(), sites.size());
+            List<ArticleKey> keys = articleStore.getArticlesOrderedByDate(siteKeys);
+            LOG.debug(RETRIEVED_ARTICLES_FOR_SITES, keys.size(), siteKeys.size());
             return keys;
         } catch (Exception exception) {
             LOG.error(COULD_NOT_RETRIEVE_ARTICLES_OF_SITES , exception);
@@ -150,56 +110,58 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	@Override
-	public List<EntityKey> getArticlesOfWorkingSet(String workingSetName) {
-	    if (workingSetName == null) {
-            throw new IllegalArgumentException(PARAMETER_WORKING_SET_NAME_MUST_NOT_BE_NULL);
+	public List<ArticleKey> getArticlesOfWorkingSet(EntityKey workingSetKey) {
+	    if (workingSetKey == null) {
+            throw new IllegalArgumentException(PARAMETER_WORKING_SET_KEY_MUST_NOT_BE_NULL);
         }
 		try {
-			WorkingSet workingSet = workingSetStore.getWorkingSet(workingSetName);
-			List<EntityKey> keys = articleStore.getArticlesOrderedByDate(workingSet);
-			LOG.debug(RETRIEVED_ARTICLES_FOR_WORKING_SET, keys.size(), workingSetName);
+			WorkingSet workingSet = workingSetStore.getWorkingSet(workingSetKey);
+			List<ArticleKey> keys = articleStore.getArticlesOrderedByDate(workingSet);
+			LOG.debug(RETRIEVED_ARTICLES_FOR_WORKING_SET, keys.size(), workingSetKey);
 			return keys;
 		} catch (Exception exception) {
-			String message = String.format(COULD_NOT_RETRIEVE_ARTICLES_OF_WORKING_SET, workingSetName);
+			String message = String.format(COULD_NOT_RETRIEVE_ARTICLES_OF_WORKING_SET, workingSetKey);
 			LOG.error(message, exception);
 			throw new ServiceException(message);
 		}
 	}
 	
 	@Override
-	public List<EntityKey> getRelatedArticles(String articleId, String workingSetName) {
-	    if (articleId == null) {
-            throw new IllegalArgumentException(PARAMETER_ARTICLE_ID_MUST_NOT_BE_NULL);
+	public List<ArticleKey> getRelatedArticles(ArticleKey articleKey, EntityKey workingSetKey) {
+	    if (articleKey == null) {
+            throw new IllegalArgumentException(PARAMETER_ARTICLE_KEY_MUST_NOT_BE_NULL);
         }
-	    if (workingSetName == null) {
-            throw new IllegalArgumentException(PARAMETER_WORKING_SET_NAME_MUST_NOT_BE_NULL);
+	    if (workingSetKey == null) {
+            throw new IllegalArgumentException(PARAMETER_WORKING_SET_KEY_MUST_NOT_BE_NULL);
         }
         try {
-			WorkingSet ws = workingSetStore.getWorkingSet(workingSetName);
+			WorkingSet ws = workingSetStore.getWorkingSet(workingSetKey);
 			if (ws == null) {
-				throw new IllegalArgumentException(String.format(WORKING_SET_NOT_FOUND, workingSetName));
+				throw new IllegalArgumentException(String.format(WORKING_SET_NOT_FOUND, workingSetKey));
 			}
 			List<EntityKey> sites = ws.getSites();
 			List<EntityKey> relatedSites = null;
+			
 			if (sites.size() == 1) {
 				relatedSites = sites;
 			} else {
 				//remove site of current article
 				relatedSites = new ArrayList<EntityKey>(sites);
-				relatedSites.remove(new EntityKey(null, articleStore.getSiteKey(articleId)));
+				String siteOfArticle = articleKey.getSiteKey();
+				relatedSites.remove(new EntityKey(null, siteOfArticle));
 			}
-			List<EntityKey> keys = articleSearchService.findRelatedArticles(EntityKeyUtil.extractKeys(relatedSites), articleId);
-			LOG.debug(RETRIEVED_RELATED_ARTICLES_FOR_ARTICLE, keys.size(), articleId);
+			List<ArticleKey> keys = articleSearchService.findRelatedArticles(relatedSites, articleKey);
+			LOG.debug(RETRIEVED_RELATED_ARTICLES_FOR_ARTICLE, keys.size(), articleKey);
 			return keys;
 		} catch (Exception exception) {
-			String message = String.format(COULD_NOT_RETRIEVE_RELATED_ARTICLES_FOR, articleId);
+			String message = String.format(COULD_NOT_RETRIEVE_RELATED_ARTICLES_FOR, articleKey);
 			LOG.error(message, exception);
 			throw new ServiceException(message);
 		}
 	}
 	
 	@Override
-	public List<EntityKey> findArticles(List<String> siteKeys, String searchQuery) {
+	public List<ArticleKey> findArticles(List<EntityKey> siteKeys, String searchQuery) {
 	    if (siteKeys == null) {
 	        throw new IllegalArgumentException(PARAMETER_SITE_KEYS_MUST_NOT_BE_NULL);
 	    }
@@ -215,14 +177,27 @@ public class NewsServiceImpl implements NewsService {
         }
 	}
 	
+	protected EntityContent<ArticleKey> render(ArticleKey key, String template) throws StoreException {
+	    return renderer.render(
+                key, 
+                articleStore.getArticle(key, false), 
+                template);
+	}
+	
+	protected List<EntityContent<ArticleKey>> render(List<ArticleKey> keys, String template) throws StoreException {
+        return renderer.render(
+                keys, 
+                articleStore.getArticles(keys, false), 
+                template);
+    }
+	
 	@Override
-	public EntityKey getHtmlDescription(EntityKey articleKey) {
+	public EntityContent<ArticleKey> getHtmlDescription(ArticleKey articleKey) {
 	    if (articleKey == null) {
             throw new IllegalArgumentException(PARAMETER_ARTICLE_KEY_MUST_NOT_BE_NULL);
         }
 	    try {
-			Article article = articleStore.getArticle(articleKey.getKey(), false);
-			return renderDescription(article, articleKey);
+	        return render(articleKey, NewsContentRenderer.DESCRIPTION_TEMPLATE);
 		} catch (Exception exception) {
 			String message = String.format(COULD_NOT_RETRIEVE_CONTENT_FOR, articleKey);
 			LOG.error(message, exception);
@@ -231,16 +206,12 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	@Override
-	public List<EntityKey> getHtmlDescriptions(List<EntityKey> keys) {
+	public List<EntityContent<ArticleKey>> getHtmlDescriptions(List<ArticleKey> keys) {
 	    if (keys == null) {
             throw new IllegalArgumentException(PARAMETER_KEYS_MUST_NOT_BE_NULL);
         }
 	    try {
-			for (EntityKey key : keys) {
-				Article article = articleStore.getArticle(key.getKey(), false);
-				renderDescription(article, key);
-			}
-			return keys;
+	        return render(keys, NewsContentRenderer.DESCRIPTION_TEMPLATE);
 		} catch (Exception exception) {
 			LOG.error(COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST, exception);
 			throw new ServiceException(COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST);
@@ -248,13 +219,12 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	@Override
-	public EntityKey getHtmlContent(EntityKey articleKey) {
+	public EntityContent<ArticleKey> getHtmlContent(ArticleKey articleKey) {
 	    if (articleKey == null) {
             throw new IllegalArgumentException(PARAMETER_ARTICLE_KEY_MUST_NOT_BE_NULL);
         }
 	    try {
-			Article article = articleStore.getArticle(articleKey.getKey(), true);
-			return renderContent(article, articleKey);
+	        return render(articleKey, NewsContentRenderer.CONTENT_TEMPLATE);
 		} catch (Exception exception) {
 			String message = String.format(COULD_NOT_RETRIEVE_CONTENT_FOR, articleKey);
 			LOG.error(message, exception);
@@ -263,16 +233,12 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	@Override
-	public List<EntityKey> getHtmlContents(ArrayList<EntityKey> keys) {
+	public List<EntityContent<ArticleKey>> getHtmlContents(ArrayList<ArticleKey> keys) {
 	    if (keys == null) {
             throw new IllegalArgumentException(PARAMETER_KEYS_MUST_NOT_BE_NULL);
         }
 	    try {
-			for (EntityKey key : keys) {
-				Article article = articleStore.getArticle(key.getKey(), false);
-				renderContent(article, key);
-			}
-			return keys;
+	        return render(keys, NewsContentRenderer.CONTENT_TEMPLATE);
 		} catch (Exception exception) {
 			LOG.error(COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST, exception);
 			throw new ServiceException(COULD_NOT_RETRIEVE_CONTENTS_FOR_KEY_LIST);

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.client.async.EntityUpdateResult.State;
+import com.cee.news.client.content.EntityKeyUtil;
 import com.cee.news.client.error.ServiceException;
 import com.cee.news.client.workingset.WorkingSetData;
 import com.cee.news.client.workingset.WorkingSetService;
@@ -42,9 +43,9 @@ public class WorkingSetServiceImpl implements WorkingSetService {
     }
 
     @Override
-    public WorkingSetData getWorkingSet(String name) {
+    public WorkingSetData getWorkingSet(EntityKey workingSetKey) {
         try {
-            WorkingSet workingSet = workingSetStore.getWorkingSet(name);
+            WorkingSet workingSet = workingSetStore.getWorkingSet(workingSetKey);
             WorkingSetData wsd = new WorkingSetData();
             wsd.setIsNew(false);
             wsd.setNewName(workingSet.getName());
@@ -62,7 +63,7 @@ public class WorkingSetServiceImpl implements WorkingSetService {
         try {
             String newName = wsd.getNewName();
             String oldName = wsd.getOldName();
-            if (wsd.getIsNew() && workingSetStore.getWorkingSet(newName) != null) {
+            if (wsd.getIsNew() && workingSetStore.getWorkingSet(EntityKeyUtil.createEntityKey(newName, newName)) != null) {
                 return new EntityUpdateResult(State.entityExists, null);
             }
             if (!wsd.getIsNew() && !newName.equals(oldName)) {
@@ -73,7 +74,7 @@ public class WorkingSetServiceImpl implements WorkingSetService {
             	workingSet = new WorkingSet();
             	workingSet.setName(newName);
             } else {
-            	workingSet = workingSetStore.getWorkingSet(newName);
+            	workingSet = workingSetStore.getWorkingSet(EntityKeyUtil.createEntityKey(newName, newName));
             }
             workingSet.setSites(wsd.getSites());
             EntityKey key = workingSetStore.update(workingSet);
@@ -85,8 +86,8 @@ public class WorkingSetServiceImpl implements WorkingSetService {
     }
     
     @Override
-    public WorkingSetData addSiteToWorkingSet(String workingSetName, EntityKey siteKey) {
-        WorkingSetData workingSet = getWorkingSet(workingSetName);
+    public WorkingSetData addSiteToWorkingSet(EntityKey workingSetKey, EntityKey siteKey) {
+        WorkingSetData workingSet = getWorkingSet(workingSetKey);
         workingSet.getSites().add(siteKey);
         update(workingSet);
         return workingSet;

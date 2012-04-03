@@ -13,7 +13,7 @@ public class SourceSelectionPanel extends Composite implements SourceSelectionVi
     private final Button selectAllButton;
     private final Button selectNoneButton;
     private final Button addSourceButton;
-    private final CellList<EntityKey> cellListSites;
+    private final CellList<EntityContent<EntityKey>> cellListSites;
 
     public SourceSelectionPanel() {
         
@@ -21,7 +21,7 @@ public class SourceSelectionPanel extends Composite implements SourceSelectionVi
         initWidget(layoutPanel);
         layoutPanel.setSize("213px", "426px");
         
-        cellListSites = new CellList<EntityKey>(new EntityKeyCell(), new EntityKeyProvider());
+        cellListSites = new CellList<EntityContent<EntityKey>>(new EntityContentCell<EntityKey>(), new EntityKeyProvider<EntityKey>());
         ScrollLoader scrollLoader = new ScrollLoader();
         scrollLoader.setDisplay(cellListSites);
         layoutPanel.add(scrollLoader);
@@ -45,7 +45,7 @@ public class SourceSelectionPanel extends Composite implements SourceSelectionVi
     }
 
     @Override
-    public CellList<EntityKey> getCellListSites() {
+    public CellList<EntityContent<EntityKey>> getCellListSites() {
         return cellListSites;
     }
 

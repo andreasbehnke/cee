@@ -16,6 +16,7 @@ import org.apache.jackrabbit.util.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cee.news.model.ArticleKey;
 import com.cee.news.model.EntityKey;
 import com.cee.news.store.StoreException;
 
@@ -84,41 +85,37 @@ public abstract class JcrStoreBase {
     protected Node getContentNodeOrNull(String relPath) throws RepositoryException {
     	return getNodeOrNull(getContent(), relPath);
     }
-    
-    protected static String getArticlePath(String articleId) {
-		return Text.escapeIllegalJcrChars(articleId);
-	}
 
-	protected static String getArticlePath(String siteName, String articleId) {
+	protected static String buildArticlePath(ArticleKey articleKey) {
 		return new StringBuilder(300)
-			.append(JcrSiteStore.getSitePath(siteName))
+			.append(Text.escapeIllegalJcrChars(articleKey.getSiteKey()))
 			.append(SLASH)
-			.append(getArticlePath(articleId))
+			.append(Text.escapeIllegalJcrChars(articleKey.getKey()))
 			.toString();
 	}
 
-	protected List<EntityKey> buildPathList(RowIterator iterator) throws RepositoryException {
-		List<EntityKey> pathes = new ArrayList<EntityKey>();
+	protected List<ArticleKey> buildArticleList(RowIterator iterator) throws RepositoryException {
+		List<ArticleKey> articles = new ArrayList<ArticleKey>();
 		while (iterator.hasNext()) {
 	    	Row row = iterator.nextRow();
 	    	String articleId = row.getValue(ARTICLE_ID_SELECTOR).getString();
 	    	String articleTitle = row.getValue(ARTICLE_TITLE_SELECTOR).getString();
 	    	String siteName = row.getValue(SITE_NAME_SELECTOR).getString();
-	        pathes.add(new EntityKey(articleTitle, getArticlePath(siteName, articleId)));
+	        articles.add(new ArticleKey(articleTitle, articleId, siteName));
 	    }
-	    return pathes;
+	    return articles;
 	}
 
-	protected String buildExpression(String formatStr, String operator, List<String> keys) {
+	protected String buildExpression(String formatStr, String operator, List<EntityKey> keys) {
 		boolean isFirst = true;
 		StringBuilder buffer = new StringBuilder();
-		for (String key : keys) {
+		for (EntityKey key : keys) {
 			if (isFirst) {
 				isFirst = false;
 			} else {
 				buffer.append(operator);
 			}
-			buffer.append(String.format(formatStr, key));
+			buffer.append(String.format(formatStr, key.getKey()));
 		}
 		return buffer.toString();
 	}

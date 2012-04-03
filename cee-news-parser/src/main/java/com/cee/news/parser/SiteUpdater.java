@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cee.news.model.Article;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 import com.cee.news.store.ArticleStore;
@@ -112,7 +113,7 @@ public class SiteUpdater {
             	remainingArticles = articles.size();
             }
         }
-        int articleCount = updateArticles(site, articles);
+        int articleCount = updateArticles(new EntityKey(null, site.getName()), articles);
         LOG.info("updated {} articles of site {}", articleCount, site.getName());
         return articleCount;
     }
@@ -126,13 +127,13 @@ public class SiteUpdater {
      * @throws IOException If the feed could not be read
      * @throws StoreException If the storage of articles failed
      */
-    protected int updateArticles(Site site, List<Article> articles) throws ParserException, IOException, StoreException {
+    protected int updateArticles(EntityKey siteKey, List<Article> articles) throws ParserException, IOException, StoreException {
     	int articleCount = 0;
         for (Article article : articles) {
         	try {
             	article = articleParser.parse(article);
             	if (article != null) {
-            	    store.update(site, article);
+            	    store.update(siteKey, article);
             	    articleCount++;
             	}
         	} catch(ParserException e) {

@@ -19,9 +19,8 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
 import org.apache.jackrabbit.util.Text;
-import org.slf4j.LoggerFactory;
-
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.WorkingSet;
@@ -46,7 +45,7 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
         setSession(session);
     }
     
-    protected Node getWorkingSetNode(String name) throws RepositoryException {
+    protected Node getWorkingSetNodeByName(String name) throws RepositoryException {
         if (name == null) {
             throw new IllegalArgumentException("Parameter name must not be null");
         }
@@ -65,10 +64,12 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
         }
     }
 
+    @Override
     public EntityKey update(WorkingSet workingSet) throws StoreException {
         try {
         	String name = workingSet.getName();
-            Node workingSetNode = getWorkingSetNode(workingSet.getName());
+        	EntityKey workingSetKey = new EntityKey(name, name);
+            Node workingSetNode = getWorkingSetNodeByName(name);
             if (workingSetNode == null) {
                 workingSetNode = getContent().addNode(NODE_WORKINGSET, NODE_WORKINGSET);
                 workingSetNode.setProperty(PROP_NAME, name);
@@ -77,22 +78,23 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
                 }
             }
             String[] sites = new String[workingSet.getSites().size()];
-            List<String> siteList = EntityKey.extractKeys(workingSet.getSites());
+            List<EntityKey> siteList = workingSet.getSites();
             for (int i=0; i < siteList.size(); i++) {
-                sites[i] = siteList.get(i);
+                sites[i] = siteList.get(i).getKey();
             }
             workingSetNode.setProperty(PROP_SITES, sites);
             getSession().save();
             LOG.debug("Stored working set {}", name);
-            return new EntityKey(name, name);
+            return workingSetKey;
         } catch (RepositoryException e) {
             throw new StoreException(workingSet, "Could not update working set", e);
         }
     }
 
+    @Override
     public void rename(String oldName, String newName) throws StoreException {
         try {
-            Node workingSetNode = getWorkingSetNode(oldName);
+            Node workingSetNode = getWorkingSetNodeByName(oldName);
             if (workingSetNode == null) {
                 throw new IllegalArgumentException("The weorking set with name " + oldName + " does not exists!");
             }
@@ -107,27 +109,29 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
     @Override
     public boolean contains(String name) throws StoreException {
     	try {
-			return getWorkingSetNode(name) != null;
+			return getWorkingSetNodeByName(name) != null;
 		} catch (RepositoryException e) {
 			throw new StoreException(name, "Could not test existence of working set", e);
 		}
     }
 
-    public WorkingSet getWorkingSet(String name) throws StoreException {
+    @Override
+    public WorkingSet getWorkingSet(EntityKey key) throws StoreException {
         try {
-            Node wsNode = getWorkingSetNode(name);
+            Node wsNode = getWorkingSetNodeByName(key.getName());
             if (wsNode == null) {
-            	LOG.warn("No working set node found for {}", name);
+            	LOG.warn("No working set node found for {}", key);
                 return null;
             }
             WorkingSet workingSet = new WorkingSet();
             workingSet.setName(wsNode.getProperty(PROP_NAME).getString());
             List<EntityKey> sites = new ArrayList<EntityKey>();
             for (Value value : wsNode.getProperty(PROP_SITES).getValues()) {
-                sites.add(new EntityKey(Text.unescapeIllegalJcrChars(value.getString()), value.getString()));
+                //TODO: Remove this workaround when all data is migrated
+                sites.add(new EntityKey(Text.unescapeIllegalJcrChars(value.getString()), Text.unescapeIllegalJcrChars(value.getString())));
             }
             workingSet.setSites(sites);
-            LOG.debug("Found working set {}", name);
+            LOG.debug("Found working set {}", key);
             return workingSet;
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrieve working set", e);

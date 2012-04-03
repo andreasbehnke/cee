@@ -1,6 +1,7 @@
 package com.cee.news.store.jcr;
 
 import static com.cee.news.store.jcr.JcrStoreConstants.PATH_CONTENT;
+import static com.cee.news.store.jcr.JcrStoreConstants.PROP_ID;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_TITLE;
 
 import java.util.ArrayList;
@@ -14,6 +15,9 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.Row;
 import javax.jcr.query.RowIterator;
 
+import org.apache.jackrabbit.util.Text;
+
+import com.cee.news.model.ArticleKey;
 import com.cee.news.model.EntityKey;
 import com.cee.news.search.ArticleSearchService;
 import com.cee.news.search.SearchException;
@@ -32,26 +36,34 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 		setSession(session);
 	}
 	
-	protected List<EntityKey> buildPathList(RowIterator iterator, List<String> sites, String comparedArticleKey) throws RepositoryException {
-		List<EntityKey> keys = new ArrayList<EntityKey>();
+	private boolean shouldArticleAdded(ArticleKey originalKey, String articleKey, String siteKey) {
+	    if (originalKey == null) {
+	        return true;
+	    }
+	    return !articleKey.equals(originalKey.getKey()) || !siteKey.equals(originalKey.getSiteKey());
+	}
+	
+	protected List<ArticleKey> buildArticleList(RowIterator iterator, List<EntityKey> sites, ArticleKey comparedArticleKey) throws RepositoryException {
+		List<ArticleKey> keys = new ArrayList<ArticleKey>();
 		while (iterator.hasNext() && keys.size() < DEFAULT_QUERY_LIMIT) {
 			Row row = iterator.nextRow();
 			double score = row.getScore();
 			Node node = row.getNode();
 			String articlePath = node.getPath().replace(PATH_CONTENT, "");
-			if (comparedArticleKey == null || !comparedArticleKey.equals(articlePath)) {
-				String siteName = articlePath.substring(0, articlePath.indexOf('/'));
-		    	if (sites.contains(siteName)) {
-		    		String articleTitle = node.getProperty(PROP_TITLE).getString() + " : " + score;
-		    		keys.add(new EntityKey(articleTitle, articlePath, score));
-		    	}
+			String siteName = Text.unescapeIllegalJcrChars(articlePath.substring(0, articlePath.indexOf('/')));
+			String articleKey = node.getProperty(PROP_ID).getString();
+			if (shouldArticleAdded(comparedArticleKey, articleKey, siteName)) {
+			    if (sites.contains(new EntityKey(siteName, siteName))) {
+			        String articleTitle = node.getProperty(PROP_TITLE).getString() + " : " + score;
+    		    	keys.add(new ArticleKey(articleTitle, articleKey, siteName, score));
+    		    }
 			}
 	    }
 	    return keys;
 	}
 	
 	@Override
-	public List<EntityKey> findArticles(List<String> sites, String fulltextSearchQuery) throws SearchException {
+	public List<ArticleKey> findArticles(List<EntityKey> sites, String fulltextSearchQuery) throws SearchException {
 	    testSession();
         if (sites == null) {
             throw new IllegalArgumentException("Parameter sites must not be null");
@@ -62,14 +74,14 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
         try {
             QueryManager queryManager = getSession().getWorkspace().getQueryManager();
             Query q = queryManager.createQuery(String.format(SQL2_SEARCH_ARTICLES, "%" + fulltextSearchQuery + "%"), Query.JCR_SQL2);
-            return buildPathList(q.execute().getRows(), sites, null);
+            return buildArticleList(q.execute().getRows(), sites, null);
         } catch (RepositoryException e) {
             throw new SearchException("Could not perform search query", e);
         }
 	}
 
     @Override
-	public List<EntityKey> findRelatedArticles(List<String> sites, String articleKey) throws SearchException {
+	public List<ArticleKey> findRelatedArticles(List<EntityKey> sites, ArticleKey articleKey) throws SearchException {
 		testSession();
 		if (sites == null) {
 			throw new IllegalArgumentException("Parameter sites must not be null");
@@ -79,8 +91,8 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 		}
 		try {
 			QueryManager queryManager = getSession().getWorkspace().getQueryManager();
-			Query q = queryManager.createQuery(String.format(XPATH_SIMILAR_ARTICLES, articleKey), Query.XPATH);
-	        return buildPathList(q.execute().getRows(), sites, articleKey);
+			Query q = queryManager.createQuery(String.format(XPATH_SIMILAR_ARTICLES, buildArticlePath(articleKey)), Query.XPATH);
+	        return buildArticleList(q.execute().getRows(), sites, articleKey);
 		} catch (RepositoryException e) {
 			throw new SearchException("Could not perform similarity query", e);
 		}

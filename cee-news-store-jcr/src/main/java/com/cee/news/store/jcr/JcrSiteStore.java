@@ -45,7 +45,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         setSession(session);
     }
     
-    public static String getSitePath(String name) {
+    private String getSitePath(String name) {
     	return Text.escapeIllegalJcrChars(name);
     }
     
@@ -53,15 +53,15 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
     	return getContent().hasNode(getSitePath(name));
     }
     
-    protected Node getSiteNode(String name) throws RepositoryException {
-        if (name == null) {
-        	throw new IllegalArgumentException("Parameter name must not be null");
+    protected Node getSiteNode(EntityKey key) throws RepositoryException {
+        if (key == null) {
+        	throw new IllegalArgumentException("Parameter key must not be null");
         }
-    	return getContentNodeOrNull(getSitePath(name));
+    	return getContentNodeOrNull(getSitePath(key.getKey()));
     }
     
-    protected Node createSiteNode(String name) throws RepositoryException {
-        return getContent().addNode(getSitePath(name), NODE_SITE);
+    protected Node createSiteNode(EntityKey key) throws RepositoryException {
+        return getContent().addNode(getSitePath(key.getKey()), NODE_SITE);
     }
 
     protected void addFeed(Node siteNode, Feed feed) throws RepositoryException {
@@ -79,14 +79,15 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         }
         Node siteNode = null;
         String name = site.getName();
+        EntityKey siteKey = new EntityKey(name, name);
         try {
-            siteNode = getSiteNode(name);
+            siteNode = getSiteNode(siteKey);
         } catch (RepositoryException e) {
             throw new StoreException(site, "Could not retrieve site node from repository", e);
         }
         if (siteNode == null) {
             try {		
-                siteNode = createSiteNode(name);
+                siteNode = createSiteNode(siteKey);
                 LOG.debug("Added site node for ", name);
             } catch (RepositoryException e) {
                 throw new StoreException(site, "Could not create site node", e);
@@ -110,7 +111,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         try {
             getSession().save();
             LOG.debug("Stored site node for ", name);
-            return new EntityKey(name, getSitePath(name));
+            return siteKey;
         } catch (Exception e) {
             throw new StoreException(site, "Could not save session", e);
         }
@@ -126,13 +127,13 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
     }
 
     @Override
-    public Site getSite(String key) throws StoreException {
+    public Site getSite(EntityKey key) throws StoreException {
         if (key == null) {
             throw new IllegalArgumentException("Parameter key must not be null");
         }
         Node siteNode = null;
         try {
-            siteNode = getContentNodeOrNull(key);
+            siteNode = getContentNodeOrNull(getSitePath(key.getKey()));
         } catch (RepositoryException e) {
             throw new StoreException("Could not query site node", e);
         }
@@ -169,9 +170,9 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
     }
     
     @Override
-    public List<Site> getSites(List<String> keys) throws StoreException {
+    public List<Site> getSites(List<EntityKey> keys) throws StoreException {
     	List<Site> sites = new ArrayList<Site>();
-    	for (String key : keys) {
+    	for (EntityKey key : keys) {
 			sites.add(getSite(key));
 		}
     	return sites;
@@ -192,7 +193,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
             while (iter.hasNext()) {
             	String name = iter.nextNode().getProperty(PROP_NAME).getString();
             	String path = getSitePath(name);
-                sites.add(new EntityKey(name, path));
+                sites.add(new EntityKey(name, Text.unescapeIllegalJcrChars(path)));
             }
             if(LOG.isDebugEnabled()) {
             	LOG.debug("Found {} sites in repository", sites.size());

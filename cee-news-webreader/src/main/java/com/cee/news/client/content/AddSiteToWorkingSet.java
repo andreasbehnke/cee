@@ -28,7 +28,7 @@ public class AddSiteToWorkingSet extends AddSiteWorkflow implements SiteAddedHan
         //add site to current working set
         final EntityKey siteKey = event.getEntityKey();
         final EntityKey workingSetKey = workingSetListModel.getSelectedKey();
-        workingSetService.addSiteToWorkingSet(workingSetKey.getKey(), siteKey, new AsyncCallback<WorkingSetData>() {
+        workingSetService.addSiteToWorkingSet(workingSetKey, siteKey, new AsyncCallback<WorkingSetData>() {
             
             @Override
             public void onSuccess(WorkingSetData result) {

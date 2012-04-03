@@ -1,7 +1,8 @@
 package com.cee.news.client;
 
+import com.cee.news.client.content.EntityContent;
 import com.cee.news.client.paging.PagingView;
-import com.cee.news.model.EntityKey;
+import com.cee.news.model.ArticleKey;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.HasText;
@@ -15,7 +16,7 @@ public interface NewsView extends IsWidget {
 
 	PagingView getNewsPagingView();
 
-	CellList<EntityKey> getWhatOthersSayCellList();
+	CellList<EntityContent<ArticleKey>> getWhatOthersSayCellList();
 
 	HasClickHandlers getButtonRefresh();
 }

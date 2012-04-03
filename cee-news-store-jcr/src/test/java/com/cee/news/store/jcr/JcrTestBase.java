@@ -17,6 +17,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import com.cee.news.model.Article;
+import com.cee.news.model.ArticleKey;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
 import com.cee.news.model.TextBlock;
 import com.cee.news.store.StoreException;
@@ -91,12 +93,11 @@ public abstract class JcrTestBase {
         closeSession();
     }
 
-    protected Site createSite(String name) throws StoreException {
+    protected EntityKey createSite(String name) throws StoreException {
         Site site = new Site();
         site.setName(name);
         site.setLocation("http://www.abc.de");
-        siteStore.update(site);
-        return site;
+        return siteStore.update(site);
     }
 
     private Article createArticle(String id, String location, int year, int month, int dayOfMonth) {
@@ -125,15 +126,15 @@ public abstract class JcrTestBase {
         return article;
     }
 
-    protected String updateArticle(Site site, String id, String location, int year, int month, int dayOfMonth) throws StoreException {
-        return articleStore.update(site, createArticle(id, location, year, month, dayOfMonth)).getKey();
+    protected ArticleKey updateArticle(EntityKey site, String id, String location, int year, int month, int dayOfMonth) throws StoreException {
+        return articleStore.update(site, createArticle(id, location, year, month, dayOfMonth));
     }
 
-    protected String updateArticle(Site site, String id, String location, int year, int month, int dayOfMonth, String title, String shortText) throws StoreException {
-        return articleStore.update(site, createArticle(id, location, year, month, dayOfMonth, title, shortText)).getKey();
+    protected ArticleKey updateArticle(EntityKey site, String id, String location, int year, int month, int dayOfMonth, String title, String shortText) throws StoreException {
+        return articleStore.update(site, createArticle(id, location, year, month, dayOfMonth, title, shortText));
     }
 
-    protected String updateArticle(Site site, String id, String location, int year, int month, int dayOfMonth, String title, String shortText, List<TextBlock> content) throws StoreException {
-        return articleStore.update(site, createArticle(id, location, year, month, dayOfMonth, title, shortText, content)).getKey();
+    protected ArticleKey updateArticle(EntityKey site, String id, String location, int year, int month, int dayOfMonth, String title, String shortText, List<TextBlock> content) throws StoreException {
+        return articleStore.update(site, createArticle(id, location, year, month, dayOfMonth, title, shortText, content));
     }
 }

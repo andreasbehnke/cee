@@ -21,10 +21,8 @@ import com.cee.news.client.content.SiteUpdateService;
 import com.cee.news.client.error.ServiceException;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
-import com.cee.news.model.WorkingSet;
 import com.cee.news.parser.SiteParser;
 import com.cee.news.store.SiteStore;
-import com.cee.news.store.WorkingSetStore;
 
 public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
@@ -38,15 +36,11 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private static final String CLEARING_WORK_QUEUE = "Clearing work queue";
 
-	private static final String UNKNOWN_WORKING_SET = "Unknown working set: %s";
-
 	private static final String COULD_NOT_BE_REMOVED_FROM_LIST_OF_RUNNABLES = "{} could not be removed from list of runnables";
 
 	private static final String COULD_NOT_BE_REMOVED_FROM_LIST_OF_SITES_IN_PROGRESS = "{} could not be removed from list of sites in progress";
 
 	private static final String SITE_UPDATE_ENCOUNTERED_AN_ERROR = "Site update %s encountered an error";
-
-	private static final String COULD_NOT_ADD_SITE_OF_WORKING_SET_TO_UPDATE_QUEUE = "Could not add site of working set to update queue";
 
 	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site: %s";
 
@@ -66,11 +60,9 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	
 	private ThreadPoolExecutor pool;
 	
-	private List<String> sitesInProgress = new ArrayList<String>();
+	private List<EntityKey> sitesInProgress = new ArrayList<EntityKey>();
 
 	private SiteStore siteStore;
-
-	private WorkingSetStore workingSetStore;
 
 	private ScheduledExecutorService scheduler;
 
@@ -81,11 +73,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	public void setSiteStore(SiteStore siteStore) {
 		this.siteStore = siteStore;
 	}
-
-	public void setWorkingSetStore(WorkingSetStore workingSetStore) {
-		this.workingSetStore = workingSetStore;
-	}
-
+	
 	/**
 	 * @return the minimum thread pool size
 	 */
@@ -160,63 +148,15 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 		}
 	}
 
-	private synchronized void removeSite(String siteName) {
-		if (!sitesInProgress.remove(siteName)) {
-			LOG.warn(COULD_NOT_BE_REMOVED_FROM_LIST_OF_SITES_IN_PROGRESS, siteName);
+	private synchronized void removeSite(EntityKey siteKey) {
+		if (!sitesInProgress.remove(siteKey)) {
+			LOG.warn(COULD_NOT_BE_REMOVED_FROM_LIST_OF_SITES_IN_PROGRESS, siteKey);
 		}
 	}
 	
 	private synchronized void removeRunnable(Runnable runnable) {
 		if (!runnablesInProgress.remove(runnable)) {
 			LOG.warn(COULD_NOT_BE_REMOVED_FROM_LIST_OF_RUNNABLES, runnable);
-		}
-	}
-
-	@Override
-	public synchronized int addSiteToUpdateQueue(final String siteKey) {
-		ensureThreadPool();
-		if (!sitesInProgress.contains(siteKey)) {
-			Site siteEntity = null;
-			try {
-				siteEntity = siteStore.getSite(siteKey);
-			} catch (Exception e) {
-				String message = String.format(COULD_NOT_RETRIEVE_SITE, siteKey);
-				LOG.error(message, e);
-				throw new ServiceException(message);
-			}
-			SiteUpdateCommand command = createSiteUpdateCommand();
-			command.addCommandCallback(new CommandCallback() {
-				@Override
-				public void notifyFinished() {
-					removeSite(siteKey);
-				}
-				@Override
-				public void notifyError(Exception ex) {
-					String message = String.format(SITE_UPDATE_ENCOUNTERED_AN_ERROR, siteKey);
-					LOG.error(message, ex);
-				}
-			});
-			command.setSite(siteEntity);
-			sitesInProgress.add(siteKey);
-			runnablesInProgress.add(command);
-			pool.execute(command);
-		}
-		return sitesInProgress.size();
-	}
-
-	@Override
-	public synchronized int addSitesOfWorkingSetToUpdateQueue(String workingSetName) {
-		try {
-			WorkingSet ws = workingSetStore.getWorkingSet(workingSetName);
-			if (ws == null)
-				throw new IllegalArgumentException(String.format(UNKNOWN_WORKING_SET, workingSetName));
-			for (EntityKey siteKey : ws.getSites()) {
-				addSiteToUpdateQueue(siteKey.getKey());
-			}
-			return sitesInProgress.size();
-		} catch (Exception e) {
-			LOG.error(COULD_NOT_ADD_SITE_OF_WORKING_SET_TO_UPDATE_QUEUE, e);
-			throw new ServiceException(COULD_NOT_ADD_SITE_OF_WORKING_SET_TO_UPDATE_QUEUE);
 		}
 	}
 
@@ -288,13 +228,44 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 					TimeUnit.MINUTES);
 		}
 	}
+	
+	private synchronized int addSiteToUpdateQueue(final EntityKey siteKey) {
+        ensureThreadPool();
+        if (!sitesInProgress.contains(siteKey)) {
+            Site siteEntity = null;
+            try {
+                siteEntity = siteStore.getSite(siteKey);
+            } catch (Exception e) {
+                String message = String.format(COULD_NOT_RETRIEVE_SITE, siteKey);
+                LOG.error(message, e);
+                throw new ServiceException(message);
+            }
+            SiteUpdateCommand command = createSiteUpdateCommand();
+            command.addCommandCallback(new CommandCallback() {
+                @Override
+                public void notifyFinished() {
+                    removeSite(siteKey);
+                }
+                @Override
+                public void notifyError(Exception ex) {
+                    String message = String.format(SITE_UPDATE_ENCOUNTERED_AN_ERROR, siteKey);
+                    LOG.error(message, ex);
+                }
+            });
+            command.setSite(siteEntity);
+            sitesInProgress.add(siteKey);
+            runnablesInProgress.add(command);
+            pool.execute(command);
+        }
+        return sitesInProgress.size();
+    }
 
 	private void startSiteUpdates() {
 		try {
 			LOG.info(SCHEDULER_STARTING_SITE_UPDATES);
 			List<EntityKey> sites = siteStore.getSitesOrderedByName();
 			for (EntityKey entityKey : sites) {
-				addSiteToUpdateQueue(entityKey.getKey());
+				addSiteToUpdateQueue(entityKey);
 			}
 		} catch (Throwable t) {
 			LOG.error(STARTING_SITE_UPDATES_ENCOUNTERED_AN_ERROR, t);

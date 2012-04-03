@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cee.news.client.async.NotificationCallback;
+import com.cee.news.model.ArticleKey;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -11,11 +12,11 @@ public class NewsListContentModel extends NewsContentModelBase {
     
     private String searchQuery;
     
-    private List<String> filteredSites = new ArrayList<String>();
+    private List<EntityKey> filteredSites = new ArrayList<EntityKey>();
 
     private void retrieveNewsOfSites(final NotificationCallback callback) {
-        newsService.getArticlesOfSites(filteredSites, new AsyncCallback<List<EntityKey>>() {
-            public void onSuccess(List<EntityKey> result) {
+        newsService.getArticlesOfSites(filteredSites, new AsyncCallback<List<ArticleKey>>() {
+            public void onSuccess(List<ArticleKey> result) {
                 setValues(result);
                 if(callback != null) {
                     callback.finished();
@@ -28,10 +29,10 @@ public class NewsListContentModel extends NewsContentModelBase {
     }
     
     private void performSearch(final NotificationCallback callback) {
-        newsService.findArticles(filteredSites, searchQuery, new AsyncCallback<List<EntityKey>>() {
+        newsService.findArticles(filteredSites, searchQuery, new AsyncCallback<List<ArticleKey>>() {
             
             @Override
-            public void onSuccess(List<EntityKey> result) {
+            public void onSuccess(List<ArticleKey> result) {
                 setValues(result);
                 if (callback != null) {
                     callback.finished();
@@ -57,22 +58,22 @@ public class NewsListContentModel extends NewsContentModelBase {
         refresh(null);
     }
     
-    public void getNewsOfSite(final String siteKey, final NotificationCallback callback) {
+    public void getNewsOfSite(final EntityKey siteKey, final NotificationCallback callback) {
         filteredSites.clear();
         filteredSites.add(siteKey);
         refresh(callback);
     }
     
-    public void getNewsOfSite(final String siteKey) {
+    public void getNewsOfSite(final EntityKey siteKey) {
         getNewsOfSite(siteKey, null);
     }    
     
-    public void getNewsOfSites(final List<String> siteKeys, final NotificationCallback callback) {
+    public void getNewsOfSites(final List<EntityKey> siteKeys, final NotificationCallback callback) {
         filteredSites = siteKeys;
         refresh(callback);
     }
     
-    public void getNewsOfSites(final List<String> siteKeys) {
+    public void getNewsOfSites(final List<EntityKey> siteKeys) {
         getNewsOfSites(siteKeys, null);
     }
     

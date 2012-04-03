@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
-	<source path="model" includes="EntityKey.java" />
+	<source path="model" includes="EntityKey.java,ArticleKey.java,SearchHit.java" />
 </module>

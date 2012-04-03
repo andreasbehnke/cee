@@ -6,6 +6,12 @@ import java.util.List;
 
 import com.cee.news.model.EntityKey;
 
+/**
+ * 
+ * @author andreasbehnke
+ * @deprecated This class should be deleted after refactoring
+ */
+@Deprecated
 public final class EntityKeyUtil {
 	
 	private EntityKeyUtil() {}
@@ -17,5 +23,16 @@ public final class EntityKeyUtil {
 		}
     	return result;
     }
-	
+    
+    public static List<EntityKey> createKeys(Collection<String> names) {
+        List<EntityKey> keys = new ArrayList<EntityKey>();
+        for (String name : names) {
+            keys.add(createEntityKey(name, name));
+        }
+        return keys;
+    }
+    
+    public static EntityKey createEntityKey(String name, String key) {
+        return new EntityKey(name, key);
+    }
 }

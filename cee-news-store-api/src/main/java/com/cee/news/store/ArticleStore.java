@@ -3,8 +3,8 @@ package com.cee.news.store;
 import java.util.List;
 
 import com.cee.news.model.Article;
+import com.cee.news.model.ArticleKey;
 import com.cee.news.model.EntityKey;
-import com.cee.news.model.Site;
 import com.cee.news.model.WorkingSet;
 
 /**
@@ -13,13 +13,13 @@ import com.cee.news.model.WorkingSet;
 public interface ArticleStore {
 	
     /**
-     * If an article with same ID exists, the existing article will be updated. TODO: Provide version functionality!
+     * If an article with same ID exists, the existing article will be updated.
      * If an article with same ID does not exist, a new article will be created.
      * @param site The articles site
      * @param article The article which needs update
      * @return primary key of the article being added
      */
-    EntityKey update(Site site, Article article) throws StoreException;
+    ArticleKey update(EntityKey site, Article article) throws StoreException;
 
 	/**
 	 * @param listener will be notified about article creation and changes
@@ -32,7 +32,7 @@ public interface ArticleStore {
      * @param withContent If the content should be retrieved
      * @return Article found in repository
      */
-    Article getArticle(String key, boolean withContent) throws StoreException;
+    Article getArticle(ArticleKey key, boolean withContent) throws StoreException;
     
     /**
      * Retrieves an article and it's content for the given keys
@@ -40,33 +40,26 @@ public interface ArticleStore {
      * @param withContent If the content should be retrieved
      * @return List of articles and their content
      */
-    List<Article> getArticles(List<String> keys, boolean withContent) throws StoreException;
+    List<Article> getArticles(List<ArticleKey> keys, boolean withContent) throws StoreException;
     
     /**
      * Returns a list of unique identifiers of all site's articles
-     * @param site The site from which to retrieve identifiers
+     * @param siteKey The site from which to retrieve identifiers
      * @return List of article identifiers
      */
-    List<EntityKey> getArticlesOrderedByDate(Site site) throws StoreException;
+    List<ArticleKey> getArticlesOrderedByDate(EntityKey siteKey) throws StoreException;
     
     /**
      * Returns a list of unique identifiers of all site's articles
-     * @param sites The sites from which to retrieve identifiers
+     * @param siteKeys The sites from which to retrieve identifiers
      * @return List of article identifiers
      */
-    List<EntityKey> getArticlesOrderedByDate(List<Site> sites) throws StoreException;
+    List<ArticleKey> getArticlesOrderedByDate(List<EntityKey> siteKeys) throws StoreException;
     
     /**
      * Returns a list of unique identifiers of all working set's articles
      * @param workingSet The working set to retrieve all articles from
      * @return List of all article identifiers
      */
-    List<EntityKey> getArticlesOrderedByDate(WorkingSet workingSet) throws StoreException;
-    
-    /**
-     * Returns the site key of an article
-     * @param articleKey Key of the article
-     * @return Site's key this article belongs to
-     */
-    String getSiteKey(String articleKey);
+    List<ArticleKey> getArticlesOrderedByDate(WorkingSet workingSet) throws StoreException;
 }

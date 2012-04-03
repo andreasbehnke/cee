@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cee.news.client.async.NotificationCallback;
+import com.cee.news.client.list.CellListContentModel;
 import com.cee.news.client.list.ContentModel;
 import com.cee.news.client.list.DefaultListModel;
 import com.cee.news.client.util.SafeHtmlUtil;
@@ -14,7 +15,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 /**
  * List content model implementation for sites
  */
-public class SiteListContentModel extends DefaultListModel<EntityKey> implements ContentModel<EntityKey>, EntityKeyContentModel {
+public class SiteListContentModel extends DefaultListModel<EntityKey> implements ContentModel<EntityKey>, CellListContentModel<EntityKey> {
 
     private SiteServiceAsync service = SiteServiceAsync.Util.getInstance();
     
@@ -38,12 +39,12 @@ public class SiteListContentModel extends DefaultListModel<EntityKey> implements
         });
     }
     
-    public void findSitesOfWorkingSet(String workingSetName) {
-        findSitesOfWorkingSet(workingSetName, null);
+    public void findSitesOfWorkingSet(EntityKey workingSetKey) {
+        findSitesOfWorkingSet(workingSetKey, null);
     }
     
-    public void findSitesOfWorkingSet(String workingSetName, final NotificationCallback callback) {
-    	service.getSitesOfWorkingSet(workingSetName, new AsyncCallback<List<EntityKey>>() {
+    public void findSitesOfWorkingSet(EntityKey workingSetKey, final NotificationCallback callback) {
+    	service.getSitesOfWorkingSet(workingSetKey, new AsyncCallback<List<EntityKey>>() {
 			
 			@Override
 			public void onSuccess(List<EntityKey> result) {
@@ -68,10 +69,10 @@ public class SiteListContentModel extends DefaultListModel<EntityKey> implements
 
     @Override
     public void getContentDescription(final HasSafeHtml target, EntityKey key) {
-    	service.getHtmlDescription(key, new AsyncCallback<EntityKey>() {
+    	service.getHtmlDescription(key, new AsyncCallback<EntityContent<EntityKey>>() {
             
-            public void onSuccess(EntityKey result) {
-                target.setHTML(SafeHtmlUtil.sanitize(result.getHtmlContent()));
+            public void onSuccess(EntityContent<EntityKey> result) {
+                target.setHTML(SafeHtmlUtil.sanitize(result.getContent()));
             }
             
             public void onFailure(Throwable caught) {
@@ -86,7 +87,8 @@ public class SiteListContentModel extends DefaultListModel<EntityKey> implements
 	}
 	
 	@Override
-	public void getContent(ArrayList<EntityKey> keys, AsyncCallback<List<EntityKey>> callback) {
-		service.getHtmlDescriptions(keys, callback);
-	}
+	public void getContent(ArrayList<EntityKey> keys, AsyncCallback<List<EntityContent<EntityKey>>> callback) {
+	    service.getHtmlDescriptions(keys, callback);
+	};
+	
 }

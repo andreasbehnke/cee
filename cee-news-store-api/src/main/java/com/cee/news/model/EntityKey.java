@@ -1,8 +1,6 @@
 package com.cee.news.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Key-name pair referencing an entity within a store
@@ -14,10 +12,6 @@ public class EntityKey implements Serializable {
 	private String name;
 	
 	private String key;
-	
-	private double score = -1;
-
-	private String htmlContent;
 	
 	public String getName() {
 		return name;
@@ -35,25 +29,6 @@ public class EntityKey implements Serializable {
 		this.key = key;
 	}
 	
-	/**
-	 * @return Score of the hit if this EntityKey was generated from a related term or fulltext search. Otherwise returns always -1;
-	 */
-	public double getScore() {
-		return score;
-	}
-
-	public void setScore(double score) {
-		this.score = score;
-	}
-	
-	public String getHtmlContent() {
-        return htmlContent;
-    }
-
-    public void setHtmlContent(String htmlContent) {
-        this.htmlContent = htmlContent;
-    }
-
     public EntityKey() {}
 	
 	public EntityKey(String name, String key) {
@@ -61,12 +36,6 @@ public class EntityKey implements Serializable {
 		this.key = key;
 	}
 	
-	public EntityKey(String name, String key, double score) {
-		this.name = name;
-		this.key = key;
-		this.score = score;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -95,21 +64,5 @@ public class EntityKey implements Serializable {
 	@Override
 	public String toString() {
 		return "[key=" + key + ";name=" + name + "]";
-	}
-
-	public static List<String> extractNames(List<EntityKey> input) {
-		List<String> keys = new ArrayList<String>(input.size());
-		for (EntityKey key : input) {
-			keys.add(key.getName());
-		}
-		return keys;
-	}
-
-	public static List<String> extractKeys(List<EntityKey> input) {
-		List<String> keys = new ArrayList<String>(input.size());
-		for (EntityKey key : input) {
-			keys.add(key.getKey());
-		}
-		return keys;
 	}
 }
