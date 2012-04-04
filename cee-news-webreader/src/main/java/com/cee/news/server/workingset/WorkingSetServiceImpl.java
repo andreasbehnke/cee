@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.client.async.EntityUpdateResult.State;
-import com.cee.news.client.content.EntityKeyUtil;
 import com.cee.news.client.error.ServiceException;
 import com.cee.news.client.workingset.WorkingSetData;
 import com.cee.news.client.workingset.WorkingSetService;
@@ -63,7 +62,7 @@ public class WorkingSetServiceImpl implements WorkingSetService {
         try {
             String newName = wsd.getNewName();
             String oldName = wsd.getOldName();
-            if (wsd.getIsNew() && workingSetStore.getWorkingSet(EntityKeyUtil.createEntityKey(newName, newName)) != null) {
+            if (wsd.getIsNew() && workingSetStore.getWorkingSet(EntityKey.get(newName)) != null) {
                 return new EntityUpdateResult(State.entityExists, null);
             }
             if (!wsd.getIsNew() && !newName.equals(oldName)) {
@@ -74,7 +73,7 @@ public class WorkingSetServiceImpl implements WorkingSetService {
             	workingSet = new WorkingSet();
             	workingSet.setName(newName);
             } else {
-            	workingSet = workingSetStore.getWorkingSet(EntityKeyUtil.createEntityKey(newName, newName));
+            	workingSet = workingSetStore.getWorkingSet(EntityKey.get(newName));
             }
             workingSet.setSites(wsd.getSites());
             EntityKey key = workingSetStore.update(workingSet);

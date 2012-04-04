@@ -79,7 +79,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         }
         Node siteNode = null;
         String name = site.getName();
-        EntityKey siteKey = new EntityKey(name, name);
+        EntityKey siteKey = EntityKey.get(name);
         try {
             siteNode = getSiteNode(siteKey);
         } catch (RepositoryException e) {
@@ -192,8 +192,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
             NodeIterator iter = getSiteNodesOrderedByName();
             while (iter.hasNext()) {
             	String name = iter.nextNode().getProperty(PROP_NAME).getString();
-            	String path = getSitePath(name);
-                sites.add(new EntityKey(name, Text.unescapeIllegalJcrChars(path)));
+            	sites.add(EntityKey.get(name));
             }
             if(LOG.isDebugEnabled()) {
             	LOG.debug("Found {} sites in repository", sites.size());

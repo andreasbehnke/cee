@@ -25,9 +25,9 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
     private static final long EXPECTED_COUNT = 3;
     private static final String UNKOWN_WORKING_SET = "unkown";
     private static final String EXPECTED_NAME = "abc";
-    private static final EntityKey SITE_A = new EntityKey("http://googlewebtoolkit.blogspot.com", "http://googlewebtoolkit.blogspot.com");
-    private static final EntityKey SITE_B = new EntityKey("siteB", "siteB");
-    private static final EntityKey SITE_C = new EntityKey("siteC", "siteC");
+    private static final EntityKey SITE_A = EntityKey.get("http://googlewebtoolkit.blogspot.com");
+    private static final EntityKey SITE_B = EntityKey.get("siteB");
+    private static final EntityKey SITE_C = EntityKey.get("siteC");
     private static final String TESTWORKINGSET = "testworkingset";
     @Test
     public void testUpdateWorkingSet() throws StoreException {
@@ -66,7 +66,7 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
         
     @Test
     public void testGetWorkingSetUnknown() throws StoreException {
-        assertNull( workingSetStore.getWorkingSet(new EntityKey(UNKOWN_WORKING_SET, UNKOWN_WORKING_SET)));
+        assertNull(workingSetStore.getWorkingSet(EntityKey.get(UNKOWN_WORKING_SET)));
     }
     
     @Test
@@ -91,8 +91,8 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
         ws.setName(OLD_NAME);
         workingSetStore.update(ws);
         workingSetStore.rename(OLD_NAME, NEW_NAME);
-        assertNull(workingSetStore.getWorkingSet(new EntityKey(OLD_NAME, OLD_NAME)));
-        assertEquals(NEW_NAME, workingSetStore.getWorkingSet(new EntityKey(NEW_NAME, NEW_NAME)).getName());
+        assertNull(workingSetStore.getWorkingSet(EntityKey.get(OLD_NAME)));
+        assertEquals(NEW_NAME, workingSetStore.getWorkingSet(EntityKey.get(NEW_NAME)).getName());
     }
     
     @Test

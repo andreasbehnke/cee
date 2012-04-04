@@ -53,9 +53,9 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 			String siteName = Text.unescapeIllegalJcrChars(articlePath.substring(0, articlePath.indexOf('/')));
 			String articleKey = node.getProperty(PROP_ID).getString();
 			if (shouldArticleAdded(comparedArticleKey, articleKey, siteName)) {
-			    if (sites.contains(new EntityKey(siteName, siteName))) {
+			    if (sites.contains(EntityKey.get(siteName))) {
 			        String articleTitle = node.getProperty(PROP_TITLE).getString() + " : " + score;
-    		    	keys.add(new ArticleKey(articleTitle, articleKey, siteName, score));
+    		    	keys.add(ArticleKey.get(articleTitle, articleKey, siteName, score));
     		    }
 			}
 	    }

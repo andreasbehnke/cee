@@ -94,7 +94,7 @@ public class TestJcrSiteStore extends JcrTestBase {
     
     @Test
     public void testGetSiteMissing() throws StoreException, MalformedURLException {
-        assertNull(siteStore.getSite(new EntityKey("http://www.blablabla.de","http://www.blablabla.de")));
+        assertNull(siteStore.getSite(EntityKey.get("http://www.blablabla.de")));
     }
     
     @Test

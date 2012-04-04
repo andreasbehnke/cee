@@ -10,14 +10,22 @@ public class ArticleKey extends EntityKey {
     
     public ArticleKey() {}
     
-    public ArticleKey(String name, String key, String siteKey) {
+    protected ArticleKey(String name, String key, String siteKey) {
         this(name, key, siteKey, -1);
     }
     
-    public ArticleKey(String name, String key, String siteKey, double score) {
+    protected ArticleKey(String name, String key, String siteKey, double score) {
         super(name, key);
         this.siteKey = siteKey;
         this.score = score;
+    }
+    
+    public static ArticleKey get(String name, String key, String siteKey, double score) {
+        return new ArticleKey(name, key, siteKey, score);
+    }
+    
+    public static ArticleKey get(String name, String key, String siteKey) {
+        return new ArticleKey(name, key, siteKey);
     }
 
     public String getSiteKey() {

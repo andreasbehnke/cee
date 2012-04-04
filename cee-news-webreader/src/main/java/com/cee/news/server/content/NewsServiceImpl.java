@@ -148,7 +148,7 @@ public class NewsServiceImpl implements NewsService {
 				//remove site of current article
 				relatedSites = new ArrayList<EntityKey>(sites);
 				String siteOfArticle = articleKey.getSiteKey();
-				relatedSites.remove(new EntityKey(null, siteOfArticle));
+				relatedSites.remove(EntityKey.get(siteOfArticle));
 			}
 			List<ArticleKey> keys = articleSearchService.findRelatedArticles(relatedSites, articleKey);
 			LOG.debug(RETRIEVED_RELATED_ARTICLES_FOR_ARTICLE, keys.size(), articleKey);
@@ -180,14 +180,14 @@ public class NewsServiceImpl implements NewsService {
 	protected EntityContent<ArticleKey> render(ArticleKey key, String template) throws StoreException {
 	    return renderer.render(
                 key, 
-                articleStore.getArticle(key, false), 
+                articleStore.getArticle(key, true), 
                 template);
 	}
 	
 	protected List<EntityContent<ArticleKey>> render(List<ArticleKey> keys, String template) throws StoreException {
         return renderer.render(
                 keys, 
-                articleStore.getArticles(keys, false), 
+                articleStore.getArticles(keys, true), 
                 template);
     }
 	

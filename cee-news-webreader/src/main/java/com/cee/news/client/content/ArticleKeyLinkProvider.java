@@ -15,7 +15,7 @@ public class ArticleKeyLinkProvider implements KeyLinkResolver<ArticleKey> {
         int index = combinedKey.indexOf('/');
         String siteKey = combinedKey.substring(0, index);
         String articleKey = combinedKey.substring(index);
-        return new ArticleKey(null, articleKey, siteKey);
+        return ArticleKey.get(link.getText(), articleKey, siteKey);
     }
     
     @Override

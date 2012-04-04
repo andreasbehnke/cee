@@ -77,7 +77,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         Node articleNode = null;
         String siteKey = site.getKey();
         String articleId = article.getExternalId();
-        ArticleKey articleKey = new ArticleKey(article.getTitle(), articleId, siteKey);
+        ArticleKey articleKey = ArticleKey.get(article.getTitle(), articleId, siteKey);
         
         try {
             articleNode = getArticleNode(articleKey);

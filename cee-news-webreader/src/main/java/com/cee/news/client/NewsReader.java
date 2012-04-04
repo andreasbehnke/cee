@@ -142,7 +142,7 @@ public class NewsReader implements EntryPoint {
 					final ArticleKey articleKey = event.getKey();
 					final String siteKey = articleKey.getSiteKey();
 					clientFactory.getNewsView().getSiteNameLabel().setText(siteKey);
-					filteredContentList.getNewsOfSite(new EntityKey(siteKey, siteKey), new NotificationCallback() {
+					filteredContentList.getNewsOfSite(EntityKey.get(siteKey), new NotificationCallback() {
 						@Override
 						public void finished() {
 						    filteredContentList.setSelectedKey(event.getKey());

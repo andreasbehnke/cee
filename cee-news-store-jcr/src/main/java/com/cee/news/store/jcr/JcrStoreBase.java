@@ -101,7 +101,7 @@ public abstract class JcrStoreBase {
 	    	String articleId = row.getValue(ARTICLE_ID_SELECTOR).getString();
 	    	String articleTitle = row.getValue(ARTICLE_TITLE_SELECTOR).getString();
 	    	String siteName = row.getValue(SITE_NAME_SELECTOR).getString();
-	        articles.add(new ArticleKey(articleTitle, articleId, siteName));
+	        articles.add(ArticleKey.get(articleTitle, articleId, siteName));
 	    }
 	    return articles;
 	}

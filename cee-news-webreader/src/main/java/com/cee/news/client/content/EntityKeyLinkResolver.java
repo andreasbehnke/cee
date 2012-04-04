@@ -13,7 +13,7 @@ public class EntityKeyLinkResolver implements KeyLinkResolver<EntityKey> {
 
     @Override
     public EntityKey resolveKey(KeyLink link) {
-        return new EntityKey(link.getText(), link.getKeyValue());
+        return EntityKey.get(link.getText(), link.getKeyValue());
     }
 
 }

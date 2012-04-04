@@ -113,7 +113,7 @@ public class SiteUpdater {
             	remainingArticles = articles.size();
             }
         }
-        int articleCount = updateArticles(new EntityKey(null, site.getName()), articles);
+        int articleCount = updateArticles(EntityKey.get(site.getName()), articles);
         LOG.info("updated {} articles of site {}", articleCount, site.getName());
         return articleCount;
     }

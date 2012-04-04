@@ -18,7 +18,6 @@ import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
-import org.apache.jackrabbit.util.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +67,7 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
     public EntityKey update(WorkingSet workingSet) throws StoreException {
         try {
         	String name = workingSet.getName();
-        	EntityKey workingSetKey = new EntityKey(name, name);
+        	EntityKey workingSetKey = EntityKey.get(name);
             Node workingSetNode = getWorkingSetNodeByName(name);
             if (workingSetNode == null) {
                 workingSetNode = getContent().addNode(NODE_WORKINGSET, NODE_WORKINGSET);
@@ -127,8 +126,7 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
             workingSet.setName(wsNode.getProperty(PROP_NAME).getString());
             List<EntityKey> sites = new ArrayList<EntityKey>();
             for (Value value : wsNode.getProperty(PROP_SITES).getValues()) {
-                //TODO: Remove this workaround when all data is migrated
-                sites.add(new EntityKey(Text.unescapeIllegalJcrChars(value.getString()), Text.unescapeIllegalJcrChars(value.getString())));
+                sites.add(EntityKey.get(value.getString()));
             }
             workingSet.setSites(sites);
             LOG.debug("Found working set {}", key);
@@ -145,13 +143,14 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
         return q.execute().getNodes();
     }
     
+    @Override
     public List<EntityKey> getWorkingSetsOrderedByName() throws StoreException {
         try {
             List<EntityKey> workingSets = new ArrayList<EntityKey>();
             NodeIterator iter = getWorkingSetNodesOrderedByName();
             while (iter.hasNext()) {
             	String name = iter.nextNode().getProperty(PROP_NAME).getString();
-                workingSets.add(new EntityKey(name, name));
+                workingSets.add(EntityKey.get(name));
             }
             if(LOG.isDebugEnabled()) {
             	LOG.debug("Found {} working sets", workingSets.size());
@@ -162,6 +161,7 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
         }
     }
 
+    @Override
     public long getWorkingSetCount() throws StoreException {
         try {
             return getWorkingSetNodesOrderedByName().getSize();

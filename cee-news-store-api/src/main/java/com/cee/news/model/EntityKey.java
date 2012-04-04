@@ -31,10 +31,18 @@ public class EntityKey implements Serializable {
 	
     public EntityKey() {}
 	
-	public EntityKey(String name, String key) {
+	protected EntityKey(String name, String key) {
 		this.name = name;
 		this.key = key;
 	}
+	
+	public static EntityKey get(String key) {
+	    return new EntityKey(key, key);
+	}
+	
+	public static EntityKey get(String name, String key) {
+        return new EntityKey(name, key);
+    }
 	
 	@Override
 	public int hashCode() {
