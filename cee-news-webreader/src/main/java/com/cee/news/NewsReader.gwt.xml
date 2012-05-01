@@ -18,7 +18,7 @@
 	<!-- Specify the paths for translatable code -->
 	<source path="client" />
 
-	<replace-with class="com.cee.news.client.StandardClientFactory">
+	<replace-with class="com.cee.news.client.ui.BinderClientFactory">
     	<when-type-is class="com.cee.news.client.ClientFactory"/>
     </replace-with>
 </module>
