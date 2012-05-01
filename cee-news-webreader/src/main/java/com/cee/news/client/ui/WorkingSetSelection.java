@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.cee.news.client.workingset.ui;
+package com.cee.news.client.ui;
 
 import java.util.List;
 
@@ -35,6 +35,9 @@ public class WorkingSetSelection extends SimplePanel implements WorkingSetSelect
 	
 	@UiField
 	Button editButton;
+	
+	@UiField
+	Button deleteButton;
 	
 	@UiField
 	ListBox listBox;

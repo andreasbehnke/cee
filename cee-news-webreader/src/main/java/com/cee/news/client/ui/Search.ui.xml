@@ -1,0 +1,8 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<g:HTMLPanel styleName="search-field">
+		<g:TextBox ui:field="textBoxSearch"/>
+		<g:Button ui:field="buttonSearch" title="Search" styleName="icon icon24 search"/>
+		<g:Button ui:field="buttonClear" title="Clear Search" styleName="icon icon24 clear"/>
+	</g:HTMLPanel>
+</ui:UiBinder> 

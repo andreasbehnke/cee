@@ -3,7 +3,7 @@ package com.cee.news.client;
 import com.cee.news.client.content.EntityContent;
 import com.cee.news.client.content.EntityContentCell;
 import com.cee.news.client.content.EntityKeyProvider;
-import com.cee.news.client.list.ScrollLoader;
+import com.cee.news.client.list.IncreaseVisibleRangeScrollHandler;
 import com.cee.news.client.paging.PagingPanel;
 import com.cee.news.client.paging.PagingView;
 import com.cee.news.model.ArticleKey;
@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 public class NewsPanel extends Composite implements NewsView {
 
@@ -42,8 +43,8 @@ public class NewsPanel extends Composite implements NewsView {
         layoutPanel.setWidgetTopBottom(pagingView, 52.0, Unit.PX, 0.0, Unit.PX);
         
         whatOthersSayCellList = new CellList<EntityContent<ArticleKey>>(new EntityContentCell<ArticleKey>(), new EntityKeyProvider<ArticleKey>());
-        ScrollLoader whatOthersSayScroller = new ScrollLoader();
-        whatOthersSayScroller.setDisplay(whatOthersSayCellList);
+        ScrollPanel whatOthersSayScroller = new ScrollPanel(whatOthersSayCellList);
+        whatOthersSayScroller.addScrollHandler(new IncreaseVisibleRangeScrollHandler(whatOthersSayCellList, whatOthersSayScroller));
         layoutPanel.add(whatOthersSayScroller);
         layoutPanel.setWidgetRightWidth(whatOthersSayScroller, 0.0, Unit.PX, 327.0, Unit.PX);
         layoutPanel.setWidgetTopBottom(whatOthersSayScroller, 52.0, Unit.PX, 0.0, Unit.PX);

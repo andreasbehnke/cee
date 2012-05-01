@@ -4,13 +4,11 @@ import com.cee.news.client.content.EntityContent;
 import com.cee.news.client.content.EntityContentCell;
 import com.cee.news.client.content.SourceSelectionPanel;
 import com.cee.news.client.content.SourceSelectionView;
-import com.cee.news.client.list.ScrollLoader;
-import com.cee.news.client.progress.ProgressView;
-import com.cee.news.client.progress.TextProgressView;
+import com.cee.news.client.list.IncreaseVisibleRangeScrollHandler;
 import com.cee.news.client.search.SearchPanel;
 import com.cee.news.client.search.SearchView;
+import com.cee.news.client.ui.WorkingSetSelection;
 import com.cee.news.client.workingset.WorkingSetSelectionView;
-import com.cee.news.client.workingset.ui.WorkingSetSelection;
 import com.cee.news.model.ArticleKey;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -19,12 +17,11 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 public class StartPanel extends Composite implements StartView {
     
 	private final WorkingSetSelection workingSetSelection;
-    
-    private final TextProgressView progressView;
     
     private final SourceSelectionView sourceSelectionView;
     
@@ -59,15 +56,10 @@ public class StartPanel extends Composite implements StartView {
         layoutPanel.setWidgetLeftWidth(nlnlblLatestNews, 366.0, Unit.PX, 90.0, Unit.PX);
         layoutPanel.setWidgetTopHeight(nlnlblLatestNews, 30.0, Unit.PX, 16.0, Unit.PX);
         
-        progressView = new TextProgressView();
-        progressView.setMessageFormat("(update %s)");
-        layoutPanel.add(progressView);
-        layoutPanel.setWidgetLeftRight(progressView, 447.0, Unit.PX, 0.0, Unit.PX);
-        layoutPanel.setWidgetTopHeight(progressView, 30.0, Unit.PX, 16.0, Unit.PX);
-        
         cellListLatestArticles = new CellList<EntityContent<ArticleKey>>(new EntityContentCell<ArticleKey>());
-        ScrollLoader articlesPager = new ScrollLoader();
-        articlesPager.setDisplay(cellListLatestArticles);
+        ScrollPanel articlesPager = new ScrollPanel();
+        articlesPager.setWidget(cellListLatestArticles);
+        articlesPager.addScrollHandler(new IncreaseVisibleRangeScrollHandler(cellListLatestArticles, articlesPager));
         layoutPanel.add(articlesPager);
         layoutPanel.setWidgetLeftRight(articlesPager, 366.0, Unit.PX, 0.0, Unit.PX);
         layoutPanel.setWidgetTopBottom(articlesPager, 52.0, Unit.PX, 0.0, Unit.PX);
@@ -97,11 +89,6 @@ public class StartPanel extends Composite implements StartView {
     @Override
     public SearchView getSearchView() {
         return searchView;
-    }
-    
-    @Override
-    public ProgressView getProgressView() {
-    	return progressView;
     }
     
     @Override

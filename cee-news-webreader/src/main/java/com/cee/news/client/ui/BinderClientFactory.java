@@ -1,5 +1,12 @@
-package com.cee.news.client;
+package com.cee.news.client.ui;
 
+import com.cee.news.client.ClientFactory;
+import com.cee.news.client.NewsPanel;
+import com.cee.news.client.NewsView;
+import com.cee.news.client.PageSwitchPanel;
+import com.cee.news.client.PageSwitchView;
+import com.cee.news.client.StartPanel;
+import com.cee.news.client.StartView;
 import com.cee.news.client.error.ErrorDialog;
 import com.cee.news.client.error.ErrorHandler;
 import com.google.gwt.dom.client.Style.Unit;
@@ -7,7 +14,7 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class StandardClientFactory implements ClientFactory {
+public class BinderClientFactory implements ClientFactory {
 
     private final ErrorHandler globalErrorHandler;
     
@@ -17,14 +24,14 @@ public class StandardClientFactory implements ClientFactory {
     
     private final NewsView newsView;
     
-    public StandardClientFactory() {
-        
+    public BinderClientFactory() {
         globalErrorHandler = new ErrorDialog();
         
         LayoutPanel layoutPanel = new LayoutPanel();
         layoutPanel.setSize("100%", "100%");
         
-        startView = new StartPanel();
+        startView = new Start();
+        //TODO migrate news panel to UI binder
         newsView = new NewsPanel();
         pageSwitchView = new PageSwitchPanel(startView, newsView);
         

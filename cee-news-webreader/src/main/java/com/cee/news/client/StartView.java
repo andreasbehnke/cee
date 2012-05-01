@@ -2,7 +2,6 @@ package com.cee.news.client;
 
 import com.cee.news.client.content.EntityContent;
 import com.cee.news.client.content.SourceSelectionView;
-import com.cee.news.client.progress.ProgressView;
 import com.cee.news.client.search.SearchView;
 import com.cee.news.client.workingset.WorkingSetSelectionView;
 import com.cee.news.model.ArticleKey;
@@ -19,8 +18,6 @@ public interface StartView extends IsWidget {
 	SourceSelectionView getSourceSelectionView();
 	
 	SearchView getSearchView();
-
-	ProgressView getProgressView();
 	
 	HasClickHandlers getButtonRefresh();
 }
