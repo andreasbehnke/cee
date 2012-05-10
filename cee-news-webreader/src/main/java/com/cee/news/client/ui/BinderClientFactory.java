@@ -5,7 +5,6 @@ import com.cee.news.client.NewsPanel;
 import com.cee.news.client.NewsView;
 import com.cee.news.client.PageSwitchPanel;
 import com.cee.news.client.PageSwitchView;
-import com.cee.news.client.StartPanel;
 import com.cee.news.client.StartView;
 import com.cee.news.client.error.ErrorDialog;
 import com.cee.news.client.error.ErrorHandler;

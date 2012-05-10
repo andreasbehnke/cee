@@ -15,13 +15,13 @@ public class SiteContentRenderer extends DefaultContentRenderer<EntityKey, Site>
             throw new IllegalArgumentException("Parameter site must not be null");
         }
         StringBuilder builder = new StringBuilder();
-        String title = site.getTitle();
-        String description = site.getDescription();
-        builder.append("<p>").append(title == null ? site.getLocation() : title).append("</p>")
-        .append("<p>").append(site.getName()).append("</p>");
-        if (description != null) {
-            builder.append("<p>").append(site.getDescription()).append("</p>");
-        }
+//        String title = site.getTitle();
+//        String description = site.getDescription();
+//        builder.append(title == null ? site.getLocation() : title);
+        builder.append(site.getName());
+//        if (description != null) {
+//            builder.append("<p>").append(site.getDescription()).append("</p>");
+//        }
         return new EntityContent<EntityKey>(key, builder.toString());
     }
 }

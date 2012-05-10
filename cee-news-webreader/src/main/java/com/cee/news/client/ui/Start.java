@@ -10,13 +10,15 @@ import com.cee.news.client.search.SearchView;
 import com.cee.news.client.workingset.WorkingSetSelectionView;
 import com.cee.news.model.ArticleKey;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Start extends Composite implements StartView {
@@ -42,7 +44,7 @@ public class Start extends Composite implements StartView {
     Button buttonRefresh;
 
     @UiField
-    ScrollPanel scrollPanelArticles;
+    SimplePanel panelArticles;
     
     private CellList<EntityContent<ArticleKey>> cellListLatestArticles;
     
@@ -50,8 +52,7 @@ public class Start extends Composite implements StartView {
         initWidget(uiBinder.createAndBindUi(this));
         EntityContentCell<ArticleKey> cell = new EntityContentCell<ArticleKey>();
         cellListLatestArticles = new CellList<EntityContent<ArticleKey>>(cell, new EntityKeyProvider<ArticleKey>());
-        scrollPanelArticles.setWidget(cellListLatestArticles);
-        scrollPanelArticles.addScrollHandler(new IncreaseVisibleRangeScrollHandler(cellListLatestArticles, scrollPanelArticles));
+        panelArticles.setWidget(cellListLatestArticles);
     }
 
     @Override

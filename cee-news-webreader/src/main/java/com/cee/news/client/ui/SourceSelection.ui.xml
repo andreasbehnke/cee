@@ -1,8 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:com.cee.news.client.ui">
 	<g:HTMLPanel styleName="left sources">
 		<div class="label">Filter Sources:</div>
-		<g:ScrollPanel ui:field="scrollPanel" styleName="list border vertical-scroll" />
+		<p:VerticalScrollPanel ui:field="scrollPanel" />
 		<g:Button ui:field="buttonSelectAll" styleName="icon icon24 select-all" title="Select All" />
 		<g:Button ui:field="buttonSelectNone" styleName="icon icon24 select-none" title="Select None" />
 		<g:Button ui:field="buttonAddSource" styleName="icon icon24 add" title="Add Source" />

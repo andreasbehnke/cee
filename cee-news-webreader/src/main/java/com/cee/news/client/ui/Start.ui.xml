@@ -8,6 +8,6 @@
 		<p:SourceSelection ui:field="sourceSelection" />
 		<div id="label-result">Latest Articles:</div>
 		<g:Button ui:field="buttonRefresh" styleName="icon icon24 refresh" title="Refresh" />
-		<g:ScrollPanel ui:field="scrollPanelArticles" styleName="center" />		
+		<g:SimplePanel ui:field="panelArticles" styleName="center" />
 	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -56,5 +56,4 @@ public class IncreaseVisibleRangeScrollHandler implements ScrollHandler {
             display.setVisibleRange(0, newPageSize);
         }
     }
-
 }

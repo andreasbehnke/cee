@@ -1,0 +1,55 @@
+.cellListEvenItem {
+	background-image: url("../images/icons24.png");
+    background-position: 0 -324px;
+	background-repeat: no-repeat;
+    height: 30px;
+	line-height: 30px;
+    vertical-align: baseline;
+	color: gray;
+    padding-left: 26px;
+	cursor: pointer;
+}
+.cellListOddItem {
+	background-image: url("../images/icons24.png");
+    background-position: 0 -324px;
+	background-repeat: no-repeat;
+    height: 30px;
+	line-height: 30px;
+    vertical-align: baseline;
+	color: gray;
+    padding-left: 26px;
+	cursor: pointer;
+}
+.cellListKeyboardSelectedItem {
+	background-position: 0 -354px;
+    background-image: url("../images/icons24.png");
+    background-repeat: no-repeat;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: baseline;
+    padding-left: 26px;
+    cursor: pointer;	
+}
+.cellListSelectedItem {
+	background-position: 0 -354px;
+    background-image: url("../images/icons24.png");
+    background-repeat: no-repeat;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: baseline;
+    padding-left: 26px;
+    cursor: pointer;
+}
+.cellListWidget {
+	position: absolute;
+    bottom: 100px;
+	left: 30px;
+    right: 30px;
+    top: 56px;
+	overflow-x: hidden;
+    overflow-y: auto;
+	border-color: #C0C0C0;
+    border-radius: 6px 6px 6px 6px;
+    border-style: solid;
+    border-width: 1px;
+}
