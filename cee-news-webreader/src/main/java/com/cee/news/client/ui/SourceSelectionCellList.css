@@ -25,6 +25,7 @@
 }
 .cellListSelectedItem {
 	background-position: 0 -354px;
+	color: #000000;
 }
 .cellListWidget {
 	position: absolute;
