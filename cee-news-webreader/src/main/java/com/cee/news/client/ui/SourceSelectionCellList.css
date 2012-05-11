@@ -22,24 +22,9 @@
 	cursor: pointer;
 }
 .cellListKeyboardSelectedItem {
-	background-position: 0 -354px;
-    background-image: icons;
-    background-repeat: no-repeat;
-    height: 30px;
-    line-height: 30px;
-    vertical-align: baseline;
-    padding-left: 26px;
-    cursor: pointer;	
 }
 .cellListSelectedItem {
 	background-position: 0 -354px;
-    background-image: icons;
-    background-repeat: no-repeat;
-    height: 30px;
-    line-height: 30px;
-    vertical-align: baseline;
-    padding-left: 26px;
-    cursor: pointer;
 }
 .cellListWidget {
 	position: absolute;

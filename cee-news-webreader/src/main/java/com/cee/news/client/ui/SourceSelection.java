@@ -18,11 +18,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class SourceSelection extends Composite implements SourceSelectionView {
     
-    //TODO: where to apply these styles for the cells?
-    //<div class="list-item icon30 checked">Spiegel Online - top news</div>
-    //<div class="list-item icon30 checked">Tageschau.de</div>
-    //<div class="list-item icon30 unchecked">FAZ</div>
-
     private static SourceSelectionUiBinder uiBinder = GWT.create(SourceSelectionUiBinder.class);
 
     interface SourceSelectionUiBinder extends UiBinder<Widget, SourceSelection> {
