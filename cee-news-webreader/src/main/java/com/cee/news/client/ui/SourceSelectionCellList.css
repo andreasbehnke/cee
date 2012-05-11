@@ -1,5 +1,6 @@
+@url icons icons;
 .cellListEvenItem {
-	background-image: url("../images/icons24.png");
+	background-image: icons;
     background-position: 0 -324px;
 	background-repeat: no-repeat;
     height: 30px;
@@ -10,7 +11,7 @@
 	cursor: pointer;
 }
 .cellListOddItem {
-	background-image: url("../images/icons24.png");
+	background-image: icons;
     background-position: 0 -324px;
 	background-repeat: no-repeat;
     height: 30px;
@@ -22,7 +23,7 @@
 }
 .cellListKeyboardSelectedItem {
 	background-position: 0 -354px;
-    background-image: url("../images/icons24.png");
+    background-image: icons;
     background-repeat: no-repeat;
     height: 30px;
     line-height: 30px;
@@ -32,7 +33,7 @@
 }
 .cellListSelectedItem {
 	background-position: 0 -354px;
-    background-image: url("../images/icons24.png");
+    background-image: icons;
     background-repeat: no-repeat;
     height: 30px;
     line-height: 30px;

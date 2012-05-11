@@ -8,6 +8,7 @@ import com.cee.news.client.list.IncreaseVisibleRangeScrollHandler;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
@@ -28,8 +29,6 @@ public class SourceSelection extends Composite implements SourceSelectionView {
     }
     
     interface SourceSelectionCellListStyle extends CellList.Style {
-        
-        public static String DEFAULT_CSS = "com/cee/news/client/ui/SourceSelectionCellList.css";
         
         @Override
         public String cellListEvenItem();
@@ -52,8 +51,11 @@ public class SourceSelection extends Composite implements SourceSelectionView {
         public static final SourceSelectionCellListResources INSTANCE = GWT.create(SourceSelectionCellListResources.class);
         
         @Override
-        @Source(SourceSelectionCellListStyle.DEFAULT_CSS)
+        @Source("SourceSelectionCellList.css")
         public SourceSelectionCellListStyle cellListStyle();
+        
+        @Source("icons24.png")
+        public DataResource icons();
     }
 
     @UiField
