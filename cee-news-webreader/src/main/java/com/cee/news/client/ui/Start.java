@@ -22,7 +22,7 @@ public class Start extends Composite implements StartView {
     
     //TODO: apply these styles to cells of scroll panel
     //<div class="clickable teaser column3"><p class="meta">01.02.2011 09:53 - spiegel</p><h1>1 Dieses ist ein sehr spannender Artikel</h1><p>This are the first sentences of the article...</p></div>
-    
+
     private static StartUiBinder uiBinder = GWT.create(StartUiBinder.class);
 
     interface StartUiBinder extends UiBinder<Widget, Start> {

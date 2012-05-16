@@ -1,13 +1,14 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:com.cee.news.client.ui">
-	<g:HTMLPanel styleName="start container">
-		<div class="top gradient search">
+	<ui:with type="com.cee.news.client.ui.Resources" field="res" />
+	<g:HTMLPanel>
+		<div class="{res.styles.top} {res.styles.search}">
 			<p:WorkingSetSelection ui:field="workingSetSelection"/>
 			<p:Search ui:field="search"/>
 		</div>
 		<p:SourceSelection ui:field="sourceSelection" />
-		<div id="label-result">Latest Articles:</div>
-		<g:Button ui:field="buttonRefresh" styleName="icon icon24 refresh" title="Refresh" />
-		<g:SimplePanel ui:field="panelArticles" styleName="center" />
+		<div class="{res.styles.labelResult}">Latest Articles:</div>
+		<g:Button ui:field="buttonRefresh" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.refresh}" title="Refresh" />
+		<g:SimplePanel ui:field="panelArticles" styleName="{res.styles.center}" />
 	</g:HTMLPanel>
 </ui:UiBinder> 

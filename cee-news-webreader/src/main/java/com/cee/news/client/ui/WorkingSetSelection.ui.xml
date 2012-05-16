@@ -1,9 +1,10 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.dom.client">
+	<ui:with type="com.cee.news.client.ui.Resources" field="res" />
 	<g:HTMLPanel>
-		<g:ListBox ui:field="listBox" styleName="workingset-selection" />
-		<g:Button ui:field="editButton" title="Edit Working Set" styleName="icon icon24 edit-set" />
-		<g:Button ui:field="newButton" title="Add New Working Set" styleName="icon icon24 add-set" />
-		<g:Button ui:field="deleteButton" title="Delete Working Set" styleName="icon icon24 delete-set" />
+		<g:ListBox ui:field="listBox" styleName="{res.styles.workingsetSelection}" />
+		<g:Button ui:field="editButton" title="Edit Working Set" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.editSet}" />
+		<g:Button ui:field="newButton" title="Add New Working Set" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.addSet}" />
+		<g:Button ui:field="deleteButton" title="Delete Working Set" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.deleteSet}" />
 	</g:HTMLPanel>
 </ui:UiBinder>

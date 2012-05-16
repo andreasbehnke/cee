@@ -1,3 +1,4 @@
+@url ICONS icons;
 /*** reset ***/
 BODY {
 	margin: 0px;
@@ -117,13 +118,13 @@ H3 {
 }
 
 
-#label-result {
+.labelResult {
 	position: absolute;
 	top: 70px;
 	left: 328px;
 }
 
-#button-refresh {
+.buttonRefresh {
 	position: absolute;
 	top: 50px;
 	right: 40px;
@@ -134,42 +135,48 @@ H3 {
 	position: fixed;
 }
 
-.search .workingset-selection {
+.search .workingsetSelection {
 	left: 30px;
 	top: 9px;
 	width: 150px;
 	position: absolute;
 }
 
-.search .icon.edit-set {
+.search .icon.editSet {
 	left: 192px;
 	top: 6px;
 	position: absolute;
 }
 
-.search .icon.add-set {
+.search .icon.addSet {
 	left: 218px;
 	top: 6px;
 	position: absolute;
 }
 
-.search .icon.delete-set {
+.search .icon.deleteSet {
 	left: 244px;
 	top: 6px;
 	position: absolute;
 }
 
-.search .search-field {
+.search .searchField {
 	left: 320px;
 	top: 9px;
 	right: 40px;
 	position: absolute;
 }
 
-.search .search-field INPUT {
+.search .searchField INPUT {
 	left: 0px;
 	top: 0px;
 	width: 100%;
+	position: absolute;
+}
+
+.search .icon.delete {
+	top: -3px;
+	right: 21px;
 	position: absolute;
 }
 
@@ -188,13 +195,13 @@ H3 {
 	bottom: 100px;
 }
 
-.sources .icon.select-all {
+.sources .icon.selectAll {
 	left: 30px;
 	bottom: 74px;
 	position: absolute;
 }
 
-.sources .icon.select-none {
+.sources .icon.selectNone {
 	left: 56px;
 	bottom: 74px;
 	position: absolute;
@@ -211,31 +218,31 @@ H3 {
 	position: fixed;
 }
 
-.pager .link.nav-left {
+.pager .link.navLeft {
 	left: 30px;
 	top: 3px;
 	width: 70px;
 	position: absolute;
 }
 
-.pager .article-selection {
+.pager .articleSelection {
 	left: 320px;
 	top: 9px;
 	right: 92px;
 	position: absolute;
 }
 
-.pager .article-selection select {
+.pager .articleSelection select {
 	width: 100%;
 }
 
-.pager .nav-left {
+.pager .navLeft {
 	top: 6px;
 	right: 66px;
 	position: absolute;
 }
 
-.pager .nav-right {
+.pager .navRight {
 	top: 6px;
 	right: 40px;
 	position: absolute;
@@ -307,12 +314,12 @@ H3 {
 	border-radius: 6px;
 }
 
-.list-item {
+.listItem {
 	line-height: 30px;
 	vertical-align: baseline;
 }
 
-.vertical-scroll {
+.verticalScroll {
 	overflow-y: auto;
 	overflow-x: hidden;
 }
@@ -337,20 +344,20 @@ button.icon24 {
 }
 
 .icon24 {
-	background-image: url("../images/icons24.png");
+	background-image: ICONS;
 	background-repeat: no-repeat;
 	height: 24px;
 }
 
-.icon24.edit-set {
+.icon24.editSet {
 	background-position: 0px -60px;
 }
 
-.icon24.add-set {
+.icon24.addSet {
 	background-position: 0px -84px;
 }
 
-.icon24.delete-set {
+.icon24.deleteSet {
 	background-position: 0px -108px;
 }
 
@@ -366,11 +373,11 @@ button.icon24 {
 	background-position: 0px -180px;
 }
 
-.icon24.select-all {
+.icon24.selectAll {
 	background-position: 0px -204px;
 }
 
-.icon24.select-none {
+.icon24.selectNone {
 	background-position: 0px -228px;
 }
 
@@ -378,11 +385,11 @@ button.icon24 {
 	background-position: 0px -252px;
 }
 
-.icon24.nav-left {
+.icon24.navLeft {
 	background-position: 0px -276px;
 }
 
-.icon24.nav-right {
+.icon24.navRight {
 	background-position: 0px -300px;
 }
 
@@ -405,11 +412,11 @@ button.icon24 {
 	background-position: 0px -354px;
 }
 
-.icon30.nav-left {
+.icon30.navLeft {
 	background-position: 0px 0px;
 }
 
-.icon30.nav-right {
+.icon30.navRight {
 	background-position: 0px -60px;
 }
 

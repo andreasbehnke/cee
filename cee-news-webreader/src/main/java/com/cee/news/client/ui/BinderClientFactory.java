@@ -24,6 +24,8 @@ public class BinderClientFactory implements ClientFactory {
     private final NewsView newsView;
     
     public BinderClientFactory() {
+        Resources.INSTANCE.styles().ensureInjected();
+        
         globalErrorHandler = new ErrorDialog();
         
         LayoutPanel layoutPanel = new LayoutPanel();

@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Search extends Composite implements SearchView {
-
+    
     private static SearchUiBinder uiBinder = GWT.create(SearchUiBinder.class);
     
     @UiField
@@ -48,12 +48,12 @@ public class Search extends Composite implements SearchView {
 
     @Override
     public void setSearchButtonEnabled(boolean enabled) {
-        buttonSearch.setEnabled(enabled);
+        buttonSearch.setVisible(enabled);
     }
 
     @Override
     public void setClearButtonEnabled(boolean enabled) {
-        buttonClear.setEnabled(enabled);
+        buttonClear.setVisible(enabled);
     }
 
 }
