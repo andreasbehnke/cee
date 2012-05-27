@@ -100,4 +100,9 @@ public class StartPanel extends Composite implements StartView {
     public HasClickHandlers getButtonRefresh() {
         return buttonRefresh;
     }
+    
+    @Override
+    public int getNumberOfVisibleArticleTeasers() {
+        return 10;
+    }
 }

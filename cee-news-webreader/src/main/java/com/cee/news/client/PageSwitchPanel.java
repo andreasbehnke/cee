@@ -10,9 +10,7 @@ public class PageSwitchPanel extends DeckPanel implements PageSwitchView {
 
     public PageSwitchPanel(StartView startView, NewsView newsView) {
         add(startView);
-        startView.asWidget().setSize("100%", "100%");
         add(newsView);
-        newsView.asWidget().setSize("100%", "100%");
         showWidget(START_PANEL_INDEX);
     }
     

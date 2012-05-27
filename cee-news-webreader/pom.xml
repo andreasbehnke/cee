@@ -163,13 +163,13 @@
 							<goal>generateAsync</goal>
 						</goals>
 					</execution>
-					<execution>
+					<!-- execution>
 						<id>css-generation</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>css</goal>
 						</goals>
-					</execution>
+					</execution -->
 				</executions>
 				<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
 					documentation at codehaus.org -->
@@ -177,9 +177,9 @@
 					<runTarget>NewsReader.html</runTarget>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
 					<!-- i18nMessagesBundle>com.cee.news.client.Messages</i18nMessagesBundle -->
-					<cssFiles>
+					<!-- cssFiles>
 						<cssFile>com/cee/news/client/ui/Styles.css</cssFile>
-					</cssFiles>
+					</cssFiles -->
 					<encoding>${source.encoding}</encoding>
 					<module>${gwtModule}</module>
 					<draftCompile>${gwtDraftCompile}</draftCompile>

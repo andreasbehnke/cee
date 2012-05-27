@@ -20,4 +20,6 @@ public interface StartView extends IsWidget {
 	SearchView getSearchView();
 	
 	HasClickHandlers getButtonRefresh();
+	
+	int getNumberOfVisibleArticleTeasers();
 }

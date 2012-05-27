@@ -10,15 +10,15 @@ import com.google.gwt.view.client.HasRows;
  * @author andreasbehnke
  *
  */
-public class IncreaseVisibleRangeScrollHandler implements ScrollHandler {
+public class IncreaseVisibleRangeScrollHandler implements ScrollHandler, com.google.gwt.user.client.Window.ScrollHandler {
     
     private static final int DEFAULT_INCREMENT = 20;
     
     private static final int DEFAULT_SCROLL_POSITION_OFFSET = 30;
     
-    private int increment = DEFAULT_INCREMENT;
+    private final int increment;
     
-    private int scrollPositionOffset = DEFAULT_SCROLL_POSITION_OFFSET;
+    private final int scrollPositionOffset;
     
     private int lastScrollPos = 0;
     
@@ -29,16 +29,18 @@ public class IncreaseVisibleRangeScrollHandler implements ScrollHandler {
     public IncreaseVisibleRangeScrollHandler(HasRows display, HasVerticalScrolling viewPort) {
         this.display = display;
         this.viewPort = viewPort;
+        this.increment = DEFAULT_INCREMENT;
+        this.scrollPositionOffset = DEFAULT_SCROLL_POSITION_OFFSET;
     }
     
     public IncreaseVisibleRangeScrollHandler(HasRows display, HasVerticalScrolling viewPort, int increment, int scrollPositionOffset) {
-        this(display, viewPort);
+        this.display = display;
+        this.viewPort = viewPort;
         this.increment = increment;
         this.scrollPositionOffset = scrollPositionOffset;
     }
- 
-    @Override
-    public void onScroll(ScrollEvent event) {
+    
+    private void testIncreaseSize() {
         // If scrolling up, ignore the event
         int oldScrollPos = lastScrollPos;
         lastScrollPos = viewPort.getVerticalScrollPosition();
@@ -55,5 +57,15 @@ public class IncreaseVisibleRangeScrollHandler implements ScrollHandler {
             );
             display.setVisibleRange(0, newPageSize);
         }
+    }
+ 
+    @Override
+    public void onScroll(ScrollEvent event) {
+        testIncreaseSize();
+    }
+
+    @Override
+    public void onWindowScroll(com.google.gwt.user.client.Window.ScrollEvent event) {
+        testIncreaseSize();
     }
 }

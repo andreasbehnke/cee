@@ -1,4 +1,7 @@
 @url ICONS icons;
+@def articleTeaserColumns 3;
+@def articleTeaserHeight 120px;
+@def articleTeaserTop 96px;
 /*** reset ***/
 BODY {
 	margin: 0px;
@@ -61,21 +64,21 @@ H3 {
 .column1 {
 	width: 100%;
 	min-width: 250px;
-	height: 120px;
+	height: articleTeaserHeight;
 	float: none;
 }
 
 .column2 {
 	width: 49%;
 	min-width: 250px;
-	height: 120px;
+	height: articleTeaserHeight;
 	float: left;
 }
 
 .column3 {
 	width: 30%;
 	min-width: 250px;
-	height: 120px;
+	height: articleTeaserHeight;
 	float: left;
 }
 
@@ -112,7 +115,7 @@ H3 {
 
 .center {
 	position: absolute;
-	top: 96px;
+	top: articleTeaserTop;
 	left: 320px;
 	right: 40px;z-index: 98;
 }

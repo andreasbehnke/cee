@@ -36,18 +36,23 @@ public class NewsReader implements EntryPoint {
 	public void onModuleLoad() {
 	    final ClientFactory clientFactory = GWT.create(ClientFactory.class);
 		final ErrorHandler errorHandler = clientFactory.getGlobalErrorHandler();
-	    
+		final StartView startView = clientFactory.getStartView();
+        
 		//Working Set Selection
 		final WorkingSetListModel workingSetListModel = new WorkingSetListModel();
 		workingSetListModel.addErrorHandler(errorHandler);
-		final WorkingSetSelectionView workingSetSelectionView = clientFactory.getStartView().getWorkingSetSelectionView();
+		final WorkingSetSelectionView workingSetSelectionView = startView.getWorkingSetSelectionView();
 		
 		//Filtered content list
 		final NewsListContentModel filteredContentList = new NewsListContentModel();
 		filteredContentList.addErrorHandler(errorHandler);
-		final CellListPresenter<ArticleKey> newsListPresenter = new SingleSelectionCellListPresenter<ArticleKey>(clientFactory.getStartView().getCellListLatestArticles(), filteredContentList, filteredContentList);
+		final CellListPresenter<ArticleKey> newsListPresenter = new SingleSelectionCellListPresenter<ArticleKey>(
+		        startView.getCellListLatestArticles(), 
+		        filteredContentList, 
+		        filteredContentList,
+		        startView.getNumberOfVisibleArticleTeasers());
 		newsListPresenter.addErrorHandler(errorHandler);
-		clientFactory.getStartView().getButtonRefresh().addClickHandler(new ClickHandler() {
+		startView.getButtonRefresh().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 filteredContentList.refresh();
@@ -57,7 +62,7 @@ public class NewsReader implements EntryPoint {
 		//Site List
 		final SiteListContentModel sitesOfWorkingSetModel = new SiteListContentModel();
 		sitesOfWorkingSetModel.addErrorHandler(errorHandler);
-		final SourceSelectionView sourceSelectionView = clientFactory.getStartView().getSourceSelectionView();
+		final SourceSelectionView sourceSelectionView = startView.getSourceSelectionView();
 		new SourceSelectionPresenter(sourceSelectionView, sitesOfWorkingSetModel, errorHandler);
 		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
             @Override
@@ -72,7 +77,7 @@ public class NewsReader implements EntryPoint {
         });
 		
 		//Search
-		new SearchPresenter(filteredContentList, clientFactory.getStartView().getSearchView());
+		new SearchPresenter(filteredContentList, startView.getSearchView());
 		
 		//New & Edit Working Set Workflow
 		final NewSiteWizardView newSiteWizard = new NewSiteWizard();

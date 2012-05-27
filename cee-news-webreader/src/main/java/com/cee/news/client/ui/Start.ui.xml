@@ -1,5 +1,5 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:com.cee.news.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:com.cee.news.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client">
 	<ui:with type="com.cee.news.client.ui.Resources" field="res" />
 	<g:HTMLPanel>
 		<div class="{res.styles.top} {res.styles.search}">
@@ -9,6 +9,6 @@
 		<p:SourceSelection ui:field="sourceSelection" />
 		<div class="{res.styles.labelResult}">Latest Articles:</div>
 		<g:Button ui:field="buttonRefresh" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.refresh}" title="Refresh" />
-		<g:SimplePanel ui:field="panelArticles" styleName="{res.styles.center}" />
+		<c:CellList ui:field="cellListLatestArticles" />
 	</g:HTMLPanel>
 </ui:UiBinder> 

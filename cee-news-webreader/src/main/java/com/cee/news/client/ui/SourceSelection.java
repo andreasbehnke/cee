@@ -49,8 +49,11 @@ public class SourceSelection extends Composite implements SourceSelectionView {
         @Source("SourceSelectionCellList.css")
         public SourceSelectionCellListStyle cellListStyle();
         
-        @Source("icons24.png")
-        public DataResource icons();
+        @Source("selected.png")
+        public DataResource iconSelected();
+        
+        @Source("unselected.png")
+        public DataResource iconUnselected();
     }
 
     @UiField
@@ -65,13 +68,14 @@ public class SourceSelection extends Composite implements SourceSelectionView {
     @UiField
     Button buttonAddSource;
     
-    private CellList<EntityContent<EntityKey>> cellListSites;
+    @UiField(provided=true)
+    CellList<EntityContent<EntityKey>> cellListSites = new CellList<EntityContent<EntityKey>>(
+            new EntityContentCell<EntityKey>(), 
+            SourceSelectionCellListResources.INSTANCE, 
+            new EntityKeyProvider<EntityKey>());
     
     public SourceSelection() {
         initWidget(uiBinder.createAndBindUi(this));
-        EntityContentCell<EntityKey> cell = new EntityContentCell<EntityKey>();
-        cellListSites = new CellList<EntityContent<EntityKey>>(cell, SourceSelectionCellListResources.INSTANCE, new EntityKeyProvider<EntityKey>());
-        scrollPanel.setWidget(cellListSites);
         scrollPanel.addScrollHandler(new IncreaseVisibleRangeScrollHandler(cellListSites, scrollPanel));
     }
 

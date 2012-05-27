@@ -1,8 +1,8 @@
-@url icons icons;
-.cellListEvenItem {
-	background-image: icons;
-    background-position: 0 -324px;
-	background-repeat: no-repeat;
+@url SELECTED iconSelected;
+@url UNSELECTED iconUnselected;
+.cellListEvenItem, .cellListOddItem {
+	background-image: UNSELECTED;
+    background-repeat: no-repeat;
     height: 30px;
 	line-height: 30px;
     vertical-align: baseline;
@@ -10,21 +10,13 @@
     padding-left: 26px;
 	cursor: pointer;
 }
-.cellListOddItem {
-	background-image: icons;
-    background-position: 0 -324px;
-	background-repeat: no-repeat;
-    height: 30px;
-	line-height: 30px;
-    vertical-align: baseline;
-	color: gray;
-    padding-left: 26px;
-	cursor: pointer;
+.cellListEvenItem:HOVER, .cellListOddItem:HOVER {
+    background-color: #F6F8F9;
 }
 .cellListKeyboardSelectedItem {
 }
 .cellListSelectedItem {
-	background-position: 0 -354px;
+	background-image: SELECTED;
 	color: #000000;
 }
 .cellListWidget {

@@ -23,14 +23,14 @@ public abstract class CellListPresenter<K> extends ErrorSourceBase {
 	    this(cellList, listModel, contentModel, DEFAULT_VISIBLE_RANGE);
 	}
 	
-	public CellListPresenter(final CellList<EntityContent<K>> cellList, final ListModel<K> listModel, final CellListContentModel<K> contentModel, int visibleRange) {
+	public CellListPresenter(final CellList<EntityContent<K>> cellList, final ListModel<K> listModel, final CellListContentModel<K> contentModel, final int visibleRange) {
 		listModel.addListChangedHandler(new ListChangedHandler<K>() {
 			@Override
 			public void onContentListChanged(ListChangedEvent<K> event) {
 				offset = 0;
 				keys = event.getValues();
 				int count = keys.size();
-				int rangeLength = (count < 20) ? count : 20;
+				int rangeLength = (count < visibleRange) ? count : visibleRange;
 				cellList.setRowCount(count, true);
 				cellList.setVisibleRangeAndClearData(new Range(0, rangeLength), true);
 			}

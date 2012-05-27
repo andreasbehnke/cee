@@ -3,13 +3,10 @@ package com.cee.news.client.ui;
 import com.cee.news.client.ClientFactory;
 import com.cee.news.client.NewsPanel;
 import com.cee.news.client.NewsView;
-import com.cee.news.client.PageSwitchPanel;
 import com.cee.news.client.PageSwitchView;
 import com.cee.news.client.StartView;
 import com.cee.news.client.error.ErrorDialog;
 import com.cee.news.client.error.ErrorHandler;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -28,21 +25,29 @@ public class BinderClientFactory implements ClientFactory {
         
         globalErrorHandler = new ErrorDialog();
         
-        LayoutPanel layoutPanel = new LayoutPanel();
-        layoutPanel.setSize("100%", "100%");
-        
         startView = new Start();
-        //TODO migrate news panel to UI binder
         newsView = new NewsPanel();
-        pageSwitchView = new PageSwitchPanel(startView, newsView);
-        
-        layoutPanel.add(pageSwitchView);
-        Widget pageSwitchWidget = pageSwitchView.asWidget();
-        pageSwitchWidget.setSize("100%", "100%");
-        layoutPanel.setWidgetLeftRight(pageSwitchWidget, 0.0, Unit.PX, 0.0, Unit.PX);
-        layoutPanel.setWidgetTopBottom(pageSwitchWidget, 0.0, Unit.PX, 0.0, Unit.PX);
-        
-        RootPanel.get().add(layoutPanel, 0, 0);
+        pageSwitchView = new PageSwitchView() {
+            
+            @Override
+            public Widget asWidget() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
+            @Override
+            public void showStartPage() {
+                RootPanel.get().remove(newsView);
+                RootPanel.get().add(startView);
+            }
+            
+            @Override
+            public void showNewsPage() {
+                RootPanel.get().remove(startView);
+                RootPanel.get().add(newsView);
+            }
+        };
+        pageSwitchView.showStartPage();
     }
 
     @Override

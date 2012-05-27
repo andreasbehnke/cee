@@ -5,6 +5,7 @@ import com.cee.news.client.content.EntityContent;
 import com.cee.news.client.content.EntityContentCell;
 import com.cee.news.client.content.EntityKeyProvider;
 import com.cee.news.client.content.SourceSelectionView;
+import com.cee.news.client.list.IncreaseVisibleRangeScrollHandler;
 import com.cee.news.client.search.SearchView;
 import com.cee.news.client.workingset.WorkingSetSelectionView;
 import com.cee.news.model.ArticleKey;
@@ -13,9 +14,9 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Start extends Composite implements StartView {
@@ -26,6 +27,33 @@ public class Start extends Composite implements StartView {
     private static StartUiBinder uiBinder = GWT.create(StartUiBinder.class);
 
     interface StartUiBinder extends UiBinder<Widget, Start> {
+    }
+    
+    interface ArticleCellListStyle extends CellList.Style {
+        
+        @Override
+        public String cellListEvenItem();
+        
+        @Override
+        public String cellListOddItem();
+        
+        @Override
+        public String cellListWidget();
+        
+        @Override
+        public String cellListKeyboardSelectedItem();
+        
+        @Override
+        public String cellListSelectedItem();
+    }
+    
+    interface ArticleCellListResources extends CellList.Resources {
+        
+        public static final ArticleCellListResources INSTANCE = GWT.create(ArticleCellListResources.class);
+        
+        @Override
+        @Source("ArticleCellList.css")
+        public ArticleCellListStyle cellListStyle();
     }
     
     @UiField
@@ -39,17 +67,23 @@ public class Start extends Composite implements StartView {
     
     @UiField
     Button buttonRefresh;
-
-    @UiField
-    SimplePanel panelArticles;
     
-    private CellList<EntityContent<ArticleKey>> cellListLatestArticles;
+    @UiField(provided=true)
+    CellList<EntityContent<ArticleKey>> cellListLatestArticles = new CellList<EntityContent<ArticleKey>>(
+            new EntityContentCell<ArticleKey>(), 
+            ArticleCellListResources.INSTANCE, 
+            new EntityKeyProvider<ArticleKey>());
     
     public Start() {
         initWidget(uiBinder.createAndBindUi(this));
-        EntityContentCell<ArticleKey> cell = new EntityContentCell<ArticleKey>();
-        cellListLatestArticles = new CellList<EntityContent<ArticleKey>>(cell, new EntityKeyProvider<ArticleKey>());
-        panelArticles.setWidget(cellListLatestArticles);
+        final Styles styles = Resources.INSTANCE.styles();
+        final WindowVerticalScroll verticalScroll = new WindowVerticalScroll(cellListLatestArticles.getElement(), styles.articleTeaserTop());
+        Window.addWindowScrollHandler(
+                new IncreaseVisibleRangeScrollHandler(
+                        cellListLatestArticles,
+                        verticalScroll,
+                        styles.articleTeaserColumns(), 
+                        styles.articleTeaserHeight()));
     }
 
     @Override
@@ -75,5 +109,11 @@ public class Start extends Composite implements StartView {
     @Override
     public HasClickHandlers getButtonRefresh() {
         return buttonRefresh;
+    }
+    
+    @Override
+    public int getNumberOfVisibleArticleTeasers() {
+        final Styles styles = Resources.INSTANCE.styles();
+        return (((Window.getClientHeight() - styles.articleTeaserTop()) / styles.articleTeaserHeight()) + 1) * styles.articleTeaserColumns();
     }
 }
