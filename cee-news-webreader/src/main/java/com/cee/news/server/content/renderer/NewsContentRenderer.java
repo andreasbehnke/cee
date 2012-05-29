@@ -3,12 +3,17 @@ package com.cee.news.server.content.renderer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cee.news.client.content.EntityContent;
 import com.cee.news.model.Article;
 import com.cee.news.model.ArticleKey;
 import com.cee.news.model.TextBlock;
 
 public class NewsContentRenderer extends DefaultContentRenderer<ArticleKey, Article> {
+    
+    private static final Logger LOG = LoggerFactory.getLogger(NewsContentRenderer.class);
 
     public static String DESCRIPTION_TEMPLATE = "Description Template";
     
@@ -48,6 +53,7 @@ public class NewsContentRenderer extends DefaultContentRenderer<ArticleKey, Arti
         if (article == null) {
             throw new IllegalArgumentException("Parameter article must not be null");
         }
+        LOG.debug("Render article {} using template {}", key, templateName);
         if (DESCRIPTION_TEMPLATE.equals(templateName)) {
             return renderDescription(key, article);
         } else {

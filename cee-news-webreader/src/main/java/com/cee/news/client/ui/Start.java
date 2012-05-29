@@ -82,7 +82,7 @@ public class Start extends Composite implements StartView {
                 new IncreaseVisibleRangeScrollHandler(
                         cellListLatestArticles,
                         verticalScroll,
-                        styles.articleTeaserColumns(), 
+                        styles.articleTeaserColumns() * 3, 
                         styles.articleTeaserHeight()));
     }
 

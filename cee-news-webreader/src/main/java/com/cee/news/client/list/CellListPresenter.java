@@ -37,10 +37,16 @@ public abstract class CellListPresenter<K> extends ErrorSourceBase {
 		});
 		
 		final AsyncDataProvider<EntityContent<K>> dataProvider = new AsyncDataProvider<EntityContent<K>>() {
+		    
+		    private boolean retrieving = false;
+		    
 			@Override
 			protected void onRangeChanged(HasData<EntityContent<K>> display) {
 				if (keys == null) {
 					return;
+				}
+				if (retrieving) {
+				    return;
 				}
 				final Range range = display.getVisibleRange();
 				final int end = range.getLength();
@@ -49,16 +55,19 @@ public abstract class CellListPresenter<K> extends ErrorSourceBase {
 				    return;
 				}
 				ArrayList<K> keysInRange = new ArrayList<K>(keys.subList(offset, end));
+				retrieving = true;
 				contentModel.getContent(keysInRange, new AsyncCallback<List<EntityContent<K>>>() {
 					
 					@Override
 					public void onSuccess(List<EntityContent<K>> result) {
-						cellList.setRowData(offset, result);
+					    cellList.setRowData(offset, result);
 						offset = end;
+						retrieving = false;
 					}
 					
 					@Override
 					public void onFailure(Throwable caught) {
+					    retrieving = false;
 						fireErrorEvent(caught, "Could not retrieve new data for cell list");
 					}
 				});
