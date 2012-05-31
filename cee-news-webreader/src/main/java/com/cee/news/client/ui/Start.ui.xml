@@ -8,7 +8,7 @@
 		</div>
 		<p:SourceSelection ui:field="sourceSelection" />
 		<div class="{res.styles.labelResult}">Latest Articles:</div>
-		<g:Button ui:field="buttonRefresh" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.refresh}" title="Refresh" />
+		<g:Button ui:field="buttonRefresh" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.refresh} {res.styles.buttonRefresh}" title="Refresh" />
 		<c:CellList ui:field="cellListLatestArticles" />
 	</g:HTMLPanel>
 </ui:UiBinder> 
