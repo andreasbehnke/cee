@@ -100,4 +100,22 @@ public class NewsPanel extends Composite implements NewsView {
 	public HasClickHandlers getButtonRefresh() {
 	    return buttonRefresh;
 	}
+
+    @Override
+    public void registerScrollHandler() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void removeScrollHandler() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public int getNumberOfVisibleRelatedArticles() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

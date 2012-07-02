@@ -16,6 +16,8 @@ interface Styles extends CssResource {
 
     int articleTeaserTop();
     
+    int relatedArticleColumns();
+    
     String border();
 
     String buttonRefresh();

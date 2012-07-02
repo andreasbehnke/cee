@@ -22,4 +22,8 @@ public interface StartView extends IsWidget {
 	HasClickHandlers getButtonRefresh();
 	
 	int getNumberOfVisibleArticleTeasers();
+	
+	void registerScrollHandler();
+	
+	void removeScrollHandler();
 }

@@ -2,6 +2,7 @@
 @def articleTeaserColumns 3;
 @def articleTeaserHeight 120px;
 @def articleTeaserTop 96px;
+@def relatedArticleColumns 1;
 /*** reset ***/
 BODY {
 	margin: 0px;

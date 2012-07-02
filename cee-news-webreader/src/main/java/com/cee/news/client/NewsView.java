@@ -17,6 +17,13 @@ public interface NewsView extends IsWidget {
 	PagingView getNewsPagingView();
 
 	CellList<EntityContent<ArticleKey>> getWhatOthersSayCellList();
+	
+	int getNumberOfVisibleRelatedArticles();
 
 	HasClickHandlers getButtonRefresh();
+	
+    void registerScrollHandler();
+    
+    void removeScrollHandler();
+
 }

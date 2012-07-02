@@ -11,6 +11,7 @@ import com.cee.news.client.workingset.WorkingSetSelectionView;
 import com.cee.news.model.ArticleKey;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
@@ -56,6 +57,8 @@ public class Start extends Composite implements StartView {
         public ArticleCellListStyle cellListStyle();
     }
     
+    private HandlerRegistration scrollRegistration;
+    
     @UiField
     WorkingSetSelection workingSetSelection;
     
@@ -76,14 +79,6 @@ public class Start extends Composite implements StartView {
     
     public Start() {
         initWidget(uiBinder.createAndBindUi(this));
-        final Styles styles = Resources.INSTANCE.styles();
-        final WindowVerticalScroll verticalScroll = new WindowVerticalScroll(cellListLatestArticles.getElement(), styles.articleTeaserTop());
-        Window.addWindowScrollHandler(
-                new IncreaseVisibleRangeScrollHandler(
-                        cellListLatestArticles,
-                        verticalScroll,
-                        styles.articleTeaserColumns() * 3, 
-                        styles.articleTeaserHeight()));
     }
 
     @Override
@@ -115,5 +110,25 @@ public class Start extends Composite implements StartView {
     public int getNumberOfVisibleArticleTeasers() {
         final Styles styles = Resources.INSTANCE.styles();
         return (((Window.getClientHeight() - styles.articleTeaserTop()) / styles.articleTeaserHeight()) + 1) * styles.articleTeaserColumns();
+    }
+    
+    @Override
+    public void registerScrollHandler() {
+        final Styles styles = Resources.INSTANCE.styles();
+        final WindowVerticalScroll verticalScroll = new WindowVerticalScroll(cellListLatestArticles.getElement(), styles.articleTeaserTop());
+        scrollRegistration = Window.addWindowScrollHandler(
+                new IncreaseVisibleRangeScrollHandler(
+                        cellListLatestArticles,
+                        verticalScroll,
+                        styles.articleTeaserColumns(), 
+                        styles.articleTeaserHeight()));
+    }
+    
+    @Override
+    public void removeScrollHandler() {
+        if (scrollRegistration != null) {
+            scrollRegistration.removeHandler();
+            scrollRegistration = null;
+        }
     }
 }

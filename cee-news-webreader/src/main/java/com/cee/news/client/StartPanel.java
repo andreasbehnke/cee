@@ -105,4 +105,16 @@ public class StartPanel extends Composite implements StartView {
     public int getNumberOfVisibleArticleTeasers() {
         return 10;
     }
+
+    @Override
+    public void registerScrollHandler() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void removeScrollHandler() {
+        // TODO Auto-generated method stub
+        
+    }
 }
