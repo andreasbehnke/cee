@@ -2,6 +2,12 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client">
 	<ui:with type="com.cee.news.client.ui.Resources" field="res" />
 	<g:HTMLPanel>
+		<g:Button ui:field="buttonRefresh" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.refresh} {res.styles.buttonRefresh}" title="Refresh" />		
+		<div class="{res.styles.left} {res.styles.related}">
+			<div class="{res.styles.label}">What others say:</div>
+			<c:CellList ui:field="cellListRelated" />
+		</div>
+		<g:HTML ui:field="mainContent" styleName="{res.styles.center} {res.styles.content}" />
 		<div class="{res.styles.top} {res.styles.pager}">
 			<g:Label ui:field="labelStart" styleName="{res.styles.link} {res.styles.icon30} {res.styles.navLeft}" text="Start Page"/>
 			<div class="{res.styles.articleSelection}">
@@ -10,11 +16,5 @@
 			<g:Button ui:field="buttonNavLeft"  styleName="{res.styles.icon} {res.styles.icon24} {res.styles.navLeft}" title="Previous Article" />
 			<g:Button ui:field="buttonNavRight" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.navRight}" title="Next Article" />
 		</div>
-		<g:Button ui:field="buttonRefresh" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.refresh}" title="Refresh" />		
-		<div class="{res.styles.left} {res.styles.related}">
-			<div class="{res.styles.label}">What others say:</div>
-			<c:CellList ui:field="cellListRelated" />
-		</div>
-		<g:HTML ui:field="mainContent" styleName="{res.styles.center} {res.styles.content}" />
 	</g:HTMLPanel>
 </ui:UiBinder>

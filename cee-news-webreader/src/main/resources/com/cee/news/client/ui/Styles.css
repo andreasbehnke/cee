@@ -90,7 +90,7 @@ H3 {
 	right: 0px;
 	top: 0px;
 	height: 40px;
-	z-index: 100;
+	/*z-index: 100;*/
 }
 
 .left {
@@ -98,7 +98,7 @@ H3 {
 	width: 320px;
 	top: 40px;
 	bottom: 0px;
-	z-index: 99;
+	/*z-index: 99;*/
 }
 
 .left .label {
@@ -118,7 +118,8 @@ H3 {
 	position: absolute;
 	top: articleTeaserTop;
 	left: 320px;
-	right: 40px;z-index: 98;
+	right: 40px;
+	/*z-index: 98;*/
 }
 
 

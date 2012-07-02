@@ -2,13 +2,13 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:com.cee.news.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client">
 	<ui:with type="com.cee.news.client.ui.Resources" field="res" />
 	<g:HTMLPanel>
+		<div class="{res.styles.labelResult}">Latest Articles:</div>
+		<g:Button ui:field="buttonRefresh" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.refresh} {res.styles.buttonRefresh}" title="Refresh" />	
+		<c:CellList ui:field="cellListLatestArticles" />
 		<div class="{res.styles.top} {res.styles.search}">
 			<p:WorkingSetSelection ui:field="workingSetSelection"/>
 			<p:Search ui:field="search"/>
 		</div>
 		<p:SourceSelection ui:field="sourceSelection" />
-		<div class="{res.styles.labelResult}">Latest Articles:</div>
-		<g:Button ui:field="buttonRefresh" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.refresh} {res.styles.buttonRefresh}" title="Refresh" />
-		<c:CellList ui:field="cellListLatestArticles" />
 	</g:HTMLPanel>
 </ui:UiBinder> 
