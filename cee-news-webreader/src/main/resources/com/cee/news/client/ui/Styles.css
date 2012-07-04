@@ -90,7 +90,6 @@ H3 {
 	right: 0px;
 	top: 0px;
 	height: 40px;
-	/*z-index: 100;*/
 }
 
 .left {
@@ -98,7 +97,6 @@ H3 {
 	width: 320px;
 	top: 40px;
 	bottom: 0px;
-	/*z-index: 99;*/
 }
 
 .left .label {
@@ -119,7 +117,6 @@ H3 {
 	top: articleTeaserTop;
 	left: 320px;
 	right: 40px;
-	/*z-index: 98;*/
 }
 
 
@@ -403,7 +400,7 @@ button.icon24 {
 }
 
 .icon30 {
-	background-image: url("../images/icons24.png");
+	background-image: ICONS;
 	background-repeat: no-repeat;
 	height: 30px;
 }
