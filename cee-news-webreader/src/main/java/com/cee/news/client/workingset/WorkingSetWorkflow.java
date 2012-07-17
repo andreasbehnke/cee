@@ -1,7 +1,5 @@
 package com.cee.news.client.workingset;
 
-import java.util.List;
-
 import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.content.AddSiteWorkflow;
@@ -12,8 +10,6 @@ import com.cee.news.client.content.SiteListContentModel;
 import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.error.ErrorSourceBase;
 import com.cee.news.model.EntityKey;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.editor.client.EditorError;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -23,33 +19,34 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 
 	private final WorkingSetListModel workingSetListModel;
 
-	private final WorkingSetDataEditorDriver driver;
-
 	private final WorkingSetServiceAsync service = WorkingSetServiceAsync.Util.getInstance();
 
-	private final WorkingSetEditor editor;
+	private final WorkingSetView workingSetView;
 	
-	final AddSiteWorkflow addSiteWorkflow;
+	private final AddSiteWorkflow addSiteWorkflow;
 
 	// TODO: Enabled / Disable buttons on async service request!
-	public WorkingSetWorkflow(final WorkingSetListModel workingSetListModel, final SiteListContentModel siteListModel, final WorkingSetEditor editor, final NewSiteWizardView newSiteWizard) {
-		this.workingSetListModel = workingSetListModel;
-		driver = GWT.create(WorkingSetDataEditorDriver.class);
-		this.editor = editor;
-		editor.getButtonCancel().addClickHandler(new ClickHandler() {
+	public WorkingSetWorkflow(final WorkingSetListModel workingSetListModel,
+	        final SiteListContentModel siteListModel,
+	        final WorkingSetView workingSetView,
+	        final NewSiteWizardView newSiteWizard) {
+
+	    this.workingSetListModel = workingSetListModel;
+		this.workingSetView = workingSetView;
+		workingSetView.getButtonCancel().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				editor.hide();
+				workingSetView.hide();
 			}
 		});
-		editor.getButtonSave().addClickHandler(new ClickHandler() {
+		workingSetView.getButtonSave().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				validate();
 			}
 		});
 		addSiteWorkflow = new AddSiteWorkflow(newSiteWizard);
-		editor.getButtonAddNewSite().addClickHandler(new ClickHandler() {
+		workingSetView.getButtonAddNewSite().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				addSiteWorkflow.start();
@@ -62,13 +59,11 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 					
 					@Override
 					public void finished() {
-						siteListModel.addSelection(event.getEntityKey());
+					    siteListModel.addSelection(event.getEntityKey());
 					}
 				});
 			}
 		});
-		
-		driver.initialize(editor);
 	}
 
 	public void newWorkingSet() {
@@ -92,21 +87,16 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 		});
 	}
 	
-	protected void showEditor(WorkingSetData workingSetData) {
-		driver.edit(workingSetData);
-		editor.center();
+	private void showEditor(WorkingSetData wsd) {
+	    workingSetView.edit(wsd);
+	    workingSetView.center();
 	}
 
-	protected void validate() {
-		final WorkingSetData workingSetData = driver.flush();
-		if (driver.hasErrors()) {
-			List<EditorError> errors = driver.getErrors();
-			String message = "";
-			for (EditorError editorError : errors) {
-				message += editorError.getMessage();
-			}
-			showValidationError(message);
-			return;
+	private void validate() {
+		final WorkingSetData workingSetData = workingSetView.getData();
+		if (workingSetView.hasValidationErrors()) {
+		    workingSetView.showValidationErrors();
+		    return;
 		}
 		String name = workingSetData.getNewName();
 		if (name == null || name.trim().isEmpty()) {
@@ -123,7 +113,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 					showValidationError("Working Set with name " + workingSetData.getNewName() + " exists!");
 					break;
 				case ok:
-					editor.hide();
+				    workingSetView.hide();
 					workingSetListModel.findAllWorkingSets(new NotificationCallback() {
 						
 						@Override
@@ -145,8 +135,8 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 		});
 	}
 
-	protected void showValidationError(String message) {
-		editor.getErrorText().setText(message);
+	private void showValidationError(String message) {
+	    workingSetView.getErrorText().setText(message);
 	}
 	
 	@Override
