@@ -8,30 +8,35 @@ import com.google.gwt.editor.client.LeafValueEditor;
 /**
  * Editor adapter for the {@link SelectionChangedHandler}
  */
-public class SelectionListEditor<K> implements LeafValueEditor<List<K>>, SelectionListChangedHandler<K> {
-	
-	private MultiSelectListModel<K> model;
+public class SelectionListEditor<K> implements LeafValueEditor<List<K>> {
 	
 	private List<K> selections = new ArrayList<K>();
 	
-	public SelectionListEditor(MultiSelectListModel<K> model) {
-		this.model = model;
-		model.addSelectionListChangedHandler(this);
-	}
-
+	private List<SelectionListChangedHandler<K>> selectionListChangedHandlers = new ArrayList<SelectionListChangedHandler<K>>();
+	
 	@Override
 	public void setValue(List<K> value) {
-		model.setSelections(value);
 		selections = value;
+		fireSelectionListChanged();
 	}
 
 	@Override
 	public List<K> getValue() {
 		return selections;
 	}
-
-	@Override
-	public void onSelectionListChanged(SelectionListChangedEvent<K> event) {
-		selections = event.getKeys();
+	
+	private void fireSelectionListChanged() {
+	    SelectionListChangedEvent<K> event = new SelectionListChangedEvent<K>(selections);
+	    for (SelectionListChangedHandler<K> handler : selectionListChangedHandlers) {
+            handler.onSelectionListChanged(event);
+        }
 	}
+	
+	public void addSelectionListChangedHandler(SelectionListChangedHandler<K> selectionListChangedHandler) {
+	    selectionListChangedHandlers.add(selectionListChangedHandler);
+	}
+	
+	public void setSelections(List<K> selections) {
+        this.selections = selections;
+    }
 }

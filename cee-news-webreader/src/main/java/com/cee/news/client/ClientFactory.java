@@ -1,6 +1,8 @@
 package com.cee.news.client;
 
+import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.error.ErrorHandler;
+import com.cee.news.client.workingset.WorkingSetView;
 
 public interface ClientFactory {
 
@@ -11,4 +13,10 @@ public interface ClientFactory {
     StartView getStartView();
     
     NewsView getNewsView();
+    
+    NewSiteWizardView getNewSiteWizardView();
+    
+    NewSiteWizardView getAddSiteWizardView();
+    
+    WorkingSetView getWorkingSetView();
 }

@@ -3,8 +3,6 @@ package com.cee.news.client;
 import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.content.AddSiteToWorkingSet;
 import com.cee.news.client.content.ArticleKeyLinkProvider;
-import com.cee.news.client.content.NewSiteWizard;
-import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.content.NewsListContentModel;
 import com.cee.news.client.content.RelatedArticlesContentModel;
 import com.cee.news.client.content.SingleSelectionCellListPresenter;
@@ -19,10 +17,10 @@ import com.cee.news.client.list.SelectionListChangedEvent;
 import com.cee.news.client.list.SelectionListChangedHandler;
 import com.cee.news.client.paging.PagingPresenter;
 import com.cee.news.client.search.SearchPresenter;
-import com.cee.news.client.workingset.WorkingSetEditor;
 import com.cee.news.client.workingset.WorkingSetListModel;
 import com.cee.news.client.workingset.WorkingSetSelectionPresenter;
 import com.cee.news.client.workingset.WorkingSetSelectionView;
+import com.cee.news.client.workingset.WorkingSetView;
 import com.cee.news.client.workingset.WorkingSetWorkflow;
 import com.cee.news.model.ArticleKey;
 import com.cee.news.model.EntityKey;
@@ -80,12 +78,12 @@ public class NewsReader implements EntryPoint {
 		new SearchPresenter(filteredContentList, startView.getSearchView());
 		
 		//New & Edit Working Set Workflow
-		final NewSiteWizardView newSiteWizard = new NewSiteWizard();
 		final SiteListContentModel siteAddRemoveListModel = new SiteListContentModel();
 		siteAddRemoveListModel.addErrorHandler(errorHandler);
-		final WorkingSetEditor workingSetEditor = new WorkingSetEditor(siteAddRemoveListModel, siteAddRemoveListModel);
-		final WorkingSetWorkflow workingSetWorkflow = new WorkingSetWorkflow(workingSetListModel, siteAddRemoveListModel, workingSetEditor, newSiteWizard);
+		final WorkingSetView workingSetView = clientFactory.getWorkingSetView();
+		final WorkingSetWorkflow workingSetWorkflow = new WorkingSetWorkflow(workingSetListModel, siteAddRemoveListModel, workingSetView, clientFactory.getNewSiteWizardView());
 		workingSetWorkflow.addErrorHandler(errorHandler);
+		
 		new WorkingSetSelectionPresenter(workingSetListModel, workingSetSelectionView);
 		workingSetSelectionView.getNewButton().addClickHandler(new ClickHandler() {
 			@Override
@@ -101,8 +99,7 @@ public class NewsReader implements EntryPoint {
 		});
 		
 		//Add Source to Working Set Workflow
-		final NewSiteWizardView addSiteWizard = new NewSiteWizard();
-        final AddSiteToWorkingSet addSiteToWorkingSet = new AddSiteToWorkingSet(addSiteWizard, workingSetListModel);
+		final AddSiteToWorkingSet addSiteToWorkingSet = new AddSiteToWorkingSet(clientFactory.getAddSiteWizardView(), workingSetListModel);
 		addSiteToWorkingSet.addErrorHandler(errorHandler);
 		sourceSelectionView.getAddButton().addClickHandler(new ClickHandler() {
             @Override

@@ -3,8 +3,12 @@ package com.cee.news.client.ui;
 import com.cee.news.client.ClientFactory;
 import com.cee.news.client.NewsView;
 import com.cee.news.client.StartView;
+import com.cee.news.client.content.NewSiteWizard;
+import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.error.ErrorDialog;
 import com.cee.news.client.error.ErrorHandler;
+import com.cee.news.client.workingset.WorkingSetEditor;
+import com.cee.news.client.workingset.WorkingSetView;
 
 public class BinderClientFactory implements ClientFactory {
 
@@ -16,6 +20,12 @@ public class BinderClientFactory implements ClientFactory {
     
     private final NewsView newsView;
     
+    private final NewSiteWizardView newSiteWizardView;
+
+    private final NewSiteWizardView addSiteWizardView;
+
+    private final WorkingSetView workingSetView;
+    
     public BinderClientFactory() {
         Resources.INSTANCE.styles().ensureInjected();
         
@@ -23,6 +33,10 @@ public class BinderClientFactory implements ClientFactory {
         
         startView = new Start();
         newsView = new News();
+        newSiteWizardView = new NewSiteWizard();
+        addSiteWizardView = new NewSiteWizard();
+        workingSetView = new WorkingSetEditor();
+        
         pageSwitchView = new PageSwitch(startView, newsView);
         pageSwitchView.showStartPage();
     }
@@ -45,5 +59,20 @@ public class BinderClientFactory implements ClientFactory {
     @Override
     public PageSwitch getPageSwitchView() {
         return pageSwitchView;
+    }
+    
+    @Override
+    public NewSiteWizardView getNewSiteWizardView() {
+        return newSiteWizardView;
+    }
+
+    @Override
+    public NewSiteWizardView getAddSiteWizardView() {
+        return addSiteWizardView;
+    }
+
+    @Override
+    public WorkingSetView getWorkingSetView() {
+        return workingSetView;
     }
 }

@@ -1,7 +1,11 @@
 package com.cee.news.client;
 
+import com.cee.news.client.content.NewSiteWizard;
+import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.error.ErrorDialog;
 import com.cee.news.client.error.ErrorHandler;
+import com.cee.news.client.workingset.WorkingSetEditor;
+import com.cee.news.client.workingset.WorkingSetView;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -16,6 +20,12 @@ public class StandardClientFactory implements ClientFactory {
     private final StartView startView;
     
     private final NewsView newsView;
+    
+    private final NewSiteWizardView newSiteWizardView;
+    
+    private final NewSiteWizardView addSiteWizardView;
+    
+    private final WorkingSetView workingSetView;
     
     public StandardClientFactory() {
         
@@ -35,6 +45,10 @@ public class StandardClientFactory implements ClientFactory {
         layoutPanel.setWidgetTopBottom(pageSwitchWidget, 0.0, Unit.PX, 0.0, Unit.PX);
         
         RootPanel.get().add(layoutPanel, 0, 0);
+        
+        newSiteWizardView = new NewSiteWizard();
+        addSiteWizardView = new NewSiteWizard();
+        workingSetView = new WorkingSetEditor();
     }
 
     @Override
@@ -55,5 +69,20 @@ public class StandardClientFactory implements ClientFactory {
     @Override
     public PageSwitchView getPageSwitchView() {
         return pageSwitchView;
+    }
+
+    @Override
+    public NewSiteWizardView getNewSiteWizardView() {
+        return newSiteWizardView;
+    }
+
+    @Override
+    public NewSiteWizardView getAddSiteWizardView() {
+        return addSiteWizardView;
+    }
+
+    @Override
+    public WorkingSetView getWorkingSetView() {
+        return workingSetView;
     }
 }

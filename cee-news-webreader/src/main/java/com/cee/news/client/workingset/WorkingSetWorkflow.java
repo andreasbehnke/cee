@@ -9,6 +9,9 @@ import com.cee.news.client.content.SiteAddedHandler;
 import com.cee.news.client.content.SiteListContentModel;
 import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.error.ErrorSourceBase;
+import com.cee.news.client.list.MultiSelectListPresenter;
+import com.cee.news.client.list.SelectionListChangedEvent;
+import com.cee.news.client.list.SelectionListChangedHandler;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -25,7 +28,6 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 	
 	private final AddSiteWorkflow addSiteWorkflow;
 
-	// TODO: Enabled / Disable buttons on async service request!
 	public WorkingSetWorkflow(final WorkingSetListModel workingSetListModel,
 	        final SiteListContentModel siteListModel,
 	        final WorkingSetView workingSetView,
@@ -45,6 +47,25 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 				validate();
 			}
 		});
+		workingSetView.getButtonRemoveAllSites().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                siteListModel.clearSelection();
+            }
+        });
+		workingSetView.addSelectionListChangedHandler(new SelectionListChangedHandler<EntityKey>() {
+            @Override
+            public void onSelectionListChanged(SelectionListChangedEvent<EntityKey> event) {
+                siteListModel.setSelections(event.getKeys());
+            }
+        });
+		siteListModel.addSelectionListChangedHandler(new SelectionListChangedHandler<EntityKey>() {
+            @Override
+            public void onSelectionListChanged(SelectionListChangedEvent<EntityKey> event) {
+                workingSetView.setSelectedSites(event.getKeys());
+            }
+        });
+		
 		addSiteWorkflow = new AddSiteWorkflow(newSiteWizard);
 		workingSetView.getButtonAddNewSite().addClickHandler(new ClickHandler() {
 			@Override
@@ -64,6 +85,8 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 				});
 			}
 		});
+		
+		new MultiSelectListPresenter<EntityKey>(siteListModel, siteListModel, workingSetView.getAvailableSitesList(), workingSetView.getSelectedSitesList());
 	}
 
 	public void newWorkingSet() {
