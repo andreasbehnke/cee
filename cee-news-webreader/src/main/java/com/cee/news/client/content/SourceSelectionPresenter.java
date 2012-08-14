@@ -34,6 +34,7 @@ public class SourceSelectionPresenter {
             
             @Override
             public void onContentListChanged(ListChangedEvent<EntityKey> event) {
+                selectionModel.clear();
                 for (EntityKey key : sitesOfWorkingSetModel.getKeys()) {
                     selectionModel.setSelected(new EntityContent<EntityKey>(key, null), true);
                 }
