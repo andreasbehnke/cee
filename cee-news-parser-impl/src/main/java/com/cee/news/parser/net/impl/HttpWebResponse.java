@@ -10,8 +10,8 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 
 import com.cee.news.parser.net.ReaderFactory;
 import com.cee.news.parser.net.WebResponse;
@@ -21,13 +21,17 @@ import com.cee.news.parser.net.WebResponse;
  */
 public final class HttpWebResponse implements WebResponse {
 	
-	private final Logger LOG = LoggerFactory.getLogger(HttpWebResponse.class);
+	private final URL originalLocation;
 	
-	private final HttpEntity entity;
+	private final HttpClient httpClient;
 	
 	private final ReaderFactory readerFactory;
 
-	public HttpWebResponse(URL location, HttpClient httpClient, ReaderFactory readerFactory) throws IOException {
+	private HttpEntity entity;
+	
+	private URL location;
+    
+    public HttpWebResponse(URL location, HttpClient httpClient, ReaderFactory readerFactory) {
 		if (location == null) {
 			throw new IllegalArgumentException("Paramter location must not be null!");
 		}
@@ -37,24 +41,36 @@ public final class HttpWebResponse implements WebResponse {
 		if (readerFactory == null) {
 			throw new IllegalArgumentException("Parameter readerFactory must not be null");
 		}
-		this.entity = getHttpEntity(location, httpClient);
+		this.originalLocation = location;
+		this.location = location;
+	    this.httpClient = httpClient;
 		this.readerFactory = readerFactory;
 	}
-	
-    protected HttpEntity getHttpEntity(URL location, HttpClient httpClient) throws IOException {
-        HttpGet httpGet = new HttpGet(location.toExternalForm());
-        HttpResponse response = httpClient.execute(httpGet);
-        HttpEntity entity = response.getEntity();
+    
+    private void executeRequest() throws IOException {
+        HttpGet httpGet = new HttpGet(originalLocation.toExternalForm());
+        HttpContext context = new BasicHttpContext();
+        HttpResponse response = httpClient.execute(httpGet, context);
+        entity = response.getEntity();
         if (entity == null) {
-            throw new IOException("No entity received for " + location.toExternalForm());
+            throw new IOException("No entity received for " + originalLocation.toExternalForm());
         }
-        LOG.debug("retrieved http entity for {}", location);
+        URL redirectUrl = (URL) context.getAttribute(HttpClientFactory.LAST_REDIRECT_URL);
+        if (redirectUrl != null) {
+            location = redirectUrl;
+        }
+    }
+	
+    private HttpEntity getEntity() throws IOException {
+        if (entity == null) {
+            executeRequest();
+        }
         return entity;
     }
 
 	@Override
 	public InputStream getStream() throws IOException {
-	    return entity.getContent();
+	    return getEntity().getContent();
 	}
 
 	@Override
@@ -63,25 +79,34 @@ public final class HttpWebResponse implements WebResponse {
 	}
 
 	@Override
-	public String getContentType() {
-		Header contentTypeHeader = entity.getContentType();
-		if (contentTypeHeader != null) {
-			return contentTypeHeader.getValue();
-		}
-	    return null;
+	public String getContentType() throws IOException {
+		Header contentTypeHeader = getEntity().getContentType();
+        if (contentTypeHeader != null) {
+            return contentTypeHeader.getValue();
+        }
+        return null;
 	}
 
 	@Override
-	public String getContentEncoding() {
-		Header contentEncodingHeader = entity.getContentEncoding();
+	public String getContentEncoding() throws IOException {
+	    Header contentEncodingHeader = getEntity().getContentEncoding();
 		if (contentEncodingHeader != null) {
 			return contentEncodingHeader.getValue();
 		}
-		return null;
+    	return null;
 	}
 
 	@Override
-	public long getContentLength() {
-	    return entity.getContentLength();
+	public long getContentLength() throws IOException {
+	    return getEntity().getContentLength();
 	}
+	
+	@Override
+	public URL getLocation() throws IOException {
+	    if (entity == null) {
+            executeRequest();
+	    }
+        return location;
+	}
+
 }

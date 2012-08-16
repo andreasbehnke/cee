@@ -17,6 +17,7 @@ import com.cee.news.model.Article;
 import com.cee.news.parser.ArticleParser;
 import com.cee.news.parser.ParserException;
 import com.cee.news.parser.net.ClassResourceWebClient;
+import com.cee.news.parser.net.impl.DefaultHttpClientFactory;
 import com.cee.news.parser.net.impl.DefaultWebClient;
 import com.cee.news.parser.net.impl.XmlStreamReaderFactory;
 
@@ -43,7 +44,7 @@ public class TestBoilerpipeArticleParser {
 		Article article = new Article();
         article.setLocation("http://www.swr.de/nachrichten/-/id=396/nid=396/did=8825882/1u2s8qj/index.html");
         
-        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(HttpClientFactory.createHttpClient(), new XmlStreamReaderFactory()));
+        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
         parser.parse(article);
         assertTrue(article.getContentText().contains("Kein Referendum, kein Rücktritt, keine Lösung"));
 	}
@@ -54,7 +55,7 @@ public class TestBoilerpipeArticleParser {
 		Article article = new Article();
         article.setLocation("http://www.spiegel.de/wirtschaft/unternehmen/0,1518,797729,00.html");
         
-        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(HttpClientFactory.createHttpClient(), new XmlStreamReaderFactory()));
+        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
         parser.parse(article);
         assertTrue(article.getContentText().contains("die Polizei durchsucht das Büro"));
 	}
@@ -66,7 +67,7 @@ public class TestBoilerpipeArticleParser {
 		Article article = new Article();
         article.setLocation("http://www.swr.de/nachrichten/-/id=396/nid=396/did=8892142/1aevpcg/index.html");
         
-        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(HttpClientFactory.createHttpClient(), new XmlStreamReaderFactory()));
+        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
         parser.parse(article);
         assertTrue(article.getContent().get(0).getContent().contains("täglich"));
 	}
@@ -78,7 +79,7 @@ public class TestBoilerpipeArticleParser {
 		Article article = new Article();
         article.setLocation("	http://www.tagesspiegel.de/politik/troika-sieht-portugal-auf-gutem-weg/5859778.html");
         
-        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(HttpClientFactory.createHttpClient(), new XmlStreamReaderFactory()));
+        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
         parser.parse(article);
         assertTrue(article.getContent().get(0).getContent().contains("Die Portugiesen selbst sind weniger optimistisch"));
 	}

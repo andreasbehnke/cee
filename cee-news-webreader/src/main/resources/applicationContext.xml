@@ -101,10 +101,10 @@
 
 	<!-- Parser -->
 	
+	<bean id="httpClientFactory" class="com.cee.news.parser.net.impl.DefaultHttpClientFactory" />
+	
 	<bean id="webClient" class="com.cee.news.parser.net.impl.DefaultWebClient" scope="prototype">
-		<property name="httpClient">
-			<bean class="org.apache.http.impl.client.DefaultHttpClient" scope="prototype" />
-		</property>
+		<property name="httpClientFactory" ref="httpClientFactory" />
 		<property name="readerFactory">
 			<bean class="com.cee.news.parser.net.impl.XmlStreamReaderFactory" />
 		</property>

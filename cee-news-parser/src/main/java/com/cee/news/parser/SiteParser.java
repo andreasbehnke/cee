@@ -84,10 +84,10 @@ public class SiteParser {
             throw new IllegalStateException("feedChecker property has not been set");
         }
 
-        SiteHandler siteHandler = new SiteHandler(siteLocation);
-        xmlReader.setContentHandler(siteHandler);
-
         WebResponse webResponse = webClient.openWebResponse(siteLocation);
+        
+        SiteHandler siteHandler = new SiteHandler(webResponse.getLocation());
+        xmlReader.setContentHandler(siteHandler);
         Reader reader = null;
         try {
         	reader = webResponse.getReader();

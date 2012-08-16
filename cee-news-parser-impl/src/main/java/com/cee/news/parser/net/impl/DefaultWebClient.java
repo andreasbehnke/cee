@@ -1,6 +1,5 @@
 package com.cee.news.parser.net.impl;
 
-import java.io.IOException;
 import java.net.URL;
 
 import org.apache.http.client.HttpClient;
@@ -30,17 +29,13 @@ public class DefaultWebClient implements WebClient {
     public DefaultWebClient() {
     }
 
-    public DefaultWebClient(HttpClient httpClient, ReaderFactory readerFactory) {
-        this.httpClient = httpClient;
+    public DefaultWebClient(HttpClientFactory httpClientFactory, ReaderFactory readerFactory) {
         this.readerFactory = readerFactory;
+        setHttpClientFactory(httpClientFactory);
     }
-
-    public HttpClient getHttpClient() {
-        return httpClient;
-    }
-
-    public void setHttpClient(HttpClient httpClient) {
-        this.httpClient = httpClient;
+    
+    public void setHttpClientFactory(HttpClientFactory httpClientFactory) {
+        this.httpClient = httpClientFactory.createHttpClient();
     }
 
     public ReaderFactory getReaderFactory() {
@@ -51,7 +46,7 @@ public class DefaultWebClient implements WebClient {
 		this.readerFactory = readerFactory;
 	}
 
-	public WebResponse openWebResponse(final URL location) throws IOException {
+	public WebResponse openWebResponse(final URL location) {
 		if (readerFactory == null) {
 			throw new IllegalArgumentException("The property readerFactory has not been set yet!");
 		}

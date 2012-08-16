@@ -9,7 +9,6 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,6 +20,7 @@ import betamax.TapeMode;
 import com.cee.news.model.Article;
 import com.cee.news.parser.FeedParser;
 import com.cee.news.parser.ParserException;
+import com.cee.news.parser.net.impl.DefaultHttpClientFactory;
 import com.cee.news.parser.net.impl.DefaultWebClient;
 import com.cee.news.parser.net.impl.XmlStreamReaderFactory;
 
@@ -31,7 +31,7 @@ public class TestRomeFeedParser {
 
     @Test
     public void testParse() throws ParserException, IOException {
-        FeedParser parser = new RomeFeedParser(new DefaultWebClient(new DefaultHttpClient(), new XmlStreamReaderFactory()));
+        FeedParser parser = new RomeFeedParser(new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
         List<Article> articles = parser.parse(getClass().getResource("spiegelNachrichten.rss"));
         
         assertEquals(7, articles.size());
@@ -49,7 +49,7 @@ public class TestRomeFeedParser {
     @Betamax(tape = "issue143", mode = TapeMode.READ_ONLY)
 	@Test
     public void testParseRegressionIssue143() throws MalformedURLException, ParserException, IOException {
-    	FeedParser parser = new RomeFeedParser(new DefaultWebClient(HttpClientFactory.createHttpClient(), new XmlStreamReaderFactory()));
+    	FeedParser parser = new RomeFeedParser(new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
         List<Article> articles = parser.parse(new URL("http://www.br.de/homepage104~rss.xml"));
         assertTrue(articles.size() != 0);
     }

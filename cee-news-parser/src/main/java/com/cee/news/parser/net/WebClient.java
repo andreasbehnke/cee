@@ -1,6 +1,5 @@
 package com.cee.news.parser.net;
 
-import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -9,6 +8,6 @@ import java.net.URL;
  */
 public interface WebClient {
     
-    WebResponse openWebResponse(URL location) throws IOException;
+    WebResponse openWebResponse(URL location);
     
 }

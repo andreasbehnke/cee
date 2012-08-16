@@ -18,7 +18,7 @@ public class ClassResourceWebClient implements WebClient {
 	 * @see com.cee.news.parser.net.WebClient#openWebResponse(java.net.URL)
 	 */
 	@Override
-	public WebResponse openWebResponse(final URL location) throws IOException {
+	public WebResponse openWebResponse(final URL location) {
 		return new WebResponse() {
 			
 			@Override
@@ -49,6 +49,11 @@ public class ClassResourceWebClient implements WebClient {
 			@Override
 			public long getContentLength() {
 				return -1;
+			}
+			
+			@Override
+			public URL getLocation() {
+			    return location;
 			}
 		};
 	}

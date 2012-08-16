@@ -10,18 +10,18 @@ import com.cee.news.parser.net.WebResponse;
 
 final class DefaultWebResponse implements WebResponse {
 	
-	private final URL location;
+	private final URL originalLocation;
 	
 	private final ReaderFactory readerFactory;
 
 	DefaultWebResponse(URL location, ReaderFactory readerFactory) {
 		this.readerFactory = readerFactory;
-		this.location = location;
+		this.originalLocation = location;
 	}
 
 	@Override
 	public InputStream getStream() throws IOException {
-	    return location.openStream();
+	    return originalLocation.openStream();
 	}
 
 	@Override
@@ -42,5 +42,10 @@ final class DefaultWebResponse implements WebResponse {
 	@Override
 	public long getContentLength() {
 	    return -1;
+	}
+	
+	@Override
+	public URL getLocation() {
+	    return originalLocation;
 	}
 }
