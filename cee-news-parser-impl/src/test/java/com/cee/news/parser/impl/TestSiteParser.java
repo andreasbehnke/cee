@@ -74,7 +74,7 @@ public class TestSiteParser {
         assertEquals(site.getLocation(), "http://www.faz.net");
     }
     
-    @Betamax(tape = "issue202", mode = TapeMode.READ_WRITE)
+    @Betamax(tape = "issue202", mode = TapeMode.READ_ONLY)
     @Test
     public void testParseRegressionIssue202() throws MalformedURLException, ParserException, IOException, SAXException {
         WebClient webClient = new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory());
