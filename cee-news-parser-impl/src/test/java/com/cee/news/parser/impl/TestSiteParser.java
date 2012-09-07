@@ -7,22 +7,35 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.ccil.cowan.tagsoup.Parser;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.xml.sax.SAXException;
 
+import betamax.Betamax;
+import betamax.Recorder;
+import betamax.TapeMode;
+
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
+import com.cee.news.parser.FeedChecker;
 import com.cee.news.parser.ParserException;
 import com.cee.news.parser.SiteParser;
 import com.cee.news.parser.net.ClassResourceWebClient;
 import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.WebResponse;
+import com.cee.news.parser.net.impl.DefaultHttpClientFactory;
+import com.cee.news.parser.net.impl.DefaultWebClient;
+import com.cee.news.parser.net.impl.XmlStreamReaderFactory;
 
 public class TestSiteParser {
+    
+    @Rule
+    public Recorder recorder = new Recorder();
     
     @Test
     public void testParse() throws IOException, SAXException {
@@ -59,5 +72,16 @@ public class TestSiteParser {
         SiteParser parser = new SiteParser(new Parser(), new RomeFeedChecker(webClient), webClient);
         Site site = parser.parse(siteLocation);
         assertEquals(site.getLocation(), "http://www.faz.net");
+    }
+    
+    @Betamax(tape = "issue202", mode = TapeMode.READ_WRITE)
+    @Test
+    public void testParseRegressionIssue202() throws MalformedURLException, ParserException, IOException, SAXException {
+        WebClient webClient = new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory());
+        FeedChecker feedChecker = new RomeFeedChecker(webClient);
+        SiteParser parser = new SiteParser(new Parser(), feedChecker, webClient);
+        
+        Site site = parser.parse(new URL("http://www.cnn.com/"));
+        assertEquals(2, site.getFeeds().size());
     }
 }

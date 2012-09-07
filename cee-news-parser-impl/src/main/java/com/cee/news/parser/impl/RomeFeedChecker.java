@@ -15,6 +15,7 @@ import com.sun.syndication.io.SAXBuilder;
 import com.sun.syndication.io.WireFeedInput;
 import com.sun.syndication.io.WireFeedParser;
 import com.sun.syndication.io.impl.FeedParsers;
+import com.sun.syndication.io.impl.XmlFixerReader;
 
 public class RomeFeedChecker extends WireFeedInput implements FeedChecker {
     
@@ -49,10 +50,10 @@ public class RomeFeedChecker extends WireFeedInput implements FeedChecker {
         Document document = null;
         Reader reader = null;
         try {
-        	reader = response.getReader();
+        	reader = new XmlFixerReader(response.getReader());
         	document = saxBuilder.build(new InputSource(reader));
         } catch (JDOMException e) {
-            throw new IOException("Could not parse feed stream", e);
+            return false;
         } finally {
         	if (reader != null)
         		reader.close();
