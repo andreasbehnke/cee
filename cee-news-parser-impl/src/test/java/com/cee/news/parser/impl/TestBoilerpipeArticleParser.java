@@ -60,6 +60,34 @@ public class TestBoilerpipeArticleParser {
         assertTrue(article.getContentText().contains("die Polizei durchsucht das Büro"));
 	}
 	
+    @Betamax(tape = "issue205", mode = TapeMode.READ_ONLY)
+    //TODO: FIX ISSUE 205 @Test
+    public void testParseRegressionIssue205() throws ParserException, IOException {
+        Article article = new Article();
+        article.setLocation("http://www.spiegel.de/politik/ausland/mohammed-video-obama-schaltet-werbespots-in-pakistan-a-857097.html");
+        
+        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
+        parser.parse(article);
+        assertTrue(article.getContentText().contains("In dem 52 Sekunden kurzen und mit Urdu-Untertiteln versehenen Beitrag"));
+    }
+    
+    @Betamax(tape = "issue206", mode = TapeMode.READ_ONLY)
+    //TODO: FIX ISSUE 206 @Test
+    public void testParseRegressionIssue206() throws ParserException, IOException {
+        Article article = new Article();
+        article.setLocation("http://www.faz.net/aktuell/politik/ausland/nach-freitagsgebeten-neue-anti-westliche-proteste-befuerchtet-11898090.html");
+        
+        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
+        parser.parse(article);
+        String content = article.getContentText();
+        //first half
+        assertTrue(content.contains("Nach der Veröffentlichung weiterer Mohammed-Karikaturen in einem französischen Satire-Magazin"));
+        assertTrue(content.contains("In Pakistan legten die angekündigten Großkundgebungen bereits am Morgen große Teile des Landes lahm"));
+        //second half
+        assertTrue(content.contains("Die amerikanische Regierung versuchte unterdessen im pakistanischen Fernsehen"));
+        
+    }
+	
 	@Ignore("The server does not send a UTF-8 Content-Type header, betamax is also unable to detect the charset encoding...")
 	//@Betamax(tape = "issue145", mode = TapeMode.READ_WRITE)
 	@Test
