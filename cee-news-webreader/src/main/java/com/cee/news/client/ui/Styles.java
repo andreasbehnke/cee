@@ -5,6 +5,8 @@ import com.google.gwt.resources.client.CssResource;
 interface Styles extends CssResource {
 
     String add();
+    
+    String addNewSite();
 
     String addSet();
 
@@ -16,11 +18,15 @@ interface Styles extends CssResource {
 
     int articleTeaserTop();
     
-    int relatedArticleColumns();
+    String availableSites();
     
     String border();
 
     String buttonRefresh();
+    
+    String cancel();
+    
+    String container();
 
     String center();
 
@@ -40,22 +46,28 @@ interface Styles extends CssResource {
 
     String deleteSet();
 
+    String dialog();
+    
     String editSet();
+    
+    String error();
+    
+    String footer();
+
+    String header();
+    
+    String horizontalGradient();
 
     String icon();
-
-    String icon24();
-
-    String icon30();
 
     String label();
 
     String labelResult();
-
-    String left();
+    
+    String lense();
 
     String link();
-
+    
     String list();
 
     String listItem();
@@ -65,16 +77,26 @@ interface Styles extends CssResource {
     String navRight();
 
     String pager();
-
+    
+    String popupPanel();
+    
     String refresh();
 
     String related();
 
+    int relatedArticleColumns();
+    
+    String removeAllSites();
+    
+    String save();
+    
     String search();
-
+    
     String searchField();
 
     String selectAll();
+
+    String selectedSites();
 
     String selectNone();
 
@@ -82,11 +104,9 @@ interface Styles extends CssResource {
 
     String teaser();
 
-    String top();
-
     String unchecked();
 
-    String verticalScroll();
+   // String verticalScroll();
 
     String workingsetSelection();
 }

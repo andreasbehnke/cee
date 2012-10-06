@@ -3,7 +3,7 @@
 	<ui:with type="com.cee.news.client.ui.Resources" field="res" />
 	<g:HTMLPanel styleName="{res.styles.searchField}">
 		<g:TextBox ui:field="textBoxSearch"/>
-		<g:Button ui:field="buttonSearch" title="Search" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.search}"/>
-		<g:Button ui:field="buttonClear" title="Clear Search" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.delete}"/>
+		<g:Button ui:field="buttonSearch" title="Search" styleName="{res.styles.icon} {res.styles.lense}"/>
+		<g:Button ui:field="buttonClear" title="Clear Search" styleName="{res.styles.icon} {res.styles.delete}"/>
 	</g:HTMLPanel>
 </ui:UiBinder> 

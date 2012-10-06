@@ -3,8 +3,8 @@
 	<ui:with type="com.cee.news.client.ui.Resources" field="res" />
 	<g:HTMLPanel>
 		<g:ListBox ui:field="listBox" styleName="{res.styles.workingsetSelection}" />
-		<g:Button ui:field="editButton" title="Edit Working Set" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.editSet}" />
-		<g:Button ui:field="newButton" title="Add New Working Set" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.addSet}" />
-		<g:Button ui:field="deleteButton" title="Delete Working Set" styleName="{res.styles.icon} {res.styles.icon24} {res.styles.deleteSet}" />
+		<g:Button ui:field="editButton" title="Edit Working Set" styleName="{res.styles.icon} {res.styles.editSet}" />
+		<g:Button ui:field="newButton" title="Add New Working Set" styleName="{res.styles.icon} {res.styles.addSet}" />
+		<g:Button ui:field="deleteButton" title="Delete Working Set" styleName="{res.styles.icon} {res.styles.deleteSet}" />
 	</g:HTMLPanel>
 </ui:UiBinder>

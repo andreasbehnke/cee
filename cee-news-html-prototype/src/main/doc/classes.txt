@@ -1,0 +1,40 @@
+
+* Start Page:
+
+container
+	labelResult
+	icon icon24 refresh buttonRefresh
+	horizontalGradient search
+		
+		workingsetSelection
+		icon icon24 editSet
+		icon icon24 addSet
+		icon icon24 deleteSet
+		
+		searchField
+		icon icon24 lense
+		icon icon24 delete
+		
+	sources
+		label
+		icon icon24 selectAll
+		icon icon24 selectNone
+		icon icon24 add
+	 
+* News Page:
+
+container
+	icon icon24 refresh buttonRefresh		
+	related
+		label
+	center content
+	horizontalGradient pager
+		link icon30 navLeft
+		articleSelection
+		icon icon24 navLeft
+		icon icon24 navRight
+	
+* Dialogs:
+
+dialog
+	

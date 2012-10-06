@@ -35,7 +35,7 @@ public class BinderClientFactory implements ClientFactory {
         newsView = new News();
         newSiteWizardView = new NewSiteWizard();
         addSiteWizardView = new NewSiteWizard();
-        workingSetView = new WorkingSetEditor();
+        workingSetView = new WorkingSet();
         
         pageSwitchView = new PageSwitch(startView, newsView);
         pageSwitchView.showStartPage();

@@ -16,13 +16,13 @@ import com.google.gwt.editor.client.adapters.SimpleEditor;
 import com.google.gwt.editor.ui.client.adapters.ValueBoxEditor;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
-public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData>, WorkingSetView {
+public class WorkingSetEditor extends PopupPanel implements Editor<WorkingSetData>, WorkingSetView {
 
     private final InlineLabel labelErrorMessage;
 
@@ -50,7 +50,8 @@ public class WorkingSetEditor extends DialogBox implements Editor<WorkingSetData
 
     public WorkingSetEditor() {
         driver = GWT.create(WorkingSetDataEditorDriver.class);
-        setText("Edit Working Set");
+        //set Text("Edit Working Set");
+        setGlassEnabled(true);
         LayoutPanel layoutPanel = new LayoutPanel();
         setWidget(layoutPanel);
         layoutPanel.setSize("627px", "498px");
