@@ -277,8 +277,12 @@ H3 {
 
 .dialog H1 {
 	font-size: 14px;
-	margin-left: 4px;
+	margin-left: 8px;
 	margin-top: 8px;
+}
+
+.dialog P {
+	margin-bottom: 8px;
 }
 
 .dialog .header {
@@ -294,16 +298,16 @@ H3 {
 	position: absolute;
 	text-align: right;
 	height: 26px;
-	bottom: 4px;
-	left: 4px;
-	right: 4px;
+	bottom: 8px;
+	left: 8px;
+	right: 8px;
 }
 
 .dialog .availableSites {
 	position: absolute;
 	top: 68px;
 	bottom: 34px;
-	left: 4px;
+	left: 8px;
 	right: 304px;
 }
 
@@ -336,7 +340,7 @@ H3 {
 	top: 68px;
 	bottom: 34px;
 	left: 304px;
-	right: 4px;
+	right: 8px;
 }
 
 .dialog .removeAllSites {
@@ -349,24 +353,24 @@ H3 {
 	position: absolute;
 	height: 26px;
 	top: 38px;
-	left: 4px;
-	right: 4px;
+	left: 8px;
+	right: 8px;
 }
 
 .dialog .pageLocationInput {
 	position: absolute;
-	top: 58px;
+	top: 38px;
 	bottom: 34px;
-	left: 4px;
-	right: 4px;
+	left: 8px;
+	right: 8px;
 }
 
 .dialog .pageFeedSelection {
 	position: absolute;
-	top: 58px;
+	top: 38px;
 	bottom: 34px;
-	left: 4px;
-	right: 4px;
+	left: 8px;
+	right: 8px;
 }
 
 .dialog .save {

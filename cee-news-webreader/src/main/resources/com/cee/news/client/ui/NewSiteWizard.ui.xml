@@ -6,13 +6,14 @@
 			<h1>Add New Site</h1>
 		</div>
 		<g:HTMLPanel ui:field="pageLocationInput" styleName="{res.styles.pageLocationInput}" >
-			<p>Enter the URL of the Site from which content should be extracted</p>
-			<span>Site's URL:</span>
+			<p>Enter the URL of the Site</p>
+			<span>URL:</span>
 			<g:TextBox ui:field="textBoxSiteUrl" />
 		</g:HTMLPanel>
 		<g:HTMLPanel ui:field="pageFeedSelection" styleName="{res.styles.pageFeedSelection}" >
-			<p>Enter the URL of the Site from which content should be extracted</p>
+			<p>The site provides the following feeds:</p>
 			<c:CellTable ui:field="cellTableFeeds" />
+			<p>Select feeds which should be used for content extraction.</p>
 			<span>Site's Name:</span>
 			<g:TextBox ui:field="textBoxSiteName" />
 		</g:HTMLPanel>
