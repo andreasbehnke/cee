@@ -3,11 +3,10 @@ package com.cee.news.client.ui;
 import com.cee.news.client.ClientFactory;
 import com.cee.news.client.NewsView;
 import com.cee.news.client.StartView;
-import com.cee.news.client.content.NewSiteWizard;
+import com.cee.news.client.ui.NewSiteWizard;
 import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.error.ErrorDialog;
 import com.cee.news.client.error.ErrorHandler;
-import com.cee.news.client.workingset.WorkingSetEditor;
 import com.cee.news.client.workingset.WorkingSetView;
 
 public class BinderClientFactory implements ClientFactory {

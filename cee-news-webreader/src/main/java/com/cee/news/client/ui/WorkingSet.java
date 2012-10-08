@@ -27,14 +27,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class WorkingSet extends PopupPanel implements WorkingSetView {
 
-    private static WorkingSetUiBinder uiBinder = GWT.create(WorkingSetUiBinder.class);
+    public interface WorkingSetUiBinder extends UiBinder<Widget, WorkingSet> {}
     
-    private static Resources resources = GWT.create(Resources.class);
-    
-    interface WorkingSetUiBinder extends UiBinder<Widget, WorkingSet> {
-    }
-    
-    class WorkingSetEditor implements Editor<WorkingSetData> {
+    public class WorkingSetEditor implements Editor<WorkingSetData> {
         public IsEditor<ValueBoxEditor<String>> newName() {
             return newNameEditor;
         }
@@ -51,7 +46,11 @@ public class WorkingSet extends PopupPanel implements WorkingSetView {
             return sitesEditor;
         }
     }
-
+    
+    private static WorkingSetUiBinder uiBinder = GWT.create(WorkingSetUiBinder.class);
+    
+    private static Resources resources = GWT.create(Resources.class);
+    
     @UiField
     InlineLabel labelErrorMessage;
 

@@ -267,11 +267,7 @@ H3 {
 /*** Dialogs ***/
 .popupPanel {
 	background-color: #ffffff;
-    border-color: #606060;
-    /*-moz-border-radius: 6px;
-	border-radius: 6px;*/
-    border-style: solid;
-    border-width: 1px;
+	border-radius: 8px;
 }
 
 .dialog {
@@ -280,21 +276,23 @@ H3 {
 }
 
 .dialog H1 {
-	font-size: 16px;
-	margin-bottom: 8px;
+	font-size: 14px;
+	margin-left: 4px;
+	margin-top: 8px;
 }
 
 .dialog .header {
 	position: absolute;
-	height: 50px;
-	top: 4px;
-	left: 4px;
-	right: 4px;
+	height: 34px;
+	top: 0px;
+	left: 0px;
+	right: 0px;	
+	border-radius: 8px 8px 0px 0px;
 }
 
 .dialog .footer {
 	position: absolute;
-	direction: rtl;
+	text-align: right;
 	height: 26px;
 	bottom: 4px;
 	left: 4px;
@@ -303,7 +301,7 @@ H3 {
 
 .dialog .availableSites {
 	position: absolute;
-	top: 58px;
+	top: 68px;
 	bottom: 34px;
 	left: 4px;
 	right: 304px;
@@ -335,7 +333,7 @@ H3 {
 
 .dialog .selectedSites {
 	position: absolute;
-	top: 58px;
+	top: 68px;
 	bottom: 34px;
 	left: 304px;
 	right: 4px;
@@ -347,7 +345,36 @@ H3 {
 	right: 0px;
 }
 
+.dialog .workingSetName {
+	position: absolute;
+	height: 26px;
+	top: 38px;
+	left: 4px;
+	right: 4px;
+}
+
+.dialog .pageLocationInput {
+	position: absolute;
+	top: 58px;
+	bottom: 34px;
+	left: 4px;
+	right: 4px;
+}
+
+.dialog .pageFeedSelection {
+	position: absolute;
+	top: 58px;
+	bottom: 34px;
+	left: 4px;
+	right: 4px;
+}
+
 .dialog .save {
+	position: relative;
+	bottom: 0px;
+}
+
+.dialog .next {
 	position: relative;
 	bottom: 0px;
 }

@@ -2,8 +2,10 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.dom.client" xmlns:l="urn:import:com.cee.news.client.list" >
 	<ui:with type="com.cee.news.client.ui.Resources" field="res" />
 	<g:HTMLPanel styleName="{res.styles.dialog}">
-			<div class="{res.styles.header}">
+			<div class="{res.styles.header} {res.styles.horizontalGradient}">
 				<h1>Edit Working Set</h1>
+			</div>
+			<div class="{res.styles.workingSetName}">
 				<span>Working Set Name:</span>
 				<g:TextBox ui:field="newNameEditor" />
 			</div>
@@ -19,8 +21,8 @@
 			</div>
 			<div class="{res.styles.footer}">
 				<g:InlineLabel ui:field="labelErrorMessage" styleName="{res.styles.error}" />
-				<g:Button ui:field="buttonSave" text="Save" styleName="{res.styles.save}" />
 				<g:Button ui:field="buttonCancel" text="Cancel" styleName="{res.styles.cancel}" />
+				<g:Button ui:field="buttonSave" text="Save" styleName="{res.styles.save}" />
 			</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

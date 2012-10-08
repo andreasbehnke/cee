@@ -75,7 +75,13 @@ interface Styles extends CssResource {
     String navLeft();
 
     String navRight();
+    
+    String next();
 
+    String pageFeedSelection();
+    
+    String pageLocationInput();
+    
     String pager();
     
     String popupPanel();
@@ -106,7 +112,7 @@ interface Styles extends CssResource {
 
     String unchecked();
 
-   // String verticalScroll();
+   String workingSetName();
 
     String workingsetSelection();
 }

@@ -1,0 +1,26 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.dom.client"  xmlns:c="urn:import:com.google.gwt.user.cellview.client" >
+	<ui:with type="com.cee.news.client.ui.Resources" field="res" />
+	<g:HTMLPanel styleName="{res.styles.dialog}">
+		<div class="{res.styles.header} {res.styles.horizontalGradient}">
+			<h1>Add New Site</h1>
+		</div>
+		<g:HTMLPanel ui:field="pageLocationInput" styleName="{res.styles.pageLocationInput}" >
+			<p>Enter the URL of the Site from which content should be extracted</p>
+			<span>Site's URL:</span>
+			<g:TextBox ui:field="textBoxSiteUrl" />
+		</g:HTMLPanel>
+		<g:HTMLPanel ui:field="pageFeedSelection" styleName="{res.styles.pageFeedSelection}" >
+			<p>Enter the URL of the Site from which content should be extracted</p>
+			<c:CellTable ui:field="cellTableFeeds" />
+			<span>Site's Name:</span>
+			<g:TextBox ui:field="textBoxSiteName" />
+		</g:HTMLPanel>
+		<div class="{res.styles.footer}">
+			<g:InlineLabel ui:field="labelErrorMessage" styleName="{res.styles.error}" />
+			<g:Button ui:field="buttonCancel" text="Cancel" styleName="{res.styles.cancel}" />
+			<g:Button ui:field="buttonLocationInput" text="Next" styleName="{res.styles.next}" />
+			<g:Button ui:field="buttonStoreSite" text="Save" styleName="{res.styles.save}" />
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder>
