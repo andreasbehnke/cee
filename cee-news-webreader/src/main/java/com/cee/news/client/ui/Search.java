@@ -3,6 +3,9 @@ package com.cee.news.client.ui;
 import com.cee.news.client.search.SearchView;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
@@ -29,6 +32,18 @@ public class Search extends Composite implements SearchView {
 
     public Search() {
         initWidget(uiBinder.createAndBindUi(this));
+        textBoxSearch.addKeyUpHandler(new KeyUpHandler() {
+			
+        	@Override
+			public void onKeyUp(KeyUpEvent event) {
+				if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+					buttonSearch.click();
+				} else if (textBoxSearch.getText() == null || textBoxSearch.getText().isEmpty()) {
+					buttonClear.click();
+				}
+				
+			}
+		});
     }
 
     @Override
