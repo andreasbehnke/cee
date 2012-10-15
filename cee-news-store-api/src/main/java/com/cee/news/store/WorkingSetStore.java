@@ -11,6 +11,8 @@ public interface WorkingSetStore {
     
     void rename(String oldName, String newName) throws StoreException;
     
+    void delete(EntityKey key) throws StoreException;
+    
     boolean contains(String name) throws StoreException;
     
     WorkingSet getWorkingSet(EntityKey key) throws StoreException;

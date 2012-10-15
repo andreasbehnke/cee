@@ -76,8 +76,12 @@ interface Styles extends CssResource {
 
     String navRight();
     
+    String newSite();
+    
     String next();
 
+    String no();
+    
     String pageFeedSelection();
     
     String pageLocationInput();
@@ -112,7 +116,11 @@ interface Styles extends CssResource {
 
     String unchecked();
 
-   String workingSetName();
+    String workingSet();
+    
+    String workingSetName();
 
     String workingsetSelection();
+    
+    String yes();
 }

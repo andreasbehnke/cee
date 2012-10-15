@@ -1,7 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.dom.client" xmlns:l="urn:import:com.cee.news.client.list" >
 	<ui:with type="com.cee.news.client.ui.Resources" field="res" />
-	<g:HTMLPanel styleName="{res.styles.dialog}">
+	<g:HTMLPanel styleName="{res.styles.dialog} {res.styles.workingSet}">
 			<div class="{res.styles.header} {res.styles.horizontalGradient}">
 				<h1>Edit Working Set</h1>
 			</div>

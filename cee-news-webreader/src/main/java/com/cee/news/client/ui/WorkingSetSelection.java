@@ -60,6 +60,11 @@ public class WorkingSetSelection extends SimplePanel implements WorkingSetSelect
 	public HasClickHandlers getEditButton() {
 		return editButton;
 	}
+	
+	@Override
+	public HasClickHandlers getDeleteButton() {
+		return deleteButton;
+	}
 
 	@Override
 	public void setEditButtonEnabled(boolean enabled) {

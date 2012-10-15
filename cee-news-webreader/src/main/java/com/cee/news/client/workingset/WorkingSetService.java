@@ -17,4 +17,6 @@ public interface WorkingSetService extends RemoteService {
 	EntityUpdateResult update(WorkingSetData workingSet);
 	
 	WorkingSetData addSiteToWorkingSet(EntityKey workingSetKey, EntityKey siteKey);
+	
+	void deleteWorkingSet(EntityKey workingSetKey);
 }

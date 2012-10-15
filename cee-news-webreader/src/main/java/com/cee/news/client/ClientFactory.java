@@ -8,6 +8,8 @@ public interface ClientFactory {
 
     ErrorHandler getGlobalErrorHandler();
     
+    ConfirmView createConfirmView();
+    
     PageSwitchView getPageSwitchView();
     
     StartView getStartView();

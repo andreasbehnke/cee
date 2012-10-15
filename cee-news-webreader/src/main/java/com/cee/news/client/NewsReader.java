@@ -81,22 +81,9 @@ public class NewsReader implements EntryPoint {
 		final SiteListContentModel siteAddRemoveListModel = new SiteListContentModel();
 		siteAddRemoveListModel.addErrorHandler(errorHandler);
 		final WorkingSetView workingSetView = clientFactory.getWorkingSetView();
-		final WorkingSetWorkflow workingSetWorkflow = new WorkingSetWorkflow(workingSetListModel, siteAddRemoveListModel, workingSetView, clientFactory.getNewSiteWizardView());
+		final WorkingSetWorkflow workingSetWorkflow = new WorkingSetWorkflow(workingSetListModel, siteAddRemoveListModel, workingSetView, clientFactory.getNewSiteWizardView(), clientFactory.createConfirmView());
 		workingSetWorkflow.addErrorHandler(errorHandler);
-		
-		new WorkingSetSelectionPresenter(workingSetListModel, workingSetSelectionView);
-		workingSetSelectionView.getNewButton().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				workingSetWorkflow.newWorkingSet();
-			}
-		});
-		workingSetSelectionView.getEditButton().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				workingSetWorkflow.editWorkingSet(workingSetListModel.getSelectedKey());
-			}
-		});
+		new WorkingSetSelectionPresenter(workingSetListModel, workingSetSelectionView, workingSetWorkflow);
 		
 		//Add Source to Working Set Workflow
 		final AddSiteToWorkingSet addSiteToWorkingSet = new AddSiteToWorkingSet(clientFactory.getAddSiteWizardView(), workingSetListModel);

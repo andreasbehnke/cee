@@ -1,10 +1,12 @@
 package com.cee.news.store.jcr;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 import org.junit.Test;
 
@@ -93,6 +95,16 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
         workingSetStore.rename(OLD_NAME, NEW_NAME);
         assertNull(workingSetStore.getWorkingSet(EntityKey.get(OLD_NAME)));
         assertEquals(NEW_NAME, workingSetStore.getWorkingSet(EntityKey.get(NEW_NAME)).getName());
+    }
+    
+    @Test
+    public void testDelete() throws StoreException {
+        WorkingSet ws = new WorkingSet();
+        ws.setName(WORKINGSET_1);
+        EntityKey key = workingSetStore.update(ws);
+        assertTrue(workingSetStore.contains(key.getName()));
+        workingSetStore.delete(key);
+        assertFalse(workingSetStore.contains(key.getName()));
     }
     
     @Test

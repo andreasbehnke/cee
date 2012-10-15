@@ -1,6 +1,7 @@
 package com.cee.news.client.ui;
 
 import com.cee.news.client.ClientFactory;
+import com.cee.news.client.ConfirmView;
 import com.cee.news.client.NewsView;
 import com.cee.news.client.StartView;
 import com.cee.news.client.ui.NewSiteWizard;
@@ -35,7 +36,7 @@ public class BinderClientFactory implements ClientFactory {
         newSiteWizardView = new NewSiteWizard();
         addSiteWizardView = new NewSiteWizard();
         workingSetView = new WorkingSet();
-        
+
         pageSwitchView = new PageSwitch(startView, newsView);
         pageSwitchView.showStartPage();
     }
@@ -73,5 +74,10 @@ public class BinderClientFactory implements ClientFactory {
     @Override
     public WorkingSetView getWorkingSetView() {
         return workingSetView;
+    }
+    
+    @Override
+    public ConfirmView createConfirmView() {
+    	return new Confirm();
     }
 }

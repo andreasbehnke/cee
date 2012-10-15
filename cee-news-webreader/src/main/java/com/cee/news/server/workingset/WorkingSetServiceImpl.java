@@ -24,6 +24,8 @@ public class WorkingSetServiceImpl implements WorkingSetService {
 	private static final String COULD_NOT_RETRIEVE_WORKING_SET = "Could not retrieve working set";
 
 	private static final String COULD_NOT_RETRIEVE_WORKING_SET_LIST = "Could not retrieve working set list";
+	
+	private static final String COULD_NOT_DELETE_WORKING_SET = "Could not delete working set";
 
 	private WorkingSetStore workingSetStore;
 
@@ -90,5 +92,15 @@ public class WorkingSetServiceImpl implements WorkingSetService {
         workingSet.getSites().add(siteKey);
         update(workingSet);
         return workingSet;
+    }
+    
+    @Override
+    public void deleteWorkingSet(EntityKey workingSetKey) {
+    	try {
+			workingSetStore.delete(workingSetKey);
+		} catch (StoreException e) {
+			LOG.error(COULD_NOT_DELETE_WORKING_SET, e);
+            throw new ServiceException(COULD_NOT_DELETE_WORKING_SET);
+		}
     }
 }

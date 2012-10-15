@@ -10,10 +10,12 @@ import com.cee.news.client.list.SelectionChangedHandler;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 
 public class WorkingSetSelectionPresenter {
     
-    public WorkingSetSelectionPresenter(final ListModel<EntityKey> model, final WorkingSetSelectionView view) {
+    public WorkingSetSelectionPresenter(final ListModel<EntityKey> model, final WorkingSetSelectionView view, final WorkingSetWorkflow workingSetWorkflow) {
         model.addListChangedHandler(new ListChangedHandler<EntityKey>() {
             
             public void onContentListChanged(ListChangedEvent<EntityKey> event) {
@@ -40,5 +42,24 @@ public class WorkingSetSelectionPresenter {
                 model.userSelectedKey(model.getKey(view.getSelectedWorkingSet()));
             }
         });
+        
+        view.getNewButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				workingSetWorkflow.newWorkingSet();
+			}
+		});
+		view.getEditButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				workingSetWorkflow.editWorkingSet();
+			}
+		});
+		view.getDeleteButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent arg0) {
+				workingSetWorkflow.deleteWorkingSet();
+			}
+		});
     }
 }

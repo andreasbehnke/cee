@@ -270,9 +270,14 @@ H3 {
 	border-radius: 8px;
 }
 
-.dialog {
+.workingSet {
 	width: 600px;
 	height: 500px;
+}
+
+.newSite {
+	width: 400px;
+	height: 300px;
 }
 
 .dialog H1 {
@@ -371,6 +376,7 @@ H3 {
 	bottom: 34px;
 	left: 8px;
 	right: 8px;
+	overflow-y: scroll;
 }
 
 .dialog .save {
@@ -384,6 +390,16 @@ H3 {
 }
 
 .dialog .cancel {
+	position: relative;
+	bottom: 0px;
+}
+
+.dialog .yes {
+	position: relative;
+	bottom: 0px;
+}
+
+.dialog .no {
 	position: relative;
 	bottom: 0px;
 }

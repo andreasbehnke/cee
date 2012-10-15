@@ -11,6 +11,10 @@ public class WorkingSetListModel extends DefaultListModel<EntityKey> {
     
     private final WorkingSetServiceAsync workingSetService = WorkingSetServiceAsync.Util.getInstance();
     
+    public void findAllWorkingSets() {
+    	this.findAllWorkingSets(null);
+    }
+    
     public void findAllWorkingSets(final NotificationCallback callback) {
     	workingSetService.getWorkingSetsOrderedByName(new AsyncCallback<List<EntityKey>>() {
 

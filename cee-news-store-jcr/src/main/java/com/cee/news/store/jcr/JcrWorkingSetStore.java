@@ -105,6 +105,24 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
         }
     }
     
+	@Override
+	public void delete(EntityKey key) throws StoreException {
+		if (key == null) {
+    		throw new IllegalArgumentException("Parameter key must not be null");
+    	}
+		try {
+            Node workingSetNode = getWorkingSetNodeByName(key.getName());
+            if (workingSetNode == null) {
+                throw new IllegalArgumentException("The weorking set with name " + key.getName() + " does not exists!");
+            }
+            workingSetNode.remove();
+            LOG.debug("Removed working set {}", key.getName());
+            getSession().save();
+        } catch (RepositoryException e) {
+            throw new StoreException(key.getName(), "Could not remove working set", e);
+        }
+	}
+    
     @Override
     public boolean contains(String name) throws StoreException {
     	try {
@@ -116,6 +134,9 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
 
     @Override
     public WorkingSet getWorkingSet(EntityKey key) throws StoreException {
+    	if (key == null) {
+    		throw new IllegalArgumentException("Parameter key must not be null");
+    	}
         try {
             Node wsNode = getWorkingSetNodeByName(key.getName());
             if (wsNode == null) {

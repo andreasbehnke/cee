@@ -1,5 +1,6 @@
 package com.cee.news.client.workingset;
 
+import com.cee.news.client.ConfirmView;
 import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.content.AddSiteWorkflow;
@@ -26,15 +27,19 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 
 	private final WorkingSetView workingSetView;
 	
+	private final ConfirmView confirmDeletionView;
+	
 	private final AddSiteWorkflow addSiteWorkflow;
 
 	public WorkingSetWorkflow(final WorkingSetListModel workingSetListModel,
 	        final SiteListContentModel siteListModel,
 	        final WorkingSetView workingSetView,
-	        final NewSiteWizardView newSiteWizard) {
+	        final NewSiteWizardView newSiteWizard,
+	        final ConfirmView confirmDeletionView) {
 
 	    this.workingSetListModel = workingSetListModel;
 		this.workingSetView = workingSetView;
+		this.confirmDeletionView = confirmDeletionView;
 		workingSetView.getButtonCancel().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -87,6 +92,22 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 		});
 		
 		new MultiSelectListPresenter<EntityKey>(siteListModel, siteListModel, workingSetView.getAvailableSitesList(), workingSetView.getSelectedSitesList());
+	
+		confirmDeletionView.getButtonNo().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				confirmDeletionView.hide();
+			}
+		});
+		confirmDeletionView.getButtonYes().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				confirmDeletionView.hide();
+				performDeletion();
+			}
+		});
 	}
 
 	public void newWorkingSet() {
@@ -95,7 +116,8 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 		showEditor(workingSetData);
 	}
 	
-	public void editWorkingSet(final EntityKey workingSetKey) {
+	public void editWorkingSet() {
+		final EntityKey workingSetKey = workingSetListModel.getSelectedKey();
 		service.getWorkingSet(workingSetKey, new AsyncCallback<WorkingSetData>() {
 			
 			@Override
@@ -106,6 +128,28 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 			@Override
 			public void onFailure(Throwable caught) {
 				fireErrorEvent(caught, "Could not retrieve working set \"" + workingSetKey + "\"");
+			}
+		});
+	}
+	
+	public void deleteWorkingSet() {
+		final EntityKey workingSetKey = workingSetListModel.getSelectedKey();
+		confirmDeletionView.getLabelQuestion().setText("Are you sure deleting working set " + workingSetKey.getName() + "?");
+		confirmDeletionView.center();
+	}
+	
+	private void performDeletion() {
+		final EntityKey workingSetKey = workingSetListModel.getSelectedKey();
+		service.deleteWorkingSet(workingSetKey, new AsyncCallback<Void>() {
+			
+			@Override
+			public void onSuccess(Void result) {
+				workingSetListModel.findAllWorkingSets();
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				fireErrorEvent(caught, "Could not delete working set \"" + workingSetKey + "\"");
 			}
 		});
 	}
