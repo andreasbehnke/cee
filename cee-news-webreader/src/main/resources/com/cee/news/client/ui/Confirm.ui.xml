@@ -1,0 +1,16 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.dom.client" xmlns:l="urn:import:com.cee.news.client.list" >
+	<ui:with type="com.cee.news.client.ui.Resources" field="res" />
+	<g:HTMLPanel styleName="{res.styles.dialog}">
+			<div class="{res.styles.header} {res.styles.horizontalGradient}">
+				<h1>Delete Working Set</h1>
+			</div>
+			<div>
+				<g:InlineLabel ui:field="labelQuestion" />
+			</div>
+			<div class="{res.styles.footer}">
+				<g:Button ui:field="buttonYes" text="Yes" styleName="{res.styles.yes}" />
+				<g:Button ui:field="buttonNo" text="No" styleName="{res.styles.no}" />
+			</div>
+	</g:HTMLPanel>
+</ui:UiBinder>
