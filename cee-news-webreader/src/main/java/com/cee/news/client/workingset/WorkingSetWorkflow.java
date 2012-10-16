@@ -144,7 +144,18 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 			
 			@Override
 			public void onSuccess(Void result) {
-				workingSetListModel.findAllWorkingSets();
+				workingSetListModel.findAllWorkingSets(new NotificationCallback() {
+					
+					@Override
+					public void finished() {
+						if (workingSetListModel.getContentCount() > 0) {
+		                    EntityKey firstWorkingSet = workingSetListModel.getKeys().get(0);
+		                    workingSetListModel.setSelectedKey(firstWorkingSet);
+		                } else {
+		                	workingSetListModel.setSelectedKey(null);
+		                }
+					}
+				});
 			}
 			
 			@Override

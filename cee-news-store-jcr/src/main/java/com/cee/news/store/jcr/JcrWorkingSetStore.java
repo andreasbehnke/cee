@@ -113,7 +113,7 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
 		try {
             Node workingSetNode = getWorkingSetNodeByName(key.getName());
             if (workingSetNode == null) {
-                throw new IllegalArgumentException("The weorking set with name " + key.getName() + " does not exists!");
+                throw new IllegalArgumentException("The working set with name " + key.getName() + " does not exists!");
             }
             workingSetNode.remove();
             LOG.debug("Removed working set {}", key.getName());

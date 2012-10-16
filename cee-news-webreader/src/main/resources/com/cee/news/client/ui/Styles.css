@@ -280,6 +280,11 @@ H3 {
 	height: 300px;
 }
 
+.confirm {
+	width: 300px;
+	height: 200px;
+}
+
 .dialog H1 {
 	font-size: 14px;
 	margin-left: 8px;
@@ -377,6 +382,14 @@ H3 {
 	left: 8px;
 	right: 8px;
 	overflow-y: scroll;
+}
+
+.dialog .confirmQuestion {
+	position: absolute;
+	top: 38px;
+	bottom: 34px;
+	left: 8px;
+	right: 8px;
 }
 
 .dialog .save {

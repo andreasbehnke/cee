@@ -38,6 +38,10 @@ interface Styles extends CssResource {
 
     String column2();
 
+    String confirm();
+    
+    String confirmQuestion();
+    
     String column3();
 
     String content();

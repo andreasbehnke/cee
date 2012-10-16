@@ -65,12 +65,17 @@ public class NewsReader implements EntryPoint {
 		workingSetListModel.addSelectionChangedhandler(new SelectionChangedHandler<EntityKey>() {
             @Override
             public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
-                sitesOfWorkingSetModel.findSitesOfWorkingSet(event.getKey(), new NotificationCallback() {      
-                    @Override
-                    public void finished() {
-                        sitesOfWorkingSetModel.setSelections(sitesOfWorkingSetModel.getKeys());
-                    }
-                });
+            	EntityKey workingSetKey = event.getKey();
+            	if (workingSetKey == null) {
+            		sitesOfWorkingSetModel.clear();
+            	} else {
+	                sitesOfWorkingSetModel.findSitesOfWorkingSet(workingSetKey, new NotificationCallback() {      
+	                    @Override
+	                    public void finished() {
+	                        sitesOfWorkingSetModel.setSelections(sitesOfWorkingSetModel.getKeys());
+	                    }
+	                });
+            	}
             }
         });
 		

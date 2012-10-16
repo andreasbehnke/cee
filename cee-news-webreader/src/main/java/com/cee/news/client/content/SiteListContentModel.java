@@ -60,6 +60,11 @@ public class SiteListContentModel extends DefaultListModel<EntityKey> implements
 			}
 		});
     }
+    
+    public void clear() {
+    	clearSelection();
+    	setValues(new ArrayList<EntityKey>());
+    }
 
     @Override
     public void getContentTitle(final HasSafeHtml target, EntityKey key) {
