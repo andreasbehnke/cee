@@ -166,6 +166,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 	}
 	
 	private void showEditor(WorkingSetData wsd) {
+		workingSetView.getErrorText().setText("");
 	    workingSetView.edit(wsd);
 	    workingSetView.center();
 	}
