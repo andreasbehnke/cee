@@ -70,6 +70,11 @@ public class WorkingSetSelection extends SimplePanel implements WorkingSetSelect
 	public void setEditButtonEnabled(boolean enabled) {
 		editButton.setEnabled(enabled);
 	}
+	
+	@Override
+	public void setDeleteButtonEnabled(boolean enabled) {
+		deleteButton.setEnabled(enabled);
+	}
 
 	@Override
 	public int getSelectedWorkingSet() {

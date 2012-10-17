@@ -98,5 +98,12 @@ public class SourceSelection extends Composite implements SourceSelectionView {
     public HasClickHandlers getAddButton() {
         return buttonAddSource;
     }
+    
+    @Override
+    public void setButtonsEnabled(boolean enabled) {
+    	buttonAddSource.setEnabled(enabled);
+    	buttonSelectAll.setEnabled(enabled);
+    	buttonSelectNone.setEnabled(enabled);
+    }
 
 }

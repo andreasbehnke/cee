@@ -23,8 +23,10 @@ public class WorkingSetSelectionPresenter {
             	view.setWorkingSets(keys);
             	if (keys == null || keys.size() == 0) {
             		view.setEditButtonEnabled(false);
+            		view.setDeleteButtonEnabled(false);
             	} else {
             		view.setEditButtonEnabled(true);
+            		view.setDeleteButtonEnabled(true);
             	}
             }
         });

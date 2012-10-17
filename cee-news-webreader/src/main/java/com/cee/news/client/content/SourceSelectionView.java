@@ -14,4 +14,6 @@ public interface SourceSelectionView extends IsWidget {
     HasClickHandlers getSelectNoneButton();
     
     HasClickHandlers getAddButton();
+    
+    void setButtonsEnabled(boolean enabled);
 }

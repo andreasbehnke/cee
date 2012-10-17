@@ -492,6 +492,10 @@ button.icon {
 	height: 24px;
 }
 
+.icon:DISABLED {
+	display: none;
+}
+
 .link {
 	cursor: pointer;
 	line-height: 30px;

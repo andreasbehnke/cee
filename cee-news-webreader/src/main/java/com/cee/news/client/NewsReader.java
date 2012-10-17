@@ -170,6 +170,8 @@ public class NewsReader implements EntryPoint {
                 if (workingSetListModel.getContentCount() > 0) {
                     EntityKey firstWorkingSet = workingSetListModel.getKeys().get(0);
                     workingSetListModel.setSelectedKey(firstWorkingSet);
+                } else {
+                	workingSetListModel.setSelectedKey(null);
                 }
             }
         });

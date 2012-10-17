@@ -18,6 +18,8 @@ public interface WorkingSetSelectionView {
     
     void setEditButtonEnabled(boolean enabled);
     
+    void setDeleteButtonEnabled(boolean enabled);
+    
     int getSelectedWorkingSet();
     
     void setSelectedWorkingSet(int key);

@@ -1,5 +1,7 @@
 package com.cee.news.client.content;
 
+import java.util.List;
+
 import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.list.ListChangedEvent;
 import com.cee.news.client.list.ListChangedHandler;
@@ -35,8 +37,14 @@ public class SourceSelectionPresenter {
             @Override
             public void onContentListChanged(ListChangedEvent<EntityKey> event) {
                 selectionModel.clear();
-                for (EntityKey key : sitesOfWorkingSetModel.getKeys()) {
-                    selectionModel.setSelected(new EntityContent<EntityKey>(key, null), true);
+                List<EntityKey> keys = sitesOfWorkingSetModel.getKeys();
+                if (keys.isEmpty()) {
+                	sourceSelectionView.setButtonsEnabled(false);
+                } else {
+                	for (EntityKey key : keys) {
+                        selectionModel.setSelected(new EntityContent<EntityKey>(key, null), true);
+                    }
+                    sourceSelectionView.setButtonsEnabled(true);	
                 }
             }
         });
