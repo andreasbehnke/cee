@@ -1,5 +1,6 @@
 package com.cee.news.client.content;
 
+import com.cee.news.model.EntityKey;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -31,4 +32,10 @@ public interface SiteUpdateService extends RemoteService {
 	 * Starts the scheduler which triggers the site updates periodically
 	 */
 	void startUpdateScheduler();
+	
+	/**
+	 * Adds the site to the update queue. The update will be performed as soon as possible.
+	 * @param siteKey Key of the site to be updated
+	 */
+	void addSiteToUpdateQueue(EntityKey siteKey);
 }

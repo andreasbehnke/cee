@@ -135,15 +135,30 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 			public void onSuccess(EntityUpdateResult result) {
 				if (result.getState() == State.entityExists) {
 					showErrorMessage("Site with name " + site.getName() + " already exists!");//TODO: localization
-					return;
+				} else {
+					queueSiteUpdae(result.getKey());
 				}
-				wizard.hide();
-	            fireSiteAdded(result.getKey());
 			}
 			
 			@Override
 			public void onFailure(Throwable caught) {
 				fireErrorEvent(caught, "Could not store new site");
+			}
+		});
+	}
+	
+	private void queueSiteUpdae(final EntityKey siteKey) {
+		siteUpdateService.addSiteToUpdateQueue(siteKey, new AsyncCallback<Void>() {
+			
+			@Override
+			public void onSuccess(Void result) {
+				wizard.hide();
+				fireSiteAdded(siteKey);
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				fireErrorEvent(caught, "Could not add site to update queue");
 			}
 		});
 	}

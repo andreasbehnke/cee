@@ -229,7 +229,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 		}
 	}
 	
-	private synchronized int addSiteToUpdateQueue(final EntityKey siteKey) {
+	public synchronized void addSiteToUpdateQueue(final EntityKey siteKey) {
         ensureThreadPool();
         if (!sitesInProgress.contains(siteKey)) {
             Site siteEntity = null;
@@ -257,7 +257,6 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
             runnablesInProgress.add(command);
             pool.execute(command);
         }
-        return sitesInProgress.size();
     }
 
 	private void startSiteUpdates() {
