@@ -145,12 +145,8 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         try {
         	site.setName(siteNode.getProperty(PROP_NAME).getString());
             site.setLocation(siteNode.getProperty(PROP_LOCATION).getString());
-            if (siteNode.hasProperty(PROP_DESCRIPTION)) {
-                site.setDescription(siteNode.getProperty(PROP_DESCRIPTION).getString());
-            }
-            if (siteNode.hasProperty(PROP_TITLE)) {
-                site.setTitle(siteNode.getProperty(PROP_TITLE).getString());
-            }
+            site.setDescription(getStringPropertyOrNull(siteNode, PROP_DESCRIPTION));
+            site.setTitle(getStringPropertyOrNull(siteNode, PROP_TITLE));
         } catch (RepositoryException e) {
             throw new StoreException("Could not populate site with properties", e);
         }
@@ -158,7 +154,10 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
             NodeIterator iter = siteNode.getNodes(NODE_FEED);
             while (iter.hasNext()) {
                 Node feedNode = iter.nextNode();
-                Feed feed = new Feed(feedNode.getProperty(PROP_LOCATION).getString(), feedNode.getProperty(PROP_TITLE).getString(), feedNode.getProperty(PROP_CONTENT_TYPE).getString());
+                Feed feed = new Feed();
+                feed.setLocation(feedNode.getProperty(PROP_LOCATION).getString());
+                feed.setTitle(feedNode.getProperty(PROP_TITLE).getString());
+                feed.setContentType(getStringPropertyOrNull(feedNode, PROP_CONTENT_TYPE));
                 feed.setActive(feedNode.getProperty(PROP_ACTIVE).getBoolean());
                 site.getFeeds().add(feed);
             }

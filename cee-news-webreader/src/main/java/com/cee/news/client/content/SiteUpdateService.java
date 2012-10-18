@@ -18,6 +18,13 @@ public interface SiteUpdateService extends RemoteService {
 	SiteData retrieveSiteData(String location);
 	
 	/**
+	 * Retrieves all feed information from a given feed url
+	 * @param location The feed's location
+	 * @return SIte information, either in state ok and the feed information embedded or in error state
+	 */
+	FeedData retrieveFeedData(String location);
+	
+	/**
 	 * Removes all commands from queue
 	 */
 	void clearQueue();

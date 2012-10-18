@@ -38,6 +38,27 @@ H3 {
 	font-size: 16pt;
 }
 
+FIELDSET {
+	border: none;
+}
+
+LABEL {
+  	display: inline-block;
+  	vertical-align: text-bottom;
+  	width: 200px;
+}
+
+FIELDSET UL {
+ 	padding: 0px;
+  	margin: 0;
+}
+
+FIELDSET LI {
+ 	list-style: none;
+  	padding: 4px;
+  	margin: 0;
+}
+
 .content {
 	font-size: 12pt;
 }
@@ -268,6 +289,9 @@ H3 {
 .popupPanel {
 	background-color: #ffffff;
 	border-radius: 8px;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #FFFFFF;
 }
 
 .workingSet {
@@ -276,8 +300,8 @@ H3 {
 }
 
 .newSite {
-	width: 400px;
-	height: 300px;
+	width: 500px;
+	height: 400px;
 }
 
 .confirm {
@@ -307,16 +331,19 @@ H3 {
 .dialog .footer {
 	position: absolute;
 	text-align: right;
-	height: 26px;
-	bottom: 8px;
-	left: 8px;
-	right: 8px;
+	height: 32px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	padding: 8px 8px 0px 0px;
+	background-color: #E0E0FF;
+	border-radius: 0px 0px 8px 8px;
 }
 
 .dialog .availableSites {
 	position: absolute;
 	top: 68px;
-	bottom: 34px;
+	bottom: 40px;
 	left: 8px;
 	right: 304px;
 }
@@ -348,7 +375,7 @@ H3 {
 .dialog .selectedSites {
 	position: absolute;
 	top: 68px;
-	bottom: 34px;
+	bottom: 40px;
 	left: 304px;
 	right: 8px;
 }

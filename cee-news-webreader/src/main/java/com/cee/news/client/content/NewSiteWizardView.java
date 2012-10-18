@@ -28,10 +28,9 @@ public interface NewSiteWizardView extends DialogView {
 	
 	HasClickHandlers getButtonCancel();
 	
-	/**
-	 * @return User's location input
-	 */
-	HasValue<String> getLocationInput();
+	HasValue<String> getSiteLocationInput();
+	
+	HasValue<String> getFeedLocationInput();
 	
 	/**
 	 * @return User's site name input

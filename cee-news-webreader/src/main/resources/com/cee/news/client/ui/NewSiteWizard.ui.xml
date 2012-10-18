@@ -6,9 +6,18 @@
 			<h1>Add New Site</h1>
 		</div>
 		<g:HTMLPanel ui:field="pageLocationInput" styleName="{res.styles.pageLocationInput}" >
-			<p>Enter the URL of the Site</p>
-			<span>URL:</span>
-			<g:TextBox ui:field="textBoxSiteUrl" />
+			<fieldset>
+				<ul>
+					<li>
+						<label>Either enter URL of site...</label>
+						<g:TextBox ui:field="textBoxSiteUrl" />
+					</li>
+					<li>
+						<label>...or enter URL of feed:</label>
+						<g:TextBox ui:field="textBoxFeedUrl" />
+					</li>
+				</ul>
+			</fieldset>
 		</g:HTMLPanel>
 		<g:HTMLPanel ui:field="pageFeedSelection" styleName="{res.styles.pageFeedSelection}" >
 			<p>The site provides the following feeds:</p>

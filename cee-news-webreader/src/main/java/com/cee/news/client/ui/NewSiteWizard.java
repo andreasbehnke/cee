@@ -40,6 +40,9 @@ public class NewSiteWizard extends PopupPanel implements NewSiteWizardView {
     TextBox textBoxSiteUrl;
     
     @UiField
+    TextBox textBoxFeedUrl;
+    
+    @UiField
     TextBox textBoxSiteName;
 
     @UiField(provided=true)
@@ -121,8 +124,13 @@ public class NewSiteWizard extends PopupPanel implements NewSiteWizardView {
     }
 
     @Override
-    public HasValue<String> getLocationInput() {
+    public HasValue<String> getSiteLocationInput() {
         return textBoxSiteUrl;
+    }
+    
+    @Override
+    public HasValue<String> getFeedLocationInput() {
+        return textBoxFeedUrl;
     }
 
     @Override

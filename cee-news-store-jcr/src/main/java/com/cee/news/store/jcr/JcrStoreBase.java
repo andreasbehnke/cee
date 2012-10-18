@@ -73,6 +73,15 @@ public abstract class JcrStoreBase {
         return content;
     }
     
+    protected String getStringPropertyOrNull(Node node, String relPath) throws RepositoryException {
+    	testSession();
+    	if (node.hasProperty(relPath)) {
+            return node.getProperty(relPath).getString();
+        } else {
+        	return null;
+        }
+    }
+    
     protected Node getNodeOrNull(Node parent, String relPath) throws RepositoryException {
     	testSession();
     	if (parent.hasNode(relPath)) {

@@ -1,5 +1,8 @@
 package com.cee.news.client.content;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.client.async.EntityUpdateResult.State;
 import com.cee.news.client.error.ErrorSourceBase;
@@ -34,7 +37,7 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 		wizard.getButtonLocationInput().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				validateLocationInput(wizard.getLocationInput().getValue());
+				validateLocationInput();
 			}
 		});
 		wizard.getButtonStoreSite().addClickHandler(new ClickHandler() {
@@ -52,57 +55,110 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 		wizard.center();
 	}
 
-	public void validateLocationInput(String location) {
+	public void validateLocationInput() {
 		wizard.setButtonsEnabled(false);
 		clearErrorMessage();
-		if (location.isEmpty()) {
-			showErrorMessage("Provide a site URL");
+		String siteLocation = wizard.getSiteLocationInput().getValue().trim();
+		String feedLocation = wizard.getFeedLocationInput().getValue().trim();
+		if (siteLocation.isEmpty() && feedLocation.isEmpty()) {
+			showErrorMessage("Please provide a site or feed URL");
 			return;
 		}
-		if (location.indexOf(SCHEME_SEPARATOR) < 0) {
-			location = HTTP_SCHEME + location;
+		boolean useSiteLocation = feedLocation.isEmpty();
+		if (useSiteLocation) {
+			validateSiteLocation(addHttpScheme(siteLocation));
+		} else {
+			validateFeedLocation(addHttpScheme(feedLocation));
 		}
-		wizard.getLocationInput().setValue(location);
+	}
+	
+	private String addHttpScheme(String location) {
+		if (location.indexOf(SCHEME_SEPARATOR) < 0) {
+			return HTTP_SCHEME + location;
+		}
+		return location;
+	}
+	
+	private void validateSiteLocation(String location) {
+		wizard.getSiteLocationInput().setValue(location);
+		wizard.getFeedLocationInput().setValue("");
 		siteUpdateService.retrieveSiteData(location,
-				new AsyncCallback<SiteData>() {
-
-					@Override
-					public void onSuccess(SiteData result) {
-						switch (result.getState()) {
-						case ok:
-							if (result.getFeeds().size() < 1) {
-								showErrorMessage("This site does not provide any feed information");
-							} else {
-								site = result;
-								guessUniqueSiteName();
-							}
-							break;
-						case ioError:
-							showErrorMessage("Could not load site");
-							break;
-						case malformedUrl:
-							showErrorMessage("The input does not represent a valid URL");
-							break;
-						case parserError:
-							showErrorMessage("Could not extract feed information from remote site");
-							break;
-						default:
-							break;
+			new AsyncCallback<SiteData>() {
+	
+				@Override
+				public void onSuccess(SiteData result) {
+					switch (result.getState()) {
+					case ok:
+						if (result.getFeeds().size() < 1) {
+							showErrorMessage("This site does not provide any feed information");
+						} else {
+							site = result;
+							guessUniqueSiteName(site.getLocation());
 						}
+						break;
+					case ioError:
+						showErrorMessage("Could not load site");
+						break;
+					case malformedUrl:
+						showErrorMessage("The input does not represent a valid URL");
+						break;
+					case parserError:
+						showErrorMessage("Could not extract feed information from remote site");
+						break;
+					default:
+						break;
 					}
-
-					@Override
-					public void onFailure(Throwable caught) {
-						wizard.setButtonsEnabled(true);
-						fireErrorEvent(caught,
-								"Could not validate location input");
-					}
-				});
+				}
+	
+				@Override
+				public void onFailure(Throwable caught) {
+					wizard.setButtonsEnabled(true);
+					fireErrorEvent(caught, "Could not validate location input");
+				}
+			});
+	}
+	
+	private void validateFeedLocation(String location) {
+		wizard.getSiteLocationInput().setValue("");
+		wizard.getFeedLocationInput().setValue(location);
+		
+		siteUpdateService.retrieveFeedData(location, new AsyncCallback<FeedData>() {
+			
+			@Override
+			public void onSuccess(FeedData result) {
+				switch (result.getState()) {
+				case ok:
+					site = new SiteData();
+					List<FeedData> feeds = new ArrayList<FeedData>();
+					feeds.add(result);
+					site.setFeeds(feeds);
+					site.setLocation(result.getLocation());
+					guessUniqueSiteName(result.getTitle());
+					break;
+				case ioError:
+					showErrorMessage("Could not load site");
+					break;
+				case malformedUrl:
+					showErrorMessage("The input does not represent a valid URL");
+					break;
+				case parserError:
+					showErrorMessage("Could not extract feed information from remote site");
+					break;
+				default:
+					break;
+				}
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				wizard.setButtonsEnabled(true);
+				fireErrorEvent(caught, "Could not validate location input");
+			}
+		});
 	}
 
-	private void guessUniqueSiteName() {
-		String location = site.getLocation();
-		siteService.guessUniqueSiteName(location, new AsyncCallback<String>() {
+	private void guessUniqueSiteName(String name) {
+		siteService.guessUniqueSiteName(name, new AsyncCallback<String>() {
 			
 			@Override
 			public void onSuccess(String result) {

@@ -1,5 +1,6 @@
 package com.cee.news.client.content;
 
+import com.cee.news.client.content.SiteData.SiteRetrivalState;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
@@ -16,6 +17,8 @@ public class FeedData implements IsSerializable {
 	private String title;
 
 	private boolean active;
+	
+	private SiteRetrivalState state;
 
 	public boolean getIsNew() {
 		return isNew;
@@ -23,6 +26,14 @@ public class FeedData implements IsSerializable {
 
 	public void setIsNew(boolean isNew) {
 		this.isNew = isNew;
+	}
+	
+	public SiteRetrivalState getState() {
+		return state;
+	}
+	
+	public void setState(SiteRetrivalState state) {
+		this.state = state;
 	}
 
 	public String getLocation() {

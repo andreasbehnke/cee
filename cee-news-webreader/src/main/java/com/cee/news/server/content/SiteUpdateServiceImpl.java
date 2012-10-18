@@ -15,12 +15,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import com.cee.news.client.content.FeedData;
 import com.cee.news.client.content.SiteData;
 import com.cee.news.client.content.SiteData.SiteRetrivalState;
 import com.cee.news.client.content.SiteUpdateService;
 import com.cee.news.client.error.ServiceException;
 import com.cee.news.model.EntityKey;
+import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
+import com.cee.news.parser.FeedChecker;
 import com.cee.news.parser.SiteParser;
 import com.cee.news.store.SiteStore;
 
@@ -212,6 +215,34 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	}
 	
 	@Override
+	public FeedData retrieveFeedData(String location) {
+		FeedChecker feedChecker = createFeedChecker();
+		FeedData info = new FeedData();
+		info.setIsNew(true);
+		URL locationUrl = null;
+		try {
+			locationUrl = new URL(location);
+		} catch (MalformedURLException e) {
+			info.setState(SiteRetrivalState.malformedUrl);
+			return info;
+		}
+		try {
+			if (!feedChecker.isSupportedFeed(locationUrl)) {
+				info.setState(SiteRetrivalState.parserError);
+				LOG.error(String.format(COULD_NOT_RETRIEVE_SITE, location));
+				return info;
+			}
+			Feed feed = feedChecker.parse(locationUrl);
+			info = SiteConverter.createFromFeed(feed);
+			info.setState(SiteRetrivalState.ok);
+		} catch (IOException e) {
+			info.setState(SiteRetrivalState.ioError);
+			LOG.error(String.format(COULD_NOT_RETRIEVE_SITE, location), e);
+		}
+		return info;
+	}
+	
+	@Override
 	public synchronized void startUpdateScheduler() {
 		if (scheduler == null) {
 			LOG.info(STARTING_UPDATE_SCHEDULER_WITH_A_DELAY_OF, updateSchedulerInitialDelay, updateSchedulerFixedDelay);
@@ -292,4 +323,9 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	 * @return A site parser prepared with all dependencies
 	 */
 	protected abstract SiteParser createSiteParser();
+	
+	/**
+	 * @return A feed checker instance prepared with all dependencies
+	 */
+	protected abstract FeedChecker createFeedChecker();
 }
