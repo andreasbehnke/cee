@@ -192,7 +192,7 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 				if (result.getState() == State.entityExists) {
 					showErrorMessage("Site with name " + site.getName() + " already exists!");//TODO: localization
 				} else {
-					queueSiteUpdae(result.getKey());
+					queueSiteUpdate(result.getKey());
 				}
 			}
 			
@@ -203,7 +203,7 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 		});
 	}
 	
-	private void queueSiteUpdae(final EntityKey siteKey) {
+	private void queueSiteUpdate(final EntityKey siteKey) {
 		siteUpdateService.addSiteToUpdateQueue(siteKey, new AsyncCallback<Void>() {
 			
 			@Override

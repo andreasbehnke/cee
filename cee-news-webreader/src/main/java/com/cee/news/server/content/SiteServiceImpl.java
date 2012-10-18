@@ -93,15 +93,16 @@ public class SiteServiceImpl implements SiteService {
             throw new IllegalArgumentException("Paramter name must not be null");
         }
         int counter = 1;
-        String guessName = name;
-        if (guessName.startsWith(PREFIX_HTTP_WWW)) {
-            guessName = guessName.substring(PREFIX_HTTP_WWW.length());
-            int point = guessName.indexOf('.');
+        String guessName = null;
+        if (name.startsWith(PREFIX_HTTP_WWW)) {
+            name = name.substring(PREFIX_HTTP_WWW.length());
+            int point = name.indexOf('.');
             if (point > 0) {
-                guessName = guessName.substring(0, point);
+                name = name.substring(0, point);
             }
         }
         try {
+        	guessName = name;
             while (siteStore.contains(guessName)) {
                 guessName = name + " " + counter;
                 counter++;
