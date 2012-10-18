@@ -6,6 +6,8 @@ import com.cee.news.client.content.ArticleKeyLinkProvider;
 import com.cee.news.client.content.NewsListContentModel;
 import com.cee.news.client.content.RelatedArticlesContentModel;
 import com.cee.news.client.content.SingleSelectionCellListPresenter;
+import com.cee.news.client.content.SiteAddedEvent;
+import com.cee.news.client.content.SiteAddedHandler;
 import com.cee.news.client.content.SiteListContentModel;
 import com.cee.news.client.content.SourceSelectionPresenter;
 import com.cee.news.client.content.SourceSelectionView;
@@ -99,7 +101,19 @@ public class NewsReader implements EntryPoint {
                 addSiteToWorkingSet.start();
             }
         });
-        
+		addSiteToWorkingSet.addSiteAddedHandler(new SiteAddedHandler() {
+			@Override
+			public void onSiteAdded(final SiteAddedEvent event) {
+				siteAddRemoveListModel.findAllSites(new NotificationCallback() {
+					
+					@Override
+					public void finished() {
+						siteAddRemoveListModel.addSelection(event.getEntityKey());
+					}
+				});
+			}
+		});
+		
 		//News Paging View
 		final NewsView newsView = clientFactory.getNewsView();
 		new PagingPresenter<ArticleKey>(filteredContentList, filteredContentList, new ArticleKeyLinkProvider(), newsView.getNewsPagingView());
