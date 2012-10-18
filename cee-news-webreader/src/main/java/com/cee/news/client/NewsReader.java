@@ -18,7 +18,6 @@ import com.cee.news.client.list.SelectionChangedHandler;
 import com.cee.news.client.list.SelectionListChangedEvent;
 import com.cee.news.client.list.SelectionListChangedHandler;
 import com.cee.news.client.paging.PagingPresenter;
-import com.cee.news.client.paging.PagingView;
 import com.cee.news.client.search.SearchPresenter;
 import com.cee.news.client.workingset.WorkingSetListModel;
 import com.cee.news.client.workingset.WorkingSetSelectionPresenter;
@@ -156,7 +155,11 @@ public class NewsReader implements EntryPoint {
 					final ArticleKey articleKey = event.getKey();
 					final String siteKey = articleKey.getSiteKey();
 					newsView.getSiteNameLabel().setText(siteKey);
-					filteredContentList.getContent(newsView.getNewsPagingView().getMainContent(), articleKey);
+					if (filteredContentList.getKeys().contains(articleKey)) {
+						filteredContentList.setSelectedKey(articleKey);
+					} else {
+						filteredContentList.getContent(newsView.getNewsPagingView().getMainContent(), articleKey);
+					}
 				}
 			}
 		});
