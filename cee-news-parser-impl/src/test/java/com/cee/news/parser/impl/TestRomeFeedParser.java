@@ -9,12 +9,7 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
 
-import org.junit.Rule;
 import org.junit.Test;
-
-import betamax.Betamax;
-import betamax.Recorder;
-import betamax.TapeMode;
 
 import com.cee.news.model.Article;
 import com.cee.news.parser.FeedParser;
@@ -24,9 +19,6 @@ import com.cee.news.parser.net.impl.DefaultWebClient;
 import com.cee.news.parser.net.impl.XmlStreamReaderFactory;
 
 public class TestRomeFeedParser {
-
-	@Rule
-	public Recorder recorder = new Recorder();
 
 	@Test
     public void testParse() throws ParserException, IOException {
@@ -44,11 +36,10 @@ public class TestRomeFeedParser {
 
     }
     
-    @Betamax(tape = "issue143", mode = TapeMode.READ_ONLY)
-	@Test
+    @Test
     public void testParseRegressionIssue143() throws MalformedURLException, ParserException, IOException {
     	FeedParser parser = new RomeFeedParser(new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
-        List<Article> articles = parser.parse(new URL("http://www.br.de/homepage104~rss.xml"));
-        assertEquals(54, articles.size());
+        List<Article> articles = parser.parse(getClass().getResource("issue143.xml"));
+        assertEquals(42, articles.size());
     }
 }
