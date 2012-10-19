@@ -9,7 +9,6 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -45,12 +44,11 @@ public class TestRomeFeedParser {
 
     }
     
-    @Ignore("This is a rome issue, feed reader is too strict in handling empty elements")
     @Betamax(tape = "issue143", mode = TapeMode.READ_ONLY)
 	@Test
     public void testParseRegressionIssue143() throws MalformedURLException, ParserException, IOException {
     	FeedParser parser = new RomeFeedParser(new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
         List<Article> articles = parser.parse(new URL("http://www.br.de/homepage104~rss.xml"));
-        assertTrue(articles.size() != 0);
+        assertEquals(54, articles.size());
     }
 }
