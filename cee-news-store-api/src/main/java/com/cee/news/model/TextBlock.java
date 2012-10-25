@@ -26,4 +26,9 @@ public class TextBlock {
     public void setNumWords(int numWords) {
         this.numWords = numWords;
     }
+
+	@Override
+	public String toString() {
+		return "TextBlock [content=" + content + ", numWords=" + numWords + "]";
+	}
 }

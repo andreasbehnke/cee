@@ -22,13 +22,39 @@ import de.l3s.boilerpipe.BoilerpipeInput;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.document.TextBlock;
 import de.l3s.boilerpipe.document.TextDocument;
-import de.l3s.boilerpipe.extractors.ArticleExtractor;
+import de.l3s.boilerpipe.extractors.ExtractorBase;
+import de.l3s.boilerpipe.filters.english.IgnoreBlocksAfterContentFilter;
+import de.l3s.boilerpipe.filters.english.NumWordsRulesClassifier;
+import de.l3s.boilerpipe.filters.english.TerminatingBlocksFinder;
+import de.l3s.boilerpipe.filters.heuristics.BlockProximityFusion;
+import de.l3s.boilerpipe.filters.heuristics.DocumentTitleMatchClassifier;
+import de.l3s.boilerpipe.filters.heuristics.ExpandTitleToContentFilter;
+import de.l3s.boilerpipe.filters.simple.BoilerplateBlockFilter;
 import de.l3s.boilerpipe.sax.BoilerpipeHTMLContentHandler;
 
 /**
  * Implementation of {@link ArticleParser} using the {@link BoilerpipeInput} of the boilerpipe library.
  */
 public class BoilerpipeArticleParser implements ArticleParser {
+	
+	private final static class ArticleExtractor extends ExtractorBase {
+	    public static final ArticleExtractor INSTANCE = new ArticleExtractor();
+
+	    public boolean process(TextDocument doc)
+	            throws BoilerpipeProcessingException {
+	        return
+
+	        TerminatingBlocksFinder.INSTANCE.process(doc)
+	                | new DocumentTitleMatchClassifier(doc.getTitle()).process(doc)
+	                | NumWordsRulesClassifier.INSTANCE.process(doc)
+	                | IgnoreBlocksAfterContentFilter.DEFAULT_INSTANCE.process(doc)
+	                | BlockProximityFusion.MAX_DISTANCE_1.process(doc)
+	                | BoilerplateBlockFilter.INSTANCE.process(doc)
+	                | BlockProximityFusion.MAX_DISTANCE_1_CONTENT_ONLY.process(doc)
+	                //| KeepLargestBlockFilter.INSTANCE.process(doc)
+	                | ExpandTitleToContentFilter.INSTANCE.process(doc);
+	    }
+	}
 	
 	private static final Logger LOG = LoggerFactory.getLogger(BoilerpipeArticleParser.class);
     

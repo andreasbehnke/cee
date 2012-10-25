@@ -111,4 +111,14 @@ public class TestBoilerpipeArticleParser {
         parser.parse(article);
         assertTrue(article.getContent().get(0).getContent().contains("Die Portugiesen selbst sind weniger optimistisch"));
 	}
+	
+	@Test
+	public void testParseRegressionIssue212() throws ParserException, IOException {
+		Article article = new Article();
+        article.setLocation(getClass().getResource("issue212.html").toExternalForm());
+        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
+        parser.parse(article);
+        String content = article.getContentText();
+        assertTrue(content.contains("Die libanesische Hisbollah erklärte, sie habe das Flugobjekt zu Spionagezwecken eingesetzt"));
+	}
 }
