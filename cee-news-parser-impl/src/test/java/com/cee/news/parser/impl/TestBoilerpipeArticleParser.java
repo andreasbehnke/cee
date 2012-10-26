@@ -70,15 +70,11 @@ public class TestBoilerpipeArticleParser {
         assertTrue(article.getContentText().contains("die Polizei durchsucht das Büro"));
 	}
 	
-    @Betamax(tape = "issue205", mode = TapeMode.READ_ONLY)
-    //TODO: FIX ISSUE 205 @Test
+    @Test
     public void testParseRegressionIssue205() throws ParserException, IOException {
-        Article article = new Article();
-        article.setLocation("http://www.spiegel.de/politik/ausland/mohammed-video-obama-schaltet-werbespots-in-pakistan-a-857097.html");
-        
-        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
-        parser.parse(article);
-        assertTrue(article.getContentText().contains("In dem 52 Sekunden kurzen und mit Urdu-Untertiteln versehenen Beitrag"));
+		assertTrue(testExpectedContent(
+				getClass().getResource("issue205.html"), 
+				"In dem 52 Sekunden kurzen und mit Urdu-Untertiteln versehenen Beitrag"));
     }
     
     @Betamax(tape = "issue206", mode = TapeMode.READ_ONLY)
