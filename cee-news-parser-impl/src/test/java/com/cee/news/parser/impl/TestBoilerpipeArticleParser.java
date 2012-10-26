@@ -1,6 +1,6 @@
 package com.cee.news.parser.impl;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -78,5 +78,12 @@ public class TestBoilerpipeArticleParser {
 		assertTrue(testExpectedContent(
 				getClass().getResource("issue212.html"), 
 				"Die libanesische Hisbollah erklärte, sie habe das Flugobjekt zu Spionagezwecken eingesetzt"));
+	}
+
+	@Test
+	public void testParseRegressionIssue214() throws ParserException, IOException {
+		assertFalse(testExpectedContent(
+				getClass().getResource("issue214.html"), 
+				"Am 26. Oktober kommt Windows 8 in den Handel"));
 	}
 }

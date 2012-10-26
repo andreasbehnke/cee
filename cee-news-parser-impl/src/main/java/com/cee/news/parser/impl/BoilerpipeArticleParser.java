@@ -45,6 +45,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	    
 	    private ArticleExtractor() {
 	    	List<String> stopText = new ArrayList<String>();
+	    	//english stopwords
 	    	stopText.add("comments");
 	    	stopText.add("users responded in");
 	    	stopText.add("please rate this");
@@ -55,6 +56,9 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	    	stopText.add("reader views");
 	    	stopText.add("have your say");
 	    	stopText.add("reader comments");
+	    	
+	    	//german stopwords
+	    	stopText.add("kommentare");
 	    	terminatingBlocksFinder = new MatchingTextFinder(DefaultLabels.INDICATES_END_OF_TEXT, stopText, 15);
 	    }
 
