@@ -3,6 +3,7 @@ package com.cee.news.parser.impl;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -25,11 +26,11 @@ import de.l3s.boilerpipe.document.TextDocument;
 import de.l3s.boilerpipe.extractors.ExtractorBase;
 import de.l3s.boilerpipe.filters.english.IgnoreBlocksAfterContentFilter;
 import de.l3s.boilerpipe.filters.english.NumWordsRulesClassifier;
-import de.l3s.boilerpipe.filters.english.TerminatingBlocksFinder;
 import de.l3s.boilerpipe.filters.heuristics.BlockProximityFusion;
 import de.l3s.boilerpipe.filters.heuristics.DocumentTitleMatchClassifier;
 import de.l3s.boilerpipe.filters.heuristics.ExpandTitleToContentFilter;
 import de.l3s.boilerpipe.filters.simple.BoilerplateBlockFilter;
+import de.l3s.boilerpipe.labels.DefaultLabels;
 import de.l3s.boilerpipe.sax.BoilerpipeHTMLContentHandler;
 
 /**
@@ -39,12 +40,28 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	
 	private final static class ArticleExtractor extends ExtractorBase {
 	    public static final ArticleExtractor INSTANCE = new ArticleExtractor();
+	    
+	    private final MatchingTextFinder terminatingBlocksFinder;
+	    
+	    private ArticleExtractor() {
+	    	List<String> stopText = new ArrayList<String>();
+	    	stopText.add("comments");
+	    	stopText.add("users responded in");
+	    	stopText.add("please rate this");
+	    	stopText.add("post a comment");
+	    	stopText.add("what you think...");
+	    	stopText.add("add your comment");
+	    	stopText.add("add comment");
+	    	stopText.add("reader views");
+	    	stopText.add("have your say");
+	    	stopText.add("reader comments");
+	    	terminatingBlocksFinder = new MatchingTextFinder(DefaultLabels.INDICATES_END_OF_TEXT, stopText, 15);
+	    }
 
 	    public boolean process(TextDocument doc)
 	            throws BoilerpipeProcessingException {
-	        return
-
-	        TerminatingBlocksFinder.INSTANCE.process(doc)
+	        return //TerminatingBlocksFinder.INSTANCE.process(doc)
+	        		terminatingBlocksFinder.process(doc)
 	                | new DocumentTitleMatchClassifier(doc.getTitle()).process(doc)
 	                | NumWordsRulesClassifier.INSTANCE.process(doc)
 	                | IgnoreBlocksAfterContentFilter.DEFAULT_INSTANCE.process(doc)

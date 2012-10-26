@@ -17,35 +17,34 @@ import betamax.TapeMode;
 import com.cee.news.model.Article;
 import com.cee.news.parser.ArticleParser;
 import com.cee.news.parser.ParserException;
-import com.cee.news.parser.net.ClassResourceWebClient;
 import com.cee.news.parser.net.impl.DefaultHttpClientFactory;
 import com.cee.news.parser.net.impl.DefaultWebClient;
 import com.cee.news.parser.net.impl.XmlStreamReaderFactory;
 
 public class TestBoilerpipeArticleParser {
 	
-	private static final String ARTICLE_START_TEXT = "Russischer ";
-	private static final String ARTICLE_LOCATION = "http://www.test.com/com/cee/news/parser/impl/spiegelArticle.html";
-
 	@Rule
 	public Recorder recorder = new Recorder();
 
-	private boolean testExpectedContent(URL articleLocation, String expectedContent) throws ParserException, IOException {
+	private boolean testExpectedContent(URL articleLocation, String... expectedContents) throws ParserException, IOException {
 		Article article = new Article();
         article.setLocation(articleLocation.toExternalForm());
         ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
         parser.parse(article);
         String content = article.getContentText();
-        return content.contains(expectedContent);
+        for (String expectedContent : expectedContents) {
+			if (!content.contains(expectedContent)) {
+				return false;
+			}
+		}
+        return true;
 	}
 	
     @Test
     public void testParse() throws ParserException, IOException {
-        Article article = new Article();
-        article.setLocation(ARTICLE_LOCATION);
-        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new ClassResourceWebClient());
-        parser.parse(article);
-        assertTrue(article.getContent().get(0).getContent().startsWith(ARTICLE_START_TEXT));
+    	assertTrue(testExpectedContent(
+				getClass().getResource("spiegelArticle.html"), 
+				"Russischer "));
     }
 
 	@Betamax(tape = "issue120", mode = TapeMode.READ_ONLY)
@@ -77,21 +76,17 @@ public class TestBoilerpipeArticleParser {
 				"In dem 52 Sekunden kurzen und mit Urdu-Untertiteln versehenen Beitrag"));
     }
     
-    @Betamax(tape = "issue206", mode = TapeMode.READ_ONLY)
-    //TODO: FIX ISSUE 206 @Test
+    @Test
     public void testParseRegressionIssue206() throws ParserException, IOException {
-        Article article = new Article();
-        article.setLocation("http://www.faz.net/aktuell/politik/ausland/nach-freitagsgebeten-neue-anti-westliche-proteste-befuerchtet-11898090.html");
-        
-        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
-        parser.parse(article);
-        String content = article.getContentText();
-        //first half
-        assertTrue(content.contains("Nach der Veröffentlichung weiterer Mohammed-Karikaturen in einem französischen Satire-Magazin"));
-        assertTrue(content.contains("In Pakistan legten die angekündigten Großkundgebungen bereits am Morgen große Teile des Landes lahm"));
-        //second half
-        assertTrue(content.contains("Die amerikanische Regierung versuchte unterdessen im pakistanischen Fernsehen"));
-        
+		assertTrue(testExpectedContent(
+				getClass().getResource("issue206.html"),
+				//first article half
+				"Mehrere westliche Staaten haben aus Furcht vor Ausschreitungen ihre Botschaften in islamischen Ländern geschlossen",
+				"Nach ersten Meldungen wurden dabei mindestens 15 Menschen getötet und mehr als 160 verletzt",
+				"Gesetze gegen die Beleidigung des Propheten zu erlassen",
+				//second article half
+				"In mehreren Werbefilmen, die am Freitag im pakistanischen Fernsehen ausgestrahlt wurden, distanzieren sich der amerikanische Präsident Barack Obama und Außenministerin Hillary Clinton von dem islamfeindlichen Film",
+				"Das Innenministerium in Tunis hatte zuvor Demonstrationen gegen den Film verboten"));
     }
 	
 	@Ignore("The server does not send a UTF-8 Content-Type header, betamax is also unable to detect the charset encoding...")
