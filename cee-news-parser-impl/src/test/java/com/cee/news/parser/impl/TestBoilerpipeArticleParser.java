@@ -3,6 +3,7 @@ package com.cee.news.parser.impl;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.net.URL;
 
 import org.ccil.cowan.tagsoup.Parser;
 import org.junit.Ignore;
@@ -29,6 +30,15 @@ public class TestBoilerpipeArticleParser {
 	@Rule
 	public Recorder recorder = new Recorder();
 
+	private boolean testExpectedContent(URL articleLocation, String expectedContent) throws ParserException, IOException {
+		Article article = new Article();
+        article.setLocation(articleLocation.toExternalForm());
+        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
+        parser.parse(article);
+        String content = article.getContentText();
+        return content.contains(expectedContent);
+	}
+	
     @Test
     public void testParse() throws ParserException, IOException {
         Article article = new Article();
@@ -100,25 +110,17 @@ public class TestBoilerpipeArticleParser {
         assertTrue(article.getContent().get(0).getContent().contains("täglich"));
 	}
 	
-	@Ignore("Does not run on build server!")
-	@Betamax(tape = "issue146", mode = TapeMode.READ_ONLY)
 	@Test
 	public void testParseRegressionIssue146() throws ParserException, IOException {
-		Article article = new Article();
-        article.setLocation("	http://www.tagesspiegel.de/politik/troika-sieht-portugal-auf-gutem-weg/5859778.html");
-        
-        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
-        parser.parse(article);
-        assertTrue(article.getContent().get(0).getContent().contains("Die Portugiesen selbst sind weniger optimistisch"));
+		assertTrue(testExpectedContent(
+				getClass().getResource("issue146.html"), 
+				"Die Portugiesen selbst sind weniger optimistisch"));
 	}
 	
 	@Test
 	public void testParseRegressionIssue212() throws ParserException, IOException {
-		Article article = new Article();
-        article.setLocation(getClass().getResource("issue212.html").toExternalForm());
-        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
-        parser.parse(article);
-        String content = article.getContentText();
-        assertTrue(content.contains("Die libanesische Hisbollah erklärte, sie habe das Flugobjekt zu Spionagezwecken eingesetzt"));
+		assertTrue(testExpectedContent(
+				getClass().getResource("issue212.html"), 
+				"Die libanesische Hisbollah erklärte, sie habe das Flugobjekt zu Spionagezwecken eingesetzt"));
 	}
 }
