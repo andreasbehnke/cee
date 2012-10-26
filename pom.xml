@@ -162,12 +162,6 @@
 				<version>2.1</version>
 			</dependency>
 			<dependency>
-				<scope>test</scope>
-				<groupId>com.github.robfletcher</groupId>
-				<artifactId>betamax</artifactId>
-				<version>1.0</version>
-			</dependency>
-			<dependency>
 				<groupId>com.google.gwt</groupId>
 				<artifactId>gwt-dev</artifactId>
 				<version>${gwt.version}</version>
