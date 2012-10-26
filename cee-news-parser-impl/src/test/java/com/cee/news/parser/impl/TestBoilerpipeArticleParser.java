@@ -86,4 +86,11 @@ public class TestBoilerpipeArticleParser {
 				getClass().getResource("issue214.html"), 
 				"Am 26. Oktober kommt Windows 8 in den Handel"));
 	}
+	
+	@Test
+	public void testParseRegressionIssue215() throws ParserException, IOException {
+		assertFalse(testExpectedContent(
+				getClass().getResource("issue215.html"), 
+				"Aus Datenschutzgründen wird Ihre IP-Adresse nur dann gespeichert"));
+	}
 }
