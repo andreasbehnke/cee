@@ -59,22 +59,26 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	    	
 	    	//german stopwords
 	    	stopText.add("kommentare");
+	    	stopText.add("kommentieren");
 	    	stopText.add("diesen artikel...");
 	    	terminatingBlocksFinder = new MatchingTextFinder(DefaultLabels.INDICATES_END_OF_TEXT, stopText, 15);
 	    }
 
-	    public boolean process(TextDocument doc)
-	            throws BoilerpipeProcessingException {
+	    public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
+	    	List<String> stopText = new ArrayList<String>();
+	    	stopText.add(doc.getTitle().toLowerCase());
+	    	MatchingTextFinder titleFinder = new MatchingTextFinder(DefaultLabels.TITLE, stopText, 15);
 	        return //TerminatingBlocksFinder.INSTANCE.process(doc)
 	        		terminatingBlocksFinder.process(doc)
-	                | new DocumentTitleMatchClassifier(doc.getTitle()).process(doc)
+	        		| titleFinder.process(doc)
+	                //| new DocumentTitleMatchClassifier(doc.getTitle()).process(doc)
 	                | NumWordsRulesClassifier.INSTANCE.process(doc)
-	                | IgnoreBlocksAfterContentFilter.DEFAULT_INSTANCE.process(doc)
-	                | BlockProximityFusion.MAX_DISTANCE_1.process(doc)
-	                | BoilerplateBlockFilter.INSTANCE.process(doc)
-	                | BlockProximityFusion.MAX_DISTANCE_1_CONTENT_ONLY.process(doc)
+	                | TitleAndEndOfContentFilter.INSTANCE.process(doc);
+	                //| BlockProximityFusion.MAX_DISTANCE_1.process(doc)
+	                //| BoilerplateBlockFilter.INSTANCE.process(doc);
+	                //| BlockProximityFusion.MAX_DISTANCE_1_CONTENT_ONLY.process(doc);
 	                //| KeepLargestBlockFilter.INSTANCE.process(doc)
-	                | ExpandTitleToContentFilter.INSTANCE.process(doc);
+	                //| ExpandTitleToContentFilter.INSTANCE.process(doc);
 	    }
 	}
 	
@@ -121,7 +125,8 @@ public class BoilerpipeArticleParser implements ArticleParser {
     public Article parse(Article article) throws ParserException, IOException {
     	Reader textReader = null;
         try {
-        	LOG.info("start parsing article content of {}", article.getTitle());
+        	String articleTitel = article.getTitle();
+        	LOG.info("start parsing article content of {}", articleTitel);
         	BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
         	
         	WebResponse response = webClient.openWebResponse(new URL(article.getLocation()));
@@ -130,8 +135,11 @@ public class BoilerpipeArticleParser implements ArticleParser {
         	InputSource is = new InputSource(textReader);
         	xmlReader.parse(is);
         	TextDocument textDoc = boilerpipeHandler.toTextDocument();
-        	LOG.debug("extracting main content from {}", article.getTitle());
-            ArticleExtractor.INSTANCE.process(textDoc);
+        	LOG.debug("extracting main content from {}", articleTitel);
+        	if (articleTitel != null) {
+        		textDoc.setTitle(articleTitel);
+            }
+        	ArticleExtractor.INSTANCE.process(textDoc);
             List<com.cee.news.model.TextBlock> content = article.getContent();
             for (TextBlock block : textDoc.getTextBlocks()) {
                 if (block.isContent()) {

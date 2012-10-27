@@ -17,14 +17,29 @@ import com.cee.news.parser.net.impl.XmlStreamReaderFactory;
 
 public class TestBoilerpipeArticleParser {
 	
-	private boolean testExpectedContent(URL articleLocation, String... expectedContents) throws ParserException, IOException {
+	private String getContent(String articleTitle, URL articleLocation) throws ParserException, IOException {
 		Article article = new Article();
+		article.setTitle(articleTitle);
         article.setLocation(articleLocation.toExternalForm());
         ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
         parser.parse(article);
-        String content = article.getContentText();
+        return article.getContentText();
+	}
+	
+	private boolean testExpectedContent(String articleTitle, URL articleLocation, String... expectedContents) throws ParserException, IOException {
+		String content = getContent(articleTitle, articleLocation);
         for (String expectedContent : expectedContents) {
 			if (!content.contains(expectedContent)) {
+				return false;
+			}
+		}
+        return true;
+	}
+	
+	private boolean testUnexpectedContent(String articleTitle, URL articleLocation, String... unexpectedContents) throws ParserException, IOException {
+		String content = getContent(articleTitle, articleLocation);
+        for (String unexpectedContent : unexpectedContents) {
+			if (content.contains(unexpectedContent)) {
 				return false;
 			}
 		}
@@ -34,13 +49,15 @@ public class TestBoilerpipeArticleParser {
     @Test
     public void testParse() throws ParserException, IOException {
     	assertTrue(testExpectedContent(
+    			null,
 				getClass().getResource("spiegelArticle.html"), 
-				"Russischer "));
+				"Tony Hayward"));
     }
 	
 	@Test
 	public void testParseRegressionIssue144() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
+				"Der verpatzte Abgang des Josef Ackermann",
 				getClass().getResource("issue144.html"), 
 				"die Polizei durchsucht das Büro"));
 	}
@@ -48,6 +65,7 @@ public class TestBoilerpipeArticleParser {
 	@Test
 	public void testParseRegressionIssue146() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
+				null,
 				getClass().getResource("issue146.html"), 
 				"Die Portugiesen selbst sind weniger optimistisch"));
 	}
@@ -56,6 +74,7 @@ public class TestBoilerpipeArticleParser {
     @Test
     public void testParseRegressionIssue205() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
+				null,
 				getClass().getResource("issue205.html"), 
 				"In dem 52 Sekunden kurzen und mit Urdu-Untertiteln versehenen Beitrag"));
     }
@@ -63,6 +82,7 @@ public class TestBoilerpipeArticleParser {
     @Test
     public void testParseRegressionIssue206() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
+				null,
 				getClass().getResource("issue206.html"),
 				//first article half
 				"Mehrere westliche Staaten haben aus Furcht vor Ausschreitungen ihre Botschaften in islamischen Ländern geschlossen",
@@ -76,21 +96,35 @@ public class TestBoilerpipeArticleParser {
 	@Test
 	public void testParseRegressionIssue212() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
+				null,
 				getClass().getResource("issue212.html"), 
 				"Die libanesische Hisbollah erklärte, sie habe das Flugobjekt zu Spionagezwecken eingesetzt"));
 	}
 
 	@Test
 	public void testParseRegressionIssue214() throws ParserException, IOException {
-		assertFalse(testExpectedContent(
+		assertTrue(testUnexpectedContent(
+				null,
 				getClass().getResource("issue214.html"), 
 				"Am 26. Oktober kommt Windows 8 in den Handel"));
 	}
 	
 	@Test
 	public void testParseRegressionIssue215() throws ParserException, IOException {
-		assertFalse(testExpectedContent(
+		assertTrue(testUnexpectedContent(
+				null,
 				getClass().getResource("issue215.html"), 
 				"Aus Datenschutzgründen wird Ihre IP-Adresse nur dann gespeichert"));
+	}
+	
+	@Test
+	public void testParseRegressionIssue216() throws ParserException, IOException {
+		assertTrue(testUnexpectedContent(
+				"Sicherheitsupdate für Firefox und Thunderbird",
+				getClass().getResource("issue216.html"), 
+				"heise online > News > 2012 > KW 43 > Sicherheitsupdate für Firefox und Thunderbird",
+				"27.10.2012 16:32",
+				"« Vorige | Nächste »",
+				"Sicherheitsupdate für Firefox und Thunderbird"));
 	}
 }

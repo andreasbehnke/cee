@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    
+    
+
+    <title>Sicherheitsupdate für Firefox und Thunderbird | heise online</title>
+
+    
+
+
+
+
+
+
+<meta charset="utf-8">
+<meta name="publisher" content="Heise Zeitschriften Verlag" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />    <link rel="canonical" href="/security/meldung/Sicherheitsupdate-fuer-Firefox-und-Thunderbird-1737865.html" />    <link rel="prev" title="Vorige Meldung" href="/newsticker/meldung/Retune-Lichtdesign-und-Mayapedal-1737863.html" /><link rel="home" type="text/html" title="Startseite" href="/" />
+<link rel="copyright" title="Copyright" href="/Impressum-4862.html" />     <meta name="date" content="2012-10-27T16:32:00" />
+    <meta name="keywords" content="Patchday, Sicherheitslücke, XSS" />
+                <meta name="topic" content="News" />        <meta name="description" content="Mozilla entfernt eine Cross-Site-Scripting-Lücke in Firefox und Thunderbird." />
+        <meta name="fulltitle" content="Sicherheitsupdate für Firefox und Thunderbird" />
+        <meta name="DC.title" content="Sicherheitsupdate für Firefox und Thunderbird" />
+        <meta name="DC.description" content="Mozilla entfernt eine Cross-Site-Scripting-Lücke in Firefox und Thunderbird." />
+        <meta name="DC.identifier" content="http://heise.de/-1737865" scheme="DCTERMS.URI" />
+        <meta name="kill_switch" content="true" />    <!--googleoff: all-->
+    <meta property="og:title"       content="Sicherheitsupdate für Firefox und Thunderbird" />
+    <meta property="og:type"        content="website" />
+    <meta property="og:locale"      content="de_DE" />
+    <meta property="og:url"         content="http://www.heise.de/newsticker/meldung/Sicherheitsupdate-fuer-Firefox-und-Thunderbird-1737865.html" />
+    <meta property="og:site_name"   content="heise online" />
+    <meta property="og:image"       content="http://www.heise.de/imgs/18/9/3/8/9/2/2/firefox-patch-5cc58d045f34f80c.png" />
+    <meta property="og:description" content="Mozilla entfernt eine Cross-Site-Scripting-Lücke in Firefox und Thunderbird." />
+
+    <!--googleon: all--><!--googleoff: all-->
+<meta name="generator" content="InterRed V13.0, http://www.interred.de/, InterRed GmbH" />
+<!--googleon: all-->
+
+    
+
+
+
+<script type="text/javascript" src="/js/jquery/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jquery-ui-1.8.18_cycle.custom.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jquery.equalheights.min.js"></script>
+<script type="text/javascript" src="/support/lib/social_bookmarks.js"></script>
+<script type="text/javascript" src="/support/lib/external.js"></script>
+<script type="text/javascript" src="/support/lib/teaser_linking.js"></script>
+
+<script type="text/javascript" src="/js/ho/bilderstrecke.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function($){
+    
+    if($('.bilderstrecke_vorschau').length > 0 && (!$.browser.msie || ($.browser.msie && $.browser.version > 8))) {
+        $('.bilderstrecke_vorschau').bilderstrecke();
+    }
+    
+    
+
+
+});
+</script>
+<!-- view_relaunch:  -->
+
+    
+
+
+
+<link href="/stil/standard2008.css" rel="stylesheet" type="text/css" />
+<link href="/stil/navi_top2008.css" rel="stylesheet" type="text/css" />
+<link href="/stil/drucken.css" rel="stylesheet" type="text/css" media="print" />
+
+
+    <link href="/favicon.ico" rel="shortcut icon" />
+    <link rel="author" title="Kontakt" href="mailto:kontakt%40heise.de?subject=heise%20online" />
+    <link rel="search" title="Suche" href="http://www.heise.de/suche/" />
+    <link rel="alternate" type="application/atom+xml" title="Aktuelle News von heise online" href="http://www.heise.de/newsticker/heise-atom.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Aktuelle News von heise online (für ältere RSS-Reader)" href="http://www.heise.de/newsticker/heise.rdf" />
+    <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-57x57-precomposed.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed.png" />
+    <meta name="DC.creator" content="heise online" />        <link href="/stil/ho/heiseonline2012.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+
+
+
+
+
+
+<!--googleoff: all-->
+
+<div class="heisetopnavi no-touch heisetopnavi_relaunch">
+    <div class="heisetopnavi_header">
+        <header role="banner">
+            <div class="heisetopnavi_login">
+                <script type="text/javascript" src="/js/ho/login.min.js"></script>
+                <div id="navi_login">
+                    <p><a href="https://www.heise.de/userdb/sso?rm=show_login&amp;dirid=1&amp;objekt=/">Einloggen</a> auf heise online</p>
+                </div>
+            </div>
+            <nav role="navigation">
+                <div class="heisetopnavi_hover_legacy">
+                    <a href="/index.html/from/navi_oben_ho" class="heisetopnavi_logo" title="heise online">
+                        <img src="//www.heise.de/icons/ho/heise_online_logo_top.gif" width="200" height="44" alt="heise online" />
+                    </a>
+                    <a href="#heisetopnavi_sub_container" class="heisetopnavi_button" aria-haspopup="true">Menü auf-/zuklappen</a>
+                    <div id="heisetopnavi_sub_container">
+                        <ul id="heisetopnavi_sub">
+                            <li>
+                                <ul>
+                                    <li class="heisetopnavi_ho"><a href="/index.html/from/navi_oben_ho" title="heise online – IT-News">News</a></li>
+                                    <li class="heisetopnavi_ct"><a href="/ct/from/navi_oben_ct" title="c't – Magazin für Computertechnik">c't</a></li>
+                                    <li class="heisetopnavi_ix"><a href="/ix/from/navi_oben_ix" title="iX – Magazin für professionelle Informationstechnik">iX</a></li>
+                                    <li class="heisetopnavi_tr"><a href="/tr/from/navi_oben_tr" title="Technology Review – Das M.I.T.-Magazin für Innovation">Technology Review</a></li>
+                                    <li class="heisetopnavi_mac"><a href="/mac-and-i/from/navi_oben_mac" title="Mac &amp; i – Nachrichten, Tests, Tipps und Meinungen rund um Apple">Mac &amp; i</a></li>
+                                    <li class="heisetopnavi_tp"><a href="/tp/from/navi_oben_tp" title="Telepolis">Telepolis</a></li>
+                                    <li class="heisetopnavi_hh"><a href="/hardware-hacks/from/navi_oben_hh" title="Hardware Hacks – Kreativ mit Technik">Hardware Hacks</a></li>
+                                    <li class="heisetopnavi_df"><a href="/foto/special/from/navi_oben_df" title="Digitale Fotografie">Digitale Fotografie</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <ul>
+                                    <li class="heisetopnavi_aut"><a href="/autos/from/navi_oben_aut" title="heise Autos – News, Tests, Technik, Service rund ums Auto">heise Autos</a></li>
+                                    <li class="heisetopnavi_dev"><a href="/developer/from/navi_oben_dev" title="heise Developer – Informationen für Entwickler">heise Developer</a></li>
+                                    <li class="heisetopnavi_foto"><a href="/foto/from/navi_oben_foto" title="heise Foto – Das Online-Magazin rund ums digitale Bild">heise Foto</a></li>
+                                    <li class="heisetopnavi_mob"><a href="/mobil/from/navi_oben_mob" title="heise mobil – Tipps &amp; Tricks sowie Produktvorstellungen rund um das mobile Internet">heise mobil</a></li>
+                                    <li class="heisetopnavi_net"><a href="/netze/from/navi_oben_net" title="heise Netze – Alles über Netzwerk-Technik">heise Netze</a></li>
+                                    <li class="heisetopnavi_op"><a href="/open/from/navi_oben_op" title="heise open – Open Source im Unternehmen">heise Open Source</a></li>
+                                    <li class="heisetopnavi_res"><a href="/resale/from/navi_oben_res" title="heise resale – Fakten, Trends und Standpunkte für das ITK-Geschäft">heise resale</a></li>
+                                    <li class="heisetopnavi_sec"><a href="/security/from/navi_oben_sec" title="heise Security – News, Dienste und Foren zum Thema Computer-Sicherheit">heise Security</a></li>
+                                    <li class="heisetopnavi_video"><a href="/video/from/navi_oben_video" title="heise Video – Clips zu Nachrichten und Artikeln">heise Video</a></li>
+                                </ul>
+                            </li>
+                            <li class="heisetopnavi_third">
+                                <ul>
+                                    <li class="heisetopnavi_swv"><a href="/download/from/navi_oben_swv" title="Software-Verzeichnis – Software zum Download fuer Windows, Mac, Linux, iPhone, Symbian, Android">Download</a></li>
+                                    <li class="heisetopnavi_pvg"><a href="/preisvergleich/from/navi_oben_pvg" title="Preisvergleich">Preisvergleich</a></li>
+                                    <li class="heisetopnavi_job"><a href="/jobs/from/navi_oben_job" title="heise jobs – Jobbörse für qualifizierte Fach- und Führungskräfte aus der IT-Branche">Stellenmarkt</a></li>
+                                    <li class="heisetopnavi_eve"><a href="/events/from/navi_oben_eve" title="heise Events – Konferenzen, Seminare, Workshops">Veranstaltungen</a></li>
+                                    <li class="heisetopnavi_mkt"><a href="/redirect-to/marktplatz/from/navi_oben_mkt" title="heise-marktplatz – Kostenlose Kleinanzeigen">heise-marktplatz</a></li>
+                                    <li class="heisetopnavi_itm"><a href="/itmarkt/from/navi_oben_itm" title="IT-Markt – Branchenverzeichnis der IT-Fachhändler">IT-Markt</a></li>
+                                    <li class="heisetopnavi_whi"><a href="/whitepapers/from/navi_oben_whi" title="heise Whitepapers – Kostenloser Download aktueller Praxisbeispiele, Firmeninfos, Case Studies und Webcasts zu neuen Produkten, Strategien und Lösungen namhafter IT-Hersteller">Whitepapers</a></li>
+                                    <li class="heisetopnavi_webcasts"><a href="/redirect-to/webcasts/from/navi_oben_webcasts" title="heise Webcasts – Kompakte Firmeninformationen zu komplexen IT-Sachverhalten">Webcasts</a></li>
+                                    <li class="heisetopnavi_tarifr"><a href="/redirect-to/tarifrechner/from/navi_oben_tarifr" title="Tarifrechner – DSL, Mobiles Internet, Handy, Telefon, Strom, Gas">Tarifrechner</a></li>
+                                </ul>
+                            </li>
+                            <li class="heisetopnavi_fourth">
+                                <ul>
+                                    <li class="heisetopnavi_shop"><a href="/redirect-to/shop/from/navi_oben_shop" title="heise-shop – IT Fachzeitschriften, Bücher, CD/DVD/Blu-ray">heise-shop</a></li>
+                                    <li class="heisetopnavi_kio"><a href="/artikel-archiv/from/navi_oben_kio" title="Artikel-Archiv – c't, iX, Technology Review, Digitale Fotografie, Mac &amp; i, Sonderhefte">Artikel-Archiv</a></li>
+                                    <li class="heisetopnavi_abo"><a href="/redirect-to/abo/from/navi_oben_abo" title="Abo – c't, iX, Technology Review, Digitale Fotografie, Mac &amp; i">Zeitschriften-Abo</a></li>
+                                    <li class="heisetopnavi_hmg"><a href="/redirect-to/hmg/from/navi_oben_hmg" title="Jobs bei Heise – Aktuelle Stellenangebote der Heise Medien Gruppe">Jobs bei Heise</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        
+            
+            
+                
+                    
+                    
+            
+        
+            <form accept-charset="utf-8" method="get" action="/suche/" id="heisetopnavi_search" role="search">
+                <fieldset>
+                    <input type="text" class="search_text" value="" name="q" placeholder="in heise online suchen"><input type="image" src="//www.heise.de/icons/ho/heise_online_lupe.gif" alt="Los" class="search_submit" name="search_submit">
+                    <input type="hidden" class="search_hidden" value="search" name="rm">
+                </fieldset>
+            </form>
+        </header>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<script type="text/javascript">
+if (typeof jQuery !== "undefined") {
+    jQuery(document).ready(function($) {
+        // Support Touch-Devices
+        if ('ontouchstart' in document) {
+            $('.heisetopnavi_relaunch').removeClass('no-touch');
+        }
+        $('.heisetopnavi_button').bind('touchstart', function(e) {
+            e.preventDefault();
+            if ($(e.target).is('a.heisetopnavi_button')) {
+                $(this).toggleClass('active');
+                $('.heisetopnavi header > nav').toggleClass('hover');
+            }
+        });
+
+        $('.heisetopnavi_relaunch .heisetopnavi_button').click(function(e) {
+            e.preventDefault();
+        });
+
+        // Support Keyboard
+        $('.heisetopnavi_relaunch .heisetopnavi_button').keyup(function(e) {
+            if (e.which == 13 && $(e.target).is('a.heisetopnavi_button')) {
+                $('.heisetopnavi_relaunch .heisetopnavi_button').toggleClass('active');
+                $('.heisetopnavi_relaunch header > nav').toggleClass('hover');
+            }
+        });
+
+        /*
+         * Open/Close Menu with JavaScript for more Usability
+         */
+
+        $('.heisetopnavi_relaunch').removeClass('no-touch');
+
+        // Logo + Icon
+        $('.heisetopnavi_relaunch .heisetopnavi_hover_legacy').mouseenter(function() {
+            var timeout_id = window.setTimeout(function() { 
+                $('.heisetopnavi_relaunch .heisetopnavi_button').addClass('active');
+                $('.heisetopnavi_relaunch nav').addClass('hover');
+                $('body').addClass('refreshDOM');
+                $('body').removeClass('refreshDOM');
+            }, 300);
+            $(this).data('timeout_id', timeout_id);
+        });
+        $('.heisetopnavi_relaunch .heisetopnavi_hover_legacy').mouseleave(function() {
+            var timeout_id = $(this).data('timeout_id');
+            window.clearTimeout(timeout_id);
+            timeout_id = window.setTimeout(function() { 
+                $('.heisetopnavi_relaunch .heisetopnavi_button').removeClass('active');
+                $('.heisetopnavi_relaunch nav').removeClass('hover');
+                $('body').addClass('refreshDOM');
+                $('body').removeClass('refreshDOM');
+            }, 0);
+            $(this).data('timeout_id', timeout_id);
+        });
+    });
+
+    if (typeof heiseLogin != "undefined") {
+        heiseLogin.login_fill_navigation({});
+    }
+}
+</script>
+
+
+
+    <div id="container">
+        <div id="container_content">
+            <div id="logo_bereich">
+                <div class="logo">
+                                    <a href="/" title="heise online News" class="channel_titel">News</a>
+                                </div>
+                <ul class="navigation">
+                    <li><strong><a href="/newsticker/classic/" title="Newsticker Classic">Newsticker</a></strong></li>
+                    <li><strong><a href="/newsticker/" title="7-Tage-News">7-Tage-News</a></strong></li>
+                    <li><strong><a href="/newsticker/archiv/" title="Newsticker Archiv">Archiv</a></strong></li>
+                    <li><strong><a href="/foren/" title="Leserforum">Foren</a></strong></li>
+                </ul>
+                <ul class="sub_navigation">
+                    <li class="rss"><a href="/news-extern/news.html" title="RSS-Feeds">RSS</a></li>
+                    <li class="mobi"><a href="http://m.heise.de/" title="News mobil">News mobil</a></li>
+                    <li class="newsletter"><a href="/newsletter/" title="Newsletter">Newsletter</a></li>
+                </ul>
+            </div>
+            
+            <div id="themen_aktuell">
+                <p>Aktuelle Themen:</p>
+                <ol>
+                    <li><a href="/thema/iPad">iPad</a></li>
+                    <li><a href="/thema/Windows-8">Windows 8</a></li>
+                    <li><a href="/thema/E_Book">E-Book</a></li>
+                    <li><a href="/thema/Datenschutz">Datenschutz</a></li>
+                    <li><a href="/thema/iPhone-5">iPhone 5</a></li>
+                    <li><a href="/thema/Android">Android</a></li>
+                    <li><a href="/thema/Facebook">Facebook</a></li>
+                    <li><a href="/thema/Curiosity">Curiosity</a></li>
+                    <li><a href="/thema/CleanIT">CleanIT</a></li>
+                </ol>
+            </div>
+            
+                
+	<div id="breadcrumb">
+	
+		<a href="/" title="heise online">heise online</a>
+		<span class="bread_gt">&gt;</span>
+	
+		<a href="/newsticker/" title="News">News</a>
+		<span class="bread_gt">&gt;</span>
+	
+		<a href="/newsticker/archiv/?jahr=2012" title="2012">2012</a>
+		<span class="bread_gt">&gt;</span>
+	
+		<a href="/newsticker/archiv/?jahr=2012;woche=43" title="KW 43">KW 43</a>
+		<span class="bread_gt">&gt;</span>
+	
+		<span class="titel">Sicherheitsupdate für Firefox und Thunderbird</span>
+		
+	
+	</div>
+
+
+                        <div id="mitte">
+            
+                <div id="mitte_links">
+            
+            <!--googleon: all-->
+            
+
+
+<!--googleoff: all-->
+<div id="mitte_news">
+
+    
+
+    <p class="news_datum">27.10.2012 16:32</p>
+    
+        <p class="news_navi">
+            <a href="/newsticker/meldung/Retune-Lichtdesign-und-Mayapedal-1737863.html"><span class="rsaquo">«</span>&nbsp;Vorige</a>
+            |
+            Nächste&nbsp;<span class="rsaquo">»</span>
+        </p>
+    
+    
+        <div class="news_logo"><a href="/security/"><img src="/security/icons/security_min.gif" alt="heise Security" width="55" height="30" /></a></div>
+    
+    <div class="clear"></div>
+    <!-- RSPEAK_START -->
+    <!--googleon: all-->
+
+    <h1> Sicherheitsupdate für Firefox und Thunderbird</h1>
+
+<!-- RSPEAK_STOP -->
+<!--googleoff: all-->
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+function openWindow() {
+    window.open('/newsticker/meldung/Sicherheitsupdate-fuer-Firefox-und-Thunderbird-1737865.html?view=audio', 'Vorlesen', 'width=492,height=400,left=100,top=100,menubar=no,status=no,scrollbars,resizable,toolbar=no,hotkeys,location=no');
+}
+document.write('<div class="readspeaker"><a href="javascript:openWindow()"><img src="/icons/ho/vorlesen_download.gif" alt="Meldung vorlesen und MP3-Download" width="150" height="13" class="ISI_IGNORE" /><' + '/a><' + '/div>');
+//--><!]]>
+</script>
+<noscript>
+<div class="readspeaker">
+    <a href="/newsticker/meldung/Sicherheitsupdate-fuer-Firefox-und-Thunderbird-1737865.html?view=audio"><img src="/icons/ho/vorlesen_download.gif" alt="Meldung vorlesen und MP3-Download" width="150" height="13" class="ISI_IGNORE" /></a>
+</div>
+</noscript>
+<!--googleon: all-->
+<!-- RSPEAK_START -->
+
+    <div class="meldung_wrapper">
+		<p>Über Nacht hat <a href="http://www.mozilla.org/" rel="external">Mozilla</a> Sicherheitsupdates für seine beliebten Produkte <a href="http://www.mozilla.org/de/firefox/" rel="external">Firefox</a> und <a href="https://www.mozilla.org/de/thunderbird/" rel="external">Thunderbird</a> bereit gestellt, die eine <a href="https://www.mozilla.org/security/announce/2012/mfsa2012-90.html" rel="external">Sicherheitslücke</a> in Bezug auf Cross-Site-Scripting (XSS) behebt. Nach dem Einspielen des Patches, der über die eingebaute Update-Funktion bereit steht, klettert die Versionsnummer auf 16.0.2  beziehungsweise 10.0.10 bei der ESR-Version für Unternehmen.<!-- AUTHOR-DATA-MARKER-BEGIN -->
+
+
+<!-- RSPEAK_STOP -->
+<span class="ISI_IGNORE">(<a href="mailto:mue@ct.de" title="Florian Müssig">mue</a>)</span>
+<br class="clear" />
+<!-- RSPEAK_START -->
+<!-- AUTHOR-DATA-MARKER-END -->
+</p>
+		
+    </div>
+    <!--googleoff: all-->
+    <!-- RSPEAK_STOP -->
+    
+    
+        <p class="news_navi">
+        <a href="/newsticker/meldung/Retune-Lichtdesign-und-Mayapedal-1737863.html"><span class="rsaquo">«</span>&nbsp;Vorige</a>
+        |
+        Nächste&nbsp;<span class="rsaquo">»</span>
+        </p>
+    
+     <div class="news_foren">
+        
+  <p>
+	<a href="/security/news/foren/S-Sicherheitsupdate-fuer-Firefox-und-Thunderbird/forum-241174/list/" title="Sicherheitsupdate f&#xfc;r Firefox und Thunderbird">
+      <b>
+		
+		  
+			Kommentare lesen (3 Beitr&#xe4;ge)
+		  
+		
+      </b>
+	</a>
+	
+  </p>
+
+
+    </div>
+    
+    <p class="news_option">
+    <a href="/newsticker/meldung/Sicherheitsupdate-fuer-Firefox-und-Thunderbird-1737865.html?view=print" rel="nofollow">Version zum Drucken</a> |
+    <a href="/newsticker/meldung/Sicherheitsupdate-fuer-Firefox-und-Thunderbird-1737865.html?view=mail" rel="nofollow">Per E-Mail versenden</a> |
+    <a href="/newsletter/" title="Newsletter abonnieren">Newsletter abonnieren</a>
+    </p>
+      
+		<p class="permalink">Permalink: <a href="http://heise.de/-1737865">http://heise.de/-1737865</a></p>
+		
+    <div id="social_bookmarks"></div>
+    
+
+
+
+<div class="related_items">
+	<h4>Auch auf heise online:</h4>
+	<ul>
+	
+	    <li><a href="http://www.heise.de/newsticker/meldung/Sicherheits-Updates-fuer-Firefox-und-Thunderbird-1110852.html/from/related" title="Sicherheits-Updates für Firefox und Thunderbird">Sicherheits-Updates für Firefox und Thunderbird</a></li>
+	
+	    <li><a href="http://www.heise.de/newsticker/meldung/Mehr-Schutz-fuer-Mozilla-Nutzer-vor-JavaScript-Angriffen-809084.html/from/related" title="Mehr Schutz für Mozilla-Nutzer vor JavaScript-Angriffen">Mehr Schutz für Mozilla-Nutzer vor JavaScript-Angriffen</a></li>
+	
+	    <li><a href="http://www.heise.de/newsticker/meldung/Updates-fuer-SeaMonkey-und-Camino-162909.html/from/related" title="Updates für SeaMonkey und Camino">Updates für SeaMonkey und Camino</a></li>
+	
+	    <li><a href="http://www.heise.de/newsticker/meldung/Updates-fuer-Thunderbird-und-Firefox-Update-162695.html/from/related" title="Updates für Thunderbird und Firefox [Update]">Updates für Thunderbird und Firefox [Update]</a></li>
+	
+	    <li><a href="http://www.heise.de/newsticker/meldung/Neue-Ausgaben-der-Mozilla-Anwendungen-als-deutschsprachige-Versionen-104024.html/from/related" title="Neue Ausgaben der Mozilla-Anwendungen als deutschsprachige Versionen">Neue Ausgaben der Mozilla-Anwendungen als deutschsprachige Versionen</a></li>
+	
+	    <li><a href="http://www.heise.de/security/artikel/Cross-Site-Scripting-FAQ-270196.html/from/related" title="Cross-Site-Scripting FAQ">Cross-Site-Scripting FAQ</a></li>
+	
+	</ul>
+</div>
+
+
+    
+
+
+<p class="themenseiten"><span class="themen_label">Mehr zum Thema</span>
+    
+        <a href="/thema/Patchday" title="Themenseite Patchday">Patchday</a>
+    
+        <a href="/thema/Sicherheitsl%C3%BCcke" title="Themenseite Sicherheitslücke">Sicherheitslücke</a>
+    
+        <a href="/thema/XSS" title="Themenseite XSS">XSS</a>
+    
+</p>
+
+
+    
+
+</div>
+
+            <!--googleoff: all-->
+            <div class="adbottom">                <script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var dfp_ord; if (!dfp_ord) { dfp_ord = Math.floor(Math.random()*1000000000)+1000000000; }
+document.write('<script src="http://ad-emea.doubleclick.net/N6514/adj/newsticker/news-security;sz=500x500;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=1;ord=_ORD_?" type="text/javascript"><\/script>'.replace('_ORD_', dfp_ord));
+//--><!]]>
+</script>
+<noscript><div><a href="http://ad-emea.doubleclick.net/N6514/jump/newsticker/news-security;sz=500x500;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=1;ord=6644400625?" target="_blank"><img alt="" src="http://ad-emea.doubleclick.net/N6514/ad/newsticker/news-security;sz=500x500;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=1;ord=6644400625?" /></a></div></noscript>
+
+            </div>
+            
+                
+            
+            
+                </div>
+                <div id="mitte_rechts">
+                
+                
+                    
+                        
+                            <!--googleoff: index-->
+<!-- RSPEAK_STOP -->
+<div  class="bcadv ISI_IGNORE"><script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var dfp_ord; if (!dfp_ord) { dfp_ord = Math.floor(Math.random()*1000000000)+1000000000; }
+document.write('<script src="http://ad-emea.doubleclick.net/N6514/adj/newsticker/news-security;sz=300x250,336x280;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=2;ord=_ORD_?" type="text/javascript"><\/script>'.replace('_ORD_', dfp_ord));
+if (typeof jQuery != 'undefined') {
+    jQuery( function() {
+        jQuery('.bcadv div[id^=google_ads_div_]').parent().prepend('<span style="font-family: Arial, Helvetica, sans-serif; color: Black; font-size:7pt; font-weight: normal; text-align: left;">Anzeige</span><br/>');
+    });
+}
+
+//--><!]]>
+</script>
+<noscript><div><a href="http://ad-emea.doubleclick.net/N6514/jump/newsticker/news-security;sz=300x250,336x280;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=2;ord=6644400625?" target="_blank"><img alt="" src="http://ad-emea.doubleclick.net/N6514/ad/newsticker/news-security;sz=300x250,336x280;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=2;ord=6644400625?" /></a></div></noscript>
+</div>
+<!-- RSPEAK_START -->
+<!--googleon: index--><!--googleoff: all--><!-- RSPEAK_STOP -->
+                        
+                        
+                            <div id="channellayout" class="security">
+                                <h3>heise Security</h3>
+                                
+                                
+
+
+
+
+
+    
+    
+    
+	
+        <div id="artikel"> 
+        
+        <div class="teaser_linker">
+            <h3><a href="/security/artikel/Angriff-auf-Truecrypt-1734824.html" title="Angriff auf Truecrypt">Angriff auf Truecrypt</a></h3>
+            <img src="/security/imgs/07/9/3/6/7/5/9/key.jpg-e0f35dd12add78ed.jpeg" width="100" height="87" alt="" title="" />
+            <p>
+                TrueCrypt gilt als Software der Wahl, um Daten systematisch zu verschlüsseln. Mit dem kleinen Tool TCHead rückt man der Verschlüsselung systematisch zu Leibe.
+            </p>
+            <div class="clear"></div>
+        </div>
+        
+         
+	
+         
+        
+        <div class="teaser_linker">
+            <h3><a href="/security/artikel/Der-Todesstoss-fuer-PPTP-1701365.html" title="Der Todesstoß für PPTP ">Der Todesstoß für PPTP </a></h3>
+            <img src="/security/imgs/07/9/1/4/5/7/9/schloss-offen.jpg-6c9ff990a86ed11f.jpeg" width="100" height="90" alt="" title="" />
+            <p>
+                PPTP ist ein viel genutzter Standard für sichere und verschlüsselte Internet-Nutzung. Doch das Projekt Cloudcracker verspicht, jeden PPTP-Zugang zu knacken -- für 200 US-Dollar und innerhalb eines Tages. Wir haben das mit einem echten Zugang ausprobiert.
+            </p>
+            <div class="clear"></div>
+        </div>
+        
+         
+	
+         
+        
+        <div class="teaser_linker">
+            <h3><a href="/security/artikel/iOS-6-stopft-Konfigurationsloch-1705096.html" title="iOS 6 stopft Konfigurationsloch">iOS 6 stopft Konfigurationsloch</a></h3>
+            <img src="/security/imgs/07/9/1/7/1/3/9/mobileconfig-1fb27ed0a3701960.png" width="100" height="87" alt="" title="" />
+            <p>
+                Das jüngste iOS-Update stopft eine seit Jahren bekannte Schwachstelle, die es in sich hat.
+            </p>
+            <div class="clear"></div>
+        </div>
+        
+        </div> 
+	
+
+
+
+                                
+
+
+
+
+
+    
+    
+        <h4>Alerts</h4>
+    
+    <ul>
+    
+        <li><a href="/meldung/Mail-Server-Exim-angreifbar-via-DKIM-1737565.html" title="Mail-Server Exim angreifbar via DKIM" class="kasten_rechts">Mail-Server Exim angreifbar via DKIM</a></li>
+    
+        <li><a href="/meldung/Sicherheitsrisiko-Steam-1731296.html" title="Sicherheitsrisiko Steam" class="kasten_rechts">Sicherheitsrisiko Steam</a></li>
+    
+        <li><a href="/meldung/Stuermischer-Oktober-Patchday-bei-Oracle-1730692.html" title="Stürmischer Oktober-Patchday bei Oracle" class="kasten_rechts">Stürmischer Oktober-Patchday bei Oracle</a></li>
+    
+        <li><a href="/meldung/Mozilla-reagiert-mit-schnellem-Firefox-Update-1728195.html" title="Mozilla reagiert mit schnellem Firefox-Update" class="kasten_rechts">Mozilla reagiert mit schnellem Firefox-Update</a></li>
+    
+        <li><a href="/meldung/Nameserver-BIND-anfaellig-fuer-Denial-of-Service-1727137.html" title="Nameserver BIND anfällig für Denial of Service" class="kasten_rechts">Nameserver BIND anfällig für Denial of Service</a></li>
+    
+    </ul>
+
+
+
+                                
+
+
+
+
+
+    
+    
+        <h4 class="teaser_title">News</h4>
+    
+    <ul>
+    
+        <li><a href="/security/meldung/Kartenterminals-bei-US-Buchhandelskette-geknackt-1737561.html" title="Kartenterminals bei US-Buchhandelskette geknackt">Kartenterminals bei US-Buchhandelskette geknackt</a></li>
+    
+        <li><a href="/security/meldung/lost-found-Das-Comeback-von-TDL4-1728367.html" title="lost+found: Das Comeback von TDL4">lost+found: Das Comeback von TDL4</a></li>
+    
+        <li><a href="/security/meldung/Mail-Server-Exim-angreifbar-via-DKIM-1737565.html" title="Mail-Server Exim angreifbar via DKIM">Mail-Server Exim angreifbar via DKIM</a></li>
+    
+        <li><a href="/security/meldung/Smart-Meter-Branche-wappnet-sich-gegen-Datendiebe-1737407.html" title="Smart Meter: Branche wappnet sich gegen Datendiebe">Smart Meter: Branche wappnet sich gegen Datendiebe</a></li>
+    
+        <li><a href="/security/meldung/Deutsche-bekommen-den-gefaehrlichsten-Spam-1737120.html" title="Deutsche bekommen den gefährlichsten Spam">Deutsche bekommen den gefährlichsten Spam</a></li>
+    
+    </ul>
+
+
+
+                                
+                                
+                                
+                                
+                                <div class="naviad"><script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var dfp_ord; if (!dfp_ord) { dfp_ord = Math.floor(Math.random()*1000000000)+1000000000; }
+document.write('<script src="http://ad-emea.doubleclick.net/N6514/adj/newsticker/news-security;sz=336x200;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=3;ord=_ORD_?" type="text/javascript"><\/script>'.replace('_ORD_', dfp_ord));
+//--><!]]>
+</script>
+<noscript><div><a href="http://ad-emea.doubleclick.net/N6514/jump/newsticker/news-security;sz=336x200;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=3;ord=6644400625?" target="_blank"><img alt="" src="http://ad-emea.doubleclick.net/N6514/ad/newsticker/news-security;sz=336x200;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=3;ord=6644400625?" /></a></div></noscript>
+</div>
+                                <div class="clear"></div>
+                                <div style="margin: 1em auto; width: 364px;">
+<a href="http://www.seenby.de" rel="external"><img src="/icons/ho/seen_by_banner.gif" alt="seen.by" /></a>
+</div>
+                                
+    <div class="teaser_preisvergleich">
+	<h4><a href="http://www.heise.de/preisvergleich/" title="Recherche und Preisvergleich Top 10">Top-10 Preisvergleich</a></h4>
+
+
+<ol>
+
+    <li>
+	<span class="num">1.</span>
+	<a href="http://www.heise.de/preisvergleich/a814823.html" title="Kaspersky Lab: Internet Security 2013, 3 User, 1 Jahr, Update (deutsch) (PC) (KL1849GXCFR/KL1849GBCFR)" class="top10">Kaspersky Lab: Internet Security 2013</a>
+	<div>
+	    <a href="http://www.heise.de/preisvergleich/?o=102">Sicherheit &amp; Backup</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?m=2">Software</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?cat=swsec_is">Internet Security</a>
+	</div>
+    </li>
+
+    <li>
+	<span class="num">2.</span>
+	<a href="http://www.heise.de/preisvergleich/a829076.html" title="Acronis: True Image Home Family 2013, 3 User (deutsch) (PC) (TIFSB2DES)" class="top10">Acronis: True Image Home Family 2013</a>
+	<div>
+	    <a href="http://www.heise.de/preisvergleich/?o=102">Sicherheit &amp; Backup</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?m=2">Software</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?cat=swutil_bak">Backup</a>
+	</div>
+    </li>
+
+    <li>
+	<span class="num">3.</span>
+	<a href="http://www.heise.de/preisvergleich/a821837.html" title="Symantec: Norton Internet Security 2013, 3 User, Update (deutsch) (PC) (21247733)" class="top10">Symantec: Norton Internet Security 2013</a>
+	<div>
+	    <a href="http://www.heise.de/preisvergleich/?o=102">Sicherheit &amp; Backup</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?m=2">Software</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?cat=swsec_is">Internet Security</a>
+	</div>
+    </li>
+
+    <li>
+	<span class="num">4.</span>
+	<a href="http://www.heise.de/preisvergleich/a829066.html" title="Acronis: True Image Home 2013 Plus (deutsch) (PC) (TPHSB2DES)" class="top10">Acronis: True Image Home 2013 Plus (deutsch) (PC) </a>
+	<div>
+	    <a href="http://www.heise.de/preisvergleich/?o=102">Sicherheit &amp; Backup</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?m=2">Software</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?cat=swutil_bak">Backup</a>
+	</div>
+    </li>
+
+    <li>
+	<span class="num">5.</span>
+	<a href="http://www.heise.de/preisvergleich/a829072.html" title="Acronis: True Image Home 2013 (deutsch) (PC) (TIHSB2DES)" class="top10">Acronis: True Image Home 2013 (deutsch) (PC) </a>
+	<div>
+	    <a href="http://www.heise.de/preisvergleich/?o=102">Sicherheit &amp; Backup</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?m=2">Software</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?cat=swutil_bak">Backup</a>
+	</div>
+    </li>
+
+    <li>
+	<span class="num">6.</span>
+	<a href="http://www.heise.de/preisvergleich/a814821.html" title="Kaspersky Lab: Internet Security 2013, 3 User, 1 Jahr (deutsch) (PC) (KL1849GXCFS)" class="top10">Kaspersky Lab: Internet Security 2013</a>
+	<div>
+	    <a href="http://www.heise.de/preisvergleich/?o=102">Sicherheit &amp; Backup</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?m=2">Software</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?cat=swsec_is">Internet Security</a>
+	</div>
+    </li>
+
+    <li>
+	<span class="num">7.</span>
+	<a href="http://www.heise.de/preisvergleich/a814820.html" title="Kaspersky Lab: Internet Security 2013, 5 User, 1 Jahr, Update (deutsch) (PC) (KL1849GXEFR/KL1849GBEFR)" class="top10">Kaspersky Lab: Internet Security 2013</a>
+	<div>
+	    <a href="http://www.heise.de/preisvergleich/?o=102">Sicherheit &amp; Backup</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?m=2">Software</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?cat=swsec_is">Internet Security</a>
+	</div>
+    </li>
+
+    <li>
+	<span class="num">8.</span>
+	<a href="http://www.heise.de/preisvergleich/a821833.html" title="Symantec: Norton Internet Security 2013, 5 User, Update (deutsch) (PC) (21260389)" class="top10">Symantec: Norton Internet Security 2013</a>
+	<div>
+	    <a href="http://www.heise.de/preisvergleich/?o=102">Sicherheit &amp; Backup</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?m=2">Software</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?cat=swsec_is">Internet Security</a>
+	</div>
+    </li>
+
+    <li>
+	<span class="num">9.</span>
+	<a href="http://www.heise.de/preisvergleich/a735463.html" title="GData Software: InternetSecurity 2013, 3 User, 1 Jahr (deutsch) (PC)" class="top10">GData Software: InternetSecurity 2013</a>
+	<div>
+	    <a href="http://www.heise.de/preisvergleich/?o=102">Sicherheit &amp; Backup</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?m=2">Software</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?cat=swsec_is">Internet Security</a>
+	</div>
+    </li>
+
+    <li>
+	<span class="num">10.</span>
+	<a href="http://www.heise.de/preisvergleich/a814825.html" title="Kaspersky Lab: Internet Security 2013, 1 User, 1 Jahr (deutsch) (PC) (KL1849GXAFS)" class="top10">Kaspersky Lab: Internet Security 2013</a>
+	<div>
+	    <a href="http://www.heise.de/preisvergleich/?o=102">Sicherheit &amp; Backup</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?m=2">Software</a>
+	    <span class="rsaquo">&rsaquo;</span>
+	    <a href="http://www.heise.de/preisvergleich/?cat=swsec_is">Internet Security</a>
+	</div>
+    </li>
+
+</ol>
+
+<form method="get" action="http://www.heise.de/preisvergleich/" id="sform">
+<div>
+    <input type="text" name="fs" size="15" />
+    <select name="in">
+	<option value="">in allen Kategorien</option>
+	<option value="1">in Hardware</option>
+	<option value="2">in Software</option>
+	<option value="3">in Games</option>
+	<option value="4">in Video/Foto/TV</option>
+	<option value="5">in Telefon &amp; Co</option>
+	<option value="6">in Audio/HIFI</option>
+	<option value="7">in DVD</option>
+	<option value="8">in Haushalt</option>
+    </select>
+    <input type="submit" value="Suchen" class="submit" />
+</div>
+</form>
+
+
+    </div>
+
+
+                                
+
+
+
+
+
+    
+    <div class="teaser_scriptinclude"><script type="text/javascript" src="http://whitepaper.heise.de/special_ads/script/51.js"></script></div>
+
+
+
+                                
+                                
+                                <div class="sales"></div>
+                                <div class="contentbanner"></div>
+                            </div>
+                        
+                    
+                
+                </div>
+            
+            </div>
+        </div>
+        <div id="bannerzone">
+            <div class="leaderboard"><script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var dfp_ord; if (!dfp_ord) { dfp_ord = Math.floor(Math.random()*1000000000)+1000000000; }
+var rb = false; document.write('<script src="http://ad-emea.doubleclick.net/N6514/adj/newsticker/news-security;sz=728x90,468x60;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=4;ord=_ORD_?" type="text/javascript"><\/script>'.replace('_ORD_', dfp_ord));
+//--><!]]>
+</script>
+<noscript><div><a href="http://ad-emea.doubleclick.net/N6514/jump/newsticker/news-security;sz=728x90,468x60;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=4;ord=6644400625?" target="_blank"><img alt="" src="http://ad-emea.doubleclick.net/N6514/ad/newsticker/news-security;sz=728x90,468x60;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=4;ord=6644400625?" /></a></div></noscript>
+</div>
+            <div class="heiseadvert"></div>
+            <div class="skyscraper" ><script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var dfp_ord; if (!dfp_ord) { dfp_ord = Math.floor(Math.random()*1000000000)+1000000000; }
+if (typeof rb != "undefined" && rb != true) document.write('<script src="http://ad-emea.doubleclick.net/N6514/adj/newsticker/news-security;sz=120x600,120x800,160x600,160x800;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=5;ord=_ORD_?" type="text/javascript"><\/script>'.replace('_ORD_', dfp_ord));
+//--><!]]>
+</script>
+<noscript><div><a href="http://ad-emea.doubleclick.net/N6514/jump/newsticker/news-security;sz=120x600,120x800,160x600,160x800;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=5;ord=6644400625?" target="_blank"><img alt="" src="http://ad-emea.doubleclick.net/N6514/ad/newsticker/news-security;sz=120x600,120x800,160x600,160x800;kw=Patchday,Sicherheitsl%FCcke,XSS;tile=5;ord=6644400625?" /></a></div></noscript>
+</div>
+            
+        </div>
+        <div id="ho_themenseite_letzte">
+            <p>heise online Themen</p>
+            <nav>
+                
+<ol class="clearfix">
+    <li class=""><a href="/themen/A">A</a></li>
+    <li class=""><a href="/themen/B">B</a></li>
+    <li class=""><a href="/themen/C">C</a></li>
+    <li class=""><a href="/themen/D">D</a></li>
+    <li class=""><a href="/themen/E">E</a></li>
+    <li class=""><a href="/themen/F">F</a></li>
+    <li class=""><a href="/themen/G">G</a></li>
+    <li class=""><a href="/themen/H">H</a></li>
+    <li class=""><a href="/themen/I">I</a></li>
+    <li class=""><a href="/themen/J">J</a></li>
+    <li class=""><a href="/themen/K">K</a></li>
+    <li class=""><a href="/themen/L">L</a></li>
+    <li class=""><a href="/themen/M">M</a></li>
+    <li class=""><a href="/themen/N">N</a></li>
+    <li class=""><a href="/themen/O">O</a></li>
+    <li class=""><a href="/themen/P">P</a></li>
+    <li class=""><a href="/themen/Q">Q</a></li>
+    <li class=""><a href="/themen/R">R</a></li>
+    <li class=""><a href="/themen/S">S</a></li>
+    <li class=""><a href="/themen/T">T</a></li>
+    <li class=""><a href="/themen/U">U</a></li>
+    <li class=""><a href="/themen/V">V</a></li>
+    <li class=""><a href="/themen/W">W</a></li>
+    <li class=""><a href="/themen/X">X</a></li>
+    <li class=""><a href="/themen/Y">Y</a></li>
+    <li class=""><a href="/themen/Z">Z</a></li>
+    <li class=""><a href="/themen/Sonderzeichen">&amp;</a></li>
+    <li class="last"><a href="/themen/Ziffer">123</a></li></ol>
+            </nav>
+        </div>
+        <div id="sitemap">
+            <ul class="navi_top_abschnitt">
+                <li><a href="/"                         title="heise online"            class="navi_oben_ho">heise online</a></li>
+                <li><a href="/ct/"                      title="c't"                     class="navi_oben_ct">c't Magazin</a></li>
+                <li><a href="/ix/"                      title="iX"                      class="navi_oben_ix">iX Magazin</a></li>
+                <li><a href="/tr/"                      title="Technology Review"       class="navi_oben_tr">Technology&nbsp;Review</a></li>
+                <li><a href="/mac-and-i/"               title="Mac &amp; i"             class="navi_oben_mac" >Mac &amp; i</a></li>
+            </ul>
+            <ul class="navi_top_abschnitt">
+                <li><a href="/mobil/"                   title="heise mobil"             class="navi_oben_mob">heise mobil</a></li>
+                <li><a href="/security/"                title="heise Security"          class="navi_oben_sec">heise Security</a></li>
+                <li><a href="/netze/"                   title="heise Netze"             class="navi_oben_net">heise Netze</a></li>
+                <li><a href="/open/"                    title="heise Open Source"       class="navi_oben_op" >Open Source</a></li>
+                <li><a href="/developer/"               title="heise Developer"         class="navi_oben_dev">heise Developer</a></li>
+            </ul>
+            <ul class="navi_top_abschnitt">
+                <li><a href="/download/"                title="Software-Verzeichnis"    class="navi_oben_swv">Download</a></li>
+                <li><a href="/tp/"                      title="Telepolis"               class="navi_oben_tp">Telepolis</a></li>
+                <li><a href="/resale/"                  title="heise resale"            class="navi_oben_res" >heise Resale</a></li>
+                <li><a href="/foto/"                    title="heise Foto"              class="navi_oben_foto">heise Foto</a></li>
+                <li><a href="/autos/"                   title="heise Autos"             class="navi_oben_aut" >heise Autos</a></li>
+            </ul>
+            <ul class="navi_top_abschnitt">
+                <li><a href="/preisvergleich/"          title="Preisvergleich"          class="navi_oben_pvg">Preisvergleich</a></li>
+                <li><a href="/jobs/"                    title="heise jobs"              class="navi_oben_job">Stellenmarkt</a></li>
+                <li><a href="https://abo.heise.de/"     title="Zeitschriften-Abo"       class="navi_oben_abo">Abo</a></li>
+                <li><a href="http://www.heise-shop.de/" title="heise-shop"              class="navi_oben_shop">Shop</a></li>
+                <li><a href="/artikel-archiv/"          title="Artikel-Archiv"          class="navi_oben_kio">Artikel-Archiv</a></li>
+            </ul>
+            <ul class="navi_top_abschnitt">
+                <li><a href="/events/"                      title="heise Events"            class="navi_oben_eve">Veranstaltungen</a></li>
+                <li><a href="/whitepapers/"                 title="heise Whitepapers"       class="navi_oben_whi">heise Whitepapers</a></li>
+                <li><a href="/itmarkt/"                     title="IT-Markt"                class="navi_oben_itm">IT-Markt</a></li>
+                <li><a href="http://tarifrechner.heise.de/" title="Tarifrechner"            class="navi_oben_tarifr">Tarifrechner</a></li>
+                <li><a href="/loseblattwerke/"              title="Loseblattwerke">Loseblattwerke</a></li>
+            </ul>
+            <ul id="navi_service">
+                <li><a href="/foren/"                                                   title="Leserforum">Leserforum</a></li>
+                <li><a href="/newsletter/"                                              title="Newsletter">Newsletter</a></li>
+                <li><a href="/news-extern/news.html"   title="RSS">RSS</a></li>
+                <li><a href="/suche/"                                                   title="Suche">Suche</a></li>
+                <li><a href="/netze/netzwerk-tools/imonitor-internet-stoerungen/"       title="iMonitor – Internet-Störungen">iMonitor</a></li>
+            </ul>
+            <ul class="navi_international">
+                <li><strong>UK</strong></li>
+                <li><a href="http://www.h-online.com/"          title="The H">The H</a></li>
+                <li><a href="http://www.h-online.com/security/" title="The H Security">The H Security</a></li>
+                <li><a href="http://www.h-online.com/open/"     title="The H Open Source">The H Open Source</a></li>
+            </ul>
+        </div>
+        <script type="text/javascript">
+        <!--//--><![CDATA[//><!--
+        jQuery(document).ready( function($) {
+            $('#mitte_links, #mitte_rechts').setMinHeight($('#mitte_links, #mitte_rechts').objectMaxHeight());
+        });
+        //--><!]]>
+        </script>
+    </div>
+
+
+
+
+
+
+
+<div style="display: inline;"><img id="ivw_pixel_intern" src="/ivw-bin/ivw/CP/newsticker/meldungen/security/1737865" width="1" height="1" alt="" /></div>
+    
+    <script type="text/javascript">
+        <!--//--><![CDATA[//><!--
+            var AVW = '<' + 'div style="display: inline;"><' + 'img id="avw_pixel_intern" src="/avw-bin/ivw/CP/mbe/newsticker/news-security" width="1" height="1" alt="" /><' + '/div>';
+            document.write(AVW);
+        //--><!]]>
+    </script>
+    
+        <script type="text/javascript">
+            <!--//--><![CDATA[//><!--
+            var IVW='<div style="display: inline;"><img id="ivw_pixel" src="http://heise.ivwbox.de/cgi-bin/ivw/CP/newstick_sec;%2Fnewsticker%2Fmeldungen%2Fsecurity%2F1737865?r=http%3A%2F%2F192.168.1.201%3A8080%2Fcee-news-webreader-tomcat6-1.6-SNAPSHOT%2F';
+            document.write(IVW + '&amp;d=' + (Math.random()*100000) + '" width="1" height="1" alt="" /><' + '/div>');
+            //--><!]]>
+        </script>
+        <script type="text/javascript" src="/support/lib/mclient/mclient-1.0.js"></script>
+        <noscript>
+            <div style="display: inline;"><img id="ivw_pixel_noscript" src="http://heise.ivwbox.de/cgi-bin/ivw/CP/newstick_sec;/newsticker/meldungen/security/1737865?r=http%3A%2F%2F192.168.1.201%3A8080%2Fcee-news-webreader-tomcat6-1.6-SNAPSHOT%2F&amp;d=" width="1" height="1" alt="" /></div>
+        </noscript>
+        <script type="text/javascript">
+            <!--//--><![CDATA[//><!--
+            window.onunload=function() {};
+            //--><!]]>
+        </script>
+        
+            <!-- SZMFRABO VERSION="1.2" -->
+            <script type="text/javascript">
+                <!--//--><![CDATA[//><!--
+                var szmvars="heise//CP//newstick_sec";
+                //--><!]]>
+            </script>
+            <script src="http://heise.ivwbox.de/2004/01/survey.js" type="text/javascript"></script>
+            <!-- /SZMFRABO -->
+        
+
+
+<!-- RL -->
+
+    <!-- RL_PATH:%2Fho%2Fcms%2F5%2F2012%2F10%2F27%2F1737865 -->
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var screenInfo = escape( screen.width + 'x' + screen.height + 'x' + screen.colorDepth );
+var cookiesEnabled = 0;
+if (navigator.cookieEnabled) cookiesEnabled=1;
+var referrer = escape(document.referrer);
+referrer = referrer.replace( /(\/software\/download).*$/, "$1/" );
+document.write(
+'<div style="display: inline;"><img id="rl_pixel" src="http://rl.heise.de/images/pic.gif?r=' + referrer + ';tp=1073741824%7C1073827193%7C1073838799%7C1074814599%7C1075026941;m=Heise;tid=1075111210;random=' + (Math.random()*100000) + ';con=1;json=1;tc=1073741824%7C1073827193%7C1073838799%7C1074814599%7C1075026941%7C1075111210;c=1737865;b=938922;sep=%7C;tce=1;tn=27;tpn=heise%20online%7CRedaktioneller%20Content%7CNews%7C2012%7C10%7C27;url=http%3A%2F%2Fwww.heise.de%2Fnewsticker%2Fmeldung%2FSicherheitsupdate-fuer-Firefox-und-Thunderbird-1737865.html;tit=Sicherheitsupdate%20f%FCr%20Firefox%20und%20Thunderbird;tpu=1;sz=' + screenInfo + ';con=' + cookiesEnabled + ';cs=1" width="1" height="1" alt="" /><' + '/div>'
+);
+//--><!]]>
+</script>
+<noscript>
+  <div style="display: inline;"><img id="rl_pixel" src="http://rl.heise.de/images/pic.gif?r=http%3A%2F%2F192.168.1.201%3A8080%2Fcee-news-webreader-tomcat6-1.6-SNAPSHOT%2F;tp=1073741824%7C1073827193%7C1073838799%7C1074814599%7C1075026941;m=Heise;tid=1075111210;random=1331141723;json=0;tc=1073741824%7C1073827193%7C1073838799%7C1074814599%7C1075026941%7C1075111210;c=1737865;b=938922;sep=%7C;tce=1;tn=27;tpn=heise%20online%7CRedaktioneller%20Content%7CNews%7C2012%7C10%7C27;url=http%3A%2F%2Fwww.heise.de%2Fnewsticker%2Fmeldung%2FSicherheitsupdate-fuer-Firefox-und-Thunderbird-1737865.html;tit=Sicherheitsupdate%20f%FCr%20Firefox%20und%20Thunderbird;tpu=1;con=1;cs=1" width="1" height="1" alt="" /></div>
+</noscript>
+
+<!-- /RL -->
+
+
+<!-- Webtrekk 3.2.2, (c) www.webtrekk.com -->
+<script type="text/javascript" src="/js/ho/webtrekk_v3.js"></script>
+<script type="text/javascript">
+<!--
+var pageConfig = {
+    linkTrack : "standard", // Activate Link Tracking    [link or standard]
+    heatmap : "0",          // Activate Heatmap Tracking [1 = on | 0 = off]
+    form : "",              // Activate Form Tracking    [1 = on | 0 = off]
+    contentId: ""
+};
+var wt = new webtrekkV3(pageConfig);
+
+
+
+
+
+wt.heatmapRefpoint = 'container_content';
+wt.pixelSampling = '5';
+wt.sendinfo();
+
+    jQuery(document).ready(function($) {
+        $('.bilderstrecke_vorschau').on('webtrekk_bilderstrecke', function(w) {
+            wt.sendinfo({
+                linkId: 'bilderstrecke.' + w.action,
+                customClickParameter: {
+                    1: '' + w.bilderstrecken_id, // Bilderstrecke-CID
+                    2: '' + w.source             // Bild-Nummer
+                }
+            });
+        });
+    });
+
+//-->
+</script>
+<noscript><div><img src="//heise01.webtrekk.net/777509609504040/wt.pl?p=322,0" height="1" width="1" alt="" /></div></noscript>
+<!-- /Webtrekk -->
+
+    <script type="text/javascript">
+        <!--//--><![CDATA[//><!--
+        // VGWORT-CROP-MARKER
+        var vgwort_token='c561715930de488cb1ae7e3805008b26';
+                document.write('<div style="display: inline;"><img src="http://heise.met.vgwort.de/na/' +  vgwort_token);
+        document.write('" width="1" height="1" alt="" /><' + '/div>');
+        //--><!]]>
+    </script>
+
+
+    
+        
+
+<div style="display: inline;"><img src="/avw-bin/ivw/CP/difftest/jorge" width="1" height="1" alt="" /></div>
+<div style="display: inline;"><img src="/avw-bin/ivw/CP/difftest/casey" width="1" height="1" alt="" /></div>
+
+	<ul id="navi_bottom">
+
+	
+		<li class="left"><a href="/Privacy-Policy-der-Heise-Zeitschriften-Verlag-GmbH-Co-KG-4860.html">Datenschutzhinweis</a> </li>
+	
+
+	
+		<li class="left"><a href="/Impressum-4862.html">Impressum</a> </li>
+	
+
+	
+		<li class="left"><a href="/Kontakt-4864.html">Kontakt</a> </li>
+	
+
+	
+		<li class="left"><a href="/mediadaten/">Mediadaten</a> </li>
+	
+
+
+<li class="bid_anzeige">
+938922
+</li>
+
+
+
+    <li class="right"><a href="http://www.interred.de/" rel="external" style="margin-right: 0;">Content Management</a> by <b style="margin-right: 0.5em;">Inter<span class="tx_red">Red</span></b></li>
+
+	
+		
+		<li class="right"><a href="http://www.plusline.de/">Hosted by Plus.line</a> </li>
+		
+		<li class="right"><a href="http://www.heise-medien.de/zeitschriften/">Copyright © 2012 Heise Zeitschriften Verlag</a> </li>
+		
+	
+
+	
+</ul>
+
+    
+
+</body>
+</html>
+<!-- Created with InterRed V13.0-x.x.x.x, http://www.interred.de/, by InterRed GmbH -->
+<!-- BID: 938922, iBID: 938928, CID: 1737865, iCID: 1737887 -->
+<!-- Link: $(LB938922:Linktext)$ $(LC1737865:Linktext)$ -->
+<!-- Generiert: 2012-10-27 16:32:54 -->
+
