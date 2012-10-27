@@ -109,7 +109,7 @@ public class SiteUpdater {
         for (Feed feed : site.getFeeds()) {
             if (!onlyActiveFeeds || feed.isActive()) {
             	LOG.debug("processing feed {}", feed.getTitle());
-                articles.addAll(feedParser.parse(new URL(feed.getLocation())));
+                articles.addAll(feedParser.readArticles(new URL(feed.getLocation())));
             	remainingArticles = articles.size();
             }
         }

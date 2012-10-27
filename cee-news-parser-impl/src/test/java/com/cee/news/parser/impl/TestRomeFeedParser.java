@@ -20,9 +20,9 @@ import com.cee.news.parser.net.impl.XmlStreamReaderFactory;
 public class TestRomeFeedParser {
 
 	@Test
-    public void testParse() throws ParserException, IOException {
+    public void testReadArticles() throws ParserException, IOException {
         FeedParser parser = new RomeFeedParser(new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
-        List<Article> articles = parser.parse(getClass().getResource("spiegelNachrichten.rss"));
+        List<Article> articles = parser.readArticles(getClass().getResource("spiegelNachrichten.rss"));
         
         assertEquals(7, articles.size());
         Article article = articles.get(0);
@@ -36,9 +36,9 @@ public class TestRomeFeedParser {
     }
     
     @Test
-    public void testParseRegressionIssue143() throws MalformedURLException, ParserException, IOException {
+    public void testReadArticlesRegressionIssue143() throws MalformedURLException, ParserException, IOException {
     	FeedParser parser = new RomeFeedParser(new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
-        List<Article> articles = parser.parse(getClass().getResource("issue143.xml"));
+        List<Article> articles = parser.readArticles(getClass().getResource("issue143.xml"));
         assertEquals(42, articles.size());
     }
 }

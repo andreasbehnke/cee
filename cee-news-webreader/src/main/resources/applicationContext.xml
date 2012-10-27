@@ -141,14 +141,10 @@
 	
 	<bean id="htmlReader" class="org.ccil.cowan.tagsoup.Parser" scope="prototype" />
 
-	<bean id="feedChecker" class="com.cee.news.parser.impl.RomeFeedChecker" scope="prototype">
-		<property name="webClient" ref="webClient" />
-	</bean>
-
 	<bean id="siteParser" class="com.cee.news.parser.SiteParser" scope="prototype">
 		<property name="webClient" ref="webClient" />
     	<property name="reader" ref="htmlReader" />
-		<property name="feedChecker" ref="feedChecker" />
+		<property name="feedParser" ref="feedParser" />
 	</bean>
 
 	<!-- GWT Services -->
@@ -177,6 +173,6 @@
 		<property name="siteStore" ref="commandSiteStore" />
 		<lookup-method name="createSiteUpdateCommand" bean="siteUpdateCommand" />
 		<lookup-method name="createSiteParser" bean="siteParser" />
-		<lookup-method name="createFeedChecker" bean="feedChecker" />
+		<lookup-method name="createFeedParser" bean="feedParser" />
 	</bean>
 </beans>

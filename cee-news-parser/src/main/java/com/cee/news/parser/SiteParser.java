@@ -30,7 +30,7 @@ public class SiteParser {
     
     private XMLReader xmlReader;
     
-    private FeedChecker feedChecker;
+    private FeedParser feedParser;
 
     /**
      * {@link XMLReader} used by the parser.
@@ -42,10 +42,10 @@ public class SiteParser {
     }
     
     /**
-     * @param feedChecker {@link FeedChecker} instance used to test, if an URL points to a supported feed type
+     * @param feedParser {@link FeedParser} instance used to test, if an URL points to a supported feed type
      */
-    public void setFeedChecker(FeedChecker feedChecker) {
-        this.feedChecker = feedChecker;
+    public void setFeedParser(FeedParser feedParser) {
+        this.feedParser = feedParser;
     }
     
     /**
@@ -57,9 +57,9 @@ public class SiteParser {
 
     public SiteParser() {}
     
-    public SiteParser(XMLReader xmlReader, FeedChecker feedChecker, WebClient webClient) {
+    public SiteParser(XMLReader xmlReader, FeedParser feedParser, WebClient webClient) {
         this.xmlReader = xmlReader;
-        this.feedChecker = feedChecker;
+        this.feedParser = feedParser;
         this.webClient = webClient;
     }
 
@@ -80,7 +80,7 @@ public class SiteParser {
         if (xmlReader == null) {
             throw new IllegalStateException("reader property has not been set");
         }
-        if (feedChecker == null) {
+        if (feedParser == null) {
             throw new IllegalStateException("feedChecker property has not been set");
         }
 
@@ -106,7 +106,7 @@ public class SiteParser {
         List<Feed> feeds = site.getFeeds();
         List<Feed> remove = new ArrayList<Feed>();
         for (Feed feed : feeds) {
-            if (!feedChecker.isSupportedFeed(new URL(feed.getLocation()))) {
+            if (!feedParser.isSupportedFeed(new URL(feed.getLocation()))) {
             	if (LOG.isDebugEnabled()) {
             		LOG.debug("removing unknown feed type from sites feed list: {} - {}", feed.getContentType(), feed.getTitle());
             	}

@@ -23,7 +23,7 @@ import com.cee.news.client.error.ServiceException;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
-import com.cee.news.parser.FeedChecker;
+import com.cee.news.parser.FeedParser;
 import com.cee.news.parser.SiteParser;
 import com.cee.news.store.SiteStore;
 
@@ -216,7 +216,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	
 	@Override
 	public FeedData retrieveFeedData(String location) {
-		FeedChecker feedChecker = createFeedChecker();
+		FeedParser feedParser = createFeedParser();
 		FeedData info = new FeedData();
 		info.setIsNew(true);
 		URL locationUrl = null;
@@ -227,12 +227,12 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			return info;
 		}
 		try {
-			if (!feedChecker.isSupportedFeed(locationUrl)) {
+			if (!feedParser.isSupportedFeed(locationUrl)) {
 				info.setState(SiteRetrivalState.parserError);
 				LOG.error(String.format(COULD_NOT_RETRIEVE_SITE, location));
 				return info;
 			}
-			Feed feed = feedChecker.parse(locationUrl);
+			Feed feed = feedParser.parse(locationUrl);
 			info = SiteConverter.createFromFeed(feed);
 			info.setState(SiteRetrivalState.ok);
 		} catch (IOException e) {
@@ -325,7 +325,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	protected abstract SiteParser createSiteParser();
 	
 	/**
-	 * @return A feed checker instance prepared with all dependencies
+	 * @return A feed parser instance prepared with all dependencies
 	 */
-	protected abstract FeedChecker createFeedChecker();
+	protected abstract FeedParser createFeedParser();
 }
