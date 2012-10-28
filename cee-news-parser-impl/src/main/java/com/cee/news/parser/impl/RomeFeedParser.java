@@ -41,6 +41,8 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
     public RomeFeedParser(WebClient webClient) {
         setWebClient(webClient);
     }
+    
+	@SuppressWarnings("serial")
 	private class EmptyElementFilter implements Filter {
 
 		@Override
@@ -121,7 +123,8 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
 		}
     }
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public List<Article> readArticles(final URL feedLocation) throws ParserException, IOException {
         List<Article> articles = new ArrayList<Article>();
 

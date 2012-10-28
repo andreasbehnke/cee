@@ -68,6 +68,11 @@ FIELDSET LI {
 	margin-bottom: 4px;
 }
 
+.content P {
+	margin-top: 8px;
+	max-width: 640px;
+}
+
 /* teaser */
 .teaser {
 	overflow: hidden;

@@ -9,18 +9,35 @@ import de.l3s.boilerpipe.labels.DefaultLabels;
 /**
  * Removes all text blocks, which are not in between the last text box labeled "TITLE" and the first text box labeled "INDICATES_END_OF_TEXT".
  */
-public class TitleAndEndOfContentFilter implements BoilerpipeFilter {
+public class TitleToEndOfContentFilter implements BoilerpipeFilter {
 	
-	public final static TitleAndEndOfContentFilter INSTANCE = new TitleAndEndOfContentFilter();
+	public final static TitleToEndOfContentFilter INSTANCE = new TitleToEndOfContentFilter();
 
 	@Override
 	public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
-		//find last text box labeled "TITLE"
+		//find first text box labeled "TITLE"
 		int titleIndex = -1;
 		int i = 0;
+		boolean expectedTitle = false;
+		int blockCnt = 0;
+		int wordCnt = 0;
 		for (TextBlock tb : doc.getTextBlocks()) {
 			if (tb.hasLabel(DefaultLabels.TITLE)) {
+				expectedTitle = true;
+				blockCnt = 0;
+				wordCnt = 0;
 				titleIndex = i;
+			} else if (expectedTitle) {//the next three blocks must have at least 40 words
+				wordCnt += tb.getNumWords();
+				blockCnt++;
+				if (blockCnt == 3) {
+					expectedTitle = false;
+					if (wordCnt > 25) {
+						break;
+					} else {
+						titleIndex = -1;
+					}
+				}
 			}
 			i++;
 		}

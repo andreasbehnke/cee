@@ -127,4 +127,45 @@ public class TestBoilerpipeArticleParser {
 				"« Vorige | Nächste »",
 				"Sicherheitsupdate für Firefox und Thunderbird"));
 	}
+	
+	@Test
+	public void testParseRegressionIssue217() throws ParserException, IOException {
+		assertTrue(testUnexpectedContent(
+				"Niederlage auf Schalke: Nürnberg-Fans belagern Mannschaftsbus",
+				getClass().getResource("issue217.html"), 
+				"Auf anderen Social Networks teilen",
+				"Forumname",
+				"alles aus der Rubrik Sport",
+				"Fanflash"));
+	}
+
+	@Test
+	public void testParseRegressionIssue218() throws ParserException, IOException {
+		assertTrue(testExpectedContent(
+				"Israel: Unter Feuer",
+				getClass().getResource("issue218.html"), 
+				"Hebron sollen mehr als 1500",
+				"auf dem Betonblock, der aus der wüstenhaften Hochebene",
+				"Das Schicksal der Bewohner ist noch ungewiss",
+				"Nach Ansicht des Verteidigungsministeriums",
+				"bald kein Platz mehr, befürchtet Lecker"));
+	}
+
+	@Test
+	public void testParseRegressionIssue219() throws ParserException, IOException {
+		assertTrue(testUnexpectedContent(
+				"Eher kleine Wellen nach Tsunami-Warnung",
+				getClass().getResource("issue219.html"), 
+				"Erdbeben vor Kanadas Westküste",
+				"Eher kleine Wellen nach Tsunami-Warnung"));
+	}
+	
+	@Test
+	public void testParseRegressionIssue220() throws ParserException, IOException {
+		assertTrue(testExpectedContent(
+				"Googles Web Toolkit 2.5 mit schlankerem Code",
+				getClass().getResource("issue220.html"), 
+				"ein in Java geschriebenes quelloffenes Webframework für Ajax-Anwendungen",
+				"GWT enthält als Besonderheit einen Java-nach-JavaScript-Compiler"));
+	}
 }

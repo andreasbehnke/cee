@@ -19,17 +19,13 @@ import com.cee.news.parser.ParserException;
 import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.WebResponse;
 
+import de.l3s.boilerpipe.BoilerpipeFilter;
 import de.l3s.boilerpipe.BoilerpipeInput;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.document.TextBlock;
 import de.l3s.boilerpipe.document.TextDocument;
 import de.l3s.boilerpipe.extractors.ExtractorBase;
-import de.l3s.boilerpipe.filters.english.IgnoreBlocksAfterContentFilter;
 import de.l3s.boilerpipe.filters.english.NumWordsRulesClassifier;
-import de.l3s.boilerpipe.filters.heuristics.BlockProximityFusion;
-import de.l3s.boilerpipe.filters.heuristics.DocumentTitleMatchClassifier;
-import de.l3s.boilerpipe.filters.heuristics.ExpandTitleToContentFilter;
-import de.l3s.boilerpipe.filters.simple.BoilerplateBlockFilter;
 import de.l3s.boilerpipe.labels.DefaultLabels;
 import de.l3s.boilerpipe.sax.BoilerpipeHTMLContentHandler;
 
@@ -41,44 +37,41 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	private final static class ArticleExtractor extends ExtractorBase {
 	    public static final ArticleExtractor INSTANCE = new ArticleExtractor();
 	    
-	    private final MatchingTextFinder terminatingBlocksFinder;
+	    private final BoilerpipeFilter terminatingBlocksFinder;
 	    
 	    private ArticleExtractor() {
-	    	List<String> stopText = new ArrayList<String>();
+	    	List<String> matches = new ArrayList<String>();
 	    	//english stopwords
-	    	stopText.add("comments");
-	    	stopText.add("users responded in");
-	    	stopText.add("please rate this");
-	    	stopText.add("post a comment");
-	    	stopText.add("what you think...");
-	    	stopText.add("add your comment");
-	    	stopText.add("add comment");
-	    	stopText.add("reader views");
-	    	stopText.add("have your say");
-	    	stopText.add("reader comments");
+	    	matches.add("comments");
+	    	matches.add("comment");
+	    	matches.add("users responded in");
+	    	matches.add("please rate this");
+	    	matches.add("what you think...");
+	    	matches.add("reader views");
+	    	matches.add("have your say");
 	    	
 	    	//german stopwords
-	    	stopText.add("kommentare");
-	    	stopText.add("kommentieren");
-	    	stopText.add("diesen artikel...");
-	    	terminatingBlocksFinder = new MatchingTextFinder(DefaultLabels.INDICATES_END_OF_TEXT, stopText, 15);
-	    }
+	    	matches.add("kommentar");
+	    	matches.add("kommentieren");
+	    	matches.add("diesen artikel...");
+	    	
+	    	terminatingBlocksFinder = new ContainsTextFinder(
+	    			DefaultLabels.INDICATES_END_OF_TEXT, 
+	    			matches, 
+	    			6, 
+	    			true);
+	    	}
 
 	    public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
-	    	List<String> stopText = new ArrayList<String>();
-	    	stopText.add(doc.getTitle().toLowerCase());
-	    	MatchingTextFinder titleFinder = new MatchingTextFinder(DefaultLabels.TITLE, stopText, 15);
-	        return //TerminatingBlocksFinder.INSTANCE.process(doc)
-	        		terminatingBlocksFinder.process(doc)
+	    	BoilerpipeFilter titleFinder = new NormalizedLevenshteinDistance(
+	    			DefaultLabels.TITLE, 
+	    			doc.getTitle(),
+	    			0.1, 
+	    			false);
+	    	return 	terminatingBlocksFinder.process(doc)
 	        		| titleFinder.process(doc)
-	                //| new DocumentTitleMatchClassifier(doc.getTitle()).process(doc)
 	                | NumWordsRulesClassifier.INSTANCE.process(doc)
-	                | TitleAndEndOfContentFilter.INSTANCE.process(doc);
-	                //| BlockProximityFusion.MAX_DISTANCE_1.process(doc)
-	                //| BoilerplateBlockFilter.INSTANCE.process(doc);
-	                //| BlockProximityFusion.MAX_DISTANCE_1_CONTENT_ONLY.process(doc);
-	                //| KeepLargestBlockFilter.INSTANCE.process(doc)
-	                //| ExpandTitleToContentFilter.INSTANCE.process(doc);
+	                | TitleToEndOfContentFilter.INSTANCE.process(doc);
 	    }
 	}
 	
