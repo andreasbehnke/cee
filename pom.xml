@@ -14,10 +14,9 @@
 		<!-- dependency versions -->
 		<gwt.version>2.4.0</gwt.version>
 		<spring.version>3.1.0.RELEASE</spring.version>
-		<!-- TODO: Set this to 1.6.2! -->
 		<slf4j.version>1.6.4</slf4j.version>
 		<jackrabbit.version>2.2.10</jackrabbit.version>
-		
+		<jetty.version>9.0.0.M0</jetty.version>
 		<source.encoding>UTF-8</source.encoding>
 		<repository.url>http://192.168.1.201:8080/archiva</repository.url>
 	</properties>
@@ -88,6 +87,8 @@
 		<module>cee-news-webreader</module>
 		<module>cee-news-webreader-tomcat6</module>
 		<module>cee-news-webreader-jetty7</module>
+		<module>jetty-starter</module>
+		<module>newsreader</module>
 	</modules>
 
 	<dependencyManagement>
@@ -147,7 +148,18 @@
 				<version>${project.version}</version>
 				<type>war</type>
 			</dependency>
-
+			<dependency>
+				<groupId>com.cee</groupId>
+				<artifactId>jetty-starter</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
+				<artifactId>newsreader</artifactId>
+				<version>${project.version}</version>
+				<type>war</type>
+			</dependency>
 			<!-- external -->
 			<dependency>
 				<groupId>cglib</groupId>
@@ -214,6 +226,11 @@
 				<version>2.0</version>
 			</dependency>
 			<dependency>
+			        <groupId>javax.servlet</groupId>
+			        <artifactId>javax.servlet-api</artifactId>
+			        <version>3.0.1</version>
+			</dependency>
+			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>4.8.2</version>
@@ -264,6 +281,63 @@
 				<version>1.8.4</version>
 				<scope>test</scope>
 			</dependency>
+			
+			<!-- jetty -->
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-continuation</artifactId>
+				<type>jar</type>
+				<version>${jetty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-http</artifactId>
+				<type>jar</type>
+				<version>${jetty.version}</version>
+			</dependency>
+	        <dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-io</artifactId>
+				<type>jar</type>
+				<version>${jetty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-security</artifactId>
+				<type>jar</type>
+				<version>${jetty.version}</version>
+			</dependency>
+	        <dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-server</artifactId>
+				<type>jar</type>
+				<version>${jetty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-servlet</artifactId>
+				<type>jar</type>
+				<version>${jetty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-util</artifactId>
+				<type>jar</type>
+				<version>${jetty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-webapp</artifactId>
+				<type>jar</type>
+				<version>${jetty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-xml</artifactId>
+				<type>jar</type>
+				<version>${jetty.version}</version>
+			</dependency>
+			
 			<dependency>
 				<groupId>org.mockito</groupId>
   				<artifactId>mockito-core</artifactId>  
