@@ -21,12 +21,12 @@
 
 	<distributionManagement>
 		<repository>
-			<id>archiva.internal</id>
+			<id>internal</id>
 			<name>Internal Release Repository</name>
 			<url>${repository.url}</url>
 		</repository>
 		<snapshotRepository>
-			<id>archiva.snapshots</id>
+			<id>snapshots</id>
 			<name>Internal Snapshot Repository</name>
 			<url>${snapshotRepository.url}</url>
 		</snapshotRepository>
