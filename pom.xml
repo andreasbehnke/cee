@@ -7,7 +7,6 @@
 	<name>Content Extraction Engine</name>
 	<description>Framework for extracting content from documents and websites</description>
 	<packaging>pom</packaging>
-
 	<properties>
 		<jdk.version>1.7</jdk.version>
 		
@@ -18,26 +17,25 @@
 		<jackrabbit.version>2.2.10</jackrabbit.version>
 		<jetty.version>9.0.0.M0</jetty.version>
 		<source.encoding>UTF-8</source.encoding>
-		<repository.url>http://192.168.1.201:8080/archiva</repository.url>
 	</properties>
 
 	<distributionManagement>
 		<repository>
 			<id>archiva.internal</id>
 			<name>Internal Release Repository</name>
-			<url>${repository.url}/repository/internal/</url>
+			<url>${repository.url}</url>
 		</repository>
 		<snapshotRepository>
 			<id>archiva.snapshots</id>
 			<name>Internal Snapshot Repository</name>
-			<url>${repository.url}/repository/snapshots/</url>
+			<url>${snapshotRepository.url}</url>
 		</snapshotRepository>
 	</distributionManagement>
 	
 	<scm>
-		<connection>scm:svn:svn://192.168.1.201/cee/trunk</connection>
-		<developerConnection>scm:svn:svn://192.168.1.201/cee/trunk</developerConnection>
-		<url>svn://192.168.1.201/cee/trunk</url>
+		<connection>${scm.connection}</connection>
+		<developerConnection>${scm.developerConnection}</developerConnection>
+		<url>${scm.url}</url>
 	</scm>
 	
 	<build>
