@@ -23,19 +23,19 @@
 		<repository>
 			<id>internal</id>
 			<name>Internal Release Repository</name>
-			<url>${repository.url}</url>
+			<url>${conf.repository.url}</url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshots</id>
 			<name>Internal Snapshot Repository</name>
-			<url>${snapshotRepository.url}</url>
+			<url>${conf.snapshotRepository.url}</url>
 		</snapshotRepository>
 	</distributionManagement>
 	
 	<scm>
-		<connection>${scm.connection}</connection>
-		<developerConnection>${scm.developerConnection}</developerConnection>
-		<url>${scm.url}</url>
+		<connection>${conf.scm.connection}</connection>
+		<developerConnection>${conf.scm.developerConnection}</developerConnection>
+		<url>${conf.scm.url}</url>
 	</scm>
 	
 	<build>
