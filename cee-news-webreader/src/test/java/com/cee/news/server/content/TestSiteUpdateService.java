@@ -17,7 +17,7 @@ import com.cee.news.model.Site;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"/testContext.xml"})
-@DirtiesContext(classMode=ClassMode.AFTER_CLASS)
+@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
 public class TestSiteUpdateService {
 	
 	private static final String SITE_URL = "http://www.test.com/content/index.html";
