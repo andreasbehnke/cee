@@ -26,8 +26,6 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.RowIterator;
 
 import org.apache.jackrabbit.util.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.cee.news.model.Article;
 import com.cee.news.model.ArticleKey;
@@ -43,9 +41,7 @@ import com.cee.news.store.StoreException;
  */
 public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
 
-	private final static Logger LOG = LoggerFactory.getLogger(JcrArticleStore.class);
-
-    private final static String SELECT_ARTICLES_OF_SITE_ORDERED_BY_DATE = "SELECT s.[news:name] AS " + SITE_NAME_SELECTOR + ", a.[news:id] AS " + ARTICLE_ID_SELECTOR + ", a.[news:title] AS " + ARTICLE_TITLE_SELECTOR + " "
+	private final static String SELECT_ARTICLES_OF_SITE_ORDERED_BY_DATE = "SELECT s.[news:name] AS " + SITE_NAME_SELECTOR + ", a.[news:id] AS " + ARTICLE_ID_SELECTOR + ", a.[news:title] AS " + ARTICLE_TITLE_SELECTOR + " "
                                                                         + "FROM [news:article] AS a INNER JOIN [news:site] AS s ON ISCHILDNODE(a, s) "
                                                                         + "WHERE %s " 
                                                                         + "ORDER BY a.[news:published] DESC";

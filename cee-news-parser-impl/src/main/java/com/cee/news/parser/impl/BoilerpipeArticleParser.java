@@ -119,7 +119,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
     	Reader textReader = null;
         try {
         	String articleTitel = article.getTitle();
-        	LOG.info("start parsing article content of {}", articleTitel);
+        	LOG.debug("start parsing article content of {}", articleTitel);
         	BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
         	
         	WebResponse response = webClient.openWebResponse(new URL(article.getLocation()));
@@ -146,7 +146,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
             	LOG.warn("article with poor content quality found: {}", article.getTitle());
             	return null;
             }
-            LOG.info("finished parsing article content of {}, found {} textblocks", article.getTitle(), content.size());
+            LOG.debug("finished parsing article content of {}, found {} textblocks", article.getTitle(), content.size());
             return article;
         } catch (BoilerpipeProcessingException e) {
             throw new ParserException(e);
