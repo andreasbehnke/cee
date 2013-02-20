@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cee</groupId>
 	<artifactId>cee</artifactId>
-	<version>1.6-SNAPSHOT</version>
+	<version>1.6</version>
 	<name>Content Extraction Engine</name>
 	<description>Framework for extracting content from documents and websites</description>
 	<packaging>pom</packaging>
@@ -33,9 +33,9 @@
 	</distributionManagement>
 	
 	<scm>
-		<connection>${conf.scm.connection}</connection>
-		<developerConnection>${conf.scm.developerConnection}</developerConnection>
-		<url>${conf.scm.url}</url>
+		<connection>scm:svn:file:///srv/svn/repos/cee/tags/cee-1.6</connection>
+		<developerConnection>scm:svn:file:///srv/svn/repos/cee/tags/cee-1.6</developerConnection>
+		<url>svn://192.168.1.201/cee/tags/cee-1.6</url>
 	</scm>
 	
 	<build>
