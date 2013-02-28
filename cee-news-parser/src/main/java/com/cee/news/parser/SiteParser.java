@@ -101,20 +101,21 @@ public class SiteParser {
         	}
         }
         
-        //remove feeds with unknown content type
         Site site = siteHandler.getSite();
-        List<Feed> feeds = site.getFeeds();
-        List<Feed> remove = new ArrayList<Feed>();
-        for (Feed feed : feeds) {
-            if (!feedParser.isSupportedFeed(new URL(feed.getLocation()))) {
+        //parse all feeds found in site
+        List<String> feedLocations = siteHandler.getFeedLocations();
+        List<Feed> feeds = new ArrayList<Feed>();
+        for (String feedLocation : feedLocations) {
+        	URL feedUrl = new URL(feedLocation);
+            if (!feedParser.isSupportedFeed(feedUrl)) {
             	if (LOG.isDebugEnabled()) {
-            		LOG.debug("removing unknown feed type from sites feed list: {} - {}", feed.getContentType(), feed.getTitle());
+            		LOG.debug("unknown feed type found: {}", feedLocation);
             	}
-            	remove.add(feed);
+            } else {
+            	feeds.add(feedParser.parse(feedUrl));
             }
         }
-        feeds.removeAll(remove);
-        
+        site.setFeeds(feeds);
         return site;
     }
 }

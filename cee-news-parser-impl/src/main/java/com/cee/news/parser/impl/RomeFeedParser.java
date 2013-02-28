@@ -117,7 +117,9 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
     		Document document = openDocument(feedLocation);
     		SyndFeedInput input = new SyndFeedInput();
     		SyndFeed syndFeed = input.build(document);
-    		return new Feed(feedLocation.toExternalForm(), syndFeed.getTitle(), null);
+    		Feed feed = new Feed(feedLocation.toExternalForm(), syndFeed.getTitle());
+    		feed.setLanguage(syndFeed.getLanguage());
+    		return feed;
 		} catch (JDOMException | IllegalArgumentException | FeedException e) {
 			throw new IOException(e);
 		}

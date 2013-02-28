@@ -34,12 +34,12 @@ public class TestSiteParser {
         assertTrue(site.getDescription().startsWith("Deutschlands f"));
         assertEquals(2, site.getFeeds().size());
         Feed feed = site.getFeeds().get(0);
-        assertEquals("SPIEGEL ONLINE RSS Schlagzeilen", feed.getTitle());
-        assertEquals("application/rss+xml", feed.getContentType());
+        assertEquals("SPIEGEL ONLINE - Schlagzeilen", feed.getTitle());
+        assertEquals("de", feed.getLanguage());
         assertEquals(new URL(siteLocation, "spiegelSchlagzeilen.rss").toExternalForm(), feed.getLocation());
         feed = site.getFeeds().get(1);
-        assertEquals("SPIEGEL ONLINE RSS Nachrichten", feed.getTitle());
-        assertEquals("application/rss+xml", feed.getContentType());
+        assertEquals("SPIEGEL ONLINE - Nachrichten", feed.getTitle());
+        assertEquals("de", feed.getLanguage());
         assertEquals(new URL(siteLocation, "spiegelNachrichten.rss").toExternalForm(), feed.getLocation());
 
     }

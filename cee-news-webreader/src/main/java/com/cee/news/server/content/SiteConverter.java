@@ -16,7 +16,6 @@ public class SiteConverter {
 		FeedData data = new FeedData();
 		data.setIsNew(true);
 		data.setIsActive(feed.isActive());
-		data.setContentType(feed.getContentType());
 		data.setLocation(feed.getLocation());
 		data.setTitle(feed.getTitle());
 		return data;
@@ -40,7 +39,6 @@ public class SiteConverter {
 	public static Feed createFromFeedData(FeedData data) {
 		Feed feed = new Feed();
 		feed.setActive(data.getIsActive());
-		feed.setContentType(data.getContentType());
 		feed.setLocation(data.getLocation());
 		feed.setTitle(data.getTitle());
 		return feed;

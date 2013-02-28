@@ -3,7 +3,6 @@ package com.cee.news.store.jcr;
 import static com.cee.news.store.jcr.JcrStoreConstants.NODE_FEED;
 import static com.cee.news.store.jcr.JcrStoreConstants.NODE_SITE;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_ACTIVE;
-import static com.cee.news.store.jcr.JcrStoreConstants.PROP_CONTENT_TYPE;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_DESCRIPTION;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_LANGUAGE;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_LOCATION;
@@ -68,7 +67,6 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
     protected void addFeed(Node siteNode, Feed feed) throws RepositoryException {
         Node feedNode = siteNode.addNode(NODE_FEED, NODE_FEED);
         feedNode.setProperty(PROP_LOCATION, feed.getLocation());
-        feedNode.setProperty(PROP_CONTENT_TYPE, feed.getContentType());
         feedNode.setProperty(PROP_TITLE, feed.getTitle());
         feedNode.setProperty(PROP_ACTIVE, feed.isActive());
     }
@@ -160,7 +158,6 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
                 Feed feed = new Feed();
                 feed.setLocation(feedNode.getProperty(PROP_LOCATION).getString());
                 feed.setTitle(feedNode.getProperty(PROP_TITLE).getString());
-                feed.setContentType(getStringPropertyOrNull(feedNode, PROP_CONTENT_TYPE));
                 feed.setActive(feedNode.getProperty(PROP_ACTIVE).getBoolean());
                 site.getFeeds().add(feed);
             }

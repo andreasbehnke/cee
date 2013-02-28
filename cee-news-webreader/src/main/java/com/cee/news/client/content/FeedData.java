@@ -12,8 +12,6 @@ public class FeedData implements IsSerializable {
 
 	private String location;
 
-	private String contentType;
-
 	private String title;
 
 	private boolean active;
@@ -42,14 +40,6 @@ public class FeedData implements IsSerializable {
 
 	public void setLocation(String location) {
 		this.location = location;
-	}
-
-	public String getContentType() {
-		return contentType;
-	}
-
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
 	}
 
 	public String getTitle() {

@@ -14,7 +14,6 @@ import java.util.Map;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 
-import org.apache.jackrabbit.util.Text;
 import org.junit.Test;
 
 import com.cee.news.model.EntityKey;
@@ -33,10 +32,10 @@ public class TestJcrSiteStore extends JcrTestBase {
         site.setName("http://www.spiegel.de");
         site.setTitle("Title");
         List<Feed> feeds = new ArrayList<Feed>();
-        Feed feed = new Feed("http://www.spiegel.de/feed1.rss", "feed1", "application/xml");
+        Feed feed = new Feed("http://www.spiegel.de/feed1.rss", "feed1");
         feed.setActive(true);
         feeds.add(feed);
-        feeds.add(new Feed("http://www.spiegel.de/feed2.rss", "feed2", "application/rss"));
+        feeds.add(new Feed("http://www.spiegel.de/feed2.rss", "feed2"));
         site.setFeeds(feeds);
         EntityKey siteKey = siteStore.update(site);
         
@@ -54,11 +53,9 @@ public class TestJcrSiteStore extends JcrTestBase {
         feedMap.put(feeds.get(0).getTitle(), feeds.get(0));
         feedMap.put(feeds.get(1).getTitle(), feeds.get(1));
         Feed feed1 = feedMap.get("feed1");
-        assertEquals("application/xml", feed1.getContentType());
         assertEquals("http://www.spiegel.de/feed1.rss", feed1.getLocation());
         assertTrue(feed1.isActive());
         Feed feed2 = feedMap.get("feed2");
-        assertEquals("application/rss", feed2.getContentType());
         assertEquals("http://www.spiegel.de/feed2.rss", feed2.getLocation());
         assertFalse(feed2.isActive());
         
@@ -67,7 +64,7 @@ public class TestJcrSiteStore extends JcrTestBase {
         site.setTitle("Title123");
         site.setLanguage("en");
         feeds = new ArrayList<Feed>();
-        feeds.add(new Feed("http://www.tageschau.de/feed.rss", "feed1", "application/xml"));
+        feeds.add(new Feed("http://www.tageschau.de/feed.rss", "feed1"));
         site.setFeeds(feeds);
         siteStore.update(site);
         
@@ -81,7 +78,6 @@ public class TestJcrSiteStore extends JcrTestBase {
         feedMap = new HashMap<String, Feed>();
         feedMap.put(feeds.get(0).getTitle(), feeds.get(0));
         feed1 = feedMap.get("feed1");
-        assertEquals("application/xml", feed1.getContentType());
         assertEquals("http://www.tageschau.de/feed.rss", feed1.getLocation());
         
         //create site with null description and title

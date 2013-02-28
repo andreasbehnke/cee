@@ -2,6 +2,8 @@ package com.cee.news.parser;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +11,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 
 /**
@@ -56,16 +57,23 @@ public class SiteHandler extends DefaultHandler {
     private final URL siteLocation;
     
     private final Site site = new Site();
+    
+    private final List<String> feedLocations;
 
     private final StringBuilder characterBuffer = new StringBuilder();
 
     public SiteHandler(final URL base) {
         this.siteLocation = base;
         this.site.setLocation(base.toExternalForm());
+        feedLocations = new ArrayList<String>();
     }
 
     public Site getSite() {
         return site;
+    }
+    
+    public List<String> getFeedLocations() {
+    	return feedLocations;
     }
 
     @Override
@@ -82,21 +90,21 @@ public class SiteHandler extends DefaultHandler {
             if (localName.equalsIgnoreCase(LINK_ELEMENT)) {
                 String rel = attributes.getValue(REL_ATTRIBUTE);
                 if (rel != null && rel.equalsIgnoreCase(ALTERNATE_CONTENT)) {
-                    String title = attributes.getValue(TITLE_ATTRIBUTE);
-                    String type = attributes.getValue(TYPE_ATTRIBUTE);
                     String href = attributes.getValue(HREF_ATTRIBUTE);
                     if (href != null) {
                     	if (LOG.isDebugEnabled()) {
-                    		LOG.debug("found feed {} of type {} at {}", new Object[]{title, type, href});
+                    		String title = attributes.getValue(TITLE_ATTRIBUTE);
+                            String type = attributes.getValue(TYPE_ATTRIBUTE);
+                            LOG.debug("found feed {} of type {} at {}", new Object[]{title, type, href});
                     	}
                         URL location = null;
                         try {
                             location = new URL(siteLocation, href);
                         } catch (MalformedURLException e) {
-                        	LOG.warn("found feed {} with invalid url: {}", title, href);
+                        	LOG.warn("found feed with invalid url: {}", href);
                             break;// the URL is invalid, ignore feed
                         }
-                        site.getFeeds().add(new Feed(location.toExternalForm(), title, type));
+                        feedLocations.add(location.toExternalForm());
                     }
                 }
             } else if (localName.equalsIgnoreCase(META_ELEMENT)) {

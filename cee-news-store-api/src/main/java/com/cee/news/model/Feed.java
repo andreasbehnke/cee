@@ -4,8 +4,8 @@ package com.cee.news.model;
 public class Feed {
 
     private String location;
-
-    private String contentType;
+    
+    private String language;
 
     private String title;
 
@@ -13,9 +13,8 @@ public class Feed {
     
     public Feed() {}
 
-    public Feed(String location, String title, String contentType) {
+    public Feed(String location, String title) {
         this.location = location;
-        this.contentType = contentType;
         this.title = title;
         active = false;
     }
@@ -28,14 +27,6 @@ public class Feed {
         this.location = location;
     }
 
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -43,8 +34,16 @@ public class Feed {
     public void setTitle(String title) {
         this.title = title;
     }
+    
+    public String getLanguage() {
+		return language;
+	}
 
-    public boolean isActive() {
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	public boolean isActive() {
         return active;
     }
 

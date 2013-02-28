@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import com.cee.news.model.ArticleKey;
 import com.cee.news.model.EntityKey;
-import com.cee.news.model.Site;
 import com.cee.news.search.SearchException;
 import com.cee.news.store.StoreException;
 

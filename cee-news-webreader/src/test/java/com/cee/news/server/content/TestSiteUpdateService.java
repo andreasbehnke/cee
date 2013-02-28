@@ -26,8 +26,6 @@ public class TestSiteUpdateService {
 
 	private static final String MISSING_SITE_URL = "http://www.test.com/content/unknown.html";
 	
-	private static final String FEED_TYPE = "application/rss+xml";
-
 	private static final String FEED_TITLE = "Dev User Stories";
 
 	private static final String FEED_URL = "http://www.test.com/content/site1/feed1.rss";
@@ -40,7 +38,7 @@ public class TestSiteUpdateService {
 	protected Site createSite() {
 		Site site = new Site();
 		site.setName(TEST_SITE);
-		Feed feed = new Feed(FEED_URL, FEED_TITLE, FEED_TYPE);
+		Feed feed = new Feed(FEED_URL, FEED_TITLE);
 		feed.setActive(true);
 		site.getFeeds().add(feed);
 		site.setLocation(SITE_URL);

@@ -17,8 +17,6 @@ public final class JcrStoreConstants {
 
     public static final String PROP_ACTIVE = "news:active";
 
-    public static final String PROP_CONTENT_TYPE = "news:contentType";
-
     public static final String PROP_TITLE = "news:title";
 
     public static final String PROP_LANGUAGE = "news:language";
