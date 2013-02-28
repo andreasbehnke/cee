@@ -13,6 +13,7 @@ primaryitem news:content
 
 [news:article]
 - news:id          (STRING)
+- news:language    (STRING)
 - news:location    (URI)
 - news:title       (STRING)
 - news:shortText   (STRING)
@@ -23,6 +24,7 @@ primaryitem news:content
 [news:site]
 primaryitem news:article
 - news:name        (STRING)
+- news:language    (STRING)
 - news:location    (URI)
 - news:title       (STRING)
 - news:description (STRING)
@@ -31,6 +33,7 @@ primaryitem news:article
 
 [news:workingSet]
 - news:name        (STRING)
+- news:language    (STRING)
 - news:sites       (STRING) multiple
 
 [news:content]

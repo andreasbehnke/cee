@@ -97,12 +97,14 @@ public abstract class JcrTestBase {
         Site site = new Site();
         site.setName(name);
         site.setLocation("http://www.abc.de");
+        site.setLanguage("de");
         return siteStore.update(site);
     }
 
     private Article createArticle(String id, String location, int year, int month, int dayOfMonth) {
         Article article = new Article();
         article.setExternalId(id);
+        article.setLanguage("en");
         article.setLocation(location);
         Calendar cal = Calendar.getInstance();
         cal.clear();

@@ -35,6 +35,7 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
     public void testUpdateWorkingSet() throws StoreException {
         WorkingSet ws = new WorkingSet();
         ws.setName(TESTWORKINGSET);
+        ws.setLanguage("cz");
         List<EntityKey> sites = new ArrayList<EntityKey>();
         sites.add(SITE_A);
         sites.add(SITE_B);
@@ -45,6 +46,7 @@ public class TestJcrWorkingSetStore extends JcrTestBase {
         ws = workingSetStore.getWorkingSet(key);
         
         assertEquals(TESTWORKINGSET, ws.getName());
+        assertEquals("cz", ws.getLanguage());
         sites = ws.getSites();
         assertEquals(3, sites.size());
         assertTrue(sites.contains(SITE_A));

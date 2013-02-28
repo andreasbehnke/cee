@@ -7,6 +7,8 @@ import java.util.List;
 public class Article {
 
     private String externalId;
+    
+    private String language;
 
     private String location;
 
@@ -76,4 +78,15 @@ public class Article {
     public void setPublishedDate(Calendar pubDate) {
         this.publishedDate = pubDate;
     }
+    
+    /**
+     * @return the ISO 639-1 Language Code of this working set
+     */
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 }

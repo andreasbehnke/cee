@@ -11,6 +11,8 @@ public class WorkingSet {
     private String name;
     
     private List<EntityKey> sites = new ArrayList<EntityKey>();
+    
+    private String language;
 
     public String getName() {
         return name;
@@ -27,4 +29,15 @@ public class WorkingSet {
     public void setSites(List<EntityKey> sites) {
         this.sites = sites; 
     }
+
+    /**
+     * @return the ISO 639-1 Language Code of this working set
+     */
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 }

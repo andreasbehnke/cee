@@ -3,9 +3,7 @@
  */
 package com.cee.news.store.jcr;
 
-import static com.cee.news.store.jcr.JcrStoreConstants.NODE_WORKINGSET;
-import static com.cee.news.store.jcr.JcrStoreConstants.PROP_NAME;
-import static com.cee.news.store.jcr.JcrStoreConstants.PROP_SITES;
+import static com.cee.news.store.jcr.JcrStoreConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +70,7 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
             if (workingSetNode == null) {
                 workingSetNode = getContent().addNode(NODE_WORKINGSET, NODE_WORKINGSET);
                 workingSetNode.setProperty(PROP_NAME, name);
+                workingSetNode.setProperty(PROP_LANGUAGE, workingSet.getLanguage());
                 if(LOG.isDebugEnabled()) {
                 	LOG.debug("Added working set node for {}", name);
                 }
@@ -145,6 +144,7 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
             }
             WorkingSet workingSet = new WorkingSet();
             workingSet.setName(wsNode.getProperty(PROP_NAME).getString());
+            workingSet.setLanguage(getStringPropertyOrNull(wsNode, PROP_LANGUAGE));
             List<EntityKey> sites = new ArrayList<EntityKey>();
             for (Value value : wsNode.getProperty(PROP_SITES).getValues()) {
                 sites.add(EntityKey.get(value.getString()));

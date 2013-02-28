@@ -21,6 +21,8 @@ public final class JcrStoreConstants {
 
     public static final String PROP_TITLE = "news:title";
 
+    public static final String PROP_LANGUAGE = "news:language";
+    
     public static final String PROP_LOCATION = "news:location";
 
     public static final String PROP_DESCRIPTION = "news:description";

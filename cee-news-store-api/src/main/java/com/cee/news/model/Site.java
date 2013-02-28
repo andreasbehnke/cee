@@ -6,6 +6,8 @@ import java.util.List;
 public class Site {
 	
 	private String name;
+	
+	private String language;
 
     private String location;
 
@@ -57,5 +59,15 @@ public class Site {
     public void setFeeds(List<Feed> feeds) {
         this.feeds = feeds;
     }
+    
+    /**
+     * @return the ISO 639-1 Language Code of this working set
+     */
+	public String getLanguage() {
+		return language;
+	}
 
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 }

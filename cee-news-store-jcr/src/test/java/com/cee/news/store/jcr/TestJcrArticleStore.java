@@ -37,6 +37,7 @@ public class TestJcrArticleStore extends JcrTestBase {
         
         Article article = articleStore.getArticle(key, false);
         assertEquals("23/1", article.getExternalId());
+        assertEquals("en", article.getLanguage());
         assertEquals("http://www.xyz.de/1", article.getLocation());
         assertEquals(2010, article.getPublishedDate().get(Calendar.YEAR));
         assertEquals(1, article.getPublishedDate().get(Calendar.MONTH));

@@ -29,6 +29,7 @@ public class TestJcrSiteStore extends JcrTestBase {
         Site site = new Site();
         site.setDescription("Description");
         site.setLocation("http://www.spiegel.de/blabla/test/test.jsp?id=52643584");
+        site.setLanguage("de");
         site.setName("http://www.spiegel.de");
         site.setTitle("Title");
         List<Feed> feeds = new ArrayList<Feed>();
@@ -46,6 +47,7 @@ public class TestJcrSiteStore extends JcrTestBase {
         assertEquals("http://www.spiegel.de/blabla/test/test.jsp?id=52643584", site.getLocation());
         assertEquals("http://www.spiegel.de", site.getName());
         assertEquals("Title", site.getTitle());
+        assertEquals("de", site.getLanguage());
         feeds = site.getFeeds();
         assertEquals(2, feeds.size());
         Map<String, Feed> feedMap = new HashMap<String, Feed>();
@@ -63,6 +65,7 @@ public class TestJcrSiteStore extends JcrTestBase {
         //change site
         site.setDescription("Description123");
         site.setTitle("Title123");
+        site.setLanguage("en");
         feeds = new ArrayList<Feed>();
         feeds.add(new Feed("http://www.tageschau.de/feed.rss", "feed1", "application/xml"));
         site.setFeeds(feeds);
@@ -72,6 +75,7 @@ public class TestJcrSiteStore extends JcrTestBase {
         assertEquals("Description123", site.getDescription());
         assertEquals("http://www.spiegel.de/blabla/test/test.jsp?id=52643584", site.getLocation());
         assertEquals("Title123", site.getTitle());
+        assertEquals("en", site.getLanguage());
         feeds = site.getFeeds();
         assertEquals(1, feeds.size());
         feedMap = new HashMap<String, Feed>();
@@ -90,6 +94,7 @@ public class TestJcrSiteStore extends JcrTestBase {
         site = siteStore.getSite(siteKey);
         assertNull(site.getDescription());
         assertNull(site.getTitle());
+        assertNull(site.getLanguage());
     }
     
     @Test

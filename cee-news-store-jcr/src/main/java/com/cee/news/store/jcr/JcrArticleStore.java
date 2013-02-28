@@ -8,6 +8,7 @@ import static com.cee.news.store.jcr.JcrStoreConstants.NODE_CONTENT;
 import static com.cee.news.store.jcr.JcrStoreConstants.NODE_TEXTBLOCK;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_CONTENT;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_ID;
+import static com.cee.news.store.jcr.JcrStoreConstants.PROP_LANGUAGE;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_LOCATION;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_PUBLISHED;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_SHORT_TEXT;
@@ -121,6 +122,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             }
             articleNode.setProperty(PROP_SHORT_TEXT, shortText);
             articleNode.setProperty(PROP_TITLE, title);
+            articleNode.setProperty(PROP_LANGUAGE, article.getLanguage());
             articleNode.setProperty(PROP_LOCATION, article.getLocation());
             articleNode.setProperty(PROP_PUBLISHED, article.getPublishedDate());
             for (TextBlock text : article.getContent()) {
@@ -165,6 +167,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             Article article = new Article();
             try {
                 article.setExternalId(articleNode.getProperty(PROP_ID).getString());
+                article.setLanguage(getStringPropertyOrNull(articleNode, PROP_LANGUAGE));
                 article.setLocation(articleNode.getProperty(PROP_LOCATION).getString());
                 article.setPublishedDate(articleNode.getProperty(PROP_PUBLISHED).getDate());
                 if (articleNode.hasProperty(PROP_TITLE)) {

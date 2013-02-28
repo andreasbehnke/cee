@@ -5,6 +5,7 @@ import static com.cee.news.store.jcr.JcrStoreConstants.NODE_SITE;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_ACTIVE;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_CONTENT_TYPE;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_DESCRIPTION;
+import static com.cee.news.store.jcr.JcrStoreConstants.PROP_LANGUAGE;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_LOCATION;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_NAME;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_TITLE;
@@ -23,8 +24,8 @@ import org.apache.jackrabbit.util.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cee.news.model.Feed;
 import com.cee.news.model.EntityKey;
+import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
@@ -95,6 +96,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         }
         try {
         	siteNode.setProperty(PROP_NAME, name);
+        	siteNode.setProperty(PROP_LANGUAGE, site.getLanguage());
             siteNode.setProperty(PROP_LOCATION, site.getLocation());
             siteNode.setProperty(PROP_TITLE, site.getTitle());
             siteNode.setProperty(PROP_DESCRIPTION, site.getDescription());
@@ -144,6 +146,7 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
         Site site = new Site();
         try {
         	site.setName(siteNode.getProperty(PROP_NAME).getString());
+        	site.setLanguage(getStringPropertyOrNull(siteNode, PROP_LANGUAGE));
             site.setLocation(siteNode.getProperty(PROP_LOCATION).getString());
             site.setDescription(getStringPropertyOrNull(siteNode, PROP_DESCRIPTION));
             site.setTitle(getStringPropertyOrNull(siteNode, PROP_TITLE));
