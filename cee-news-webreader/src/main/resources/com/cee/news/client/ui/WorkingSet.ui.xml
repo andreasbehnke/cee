@@ -8,6 +8,8 @@
 			<div class="{res.styles.workingSetName}">
 				<span>Working Set Name:</span>
 				<g:TextBox ui:field="newNameEditor" />
+				<span>Language:</span>
+				<g:ValueListBox ui:field="listBoxLanguage" />
 			</div>
 			<div class="{res.styles.availableSites}">
 				<div class="{res.styles.label}">Available Sites:</div>

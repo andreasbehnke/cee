@@ -5,7 +5,7 @@ import java.util.List;
 import com.cee.news.client.NewsView;
 import com.cee.news.client.content.EntityContent;
 import com.cee.news.client.content.EntityContentCell;
-import com.cee.news.client.content.EntityKeyProvider;
+import com.cee.news.client.content.EntityContentKeyProvider;
 import com.cee.news.client.list.IncreaseVisibleRangeScrollHandler;
 import com.cee.news.client.list.KeyLink;
 import com.cee.news.client.paging.PagingView;
@@ -83,7 +83,7 @@ public class News extends Composite implements NewsView, PagingView {
     CellList<EntityContent<ArticleKey>> cellListRelated = new CellList<EntityContent<ArticleKey>>(
             new EntityContentCell<ArticleKey>(), 
             RelatedCellListResources.INSTANCE, 
-            new EntityKeyProvider<ArticleKey>());
+            new EntityContentKeyProvider<ArticleKey>());
 
     @UiField
     HTML mainContent;

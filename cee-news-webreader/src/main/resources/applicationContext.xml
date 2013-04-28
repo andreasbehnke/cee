@@ -148,6 +148,10 @@
 	</bean>
 
 	<!-- GWT Services -->
+	
+	<bean id="gwtLanguageService" class="com.cee.news.server.content.LanguageServiceImpl" scope="request" autowire="byType">
+		<property name="searchService" ref="articleSearchService" />
+	</bean>
 
 	<bean id="gwtNewsService" class="com.cee.news.server.content.NewsServiceImpl" scope="request">
 		<property name="workingSetStore" ref="workingSetStore" />

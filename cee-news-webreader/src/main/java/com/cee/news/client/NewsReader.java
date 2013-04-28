@@ -3,6 +3,7 @@ package com.cee.news.client;
 import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.content.AddSiteToWorkingSet;
 import com.cee.news.client.content.ArticleKeyLinkProvider;
+import com.cee.news.client.content.LanguageListModel;
 import com.cee.news.client.content.NewsListContentModel;
 import com.cee.news.client.content.RelatedArticlesContentModel;
 import com.cee.news.client.content.SingleSelectionCellListPresenter;
@@ -85,10 +86,11 @@ public class NewsReader implements EntryPoint {
 		new SearchPresenter(filteredContentList, startView.getSearchView());
 		
 		//New & Edit Working Set Workflow
+		final LanguageListModel languageListModel = new LanguageListModel();
 		final SiteListContentModel siteAddRemoveListModel = new SiteListContentModel();
 		siteAddRemoveListModel.addErrorHandler(errorHandler);
 		final WorkingSetView workingSetView = clientFactory.getWorkingSetView();
-		final WorkingSetWorkflow workingSetWorkflow = new WorkingSetWorkflow(workingSetListModel, siteAddRemoveListModel, workingSetView, clientFactory.getNewSiteWizardView(), clientFactory.createConfirmView());
+		final WorkingSetWorkflow workingSetWorkflow = new WorkingSetWorkflow(workingSetListModel, siteAddRemoveListModel, languageListModel, workingSetView, clientFactory.getNewSiteWizardView(), clientFactory.createConfirmView());
 		workingSetWorkflow.addErrorHandler(errorHandler);
 		new WorkingSetSelectionPresenter(workingSetListModel, workingSetSelectionView, workingSetWorkflow);
 		
@@ -176,6 +178,7 @@ public class NewsReader implements EntryPoint {
         });
 		
 		//trigger update
+		languageListModel.findAllLanguages();
 		siteAddRemoveListModel.findAllSites();
 		workingSetListModel.findAllWorkingSets(new NotificationCallback() {
             @Override

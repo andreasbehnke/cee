@@ -10,6 +10,12 @@ import com.cee.news.model.EntityKey;
  * @author andreasbehnke
  */
 public interface ArticleSearchService {
+	
+	/**
+	 * @return List of supported languages as two-letter code as defined by ISO-639 or null, if this
+	 * search implementation is language independent.
+	 */
+	List<String> getSupportedLanguages();
 
 	/**
 	 * Searches the fulltext index

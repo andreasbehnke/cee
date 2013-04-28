@@ -1,11 +1,12 @@
 package com.cee.news.client.content;
 
+import com.cee.news.model.EntityKey;
 import com.google.gwt.view.client.ProvidesKey;
 
-public class EntityKeyProvider<K> implements ProvidesKey<EntityContent<K>> {
+public class EntityKeyProvider implements ProvidesKey<EntityKey> {
 
 	@Override
-	public K getKey(EntityContent<K> item) {
+	public Object getKey(EntityKey item) {
 		return item.getKey();
 	}
 

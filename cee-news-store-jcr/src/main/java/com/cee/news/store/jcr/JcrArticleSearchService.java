@@ -36,6 +36,12 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 		setSession(session);
 	}
 	
+	@Override
+	public List<String> getSupportedLanguages() {
+		//There is no way to support language optimization for JCR search.
+		return null;
+	}
+	
 	private boolean shouldArticleAdded(ArticleKey originalKey, String articleKey, String siteKey) {
 	    if (originalKey == null) {
 	        return true;

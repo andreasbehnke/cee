@@ -2,6 +2,8 @@ package com.cee.news.client.ui;
 
 import java.util.List;
 
+import com.cee.news.client.content.EntityKeyProvider;
+import com.cee.news.client.content.EntityKeyRenderer;
 import com.cee.news.client.list.ListPanel;
 import com.cee.news.client.list.ListView;
 import com.cee.news.client.list.SelectionListChangedHandler;
@@ -14,6 +16,7 @@ import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.EditorError;
 import com.google.gwt.editor.client.IsEditor;
 import com.google.gwt.editor.client.adapters.SimpleEditor;
+import com.google.gwt.editor.client.adapters.TakesValueEditor;
 import com.google.gwt.editor.ui.client.adapters.ValueBoxEditor;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -23,6 +26,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ValueListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class WorkingSet extends PopupPanel implements WorkingSetView {
@@ -45,6 +49,10 @@ public class WorkingSet extends PopupPanel implements WorkingSetView {
         public Editor<List<EntityKey>> sites() {
             return sitesEditor;
         }
+        
+        public IsEditor<TakesValueEditor<EntityKey>> language() {
+        	return listBoxLanguage;
+        }
     }
     
     private static WorkingSetUiBinder uiBinder = GWT.create(WorkingSetUiBinder.class);
@@ -56,6 +64,9 @@ public class WorkingSet extends PopupPanel implements WorkingSetView {
 
     @UiField
     TextBox newNameEditor;
+    
+    @UiField(provided = true)
+    ValueListBox<EntityKey> listBoxLanguage;
 
     private final SimpleEditor<String> oldNameEditor;
 
@@ -84,6 +95,8 @@ public class WorkingSet extends PopupPanel implements WorkingSetView {
     private final WorkingSetDataEditorDriver driver;
 
     public WorkingSet() {
+    	listBoxLanguage = new ValueListBox<EntityKey>(new EntityKeyRenderer(), new EntityKeyProvider());
+    	
         setWidget(uiBinder.createAndBindUi(this));
         setGlassEnabled(true);
         setStyleName(resources.styles().popupPanel());
@@ -156,7 +169,7 @@ public class WorkingSet extends PopupPanel implements WorkingSetView {
     }
 
     @Override
-    public void addSelectionListChangedHandler(SelectionListChangedHandler<EntityKey> selectionListChangedHandler) {
+    public void addSiteSelectionListChangedHandler(SelectionListChangedHandler<EntityKey> selectionListChangedHandler) {
         sitesEditor.addSelectionListChangedHandler(selectionListChangedHandler);
     }
     
@@ -164,4 +177,10 @@ public class WorkingSet extends PopupPanel implements WorkingSetView {
     public void setSelectedSites(List<EntityKey> selectedSites) {
         sitesEditor.setSelections(selectedSites);
     }
+
+	@Override
+	public void setAvailableLanguages(List<EntityKey> languages, EntityKey defaultLanguage) {
+		listBoxLanguage.setValue(defaultLanguage);
+		listBoxLanguage.setAcceptableValues(languages);
+	}
 }

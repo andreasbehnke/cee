@@ -28,5 +28,7 @@ public interface WorkingSetView extends EditorView<WorkingSetData>, DialogView {
 	
 	void setSelectedSites(List<EntityKey> selectedSites);
 
-    void addSelectionListChangedHandler(SelectionListChangedHandler<EntityKey> selectionListChangedHandler);
+    void addSiteSelectionListChangedHandler(SelectionListChangedHandler<EntityKey> selectionListChangedHandler);
+    
+    void setAvailableLanguages(List<EntityKey> languages, EntityKey defaultLanguage);
 }

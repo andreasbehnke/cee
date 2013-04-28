@@ -17,6 +17,8 @@ public class WorkingSetData implements IsSerializable {
     
     private String oldName;
     
+    private EntityKey language;
+    
     private List<EntityKey> sites = new ArrayList<EntityKey>();
 
     /**
@@ -62,4 +64,12 @@ public class WorkingSetData implements IsSerializable {
     public void setSites(List<EntityKey> sites) {
         this.sites = sites;
     }
+
+	public EntityKey getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(EntityKey language) {
+		this.language = language;
+	}
 }

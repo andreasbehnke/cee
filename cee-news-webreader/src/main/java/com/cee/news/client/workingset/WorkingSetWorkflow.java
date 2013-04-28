@@ -4,12 +4,15 @@ import com.cee.news.client.ConfirmView;
 import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.content.AddSiteWorkflow;
+import com.cee.news.client.content.LanguageListModel;
 import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.content.SiteAddedEvent;
 import com.cee.news.client.content.SiteAddedHandler;
 import com.cee.news.client.content.SiteListContentModel;
 import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.error.ErrorSourceBase;
+import com.cee.news.client.list.ListChangedEvent;
+import com.cee.news.client.list.ListChangedHandler;
 import com.cee.news.client.list.MultiSelectListPresenter;
 import com.cee.news.client.list.SelectionListChangedEvent;
 import com.cee.news.client.list.SelectionListChangedHandler;
@@ -30,9 +33,12 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 	private final ConfirmView confirmDeletionView;
 	
 	private final AddSiteWorkflow addSiteWorkflow;
+	
+	private final LanguageListModel languageListModel;
 
 	public WorkingSetWorkflow(final WorkingSetListModel workingSetListModel,
 	        final SiteListContentModel siteListModel,
+	        final LanguageListModel languageListModel,
 	        final WorkingSetView workingSetView,
 	        final NewSiteWizardView newSiteWizard,
 	        final ConfirmView confirmDeletionView) {
@@ -40,6 +46,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 	    this.workingSetListModel = workingSetListModel;
 		this.workingSetView = workingSetView;
 		this.confirmDeletionView = confirmDeletionView;
+		this.languageListModel = languageListModel;
 		workingSetView.getButtonCancel().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -58,7 +65,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
                 siteListModel.clearSelection();
             }
         });
-		workingSetView.addSelectionListChangedHandler(new SelectionListChangedHandler<EntityKey>() {
+		workingSetView.addSiteSelectionListChangedHandler(new SelectionListChangedHandler<EntityKey>() {
             @Override
             public void onSelectionListChanged(SelectionListChangedEvent<EntityKey> event) {
                 siteListModel.setSelections(event.getKeys());
@@ -70,6 +77,12 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
                 workingSetView.setSelectedSites(event.getKeys());
             }
         });
+		languageListModel.addListChangedHandler(new ListChangedHandler<EntityKey>() {
+			@Override
+			public void onContentListChanged(ListChangedEvent<EntityKey> event) {
+				workingSetView.setAvailableLanguages(event.getValues(), languageListModel.getDefaultLanguage());
+			}
+		});
 		
 		addSiteWorkflow = new AddSiteWorkflow(newSiteWizard);
 		workingSetView.getButtonAddNewSite().addClickHandler(new ClickHandler() {
@@ -113,6 +126,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 	public void newWorkingSet() {
 		WorkingSetData workingSetData = new WorkingSetData();
 		workingSetData.setIsNew(true);
+		workingSetData.setLanguage(languageListModel.getDefaultLanguage());
 		showEditor(workingSetData);
 	}
 	

@@ -52,6 +52,7 @@ public class WorkingSetServiceImpl implements WorkingSetService {
             wsd.setNewName(workingSet.getName());
             wsd.setOldName(workingSet.getName());
             wsd.setSites(workingSet.getSites());
+            wsd.setLanguage(EntityKey.get(workingSet.getLanguage()));
             return wsd;
         } catch (StoreException e) {
         	LOG.error(COULD_NOT_RETRIEVE_WORKING_SET, e);
@@ -78,6 +79,7 @@ public class WorkingSetServiceImpl implements WorkingSetService {
             	workingSet = workingSetStore.getWorkingSet(EntityKey.get(newName));
             }
             workingSet.setSites(wsd.getSites());
+            workingSet.setLanguage(wsd.getLanguage().getKey());
             EntityKey key = workingSetStore.update(workingSet);
             return new EntityUpdateResult(State.ok, key);
         } catch (StoreException e) {

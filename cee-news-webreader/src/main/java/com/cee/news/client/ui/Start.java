@@ -3,7 +3,7 @@ package com.cee.news.client.ui;
 import com.cee.news.client.StartView;
 import com.cee.news.client.content.EntityContent;
 import com.cee.news.client.content.EntityContentCell;
-import com.cee.news.client.content.EntityKeyProvider;
+import com.cee.news.client.content.EntityContentKeyProvider;
 import com.cee.news.client.content.SourceSelectionView;
 import com.cee.news.client.list.IncreaseVisibleRangeScrollHandler;
 import com.cee.news.client.search.SearchView;
@@ -75,7 +75,7 @@ public class Start extends Composite implements StartView {
     CellList<EntityContent<ArticleKey>> cellListLatestArticles = new CellList<EntityContent<ArticleKey>>(
             new EntityContentCell<ArticleKey>(), 
             ArticleCellListResources.INSTANCE, 
-            new EntityKeyProvider<ArticleKey>());
+            new EntityContentKeyProvider<ArticleKey>());
     
     public Start() {
         initWidget(uiBinder.createAndBindUi(this));

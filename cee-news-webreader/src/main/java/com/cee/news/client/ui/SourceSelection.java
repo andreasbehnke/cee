@@ -2,7 +2,7 @@ package com.cee.news.client.ui;
 
 import com.cee.news.client.content.EntityContent;
 import com.cee.news.client.content.EntityContentCell;
-import com.cee.news.client.content.EntityKeyProvider;
+import com.cee.news.client.content.EntityContentKeyProvider;
 import com.cee.news.client.content.SourceSelectionView;
 import com.cee.news.client.list.IncreaseVisibleRangeScrollHandler;
 import com.cee.news.model.EntityKey;
@@ -72,7 +72,7 @@ public class SourceSelection extends Composite implements SourceSelectionView {
     CellList<EntityContent<EntityKey>> cellListSites = new CellList<EntityContent<EntityKey>>(
             new EntityContentCell<EntityKey>(), 
             SourceSelectionCellListResources.INSTANCE, 
-            new EntityKeyProvider<EntityKey>());
+            new EntityContentKeyProvider<EntityKey>());
     
     public SourceSelection() {
         initWidget(uiBinder.createAndBindUi(this));
