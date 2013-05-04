@@ -166,6 +166,7 @@
 
 	<bean id="gwtWorkingSetService" class="com.cee.news.server.workingset.WorkingSetServiceImpl" scope="request">
 		<property name="workingSetStore" ref="workingSetStore" />
+		<property name="siteStore" ref="siteStore" />
 	</bean>
 
 	<bean id="gwtSiteUpdateService" class="com.cee.news.server.content.SiteUpdateServiceImpl" init-method="startUpdateScheduler" destroy-method="shutdown">

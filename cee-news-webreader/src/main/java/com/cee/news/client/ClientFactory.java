@@ -10,6 +10,8 @@ public interface ClientFactory {
     
     ConfirmView createConfirmView();
     
+    NotificationView createNotificationView();
+    
     PageSwitchView getPageSwitchView();
     
     StartView getStartView();

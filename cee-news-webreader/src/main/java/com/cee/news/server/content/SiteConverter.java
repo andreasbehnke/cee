@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.cee.news.client.content.FeedData;
 import com.cee.news.client.content.SiteData;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 
@@ -18,6 +19,7 @@ public class SiteConverter {
 		data.setIsActive(feed.isActive());
 		data.setLocation(feed.getLocation());
 		data.setTitle(feed.getTitle());
+		data.setLanguage(EntityKey.get(feed.getLanguage()));
 		return data;
 	}
 	
@@ -28,6 +30,7 @@ public class SiteConverter {
 		data.setLocation(site.getLocation());
 		data.setName(site.getName());
 		data.setTitle(site.getTitle());
+		data.setLanguage(EntityKey.get(site.getLanguage()));
 		List<FeedData> feeds = new ArrayList<FeedData>();
 		for (Feed feed : site.getFeeds()) {
 			feeds.add(createFromFeed(feed));
@@ -41,6 +44,7 @@ public class SiteConverter {
 		feed.setActive(data.getIsActive());
 		feed.setLocation(data.getLocation());
 		feed.setTitle(data.getTitle());
+		feed.setLanguage(data.getLanguage().getKey());
 		return feed;
 	}
 	
@@ -50,6 +54,7 @@ public class SiteConverter {
 		site.setLocation(data.getLocation());
 		site.setName(data.getName());
 		site.setTitle(data.getTitle());
+		site.setLanguage(data.getLanguage().getKey());
 		List<Feed> feeds = new ArrayList<Feed>();
 		for (FeedData feed : data.getFeeds()) {
 			feeds.add(createFromFeedData(feed));

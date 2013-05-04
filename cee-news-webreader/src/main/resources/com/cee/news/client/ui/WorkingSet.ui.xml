@@ -22,9 +22,9 @@
 				<g:Button ui:field="buttonRemoveAllSites" text="Remove All Sites" styleName="{res.styles.removeAllSites}" />
 			</div>
 			<div class="{res.styles.footer}">
-				<g:InlineLabel ui:field="labelErrorMessage" styleName="{res.styles.error}" />
-				<g:Button ui:field="buttonCancel" text="Cancel" styleName="{res.styles.cancel}" />
 				<g:Button ui:field="buttonSave" text="Save" styleName="{res.styles.save}" />
+				<g:Button ui:field="buttonCancel" text="Cancel" styleName="{res.styles.cancel}" />
+                <g:InlineLabel ui:field="labelErrorMessage" styleName="{res.styles.error}" />
 			</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

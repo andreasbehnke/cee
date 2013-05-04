@@ -6,11 +6,10 @@
 				<h1><g:InlineLabel ui:field="labelTitle" /></h1>
 			</div>
 			<div class="{res.styles.confirmQuestion}">
-				<g:InlineLabel ui:field="labelQuestion" />
+				<g:InlineLabel ui:field="labelMessage" />
 			</div>
 			<div class="{res.styles.footer}">
-                <g:Button ui:field="buttonNo" text="No" styleName="{res.styles.no}" />
-                <g:Button ui:field="buttonYes" text="Yes" styleName="{res.styles.yes}" />
+				<g:Button ui:field="buttonOk" text="Ok" styleName="{res.styles.ok}" />
 			</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

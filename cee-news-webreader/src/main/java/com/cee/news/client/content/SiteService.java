@@ -3,7 +3,6 @@ package com.cee.news.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -47,5 +46,5 @@ public interface SiteService extends RemoteService {
 	 * @param site to update or create
 	 * @return the result state of the operation
 	 */ 
-	EntityUpdateResult update(SiteData site);
+	SiteUpdateResult update(SiteData site);
 }

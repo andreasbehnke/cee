@@ -3,8 +3,7 @@ package com.cee.news.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cee.news.client.async.EntityUpdateResult;
-import com.cee.news.client.async.EntityUpdateResult.State;
+import com.cee.news.client.content.SiteUpdateResult.State;
 import com.cee.news.client.error.ErrorSourceBase;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -184,11 +183,34 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 	private void storeSite() {
 		wizard.setButtonsEnabled(false);
 		clearErrorMessage();
+		
+		//check feed selection
+		boolean isFeedSelected = false;
+		for (FeedData feed: site.getFeeds()) {
+			if (feed.getIsActive()) {
+				isFeedSelected = true;
+			}
+		}
+		if (!isFeedSelected) {
+			showErrorMessage("Select at least one feed!");//TODO: localization
+			wizard.setButtonsEnabled(true);
+			return;
+		}
+		
+		//get site's language from feeds. Default language is en.
+		site.setLanguage(EntityKey.get("en"));
+		for (FeedData feed : site.getFeeds()) {
+			if (feed.getIsActive()) {
+				site.setLanguage(feed.getLanguage());
+				break;
+			}
+		}
+		
 		site.setName(wizard.getSiteNameInput().getValue());
-		siteService.update(site, new AsyncCallback<EntityUpdateResult>() {
+		siteService.update(site, new AsyncCallback<SiteUpdateResult>() {
 			
 			@Override
-			public void onSuccess(EntityUpdateResult result) {
+			public void onSuccess(SiteUpdateResult result) {
 				if (result.getState() == State.entityExists) {
 					showErrorMessage("Site with name " + site.getName() + " already exists!");//TODO: localization
 				} else {
@@ -219,11 +241,11 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 		});
 	}
 	
-	private void clearErrorMessage() {
+	protected void clearErrorMessage() {
 		wizard.getErrorText().setText("");
 	}
 	
-	private void showErrorMessage(String message) {
+	protected void showErrorMessage(String message) {
 		wizard.getErrorText().setText(message);
 		wizard.setButtonsEnabled(true);
 	}

@@ -2,6 +2,7 @@ package com.cee.news.client.content;
 
 import java.util.List;
 
+import com.cee.news.model.EntityKey;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
@@ -24,6 +25,8 @@ public class SiteData implements IsSerializable {
 	private String title;
 
 	private String description;
+	
+	private EntityKey language;
 
 	private List<FeedData> feeds;
 
@@ -83,4 +86,11 @@ public class SiteData implements IsSerializable {
 		this.feeds = feeds;
 	}
 
+	public EntityKey getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(EntityKey language) {
+		this.language = language;
+	}
 }

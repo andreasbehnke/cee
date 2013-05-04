@@ -1,17 +1,20 @@
 package com.cee.news.server.workingset;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cee.news.client.async.EntityUpdateResult;
-import com.cee.news.client.async.EntityUpdateResult.State;
 import com.cee.news.client.error.ServiceException;
 import com.cee.news.client.workingset.WorkingSetData;
 import com.cee.news.client.workingset.WorkingSetService;
+import com.cee.news.client.workingset.WorkingSetUpdateResult;
+import com.cee.news.client.workingset.WorkingSetUpdateResult.State;
 import com.cee.news.model.EntityKey;
+import com.cee.news.model.Site;
 import com.cee.news.model.WorkingSet;
+import com.cee.news.store.SiteStore;
 import com.cee.news.store.StoreException;
 import com.cee.news.store.WorkingSetStore;
 
@@ -19,7 +22,9 @@ public class WorkingSetServiceImpl implements WorkingSetService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(WorkingSetServiceImpl.class);
 
-    private static final String COULD_NOT_UPDATE_WORKING_SET = "Could not update working set";
+    private static final String COULD_NOT_VALIDATE_SITE_LANGUAGES = "Could not validate site languages";
+
+	private static final String COULD_NOT_UPDATE_WORKING_SET = "Could not update working set";
 
 	private static final String COULD_NOT_RETRIEVE_WORKING_SET = "Could not retrieve working set";
 
@@ -29,9 +34,15 @@ public class WorkingSetServiceImpl implements WorkingSetService {
 
 	private WorkingSetStore workingSetStore;
 
+	private SiteStore siteStore;
+	
     public void setWorkingSetStore(WorkingSetStore workingSetStore) {
         this.workingSetStore = workingSetStore;
     }
+    
+    public void setSiteStore(SiteStore siteStore) {
+		this.siteStore = siteStore;
+	}
     
     @Override
     public List<EntityKey> getWorkingSetsOrderedByName() {
@@ -61,12 +72,37 @@ public class WorkingSetServiceImpl implements WorkingSetService {
     }
     
     @Override
-    public EntityUpdateResult update(WorkingSetData wsd) {
+    public List<EntityKey> validateSiteLanguages(WorkingSetData wsd) {
+    	try {
+	    	List<EntityKey> sitesWithDifferentLang = new ArrayList<EntityKey>();
+	    	String workingSetLang = wsd.getLanguage().getKey();
+	    	for (EntityKey siteKey : wsd.getSites()) {
+				Site site = siteStore.getSite(siteKey);
+				String siteLang = site.getLanguage();
+				if (!siteLang.equalsIgnoreCase(workingSetLang)) {
+					sitesWithDifferentLang.add(siteKey);
+				}
+			}
+	    	return sitesWithDifferentLang;
+	    } catch (StoreException e) {
+			LOG.error(COULD_NOT_VALIDATE_SITE_LANGUAGES, e);
+	        throw new ServiceException(COULD_NOT_VALIDATE_SITE_LANGUAGES);
+		}
+    }
+    
+    @Override
+    public WorkingSetUpdateResult update(WorkingSetData wsd) {
         try {
             String newName = wsd.getNewName();
             String oldName = wsd.getOldName();
             if (wsd.getIsNew() && workingSetStore.getWorkingSet(EntityKey.get(newName)) != null) {
-                return new EntityUpdateResult(State.entityExists, null);
+                return new WorkingSetUpdateResult(State.entityExists, null, wsd, null);
+            }
+            List<EntityKey> sitesWithDifferentLang = validateSiteLanguages(wsd);
+            WorkingSetUpdateResult result = new WorkingSetUpdateResult(State.ok, null, wsd, null);
+            if (sitesWithDifferentLang.size() > 0) {
+            	result.setState(State.siteLanguagesDiffer);
+            	result.setSitesWithDifferentLang(sitesWithDifferentLang);
             }
             if (!wsd.getIsNew() && !newName.equals(oldName)) {
                 workingSetStore.rename(oldName, newName);
@@ -80,8 +116,8 @@ public class WorkingSetServiceImpl implements WorkingSetService {
             }
             workingSet.setSites(wsd.getSites());
             workingSet.setLanguage(wsd.getLanguage().getKey());
-            EntityKey key = workingSetStore.update(workingSet);
-            return new EntityUpdateResult(State.ok, key);
+            result.setKey(workingSetStore.update(workingSet));
+            return result;
         } catch (StoreException e) {
         	LOG.error(COULD_NOT_UPDATE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_UPDATE_WORKING_SET);
@@ -89,11 +125,10 @@ public class WorkingSetServiceImpl implements WorkingSetService {
     }
     
     @Override
-    public WorkingSetData addSiteToWorkingSet(EntityKey workingSetKey, EntityKey siteKey) {
+    public WorkingSetUpdateResult addSiteToWorkingSet(EntityKey workingSetKey, EntityKey siteKey) {
         WorkingSetData workingSet = getWorkingSet(workingSetKey);
         workingSet.getSites().add(siteKey);
-        update(workingSet);
-        return workingSet;
+        return update(workingSet);
     }
     
     @Override

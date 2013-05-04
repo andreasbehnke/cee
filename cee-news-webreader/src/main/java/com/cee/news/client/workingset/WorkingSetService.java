@@ -2,7 +2,6 @@ package com.cee.news.client.workingset;
 
 import java.util.List;
 
-import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -14,9 +13,11 @@ public interface WorkingSetService extends RemoteService {
 	
 	WorkingSetData getWorkingSet(EntityKey workingSetKey);
 	
-	EntityUpdateResult update(WorkingSetData workingSet);
+	List<EntityKey> validateSiteLanguages(WorkingSetData workingSet);
 	
-	WorkingSetData addSiteToWorkingSet(EntityKey workingSetKey, EntityKey siteKey);
+	WorkingSetUpdateResult update(WorkingSetData workingSet);
+	
+	WorkingSetUpdateResult addSiteToWorkingSet(EntityKey workingSetKey, EntityKey siteKey);
 	
 	void deleteWorkingSet(EntityKey workingSetKey);
 }

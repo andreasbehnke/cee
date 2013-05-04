@@ -27,10 +27,10 @@
 			<g:TextBox ui:field="textBoxSiteName" />
 		</g:HTMLPanel>
 		<div class="{res.styles.footer}">
-			<g:InlineLabel ui:field="labelErrorMessage" styleName="{res.styles.error}" />
-			<g:Button ui:field="buttonCancel" text="Cancel" styleName="{res.styles.cancel}" />
+            <g:Button ui:field="buttonStoreSite" text="Save" styleName="{res.styles.save}" />
 			<g:Button ui:field="buttonLocationInput" text="Next" styleName="{res.styles.next}" />
-			<g:Button ui:field="buttonStoreSite" text="Save" styleName="{res.styles.save}" />
+            <g:Button ui:field="buttonCancel" text="Cancel" styleName="{res.styles.cancel}" />
+            <g:InlineLabel ui:field="labelErrorMessage" styleName="{res.styles.error}" />
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -87,6 +87,14 @@ public class NewSiteWizard extends PopupPanel implements NewSiteWizardView {
         };
         cellTableFeeds.addColumn(columnTitle, "Title");
     
+        TextColumn<FeedData> columnLanguage = new TextColumn<FeedData>() {
+            @Override
+            public String getValue(FeedData feed) {
+                return feed.getLanguage().getName();
+            }
+        };
+        cellTableFeeds.addColumn(columnLanguage, "Language");
+        
         setWidget(uiBinder.createAndBindUi(this));
         setGlassEnabled(true);
         setStyleName(resources.styles().popupPanel());

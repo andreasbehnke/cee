@@ -95,7 +95,7 @@ public class NewsReader implements EntryPoint {
 		new WorkingSetSelectionPresenter(workingSetListModel, workingSetSelectionView, workingSetWorkflow);
 		
 		//Add Source to Working Set Workflow
-		final AddSiteToWorkingSet addSiteToWorkingSet = new AddSiteToWorkingSet(clientFactory.getAddSiteWizardView(), workingSetListModel);
+		final AddSiteToWorkingSet addSiteToWorkingSet = new AddSiteToWorkingSet(clientFactory.getAddSiteWizardView(), workingSetListModel, clientFactory.createNotificationView());
 		addSiteToWorkingSet.addErrorHandler(errorHandler);
 		sourceSelectionView.getAddButton().addClickHandler(new ClickHandler() {
             @Override

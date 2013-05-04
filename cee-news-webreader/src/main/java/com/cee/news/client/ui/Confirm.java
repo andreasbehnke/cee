@@ -20,6 +20,9 @@ public class Confirm extends PopupPanel implements ConfirmView {
 	private static Resources resources = GWT.create(Resources.class);
 	
 	@UiField
+	InlineLabel labelTitle;
+	
+	@UiField
 	InlineLabel labelQuestion;
 	
 	@UiField
@@ -42,6 +45,11 @@ public class Confirm extends PopupPanel implements ConfirmView {
 	@Override
 	public HasClickHandlers getButtonNo() {
 		return buttonNo;
+	}
+	
+	@Override
+	public HasText getLabelTitle() {
+		return labelTitle;
 	}
 
 	@Override

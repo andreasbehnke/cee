@@ -301,7 +301,7 @@ FIELDSET LI {
 
 .workingSet {
 	width: 600px;
-	height: 500px;
+	height: 550px;
 }
 
 .newSite {
@@ -335,8 +335,7 @@ FIELDSET LI {
 
 .dialog .footer {
 	position: absolute;
-	text-align: right;
-	height: 32px;
+	height: 64px;
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
@@ -348,7 +347,7 @@ FIELDSET LI {
 .dialog .availableSites {
 	position: absolute;
 	top: 68px;
-	bottom: 40px;
+	bottom: 68px;
 	left: 8px;
 	right: 304px;
 }
@@ -380,7 +379,7 @@ FIELDSET LI {
 .dialog .selectedSites {
 	position: absolute;
 	top: 68px;
-	bottom: 40px;
+	bottom: 68px;
 	left: 304px;
 	right: 8px;
 }
@@ -426,31 +425,45 @@ FIELDSET LI {
 
 .dialog .save {
 	position: relative;
-	bottom: 0px;
+	top: 32px;
+	float:right;
 }
 
 .dialog .next {
 	position: relative;
-	bottom: 0px;
+	top: 32px;
+	float:right;
 }
 
 .dialog .cancel {
 	position: relative;
-	bottom: 0px;
+	top: 32px;
+	float:right;
 }
 
 .dialog .yes {
 	position: relative;
-	bottom: 0px;
+	top: 32px;
+	float:right;
 }
 
 .dialog .no {
 	position: relative;
-	bottom: 0px;
+	top: 32px;
+	float:right;
+}
+
+.dialog .ok {
+    position: relative;
+    top: 32px;
+    float:right;
 }
 
 .error {
 	color: #ff0000;
+	width: 460px;
+	float:right;
+	padding: 2px;
 }
 
 /*** UI elements ***/

@@ -9,6 +9,8 @@ public interface ConfirmView extends DialogView {
 	
 	HasClickHandlers getButtonNo();
 	
+	HasText getLabelTitle();
+	
 	HasText getLabelQuestion();
 	
 }

@@ -1,6 +1,7 @@
 package com.cee.news.client.content;
 
 import com.cee.news.client.content.SiteData.SiteRetrivalState;
+import com.cee.news.model.EntityKey;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
@@ -17,6 +18,8 @@ public class FeedData implements IsSerializable {
 	private boolean active;
 	
 	private SiteRetrivalState state;
+	
+	private EntityKey language;
 
 	public boolean getIsNew() {
 		return isNew;
@@ -56,5 +59,13 @@ public class FeedData implements IsSerializable {
 
 	public void setIsActive(boolean active) {
 		this.active = active;
+	}
+
+	public EntityKey getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(EntityKey language) {
+		this.language = language;
 	}
 }

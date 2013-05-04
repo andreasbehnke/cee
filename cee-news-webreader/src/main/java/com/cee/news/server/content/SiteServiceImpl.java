@@ -6,11 +6,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cee.news.client.async.EntityUpdateResult;
-import com.cee.news.client.async.EntityUpdateResult.State;
 import com.cee.news.client.content.EntityContent;
 import com.cee.news.client.content.SiteData;
 import com.cee.news.client.content.SiteService;
+import com.cee.news.client.content.SiteUpdateResult;
+import com.cee.news.client.content.SiteUpdateResult.State;
 import com.cee.news.client.error.ServiceException;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Site;
@@ -115,13 +115,13 @@ public class SiteServiceImpl implements SiteService {
     }
 
     @Override
-    public EntityUpdateResult update(SiteData siteData) {
+    public SiteUpdateResult update(SiteData siteData) {
         try {
             if (siteStore.contains(siteData.getName()) && siteData.getIsNew()) {
-                return new EntityUpdateResult(State.entityExists, null);
+                return new SiteUpdateResult(State.entityExists, null);
             }
             EntityKey key = siteStore.update(SiteConverter.createFromSiteData(siteData));
-            return new EntityUpdateResult(State.ok, key);
+            return new SiteUpdateResult(State.ok, key);
         } catch (Exception e) {
             LOG.error(COULD_NOT_UPDATE_SITE, e);
             throw new ServiceException(COULD_NOT_UPDATE_SITE);

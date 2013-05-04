@@ -1,7 +1,8 @@
 package com.cee.news.client.workingset;
 
+import java.util.List;
+
 import com.cee.news.client.ConfirmView;
-import com.cee.news.client.async.EntityUpdateResult;
 import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.content.AddSiteWorkflow;
 import com.cee.news.client.content.LanguageListModel;
@@ -16,6 +17,7 @@ import com.cee.news.client.list.ListChangedHandler;
 import com.cee.news.client.list.MultiSelectListPresenter;
 import com.cee.news.client.list.SelectionListChangedEvent;
 import com.cee.news.client.list.SelectionListChangedHandler;
+import com.cee.news.client.workingset.WorkingSetUpdateResult.State;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -105,7 +107,41 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 		});
 		
 		new MultiSelectListPresenter<EntityKey>(siteListModel, siteListModel, workingSetView.getAvailableSitesList(), workingSetView.getSelectedSitesList());
-	
+		
+		siteListModel.addSelectionListChangedHandler(new SelectionListChangedHandler<EntityKey>() {
+			
+			@Override
+			public void onSelectionListChanged(SelectionListChangedEvent<EntityKey> event) {
+				 WorkingSetData workingSetData = workingSetView.getData();
+				 service.validateSiteLanguages(workingSetData, new AsyncCallback<List<EntityKey>>() {
+					
+					@Override
+					public void onSuccess(List<EntityKey> result) {
+						if (result.size() == 0) {
+							workingSetView.getErrorText().setText("");
+						} else {
+							String differentSites = "";
+							boolean first = true;
+							for (EntityKey entityKey : result) {
+								if (first) {
+									first = false;
+								} else {
+									differentSites += ",";
+								}
+								differentSites += entityKey.getName();
+							}
+							showValidationError("The following sites have a different language than working set: " + differentSites + ". This may result in bad search and related documents behaviour!");
+						}
+					}
+					
+					@Override
+					public void onFailure(Throwable caught) {
+						fireErrorEvent(caught, "Could not validate working set");
+					}
+				});
+			}
+		});
+		
 		confirmDeletionView.getButtonNo().addClickHandler(new ClickHandler() {
 			
 			@Override
@@ -148,6 +184,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 	
 	public void deleteWorkingSet() {
 		final EntityKey workingSetKey = workingSetListModel.getSelectedKey();
+		confirmDeletionView.getLabelTitle().setText("Delete Working Set");
 		confirmDeletionView.getLabelQuestion().setText("Are you sure deleting working set " + workingSetKey.getName() + "?");
 		confirmDeletionView.center();
 	}
@@ -197,16 +234,14 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 			return;
 		}
 
-		service.update(workingSetData, new AsyncCallback<EntityUpdateResult>() {
+		service.update(workingSetData, new AsyncCallback<WorkingSetUpdateResult>() {
 
 			@Override
-			public void onSuccess(final EntityUpdateResult result) {
-				switch (result.getState()) {
-				case entityExists:
+			public void onSuccess(final WorkingSetUpdateResult result) {
+				if (result.getState() == State.entityExists) {
 					showValidationError("Working Set with name " + workingSetData.getNewName() + " exists!");
-					break;
-				case ok:
-				    workingSetView.hide();
+				} else {
+					workingSetView.hide();
 					workingSetListModel.findAllWorkingSets(new NotificationCallback() {
 						
 						@Override
@@ -214,10 +249,6 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 							workingSetListModel.setSelectedKey(result.getKey());
 						}
 					});
-					break;
-
-				default:
-					break;
 				}
 			}
 

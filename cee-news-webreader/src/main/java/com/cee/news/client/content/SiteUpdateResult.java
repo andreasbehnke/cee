@@ -1,9 +1,9 @@
-package com.cee.news.client.async;
+package com.cee.news.client.content;
 
 import com.cee.news.model.EntityKey;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class EntityUpdateResult implements IsSerializable {
+public class SiteUpdateResult implements IsSerializable {
 	
 	public enum State {
 		ok,
@@ -14,9 +14,9 @@ public class EntityUpdateResult implements IsSerializable {
 	
 	private EntityKey key;
 
-	public EntityUpdateResult() {}
+	public SiteUpdateResult() {}
 	
-	public EntityUpdateResult(State state, EntityKey key) {
+	public SiteUpdateResult(State state, EntityKey key) {
 		this.state = state;
 		this.key = key;
 	}

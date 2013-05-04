@@ -127,4 +127,6 @@ interface Styles extends CssResource {
     String workingsetSelection();
     
     String yes();
+    
+    String ok();
 }

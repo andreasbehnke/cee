@@ -3,6 +3,7 @@ package com.cee.news.client.ui;
 import com.cee.news.client.ClientFactory;
 import com.cee.news.client.ConfirmView;
 import com.cee.news.client.NewsView;
+import com.cee.news.client.NotificationView;
 import com.cee.news.client.StartView;
 import com.cee.news.client.ui.NewSiteWizard;
 import com.cee.news.client.content.NewSiteWizardView;
@@ -79,5 +80,10 @@ public class BinderClientFactory implements ClientFactory {
     @Override
     public ConfirmView createConfirmView() {
     	return new Confirm();
+    }
+    
+    @Override
+    public NotificationView createNotificationView() {
+    	return new Notification();
     }
 }
