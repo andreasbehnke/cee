@@ -1,0 +1,30 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>cee-news-store-test-suite</artifactId>
+	<name>Content Extraction Engine - News Store Test Suite</name>
+	<description>Provides a test suite for all CEE store implementations</description>
+	
+	<parent>
+		<groupId>com.cee</groupId>
+		<artifactId>cee</artifactId>
+		<version>1.7-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<dependencies>
+		<!-- internal -->
+		<dependency>
+			<groupId>com.cee</groupId>
+			<artifactId>cee-news-search-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cee</groupId>
+			<artifactId>cee-news-store-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+</project>

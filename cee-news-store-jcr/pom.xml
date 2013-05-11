@@ -38,8 +38,8 @@
 
 		<!-- testing -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>com.cee</groupId>
+			<artifactId>cee-news-store-test-suite</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

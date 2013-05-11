@@ -1,4 +1,4 @@
-package com.cee.news.store.jcr;
+package com.cee.news.store.test.suite;
 
 import com.cee.news.model.Article;
 import com.cee.news.model.EntityKey;

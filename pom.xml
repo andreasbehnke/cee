@@ -81,6 +81,7 @@
 		<module>cee-news-parser-impl</module>
 		<module>cee-news-store-api</module>
 		<module>cee-news-search-api</module>
+		<module>cee-news-store-test-suite</module>
 		<module>cee-news-store-jcr</module>
 		<module>cee-news-webreader</module>
 		<module>cee-news-webreader-tomcat6</module>
@@ -121,6 +122,11 @@
 				<groupId>com.cee</groupId>
 				<artifactId>cee-news-store-api</artifactId>
 				<classifier>sources</classifier>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
+				<artifactId>cee-news-store-test-suite</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
