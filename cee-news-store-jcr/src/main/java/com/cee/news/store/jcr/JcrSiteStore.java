@@ -15,7 +15,6 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
@@ -41,9 +40,9 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
     public JcrSiteStore() {
     }
 
-    public JcrSiteStore(Session session) throws StoreException {
-        setSession(session);
-    }
+    public JcrSiteStore(SessionManager sessionManager) {
+		setSessionManager(sessionManager);
+	}
     
     private String getSitePath(String name) {
     	return Text.escapeIllegalJcrChars(name);
@@ -178,7 +177,6 @@ public class JcrSiteStore extends JcrStoreBase implements SiteStore {
     }
 
     protected NodeIterator getSiteNodesOrderedByName() throws RepositoryException {
-        testSession();
         QueryManager queryManager = getSession().getWorkspace().getQueryManager();
         Query q = queryManager.createQuery(SELECT_SITES_ORDERED_BY_NAME, Query.JCR_SQL2);
         return q.execute().getNodes();

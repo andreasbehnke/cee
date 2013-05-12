@@ -21,7 +21,6 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.RowIterator;
@@ -52,9 +51,9 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
     public JcrArticleStore() {
     }
 
-    public JcrArticleStore(Session session) throws StoreException {
-        setSession(session);
-    }
+    public JcrArticleStore(SessionManager sessionManager) {
+		setSessionManager(sessionManager);
+	}
     
     protected Node getArticleNode(ArticleKey articleKey) throws RepositoryException {
         if (articleKey == null) {
@@ -212,7 +211,6 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
     }
     
     protected RowIterator getArticlesOfSitesOrderedByPublication(List<EntityKey> sites) throws RepositoryException {
-        testSession();
         QueryManager queryManager = getSession().getWorkspace().getQueryManager();
         String whereExpression = buildExpression(WHERE_SITE_NAME_TERM, OR, sites);
         Query q = queryManager.createQuery(String.format(SELECT_ARTICLES_OF_SITE_ORDERED_BY_DATE, whereExpression), Query.JCR_SQL2);

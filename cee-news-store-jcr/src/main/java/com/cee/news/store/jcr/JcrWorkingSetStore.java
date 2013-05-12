@@ -3,7 +3,10 @@
  */
 package com.cee.news.store.jcr;
 
-import static com.cee.news.store.jcr.JcrStoreConstants.*;
+import static com.cee.news.store.jcr.JcrStoreConstants.NODE_WORKINGSET;
+import static com.cee.news.store.jcr.JcrStoreConstants.PROP_LANGUAGE;
+import static com.cee.news.store.jcr.JcrStoreConstants.PROP_NAME;
+import static com.cee.news.store.jcr.JcrStoreConstants.PROP_SITES;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +14,6 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
@@ -38,15 +40,14 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
     public JcrWorkingSetStore() {
     }
 
-    public JcrWorkingSetStore(Session session) throws StoreException {
-        setSession(session);
-    }
+    public JcrWorkingSetStore(SessionManager sessionManager) {
+		setSessionManager(sessionManager);
+	}
     
     protected Node getWorkingSetNodeByName(String name) throws RepositoryException {
         if (name == null) {
             throw new IllegalArgumentException("Parameter name must not be null");
         }
-        testSession();
         QueryManager queryManager = getSession().getWorkspace().getQueryManager();
         Query q = queryManager.createQuery(String.format(SELECT_WORKING_SET_BY_NAME, name), Query.JCR_SQL2);
         NodeIterator iter = q.execute().getNodes();
@@ -158,7 +159,6 @@ public class JcrWorkingSetStore extends JcrStoreBase implements WorkingSetStore 
     }
 
     protected NodeIterator getWorkingSetNodesOrderedByName() throws RepositoryException {
-        testSession();
         QueryManager queryManager = getSession().getWorkspace().getQueryManager();
         Query q = queryManager.createQuery(SELECT_WORKING_SETS_ORDERED_BY_NAME, Query.JCR_SQL2);
         return q.execute().getNodes();

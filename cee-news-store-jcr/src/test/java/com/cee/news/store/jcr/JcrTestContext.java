@@ -43,10 +43,16 @@ public class JcrTestContext implements TestContext {
 	        JcrStoreInitializer init = new JcrStoreInitializer();
 	        init.setSession(session);
 	        init.registerNodeTypes();
-	        workingSetStore = new JcrWorkingSetStore(session);
-	        siteStore = new JcrSiteStore(session);
-	        articleStore = new JcrArticleStore(session);
-	        articleSearchService = new JcrArticleSearchService(session);	
+	        SessionManager sessionManager = new SessionManager() {
+				@Override
+				public Session getSession() {
+					return session;
+				}
+			};
+	        workingSetStore = new JcrWorkingSetStore(sessionManager);
+	        siteStore = new JcrSiteStore(sessionManager);
+	        articleStore = new JcrArticleStore(sessionManager);
+	        articleSearchService = new JcrArticleSearchService(sessionManager);	
     	} catch(Exception e) {
     		throw new RuntimeException("Could not open JCR context", e);
     	}

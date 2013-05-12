@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.Row;
@@ -21,7 +20,6 @@ import com.cee.news.model.ArticleKey;
 import com.cee.news.model.EntityKey;
 import com.cee.news.search.ArticleSearchService;
 import com.cee.news.search.SearchException;
-import com.cee.news.store.StoreException;
 
 public class JcrArticleSearchService extends JcrStoreBase implements ArticleSearchService {
 
@@ -32,8 +30,8 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 	public JcrArticleSearchService() {
 	}
 	
-	public JcrArticleSearchService(Session session) throws StoreException {
-		setSession(session);
+	public JcrArticleSearchService(SessionManager sessionManager) {
+		setSessionManager(sessionManager);
 	}
 	
 	@Override
@@ -70,8 +68,7 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 	
 	@Override
 	public List<ArticleKey> findArticles(List<EntityKey> sites, String fulltextSearchQuery) throws SearchException {
-	    testSession();
-        if (sites == null) {
+	    if (sites == null) {
             throw new IllegalArgumentException("Parameter sites must not be null");
         }
         if (fulltextSearchQuery == null) {
@@ -88,7 +85,6 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 
     @Override
 	public List<ArticleKey> findRelatedArticles(List<EntityKey> sites, ArticleKey articleKey) throws SearchException {
-		testSession();
 		if (sites == null) {
 			throw new IllegalArgumentException("Parameter sites must not be null");
 		}
