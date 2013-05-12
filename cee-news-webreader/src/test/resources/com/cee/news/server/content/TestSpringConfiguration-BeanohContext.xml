@@ -4,8 +4,10 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
 	<import resource="../../../../../applicationContext.xml"/>
-
-	<bean class="com.cee.news.server.content.DeleteRepositoryHook" scope="singleton" destroy-method="deleteRepository">
-		<property name="repository" ref="jcrRepository" />
-	</bean>
+	
+	<!-- configure JCR to use in memory file manager -->
+    <bean id="jcrRepositoryConfig" class="org.apache.jackrabbit.core.config.RepositoryConfig" factory-method="create">
+        <constructor-arg value="classpath:repository.xml" type="java.io.InputStream" />
+        <constructor-arg value="target/repository1" />
+    </bean>
 </beans>

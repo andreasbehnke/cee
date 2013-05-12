@@ -83,6 +83,7 @@
 		<module>cee-news-search-api</module>
 		<module>cee-news-store-test-suite</module>
 		<module>cee-news-store-jcr</module>
+		<module>cee-news-store-lucene</module>
 		<module>cee-news-webreader</module>
 		<module>cee-news-webreader-tomcat6</module>
 		<module>cee-news-webreader-jetty7</module>
@@ -132,6 +133,11 @@
 			<dependency>
 				<groupId>com.cee</groupId>
 				<artifactId>cee-news-store-jcr</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
+				<artifactId>cee-news-store-lucene</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
