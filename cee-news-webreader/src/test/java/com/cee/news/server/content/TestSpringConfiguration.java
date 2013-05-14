@@ -3,7 +3,6 @@ package com.cee.news.server.content;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import com.sourceallies.beanoh.BeanohTestCase;
@@ -19,7 +18,6 @@ public class TestSpringConfiguration extends BeanohTestCase {
 		} finally {
 			File repdir = new File(TEST_REPOSITORY_DIR);
 			System.out.println("deleting repository directory: " + repdir.getAbsolutePath());
-			FileUtils.deleteDirectory(repdir);
 		}
     }
 }

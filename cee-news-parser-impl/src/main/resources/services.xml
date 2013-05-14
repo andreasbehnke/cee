@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+	<!-- Parser -->
+	
+	<bean id="httpClientFactory" class="com.cee.news.parser.net.impl.DefaultHttpClientFactory" />
+	
+	<bean id="webClient" class="com.cee.news.parser.net.impl.DefaultWebClient" scope="prototype">
+		<property name="httpClientFactory" ref="httpClientFactory" />
+		<property name="readerFactory">
+			<bean class="com.cee.news.parser.net.impl.XmlStreamReaderFactory" />
+		</property>
+	</bean>
+	
+	<bean id="htmlParser" class="org.ccil.cowan.tagsoup.Parser" scope="prototype"/>
+	
+	<bean id="articleParser" class="com.cee.news.parser.impl.BoilerpipeArticleParser" scope="prototype">
+		<property name="webClient" ref="webClient" />
+		<property name="reader" ref="htmlParser"/>
+		<property name="filters">
+			<list>
+				<bean class="com.cee.news.parser.impl.MinWordCountArticleFilter">
+					<property name="minWordCount" value="30" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="feedParser" class="com.cee.news.parser.impl.RomeFeedParser" scope="prototype">
+		<property name="webClient" ref="webClient" />
+	</bean>
+
+	<bean id="siteUpdater" class="com.cee.news.parser.SiteUpdater" scope="prototype">
+		<property name="articleParser" ref="articleParser" />
+		<property name="feedParser" ref="feedParser" />
+		<property name="store" ref="articleStore" />
+		<property name="onlyActiveFeeds" value="true" />
+	</bean>
+
+	<bean id="siteParser" class="com.cee.news.parser.SiteParser" scope="prototype">
+		<property name="webClient" ref="webClient" />
+    	<property name="reader" ref="htmlParser" />
+		<property name="feedParser" ref="feedParser" />
+	</bean>
+</beans>	

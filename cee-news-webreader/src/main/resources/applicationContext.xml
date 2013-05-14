@@ -12,55 +12,7 @@
 	</bean>
 	
 	<import resource="classpath*:services.xml" />
-
-	<!-- Parser -->
 	
-	<bean id="httpClientFactory" class="com.cee.news.parser.net.impl.DefaultHttpClientFactory" />
-	
-	<bean id="webClient" class="com.cee.news.parser.net.impl.DefaultWebClient" scope="prototype">
-		<property name="httpClientFactory" ref="httpClientFactory" />
-		<property name="readerFactory">
-			<bean class="com.cee.news.parser.net.impl.XmlStreamReaderFactory" />
-		</property>
-	</bean>
-	
-	<bean id="htmlParser" class="org.ccil.cowan.tagsoup.Parser" scope="prototype"/>
-	
-	<bean id="articleParser" class="com.cee.news.parser.impl.BoilerpipeArticleParser" scope="prototype">
-		<property name="webClient" ref="webClient" />
-		<property name="reader" ref="htmlParser"/>
-		<property name="filters">
-			<list>
-				<bean class="com.cee.news.parser.impl.MinWordCountArticleFilter">
-					<property name="minWordCount" value="30" />
-				</bean>
-			</list>
-		</property>
-	</bean>
-	
-	<bean id="feedParser" class="com.cee.news.parser.impl.RomeFeedParser" scope="prototype">
-		<property name="webClient" ref="webClient" />
-	</bean>
-
-	<bean id="siteUpdater" class="com.cee.news.parser.SiteUpdater" scope="prototype">
-		<property name="articleParser" ref="articleParser" />
-		<property name="feedParser" ref="feedParser" />
-		<property name="store" ref="articleStore" />
-		<property name="onlyActiveFeeds" value="true" />
-	</bean>
-
-	<bean id="siteUpdateCommand" class="com.cee.news.server.content.SiteUpdateCommand" scope="prototype">
-		<property name="siteUpdater" ref="siteUpdater" />
-	</bean>
-	
-	<bean id="htmlReader" class="org.ccil.cowan.tagsoup.Parser" scope="prototype" />
-
-	<bean id="siteParser" class="com.cee.news.parser.SiteParser" scope="prototype">
-		<property name="webClient" ref="webClient" />
-    	<property name="reader" ref="htmlReader" />
-		<property name="feedParser" ref="feedParser" />
-	</bean>
-
 	<!-- GWT Services -->
 	
 	<bean id="gwtLanguageService" class="com.cee.news.server.content.LanguageServiceImpl" scope="request" autowire="byType">
@@ -83,6 +35,10 @@
 		<property name="siteStore" ref="siteStore" />
 	</bean>
 
+	<bean id="siteUpdateCommand" class="com.cee.news.server.content.SiteUpdateCommand" scope="prototype">
+		<property name="siteUpdater" ref="siteUpdater" />
+	</bean>
+	
 	<bean id="gwtSiteUpdateService" class="com.cee.news.server.content.SiteUpdateServiceImpl" init-method="startUpdateScheduler" destroy-method="shutdown">
 		<property name="corePoolSize" value="${update.service.core.pool.size}" />
 		<property name="maxPoolSize" value="${update.service.max.pool.size}" />

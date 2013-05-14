@@ -1,10 +1,5 @@
 package com.cee.news.server.content;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,8 +31,6 @@ public class TestSiteUpdateService {
 	private static final String FEED_URL = "http://www.test.com/content/site1/feed1.rss";
 
 	private static final String TEST_SITE = "testSite";
-	
-	private final static String TEST_REPOSITORY_DIR = "target/repository";
 	
 	@Autowired
 	private SiteUpdateService siteUpdateService;
@@ -71,9 +64,4 @@ public class TestSiteUpdateService {
 		SiteData siteData = siteUpdateService.retrieveSiteData(MISSING_SITE_URL);
 		Assert.assertEquals(SiteRetrivalState.ioError, siteData.getState());
 	}
-	
-	@AfterClass
-	public static void deleteRepository() throws IOException {  
-        FileUtils.deleteDirectory(new File(TEST_REPOSITORY_DIR));
-    }
 }
