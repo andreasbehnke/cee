@@ -41,7 +41,7 @@ public class LuceneTestContext implements TestContext {
 		siteStore = new LuceneSiteStore(createWriter());
 		articleStore = new LuceneArticleStore();
 		articleSearchService = new LuceneArticleSearchService();
-		workingSetStore = new LuceneWorkingSetStore();
+		workingSetStore = new LuceneWorkingSetStore(createWriter());
 	}
 
 	@Override

@@ -13,6 +13,10 @@ public class DocumentBuilder {
 	public DocumentBuilder() {
 		document = new Document();
 	}
+	
+	public DocumentBuilder(Document document) {
+		this.document = document;
+	}
 
 	public Document getDocument() {
 		return document;
@@ -36,6 +40,11 @@ public class DocumentBuilder {
 		if (value != null) {
 			document.add(new StoredField(name, value));
 		}
+		return this;
+	}
+	
+	public DocumentBuilder removeField(String name) {
+		document.removeField(name);
 		return this;
 	}
 }

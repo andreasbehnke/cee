@@ -7,7 +7,7 @@ import com.cee.news.model.EntityKey;
 import com.cee.news.search.ArticleSearchService;
 import com.cee.news.search.SearchException;
 
-public class LuceneArticleSearchService implements ArticleSearchService {
+public class LuceneArticleSearchService extends LuceneStoreBase implements ArticleSearchService {
 
 	@Override
 	public List<String> getSupportedLanguages() {

@@ -10,11 +10,10 @@ import com.cee.news.store.ArticleChangeListener;
 import com.cee.news.store.ArticleStore;
 import com.cee.news.store.StoreException;
 
-public class LuceneArticleStore implements ArticleStore {
+public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore {
 
 	@Override
-	public ArticleKey update(EntityKey site, Article article)
-			throws StoreException {
+	public ArticleKey update(EntityKey site, Article article) throws StoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -26,36 +25,31 @@ public class LuceneArticleStore implements ArticleStore {
 	}
 
 	@Override
-	public Article getArticle(ArticleKey key, boolean withContent)
-			throws StoreException {
+	public Article getArticle(ArticleKey key, boolean withContent) throws StoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<Article> getArticles(List<ArticleKey> keys, boolean withContent)
-			throws StoreException {
+	public List<Article> getArticles(List<ArticleKey> keys, boolean withContent) throws StoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ArticleKey> getArticlesOrderedByDate(EntityKey siteKey)
-			throws StoreException {
+	public List<ArticleKey> getArticlesOrderedByDate(EntityKey siteKey) throws StoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ArticleKey> getArticlesOrderedByDate(List<EntityKey> siteKeys)
-			throws StoreException {
+	public List<ArticleKey> getArticlesOrderedByDate(List<EntityKey> siteKeys) throws StoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ArticleKey> getArticlesOrderedByDate(WorkingSet workingSet)
-			throws StoreException {
+	public List<ArticleKey> getArticlesOrderedByDate(WorkingSet workingSet) throws StoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
