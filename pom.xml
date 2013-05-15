@@ -16,6 +16,7 @@
 		<slf4j.version>1.6.4</slf4j.version>
 		<jackrabbit.version>2.2.10</jackrabbit.version>
 		<jetty.version>9.0.0.M0</jetty.version>
+		<lucene.version>4.3.0</lucene.version>
 		<source.encoding>UTF-8</source.encoding>
 	</properties>
 
@@ -189,6 +190,11 @@
 				<version>2.1</version>
 			</dependency>
 			<dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.2.4</version>
+            </dependency>
+			<dependency>
 				<groupId>com.google.gwt</groupId>
 				<artifactId>gwt-dev</artifactId>
 				<version>${gwt.version}</version>
@@ -286,9 +292,14 @@
 				<version>${jackrabbit.version}</version>
 			</dependency>
 			<dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-analyzers-common</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+			<dependency>
 				<groupId>org.apache.lucene</groupId>
 				<artifactId>lucene-core</artifactId>
-				<version>4.3.0</version>
+				<version>${lucene.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.ccil.cowan.tagsoup</groupId>

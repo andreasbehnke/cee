@@ -59,8 +59,8 @@ public abstract class TestSiteStore extends TestStoreBase {
         assertFalse(feed2.isActive());
         
         //change site
-        site.setDescription("Description123");
-        site.setTitle("Title123");
+        site.setDescription("Description123 Text");
+        site.setTitle("Title123 Text");
         site.setLanguage("en");
         feeds = new ArrayList<Feed>();
         feeds.add(new Feed("http://www.tageschau.de/feed.rss", "feed1"));
@@ -68,9 +68,9 @@ public abstract class TestSiteStore extends TestStoreBase {
         siteStore.update(site);
         
         site = siteStore.getSite(siteKey);
-        assertEquals("Description123", site.getDescription());
+        assertEquals("Description123 Text", site.getDescription());
         assertEquals("http://www.spiegel.de/blabla/test/test.jsp?id=52643584", site.getLocation());
-        assertEquals("Title123", site.getTitle());
+        assertEquals("Title123 Text", site.getTitle());
         assertEquals("en", site.getLanguage());
         feeds = site.getFeeds();
         assertEquals(1, feeds.size());

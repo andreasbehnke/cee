@@ -29,12 +29,12 @@ public abstract class TestStoreBase {
 	}
 	
 	@Before
-	public void Open() {
+	public void open() {
 		getContext().open();
 	}
 	
 	@After
-	public void Close() {
+	public void close() {
 		getContext().close();
 	}
 }
