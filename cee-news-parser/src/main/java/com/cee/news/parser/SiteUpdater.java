@@ -103,26 +103,18 @@ public class SiteUpdater {
                 articles.addAll(feedParser.readArticles(new URL(feed.getLocation())));
             }
         }
-        int articleCount = updateArticles(EntityKey.get(site.getName()), articles);
+        int articleCount = updateArticles(EntityKey.get(site.getName()), articles, site.getLanguage());
         LOG.info("updated {} articles of site {}", articleCount, site.getName());
         return articleCount;
     }
     
-    /**
-     * Updates all articles of a site
-     * @param site
-     * @param feed
-     * @return number of articles processed
-     * @throws ParserException If the feed could not be parsed
-     * @throws IOException If the feed could not be read
-     * @throws StoreException If the storage of articles failed
-     */
-    protected int updateArticles(EntityKey siteKey, List<Article> articles) throws StoreException {
+    protected int updateArticles(EntityKey siteKey, List<Article> articles, String language) throws StoreException {
     	List<Article> articlesForUpdate = new ArrayList<Article>();
         for (Article article : articles) {
         	try {
             	article = articleParser.parse(article);
             	if (article != null) {
+            		article.setLanguage(language);
             		articlesForUpdate.add(article);
             	}
         	} catch(ParserException e) {
