@@ -17,6 +17,12 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore 
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public List<ArticleKey> addNewArticles(EntityKey site, List<Article> articles) throws StoreException {
+	    // TODO Auto-generated method stub
+	    return null;
+	}
 
 	@Override
 	public void addArticleChangeListener(ArticleChangeListener listener) {

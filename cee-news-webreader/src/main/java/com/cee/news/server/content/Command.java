@@ -6,11 +6,6 @@ package com.cee.news.server.content;
 public interface Command extends Runnable {
 	
 	/**
-	 * @return The number of remaining tasks.
-	 */
-	int getRemainingTasks();
-
-	/**
 	 * Register a callback which will be called when this command finishes execution.
 	 * @param callback The callback being notified about command finish and command errors
 	 */

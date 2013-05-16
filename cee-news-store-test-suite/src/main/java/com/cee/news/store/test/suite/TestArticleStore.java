@@ -2,6 +2,7 @@ package com.cee.news.store.test.suite;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,6 +51,41 @@ public abstract class TestArticleStore extends TestStoreBase {
         assertEquals("Short Text", article.getShortText());
         assertEquals("Title", article.getTitle());
     }
+	
+	@Test
+	public void testAddNewArticles() throws StoreException {
+		SiteStore siteStore = getSiteStore();
+		ArticleStore articleStore = getArticleStore();
+		DummyArticleChangeListener listener = new DummyArticleChangeListener();
+		articleStore.addArticleChangeListener(listener);
+		
+		EntityKey site = Utils.createSite(siteStore, "http://www.xyz.de");
+        
+        Article article1 = Utils.createArticle("1", "http://www.xyz.de/1", 2010, 1, 12, "Title", "Short Text");
+        Article article2 = Utils.createArticle("2", "http://www.xyz.de/2", 2010, 1, 12, "Title", "Short Text");
+        Article article3 = Utils.createArticle("3", "http://www.xyz.de/4", 2010, 1, 12, "Title", "Short Text");
+        Article article4 = Utils.createArticle("4", "http://www.xyz.de/5", 2010, 1, 12, "Title", "Short Text");
+        
+        ArticleKey key3 = articleStore.update(site, article3);
+        ArticleKey key1 = articleStore.update(site, article1);
+        
+        List<Article> articles = new ArrayList<Article>();
+        articles.add(article1);
+        articles.add(article2);
+        articles.add(article3);
+        articles.add(article4);
+        
+        List<ArticleKey> keys = articleStore.addNewArticles(site, articles);
+        
+        assertEquals(2, keys.size());
+        assertFalse(keys.contains(key1));
+        assertFalse(keys.contains(key3));
+        
+        article2 = articleStore.getArticle(keys.get(0), false);
+        assertEquals("2", article2.getExternalId());
+        article4 = articleStore.getArticle(keys.get(1), false);
+        assertEquals("4", article4.getExternalId());
+	}
     
     @Test
     public void testUpdateSiteArticleChangeContent() throws StoreException {

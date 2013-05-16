@@ -30,12 +30,6 @@ public interface SiteUpdateService extends RemoteService {
 	void clearQueue();
 	
 	/**
-	 * @return The number of update tasks in the queue. Used for displaying 
-	 * a progress bar.
-	 */
-	int getUpdateTasks();
-	
-	/**
 	 * Starts the scheduler which triggers the site updates periodically
 	 */
 	void startUpdateScheduler();

@@ -145,6 +145,28 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         return articleKey;
     }
     
+    @Override
+    public List<ArticleKey> addNewArticles(EntityKey site, List<Article> articles) throws StoreException {
+    	if (site == null) {
+            throw new IllegalArgumentException("Parameter site must not be null");
+        }
+        if (articles == null) {
+            throw new IllegalArgumentException("Parameter articles must not be null");
+        }
+        List<ArticleKey> keys = new ArrayList<ArticleKey>();
+        for (Article article : articles) {
+        	try {
+    	    	ArticleKey key = ArticleKey.get(article.getTitle(), article.getExternalId(), site.getKey());
+		        if (!containsContentNode(buildArticlePath(key))) {
+		        	keys.add(update(site, article));
+		        }
+        	} catch (RepositoryException re) {
+            	throw new StoreException(article, "Could not check article exists");
+            }
+        }
+        return keys;
+    }
+    
     protected List<TextBlock> createContentFromNode(Node articleNode) throws StoreException {
     	List<TextBlock> content = new ArrayList<TextBlock>();
         try {

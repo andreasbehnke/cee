@@ -1,6 +1,7 @@
 package com.cee.news.parser;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +21,6 @@ import com.cee.news.store.StoreException;
  */
 public class SiteUpdater {
 	
-	private static final int DEFAULT_REMAINING_TASKS = 10;
-
 	private static final Logger LOG = LoggerFactory.getLogger(SiteUpdater.class);
 
     private ArticleParser articleParser;
@@ -31,8 +30,6 @@ public class SiteUpdater {
     private ArticleStore store;
 
     private boolean onlyActiveFeeds = true;
-
-    private int remainingArticles = DEFAULT_REMAINING_TASKS;
     
     public SiteUpdater() {
     }
@@ -49,13 +46,6 @@ public class SiteUpdater {
         this.feedParser = feedParser;
         this.onlyActiveFeeds = onlyActiveFeeds;
     }
-    
-    /**
-     * @return number of remaining articles to update. This information can be used to display a progress bar.
-     */
-    public int getRemainingArticles() {
-		return remainingArticles;
-	}
 
     /**
      * @param articleParser
@@ -100,17 +90,17 @@ public class SiteUpdater {
      *             Thrown if a site's feed could not be parsed
      * @throws StoreException
      *             Thrown if an article could not be stored
+     * @throws MalformedURLException 
      * @throws IOException
      *             If an IO error occurred while retrieving a feed
      */
-    public int update(Site site) throws ParserException, StoreException, IOException {
+    public int update(Site site) throws StoreException, MalformedURLException, ParserException, IOException {
         LOG.info("starting update for site {}", site.getName());
     	List<Article> articles = new ArrayList<Article>();
         for (Feed feed : site.getFeeds()) {
             if (!onlyActiveFeeds || feed.isActive()) {
             	LOG.debug("processing feed {}", feed.getTitle());
                 articles.addAll(feedParser.readArticles(new URL(feed.getLocation())));
-            	remainingArticles = articles.size();
             }
         }
         int articleCount = updateArticles(EntityKey.get(site.getName()), articles);
@@ -127,23 +117,20 @@ public class SiteUpdater {
      * @throws IOException If the feed could not be read
      * @throws StoreException If the storage of articles failed
      */
-    protected int updateArticles(EntityKey siteKey, List<Article> articles) throws ParserException, IOException, StoreException {
-    	int articleCount = 0;
+    protected int updateArticles(EntityKey siteKey, List<Article> articles) throws StoreException {
+    	List<Article> articlesForUpdate = new ArrayList<Article>();
         for (Article article : articles) {
         	try {
             	article = articleParser.parse(article);
             	if (article != null) {
-            	    store.update(siteKey, article);
-            	    articleCount++;
+            		articlesForUpdate.add(article);
             	}
         	} catch(ParserException e) {
         		LOG.error("could not parse article {}", article.getTitle(), e);
         	} catch (IOException e) {
         		LOG.error("could retrieve article {}", article.getTitle(), e);
-			} finally {
-				remainingArticles--;
 			}
         }
-        return articleCount;
+        return store.addNewArticles(siteKey, articlesForUpdate).size();
     }
 }

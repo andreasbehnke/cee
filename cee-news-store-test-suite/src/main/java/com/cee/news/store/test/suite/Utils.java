@@ -22,7 +22,7 @@ public class Utils {
         return siteStore.update(site);
     }
 
-    private static Article createArticle(String id, String location, int year, int month, int dayOfMonth) {
+    public static Article createArticle(String id, String location, int year, int month, int dayOfMonth) {
         Article article = new Article();
         article.setExternalId(id);
         article.setLanguage("en");
@@ -36,14 +36,14 @@ public class Utils {
         return article;
     }
 
-    private static Article createArticle(String id, String location, int year, int month, int dayOfMonth, String title, String shortText) {
+    public static Article createArticle(String id, String location, int year, int month, int dayOfMonth, String title, String shortText) {
         Article article = createArticle(id, location, year, month, dayOfMonth);
         article.setTitle(title);
         article.setShortText(shortText);
         return article;
     }
 
-    private static Article createArticle(String id, String location, int year, int month, int dayOfMonth, String title, String shortText, List<TextBlock> content) {
+    public static Article createArticle(String id, String location, int year, int month, int dayOfMonth, String title, String shortText, List<TextBlock> content) {
         Article article = createArticle(id, location, year, month, dayOfMonth, title, shortText);
         article.setContent(content);
         return article;

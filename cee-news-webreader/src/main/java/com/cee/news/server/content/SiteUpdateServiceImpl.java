@@ -164,19 +164,6 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	}
 
 	@Override
-	public synchronized int getUpdateTasks() {
-		int taskCount = 0;
-		for (Runnable runnable : runnablesInProgress) {
-			if (runnable instanceof AbstractCommand) {
-				taskCount += ((AbstractCommand)runnable).getRemainingTasks();
-			} else {
-				taskCount++;
-			}
-		}
-		return taskCount;
-	}
-
-	@Override
 	public synchronized void clearQueue() {
 		LOG.info(CLEARING_WORK_QUEUE);
 		workQueue.clear();

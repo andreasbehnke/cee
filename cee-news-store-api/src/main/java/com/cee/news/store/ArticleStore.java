@@ -15,11 +15,19 @@ public interface ArticleStore {
     /**
      * If an article with same ID exists, the existing article will be updated.
      * If an article with same ID does not exist, a new article will be created.
-     * @param site The articles site
+     * @param site The article's site
      * @param article The article which needs update
      * @return primary key of the article being added
      */
     ArticleKey update(EntityKey site, Article article) throws StoreException;
+    
+    /**
+     * Adds all articles, which do not exist in store
+     * @param site The article's site
+     * @param articles List of articles to add. Only new articles will be added.
+     * @return List of primary keys which have been added
+     */
+    List<ArticleKey> addNewArticles(EntityKey site, List<Article> articles) throws StoreException;
 
 	/**
 	 * @param listener will be notified about article creation and changes

@@ -71,6 +71,10 @@ public abstract class JcrStoreBase {
     protected Node getContentNodeOrNull(String relPath) throws RepositoryException {
     	return getNodeOrNull(getContent(), relPath);
     }
+    
+    protected boolean containsContentNode(String relPath) throws RepositoryException {
+    	return getContent().hasNode(relPath);
+    }
 
 	protected static String buildArticlePath(ArticleKey articleKey) {
 		return new StringBuilder(300)
