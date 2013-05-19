@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexableField;
@@ -21,13 +22,15 @@ public abstract class LuceneStoreBase {
 
 	protected static final Gson GSON = new Gson();
 	
-	protected IndexWriter indexWriter;
+	private IndexWriter indexWriter;
 	
 	private SearcherManager searcherManager;
 	
 	private Object searcherManagerLock = new Object();
 
-	private SearcherManager getSearcherManager(boolean refresh) throws IOException {
+	private LuceneAnalysers analysers;
+
+	private SearcherManager getSearcherManager() throws IOException {
 		if (searcherManager == null) {
 			synchronized (searcherManagerLock) {
 				if (searcherManager == null) {
@@ -35,18 +38,15 @@ public abstract class LuceneStoreBase {
 				}
 			}
 		}
-		if (refresh) {
-			searcherManager.maybeRefreshBlocking();
-		}
 		return searcherManager;
 	}
 
-	protected IndexSearcher aquireSearcher(boolean refresh) throws IOException {
-		return getSearcherManager(refresh).acquire();
+	protected IndexSearcher aquireSearcher() throws IOException {
+		return getSearcherManager().acquire();
 	}
 
 	protected void releaseSearcher(IndexSearcher searcher) throws IOException {
-		getSearcherManager(false).release(searcher);
+		getSearcherManager().release(searcher);
 	}
 
 	protected String getStringFieldOrNull(Document document, String fieldName) {
@@ -65,7 +65,15 @@ public abstract class LuceneStoreBase {
 	public void setIndexWriter(IndexWriter indexWriter) {
 		this.indexWriter = indexWriter;
 	}
+	
+	public LuceneAnalysers getAnalysers() {
+		return analysers;
+	}
 
+	public void setAnalysers(LuceneAnalysers analysers) {
+		this.analysers = analysers;
+	}
+	
 	protected Document getSingleDocument(IndexSearcher searcher, Query query) throws IOException {
 		TopDocs topDocs = searcher.search(query, 1);
 		if (topDocs.totalHits == 0) {
@@ -74,23 +82,27 @@ public abstract class LuceneStoreBase {
 			return searcher.doc(topDocs.scoreDocs[0].doc);
 		}
 	}
+	
+	protected boolean containsDocument(Query query, IndexSearcher searcher) throws IOException {
+		TopDocs topDocs = searcher.search(query, 1);
+		if (topDocs.totalHits == 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	protected boolean containsDocument(Query query) throws IOException {
-		IndexSearcher searcher = aquireSearcher(true);
+		IndexSearcher searcher = aquireSearcher();
 		try {
-			TopDocs topDocs = searcher.search(query, 1);
-			if (topDocs.totalHits == 0) {
-				return false;
-			} else {
-				return true;
-			}
+			return containsDocument(query, searcher);
 		} finally {
 			releaseSearcher(searcher);
 		}
 	}
 	
 	protected long documentCount(Query query) throws IOException {
-		IndexSearcher searcher = aquireSearcher(true);
+		IndexSearcher searcher = aquireSearcher();
 		try {
 			TopDocs topDocs = searcher.search(query, LuceneConstants.MAX_RESULT_SIZE);
 			return topDocs.totalHits;
@@ -101,7 +113,7 @@ public abstract class LuceneStoreBase {
 	
 	protected List<EntityKey> getSortedDocuments(Query query, Sort sort, String keyField, String nameField) throws IOException {
 		List<EntityKey> entityKeys = new ArrayList<EntityKey>();
-		IndexSearcher searcher = aquireSearcher(true);
+		IndexSearcher searcher = aquireSearcher();
 		try {
 			TopDocs topDocs = searcher.search(query, LuceneConstants.MAX_RESULT_SIZE, sort);
 			for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
@@ -114,5 +126,23 @@ public abstract class LuceneStoreBase {
 			releaseSearcher(searcher);
 		}
 		return entityKeys;
+	}
+	
+	protected Analyzer getAnalyzer(String language) {
+		return analysers.getAnalayserForLanguage(language);
+	}
+	
+	protected void deleteDocuments(Query query) throws IOException {
+		indexWriter.deleteDocuments(query);
+	}
+
+	protected void addDocument(Document document, String language) throws IOException {
+		Analyzer analyzer = analysers.getAnalayserForLanguage(language);
+		indexWriter.addDocument(document, analyzer);
+	}
+	
+	protected void commit() throws IOException {
+		indexWriter.commit();
+		getSearcherManager().maybeRefreshBlocking();
 	}
 }

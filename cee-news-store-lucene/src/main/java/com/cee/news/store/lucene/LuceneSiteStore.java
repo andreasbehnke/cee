@@ -8,6 +8,8 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
@@ -27,6 +29,23 @@ public class LuceneSiteStore extends LuceneStoreBase implements SiteStore {
 		return new TermQuery(new Term(LuceneConstants.FIELD_SITE_NAME, siteKey.getKey()));
 	}
 	
+	private Query createSitesQuery(List<EntityKey> siteKeys) {
+		if (siteKeys.size() == 1) {
+			return createSiteQuery(siteKeys.get(0));
+		} else {
+			BooleanQuery query = new BooleanQuery();
+			query.setMinimumNumberShouldMatch(1);
+			float boost = siteKeys.size() * 10;
+			for (EntityKey siteKey: siteKeys) {
+				Query siteQuery = createSiteQuery(siteKey);
+				siteQuery.setBoost(boost);
+				query.add(siteQuery, BooleanClause.Occur.SHOULD);
+				boost -= 10;
+			}
+			return query;
+		}
+	}
+	
 	private Query createAllSitesQuery() {
 		return new MatchAllDocsQuery();
 	}
@@ -36,7 +55,7 @@ public class LuceneSiteStore extends LuceneStoreBase implements SiteStore {
 	}
 	
 	private Document getSiteDocument(EntityKey siteKey) throws IOException {
-		IndexSearcher searcher = aquireSearcher(true);
+		IndexSearcher searcher = aquireSearcher();
 		try {
 			return getSiteDocument(searcher, siteKey);
 		} finally {
@@ -44,7 +63,7 @@ public class LuceneSiteStore extends LuceneStoreBase implements SiteStore {
 		}
 	}
 	
-	private Document createSiteDocument(EntityKey siteKey, Site site) {
+	private Document createSiteDocument(Site site) {
 		return new DocumentBuilder()
 			.addStringField(LuceneConstants.FIELD_SITE_NAME, site.getName(), Field.Store.YES)
 			.addTextField(LuceneConstants.FIELD_SITE_TITLE, site.getTitle(), Field.Store.YES)
@@ -74,8 +93,9 @@ public class LuceneSiteStore extends LuceneStoreBase implements SiteStore {
 	
 	public LuceneSiteStore() {}
 	
-	public LuceneSiteStore(IndexWriter indexWriter) {
-		this.indexWriter = indexWriter;
+	public LuceneSiteStore(IndexWriter indexWriter, LuceneAnalysers analysers) {
+		setIndexWriter(indexWriter);
+		setAnalysers(analysers);
 	}
 
 	@Override
@@ -83,9 +103,9 @@ public class LuceneSiteStore extends LuceneStoreBase implements SiteStore {
 		try {
 			String siteName = site.getName();
 			EntityKey siteKey = EntityKey.get(siteName, siteName);
-			indexWriter.deleteDocuments(createSiteQuery(siteKey));
-			indexWriter.addDocument(createSiteDocument(siteKey, site));
-			indexWriter.commit();
+			deleteDocuments(createSiteQuery(siteKey));
+			addDocument(createSiteDocument(site), site.getLanguage());
+			commit();
 			return siteKey;
 		} catch(IOException ioe) {
 			throw new StoreException(site, ioe);
@@ -115,11 +135,13 @@ public class LuceneSiteStore extends LuceneStoreBase implements SiteStore {
 	public List<Site> getSites(List<EntityKey> keys) throws StoreException {
 		try {
 			List<Site> sites = new ArrayList<Site>();
-			IndexSearcher searcher = aquireSearcher(true);
+			IndexSearcher searcher = aquireSearcher();
+			Query query = createSitesQuery(keys);
 			try {
-				for (EntityKey siteKey : keys) {
-					sites.add(createSiteFromDocument(getSiteDocument(searcher, siteKey)));
-				}
+				TopDocs topDocs = searcher.search(query, LuceneConstants.MAX_RESULT_SIZE);
+				for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+	                sites.add(createSiteFromDocument(searcher.doc(scoreDoc.doc)));
+                }
 			} finally {
 				releaseSearcher(searcher);
 			}

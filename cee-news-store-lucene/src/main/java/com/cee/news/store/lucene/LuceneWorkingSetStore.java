@@ -32,7 +32,7 @@ public class LuceneWorkingSetStore extends LuceneStoreBase implements WorkingSet
 	}
 	
 	private Document getWorkingSetDocument(EntityKey wsKey) throws IOException {
-		IndexSearcher searcher = aquireSearcher(true);
+		IndexSearcher searcher = aquireSearcher();
 		try {
 			return getWorkingSetDocument(searcher, wsKey);
 		} finally {
@@ -64,8 +64,9 @@ public class LuceneWorkingSetStore extends LuceneStoreBase implements WorkingSet
 	
 	public LuceneWorkingSetStore() {}
 	
-	public LuceneWorkingSetStore(IndexWriter indexWriter) {
-		this.indexWriter = indexWriter;
+	public LuceneWorkingSetStore(IndexWriter indexWriter, LuceneAnalysers analysers) {
+		setIndexWriter(indexWriter);
+		setAnalysers(analysers);
 	}
 	
 	@Override
@@ -73,9 +74,9 @@ public class LuceneWorkingSetStore extends LuceneStoreBase implements WorkingSet
 		try {
 			String wsName = workingSet.getName();
 			EntityKey wsKey = EntityKey.get(wsName, wsName);
-			indexWriter.deleteDocuments(createWorkingSetQuery(wsKey));
-			indexWriter.addDocument(createWorkingSetDocument(workingSet));
-			indexWriter.commit();
+			deleteDocuments(createWorkingSetQuery(wsKey));
+			addDocument(createWorkingSetDocument(workingSet), workingSet.getLanguage());
+			commit();
 			return wsKey;
 		} catch(IOException ioe) {
 			throw new StoreException(workingSet, ioe);
@@ -90,9 +91,9 @@ public class LuceneWorkingSetStore extends LuceneStoreBase implements WorkingSet
 				.removeField(LuceneConstants.FIELD_WORKING_SET_NAME)
 				.addStringField(LuceneConstants.FIELD_WORKING_SET_NAME, newName, Field.Store.YES)
 				.getDocument();
-			indexWriter.deleteDocuments(createWorkingSetQuery(wsKey));
-			indexWriter.addDocument(document);
-			indexWriter.commit();
+			deleteDocuments(createWorkingSetQuery(wsKey));
+			addDocument(document, getStringFieldOrNull(document, LuceneConstants.FIELD_WORKING_SET_LANGUAGE));
+			commit();
 		} catch(IOException ioe) {
 			throw new StoreException(null, ioe);
 		}
@@ -101,8 +102,8 @@ public class LuceneWorkingSetStore extends LuceneStoreBase implements WorkingSet
 	@Override
 	public void delete(EntityKey key) throws StoreException {
 		try {
-			indexWriter.deleteDocuments(createWorkingSetQuery(key));
-			indexWriter.commit();
+			deleteDocuments(createWorkingSetQuery(key));
+			commit();
 		} catch(IOException ioe) {
 			throw new StoreException(null, ioe);
 		}

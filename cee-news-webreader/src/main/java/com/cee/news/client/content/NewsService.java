@@ -22,7 +22,7 @@ public interface NewsService extends RemoteService {
 	
 	List<ArticleKey> getRelatedArticles(ArticleKey articleKey, EntityKey workingSetKey);
 	
-	List<ArticleKey> findArticles(List<EntityKey> siteKeys, String searchQuery);
+	List<ArticleKey> findArticles(List<EntityKey> siteKeys, EntityKey workingSetKey, String searchQuery);
 	
 	EntityContent<ArticleKey> getHtmlDescription(ArticleKey articleKey);
 	

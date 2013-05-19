@@ -150,7 +150,7 @@ public class NewsServiceImpl implements NewsService {
 				String siteOfArticle = articleKey.getSiteKey();
 				relatedSites.remove(EntityKey.get(siteOfArticle));
 			}
-			List<ArticleKey> keys = articleSearchService.findRelatedArticles(relatedSites, articleKey);
+			List<ArticleKey> keys = articleSearchService.findRelatedArticles(relatedSites, articleKey, ws.getLanguage());
 			LOG.debug(RETRIEVED_RELATED_ARTICLES_FOR_ARTICLE, keys.size(), articleKey);
 			return keys;
 		} catch (Exception exception) {
@@ -161,7 +161,7 @@ public class NewsServiceImpl implements NewsService {
 	}
 	
 	@Override
-	public List<ArticleKey> findArticles(List<EntityKey> siteKeys, String searchQuery) {
+	public List<ArticleKey> findArticles(List<EntityKey> siteKeys, EntityKey workingSetKey, String searchQuery) {
 	    if (siteKeys == null) {
 	        throw new IllegalArgumentException(PARAMETER_SITE_KEYS_MUST_NOT_BE_NULL);
 	    }
@@ -169,7 +169,8 @@ public class NewsServiceImpl implements NewsService {
 	        throw new IllegalArgumentException(PARAMETER_SEARCH_QUERY_MUST_NOT_BE_NULL);
 	    }
 	    try {
-            return articleSearchService.findArticles(siteKeys, searchQuery);
+	    	WorkingSet ws = workingSetStore.getWorkingSet(workingSetKey);
+	    	return articleSearchService.findArticles(siteKeys, searchQuery, ws.getLanguage());
         } catch (Exception exception) {
             String message = String.format(COULD_NOT_FIND_ARTICLES_FOR_SEARCH, searchQuery);
             LOG.error(message, exception);

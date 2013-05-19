@@ -18,7 +18,7 @@ public class Utils {
         Site site = new Site();
         site.setName(name);
         site.setLocation("http://www.abc.de");
-        site.setLanguage("de");
+        site.setLanguage("en");
         return siteStore.update(site);
     }
 

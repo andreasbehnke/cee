@@ -33,6 +33,7 @@ import com.cee.news.model.EntityKey;
 import com.cee.news.model.TextBlock;
 import com.cee.news.model.WorkingSet;
 import com.cee.news.store.ArticleChangeListener;
+import com.cee.news.store.ArticleChangeListenerSupport;
 import com.cee.news.store.ArticleStore;
 import com.cee.news.store.StoreException;
 
@@ -46,8 +47,8 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
                                                                         + "WHERE %s " 
                                                                         + "ORDER BY a.[news:published] DESC";
     
-    private List<ArticleChangeListener> changeListeners;
-    
+	private ArticleChangeListenerSupport listenerSupport = new ArticleChangeListenerSupport();
+	
     public JcrArticleStore() {
     }
 
@@ -81,11 +82,8 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             throw new StoreException(article, "Could not retrive article node", e);
         }
         
-        boolean articleCreated = false;
-        
         if (articleNode == null) {
-        	articleCreated = true;
-            Node siteNode = null;
+        	Node siteNode = null;
             try {
                 siteNode = getContentNodeOrNull(Text.escapeIllegalJcrChars(siteKey));
             } catch (RepositoryException e) {
@@ -134,11 +132,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
         try {
             getSession().save();
-            if (articleCreated) {
-            	fireArticleCreated(site, article);
-            } else {
-            	fireArticleChanged(site, article);
-            }
+            listenerSupport.fireArticleChanged(site, article);
         } catch (RepositoryException e) {
             throw new StoreException(site, "Could not save session", e);
         }
@@ -285,25 +279,8 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
         }
     }
     
-    protected void fireArticleChanged(EntityKey site, Article article) {
-    	if (changeListeners == null) return;
-    	for (ArticleChangeListener changeListener : changeListeners) {
-			changeListener.onArticleChanged(site, article);
-		}
-    }
-    
-    protected void fireArticleCreated(EntityKey site, Article article) {
-    	if (changeListeners == null) return;
-    	for (ArticleChangeListener changeListener : changeListeners) {
-			changeListener.onArticleCreated(site, article);
-		}
-    }
-    
     @Override
     public void addArticleChangeListener(ArticleChangeListener listener) {
-    	if (changeListeners == null) {
-    		changeListeners = new ArrayList<ArticleChangeListener>();
-    	}
-    	changeListeners.add(listener);
+    	listenerSupport.addArticleChangeListener(listener);
     }
 }

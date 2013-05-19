@@ -46,6 +46,7 @@ public class NewsReader implements EntryPoint {
 		
 		//Filtered content list
 		final NewsListContentModel filteredContentList = new NewsListContentModel();
+		workingSetListModel.addSelectionChangedhandler(filteredContentList);
 		filteredContentList.addErrorHandler(errorHandler);
 		final CellListPresenter<ArticleKey> newsListPresenter = new SingleSelectionCellListPresenter<ArticleKey>(
 		        startView.getCellListLatestArticles(), 

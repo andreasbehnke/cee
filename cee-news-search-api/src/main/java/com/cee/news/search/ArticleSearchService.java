@@ -23,7 +23,7 @@ public interface ArticleSearchService {
 	 * @param fulltextSearchQuery The fulltext query to be used
 	 * @return List of hits
 	 */
-	List<ArticleKey> findArticles(List<EntityKey> sites, String fulltextSearchQuery) throws SearchException;
+	List<ArticleKey> findArticles(List<EntityKey> sites, String fulltextSearchQuery, String language) throws SearchException;
 	
 	/**
 	 * Searches the index for matching (related) articles
@@ -31,5 +31,5 @@ public interface ArticleSearchService {
 	 * @param articleKey The article key to be compared to
 	 * @return List of related articles
 	 */
-	List<ArticleKey> findRelatedArticles(List<EntityKey> sites, ArticleKey articleKey) throws SearchException;
+	List<ArticleKey> findRelatedArticles(List<EntityKey> sites, ArticleKey articleKey, String language) throws SearchException;
 }

@@ -7,7 +7,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
 
 import com.cee.news.search.ArticleSearchService;
 import com.cee.news.store.ArticleStore;
@@ -19,17 +18,15 @@ public class LuceneTestContext implements TestContext {
 
 	private SiteStore siteStore;
 
-	private ArticleStore articleStore;
+	private LuceneArticleStore articleStore;
 	
-	private ArticleSearchService articleSearchService;
-
 	private WorkingSetStore workingSetStore;
 	
 	private IndexWriter createWriter() {
 		try {
-			StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_43);
+			StandardAnalyzer analyzer = new StandardAnalyzer(LuceneConstants.VERSION);
 			Directory directory = new RAMDirectory();
-			IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_43, analyzer);
+			IndexWriterConfig config = new IndexWriterConfig(LuceneConstants.VERSION, analyzer);
 			return new IndexWriter(directory, config);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -38,10 +35,11 @@ public class LuceneTestContext implements TestContext {
 	
 	@Override
 	public void open() {
-		siteStore = new LuceneSiteStore(createWriter());
-		articleStore = new LuceneArticleStore();
-		articleSearchService = new LuceneArticleSearchService();
-		workingSetStore = new LuceneWorkingSetStore(createWriter());
+		LuceneAnalysers analysers = new LuceneAnalysers();
+		siteStore = new LuceneSiteStore(createWriter(), analysers);
+		IndexWriter articleWriter = createWriter();
+		articleStore = new LuceneArticleStore(articleWriter, analysers);
+		workingSetStore = new LuceneWorkingSetStore(createWriter(), analysers);
 	}
 
 	@Override
@@ -62,7 +60,7 @@ public class LuceneTestContext implements TestContext {
 
 	@Override
 	public ArticleSearchService getArticleSearchService() {
-		return articleSearchService;
+		return articleStore;
 	}
 
 	@Override

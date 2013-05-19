@@ -84,12 +84,12 @@ public abstract class TestSiteStore extends TestStoreBase {
         site = new Site();
         site.setName(name);
         site.setLocation(name);
+        site.setLanguage("de");
         siteKey = siteStore.update(site);
         
         site = siteStore.getSite(siteKey);
         assertNull(site.getDescription());
         assertNull(site.getTitle());
-        assertNull(site.getLanguage());
     }
     
     @Test
@@ -106,12 +106,14 @@ public abstract class TestSiteStore extends TestStoreBase {
         site.setLocation("http://www.site1.de");
         site.setName("http://www.site1.de");
         site.setTitle("Title");
+        site.setLanguage("en");
         EntityKey key1 = siteStore.update(site);
         site = new Site();
         site.setDescription("Description");
         site.setLocation("http://www.site2.de");
         site.setName("http://www.site2.de");
         site.setTitle("Title");
+        site.setLanguage("en");
         EntityKey key2 = siteStore.update(site);
         
         List<EntityKey> keys = new ArrayList<EntityKey>();
@@ -132,18 +134,21 @@ public abstract class TestSiteStore extends TestStoreBase {
         site.setLocation("http://www.bbb.de");
         site.setName("http://www.bbb.de");
         site.setTitle("Title");
+        site.setLanguage("en");
         siteStore.update(site);
         site = new Site();
         site.setDescription("Description");
         site.setLocation("http://www.ccc.de");
         site.setName("http://www.ccc.de");
         site.setTitle("Title");
+        site.setLanguage("en");
         siteStore.update(site);
         site = new Site();
         site.setDescription("Description");
         site.setLocation("http://www.abc.de");
         site.setName("http://www.abc.de");
         site.setTitle("Title");
+        site.setLanguage("en");
         siteStore.update(site);
         
         List<EntityKey> sites = siteStore.getSitesOrderedByName();

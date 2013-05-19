@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cee.news.client.async.NotificationCallback;
+import com.cee.news.client.list.SelectionChangedEvent;
+import com.cee.news.client.list.SelectionChangedHandler;
 import com.cee.news.model.ArticleKey;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class NewsListContentModel extends NewsContentModelBase {
+public class NewsListContentModel extends NewsContentModelBase implements SelectionChangedHandler<EntityKey> {
     
     private String searchQuery;
     
     private List<EntityKey> filteredSites = new ArrayList<EntityKey>();
+    
+    private EntityKey selectedWorkingSet;
 
     private void retrieveNewsOfSites(final NotificationCallback callback) {
         newsService.getArticlesOfSites(filteredSites, new AsyncCallback<List<ArticleKey>>() {
@@ -29,7 +33,7 @@ public class NewsListContentModel extends NewsContentModelBase {
     }
     
     private void performSearch(final NotificationCallback callback) {
-        newsService.findArticles(filteredSites, searchQuery, new AsyncCallback<List<ArticleKey>>() {
+        newsService.findArticles(filteredSites, selectedWorkingSet, searchQuery, new AsyncCallback<List<ArticleKey>>() {
             
             @Override
             public void onSuccess(List<ArticleKey> result) {
@@ -44,6 +48,11 @@ public class NewsListContentModel extends NewsContentModelBase {
                 fireErrorEvent(caught, "Could not find articles!");//TODO: i18n
             }
         });
+    }
+    
+    @Override
+    public void onSelectionChange(SelectionChangedEvent<EntityKey> event) {
+        this.selectedWorkingSet = event.getKey();
     }
     
     public void refresh(final NotificationCallback callback) {

@@ -67,7 +67,7 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 	}
 	
 	@Override
-	public List<ArticleKey> findArticles(List<EntityKey> sites, String fulltextSearchQuery) throws SearchException {
+	public List<ArticleKey> findArticles(List<EntityKey> sites, String fulltextSearchQuery, String language) throws SearchException {
 	    if (sites == null) {
             throw new IllegalArgumentException("Parameter sites must not be null");
         }
@@ -84,7 +84,7 @@ public class JcrArticleSearchService extends JcrStoreBase implements ArticleSear
 	}
 
     @Override
-	public List<ArticleKey> findRelatedArticles(List<EntityKey> sites, ArticleKey articleKey) throws SearchException {
+	public List<ArticleKey> findRelatedArticles(List<EntityKey> sites, ArticleKey articleKey, String language) throws SearchException {
 		if (sites == null) {
 			throw new IllegalArgumentException("Parameter sites must not be null");
 		}

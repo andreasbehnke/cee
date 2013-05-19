@@ -82,10 +82,13 @@ public abstract class TestWorkingSetStore extends TestStoreBase {
     	WorkingSetStore workingSetStore = getWorkingSetStore();
         WorkingSet ws = new WorkingSet();
         ws.setName(WORKINGSET_3);
+        ws.setLanguage("en");
         workingSetStore.update(ws);
         ws.setName(WORKINGSET_2);
+        ws.setLanguage("de");
         workingSetStore.update(ws);
         ws.setName(WORKINGSET_1);
+        ws.setLanguage("fr");
         workingSetStore.update(ws);
         
         List<EntityKey> workingSets = workingSetStore.getWorkingSetsOrderedByName();
@@ -98,6 +101,7 @@ public abstract class TestWorkingSetStore extends TestStoreBase {
     public void testRename() throws StoreException {
     	WorkingSetStore workingSetStore = getWorkingSetStore();
         WorkingSet ws = new WorkingSet();
+        ws.setLanguage("en");
         ws.setName(OLD_NAME);
         workingSetStore.update(ws);
         workingSetStore.rename(OLD_NAME, NEW_NAME);
@@ -109,6 +113,7 @@ public abstract class TestWorkingSetStore extends TestStoreBase {
     public void testDelete() throws StoreException {
     	WorkingSetStore workingSetStore = getWorkingSetStore();
         WorkingSet ws = new WorkingSet();
+        ws.setLanguage("en");
         ws.setName(WORKINGSET_1);
         EntityKey key = workingSetStore.update(ws);
         assertTrue(workingSetStore.contains(key.getName()));
@@ -122,12 +127,15 @@ public abstract class TestWorkingSetStore extends TestStoreBase {
         long startCount = workingSetStore.getWorkingSetCount();
         WorkingSet ws = new WorkingSet();
         ws.setName(WORKINGSET_COUNT_1);
+        ws.setLanguage("en");
         workingSetStore.update(ws);
         ws = new WorkingSet();
         ws.setName(WORKINGSET_COUNT_2);
+        ws.setLanguage("en");
         workingSetStore.update(ws);
         ws = new WorkingSet();
         ws.setName(WORKINGSET_COUNT_3);
+        ws.setLanguage("en");
         workingSetStore.update(ws);
         assertEquals(EXPECTED_COUNT, workingSetStore.getWorkingSetCount() - startCount);
     }
