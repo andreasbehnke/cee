@@ -140,6 +140,16 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
     }
     
     @Override
+    public boolean contains(EntityKey site, String externalId) throws StoreException {
+    	ArticleKey articleKey = ArticleKey.get(null, externalId, site.getKey());
+        try {
+	        return containsContentNode(buildArticlePath(articleKey));
+        } catch (RepositoryException e) {
+	        throw new StoreException(null, e);
+        }
+    }
+    
+    @Override
     public List<ArticleKey> addNewArticles(EntityKey site, List<Article> articles) throws StoreException {
     	if (site == null) {
             throw new IllegalArgumentException("Parameter site must not be null");

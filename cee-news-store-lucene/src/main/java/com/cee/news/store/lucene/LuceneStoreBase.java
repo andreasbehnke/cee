@@ -28,7 +28,7 @@ public abstract class LuceneStoreBase {
 	
 	private Object searcherManagerLock = new Object();
 
-	private LuceneAnalysers analysers;
+	private LuceneAnalyzers analyzers;
 
 	private SearcherManager getSearcherManager() throws IOException {
 		if (searcherManager == null) {
@@ -66,12 +66,12 @@ public abstract class LuceneStoreBase {
 		this.indexWriter = indexWriter;
 	}
 	
-	public LuceneAnalysers getAnalysers() {
-		return analysers;
+	public LuceneAnalyzers getAnalyzers() {
+		return analyzers;
 	}
 
-	public void setAnalysers(LuceneAnalysers analysers) {
-		this.analysers = analysers;
+	public void setAnalyzers(LuceneAnalyzers analysers) {
+		this.analyzers = analysers;
 	}
 	
 	protected Document getSingleDocument(IndexSearcher searcher, Query query) throws IOException {
@@ -129,7 +129,7 @@ public abstract class LuceneStoreBase {
 	}
 	
 	protected Analyzer getAnalyzer(String language) {
-		return analysers.getAnalayserForLanguage(language);
+		return analyzers.getAnalayserForLanguage(language);
 	}
 	
 	protected void deleteDocuments(Query query) throws IOException {
@@ -137,7 +137,7 @@ public abstract class LuceneStoreBase {
 	}
 
 	protected void addDocument(Document document, String language) throws IOException {
-		Analyzer analyzer = analysers.getAnalayserForLanguage(language);
+		Analyzer analyzer = analyzers.getAnalayserForLanguage(language);
 		indexWriter.addDocument(document, analyzer);
 	}
 	

@@ -50,5 +50,9 @@ public class Feed {
     public void setActive(boolean active) {
         this.active = active;
     }
-
+	
+	@Override
+	public String toString() {
+	    return "Feed [location=" + location + "; title=" + title + "]";
+	}
 }

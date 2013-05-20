@@ -10,7 +10,7 @@
 		<property name="scopes">
 			<map>
 				<entry key="request">
-					<bean class="org.springbyexample.bean.scope.thread.ThreadScope"/>
+					<bean class="org.springframework.context.support.SimpleThreadScope"/>
 				</entry>
 			</map>
 		</property>

@@ -22,6 +22,14 @@ public interface ArticleStore {
     ArticleKey update(EntityKey site, Article article) throws StoreException;
     
     /**
+     * Tests existence of article 
+     * @param site The articles site
+     * @param externalId External article id
+     * @return true if article with externalId exists within this store
+     */
+    boolean contains(EntityKey site, String externalId) throws StoreException;
+    
+    /**
      * Adds all articles, which do not exist in store
      * @param site The article's site
      * @param articles List of articles to add. Only new articles will be added.

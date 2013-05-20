@@ -95,34 +95,40 @@ public class SiteUpdater {
      *             If an IO error occurred while retrieving a feed
      */
     public int update(Site site) throws StoreException, MalformedURLException, ParserException, IOException {
-        LOG.info("starting update for site {}", site.getName());
-    	List<Article> articles = new ArrayList<Article>();
-        for (Feed feed : site.getFeeds()) {
-            if (!onlyActiveFeeds || feed.isActive()) {
-            	LOG.debug("processing feed {}", feed.getTitle());
-                articles.addAll(feedParser.readArticles(new URL(feed.getLocation())));
+        String siteName = site.getName();
+    	LOG.info("starting update for site {}", siteName);
+        EntityKey siteKey = EntityKey.get(siteName);
+        String language = site.getLanguage();
+        int siteArticleCount = 0;
+    	for (Feed feed : site.getFeeds()) {
+    		if (!onlyActiveFeeds || feed.isActive()) {
+    			siteArticleCount += processFeed(feed, siteKey, language);
             }
         }
-        int articleCount = updateArticles(EntityKey.get(site.getName()), articles, site.getLanguage());
-        LOG.info("updated {} articles of site {}", articleCount, site.getName());
-        return articleCount;
+    	if (LOG.isInfoEnabled() && siteArticleCount > 0) {
+    		LOG.info("found {} new articles in site {}", siteArticleCount, siteName);
+    	}
+        return siteArticleCount;
     }
     
-    protected int updateArticles(EntityKey siteKey, List<Article> articles, String language) throws StoreException {
-    	List<Article> articlesForUpdate = new ArrayList<Article>();
-        for (Article article : articles) {
-        	try {
+    private int processFeed(Feed feed, EntityKey siteKey, String language) throws MalformedURLException, ParserException, IOException, StoreException {
+    	LOG.debug("processing feed {}", feed.getTitle());
+		List<Article> articles = feedParser.readArticles(new URL(feed.getLocation()));
+		List<Article> articlesForUpdate = new ArrayList<Article>();
+		int articleCount = 0;
+		for (Article article : articles) {
+            if (!store.contains(siteKey, article.getExternalId())) {
             	article = articleParser.parse(article);
             	if (article != null) {
             		article.setLanguage(language);
             		articlesForUpdate.add(article);
             	}
-        	} catch(ParserException e) {
-        		LOG.error("could not parse article {}", article.getTitle(), e);
-        	} catch (IOException e) {
-        		LOG.error("could retrieve article {}", article.getTitle(), e);
-			}
+            }
         }
-        return store.addNewArticles(siteKey, articlesForUpdate).size();
+		if (articlesForUpdate.size() > 0) {
+			articleCount = store.addNewArticles(siteKey, articlesForUpdate).size();
+			LOG.debug("found {} new articles in feed {}", articleCount, feed.getTitle());
+		}
+		return articleCount;
     }
 }

@@ -40,4 +40,9 @@ public class WorkingSet {
 	public void setLanguage(String language) {
 		this.language = language;
 	}
+	
+	@Override
+	public String toString() {
+		return "WorkingSet [name=" + name + ", language=" + language + "]";
+	}
 }

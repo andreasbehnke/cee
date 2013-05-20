@@ -12,6 +12,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.filter.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 import com.cee.news.model.Article;
@@ -32,6 +34,8 @@ import com.sun.syndication.io.impl.FeedParsers;
 import com.sun.syndication.io.impl.XmlFixerReader;
 
 public class RomeFeedParser extends WireFeedInput implements FeedParser {
+	
+	private final static Logger LOG = LoggerFactory.getLogger(RomeFeedParser.class);
 	
 	private static FeedParsers feedParsers =  new FeedParsers();
 
@@ -159,7 +163,8 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
             	URL articleUrl = new URL(feedLocation, link);//check for well formed URL
                 article.setLocation(articleUrl.toExternalForm());
             } catch (MalformedURLException e) {
-                throw new ParserException("The article has an invalid URL.", e);
+            	LOG.warn("The feed {} contains article with invalid URL {}", feedLocation, link);
+                continue;
             }
             if (entry.getPublishedDate() != null) {
                 Calendar cal = Calendar.getInstance();

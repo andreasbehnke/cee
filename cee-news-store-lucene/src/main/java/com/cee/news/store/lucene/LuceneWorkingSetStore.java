@@ -64,9 +64,9 @@ public class LuceneWorkingSetStore extends LuceneStoreBase implements WorkingSet
 	
 	public LuceneWorkingSetStore() {}
 	
-	public LuceneWorkingSetStore(IndexWriter indexWriter, LuceneAnalysers analysers) {
+	public LuceneWorkingSetStore(IndexWriter indexWriter, LuceneAnalyzers analysers) {
 		setIndexWriter(indexWriter);
-		setAnalysers(analysers);
+		setAnalyzers(analysers);
 	}
 	
 	@Override

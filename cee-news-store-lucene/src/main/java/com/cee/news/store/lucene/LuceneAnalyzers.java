@@ -10,15 +10,15 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LuceneAnalysers {
+public class LuceneAnalyzers {
 	
-	private final static Logger LOG = LoggerFactory.getLogger(LuceneAnalysers.class);
+	private final static Logger LOG = LoggerFactory.getLogger(LuceneAnalyzers.class);
 
 	private final HashMap<String, Analyzer> analyzers;
 	
 	private final Analyzer defaultAnalyzer = new StandardAnalyzer(LuceneConstants.VERSION);
 	
-	public LuceneAnalysers() {
+	public LuceneAnalyzers() {
 		analyzers = new HashMap<String, Analyzer>();
 		analyzers.put("ar", new org.apache.lucene.analysis.ar.ArabicAnalyzer(LuceneConstants.VERSION));
 		analyzers.put("bg", new org.apache.lucene.analysis.bg.BulgarianAnalyzer(LuceneConstants.VERSION));

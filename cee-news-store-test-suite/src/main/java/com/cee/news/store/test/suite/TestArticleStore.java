@@ -34,6 +34,7 @@ public abstract class TestArticleStore extends TestStoreBase {
 		EntityKey site = Utils.createSite(siteStore, "http://www.xyz.de");
         ArticleKey key = Utils.updateArticle(articleStore, site, "23/1", "http://www.xyz.de/1", 2010, 1, 12, "Title", "Short Text");
         
+        assertTrue(articleStore.contains(site, "23/1"));
         assertEquals("http://www.xyz.de", key.getSiteKey());
         assertEquals("23/1", key.getKey());
         assertEquals("Title", key.getName());
@@ -68,6 +69,8 @@ public abstract class TestArticleStore extends TestStoreBase {
         
         ArticleKey key3 = articleStore.update(site, article3);
         ArticleKey key1 = articleStore.update(site, article1);
+        assertTrue(articleStore.contains(site, "1"));
+        assertTrue(articleStore.contains(site, "3"));
         
         List<Article> articles = new ArrayList<Article>();
         articles.add(article1);

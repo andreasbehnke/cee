@@ -39,8 +39,6 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private static final String CLEARING_WORK_QUEUE = "Clearing work queue";
 
-	private static final String COULD_NOT_BE_REMOVED_FROM_LIST_OF_RUNNABLES = "{} could not be removed from list of runnables";
-
 	private static final String COULD_NOT_BE_REMOVED_FROM_LIST_OF_SITES_IN_PROGRESS = "{} could not be removed from list of sites in progress";
 
 	private static final String SITE_UPDATE_ENCOUNTERED_AN_ERROR = "Site update %s encountered an error";
@@ -68,8 +66,6 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	private SiteStore siteStore;
 
 	private ScheduledExecutorService scheduler;
-
-	private List<Runnable> runnablesInProgress = new ArrayList<Runnable>();
 
 	private LinkedBlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();
 	
@@ -134,19 +130,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	
 	private synchronized void ensureThreadPool() {
 		if (pool == null) {
-			pool = new ThreadPoolExecutor(
-					corePoolSize, 
-					maxPoolSize, 
-					keepAliveTime,
-					TimeUnit.MILLISECONDS, 
-					workQueue) {
-				
-					@Override
-					protected void afterExecute(Runnable r, Throwable t) {
-						super.afterExecute(r, t);
-						SiteUpdateServiceImpl.this.removeRunnable(r);
-					}
-			};
+			pool = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, workQueue);
 			pool.setThreadFactory( new PrefixCountThreadFactory(SITE_UPDATER_THREAD_PREFIX) );
 		}
 	}
@@ -156,18 +140,11 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			LOG.warn(COULD_NOT_BE_REMOVED_FROM_LIST_OF_SITES_IN_PROGRESS, siteKey);
 		}
 	}
-	
-	private synchronized void removeRunnable(Runnable runnable) {
-		if (!runnablesInProgress.remove(runnable)) {
-			LOG.warn(COULD_NOT_BE_REMOVED_FROM_LIST_OF_RUNNABLES, runnable);
-		}
-	}
 
 	@Override
 	public synchronized void clearQueue() {
 		LOG.info(CLEARING_WORK_QUEUE);
 		workQueue.clear();
-		runnablesInProgress.clear();
 		sitesInProgress.clear();
 	}
 
@@ -272,7 +249,6 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
             });
             command.setSite(siteEntity);
             sitesInProgress.add(siteKey);
-            runnablesInProgress.add(command);
             pool.execute(command);
         }
     }

@@ -3,10 +3,12 @@ package com.cee.news.server.content;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.sourceallies.beanoh.BeanohTestCase;
 
+@Ignore
 public class TestSpringConfiguration extends BeanohTestCase {
 	
 	private final static String TEST_REPOSITORY_DIR = "target/repository1";

@@ -63,29 +63,35 @@
 			<type>jar</type>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
+		<!-- dependency>
 			<groupId>com.cee</groupId>
 			<artifactId>cee-news-store-jcr</artifactId>
 			<type>jar</type>
 			<scope>runtime</scope>
-		</dependency>
+		</dependency -->
+		<dependency>
+            <groupId>com.cee</groupId>
+            <artifactId>cee-news-store-lucene</artifactId>
+            <type>jar</type>
+            <scope>runtime</scope>
+        </dependency>
 		
 		<!-- external -->
-		<dependency>
+		<!-- dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
 			<scope>runtime</scope>
-		</dependency>
+		</dependency -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
+		<!-- dependency>
 			<groupId>org.apache.jackrabbit</groupId>
 			<artifactId>jackrabbit-core</artifactId>
 			<scope>runtime</scope>
-		</dependency>
+		</dependency -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
@@ -125,11 +131,6 @@
 			<groupId>org.ccil.cowan.tagsoup</groupId>
 			<artifactId>tagsoup</artifactId>
 			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.springbyexample</groupId>
-		    <artifactId>org.springbyexample.threadscope</artifactId>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

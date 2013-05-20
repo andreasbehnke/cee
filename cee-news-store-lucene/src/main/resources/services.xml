@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+    <!-- Lucene -->
+    
+    <bean id="luceneSiteIndexDirectory" class="org.apache.lucene.store.FSDirectory" factory-method="open">
+        <constructor-arg>
+            <bean class="java.io.File">
+                <constructor-arg value="${lucene.sites.index.dir}" />
+            </bean>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="luceneWorkingSetIndexDirectory" class="org.apache.lucene.store.FSDirectory" factory-method="open">
+        <constructor-arg>
+            <bean class="java.io.File">
+                <constructor-arg value="${lucene.workingsets.index.dir}" />
+            </bean>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="luceneArticleIndexDirectory" class="org.apache.lucene.store.FSDirectory" factory-method="open">
+        <constructor-arg>
+            <bean class="java.io.File">
+                <constructor-arg value="${lucene.articles.index.dir}" />
+            </bean>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="luceneStandardAnalyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer">
+        <constructor-arg>
+            <value>LUCENE_43</value>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="luceneIndexWriterConfig" class="org.apache.lucene.index.IndexWriterConfig">
+        <constructor-arg>
+            <value>LUCENE_43</value>
+        </constructor-arg>
+        <constructor-arg ref="luceneStandardAnalyzer" />
+    </bean>
+    
+    <bean id="luceneArticleIndexWriter" class="org.apache.lucene.index.IndexWriter">
+        <constructor-arg ref="luceneArticleIndexDirectory" />
+        <constructor-arg ref="luceneIndexWriterConfig" />
+    </bean>
+    
+    <bean id="luceneSiteIndexWriter" class="org.apache.lucene.index.IndexWriter">
+        <constructor-arg ref="luceneSiteIndexDirectory" />
+        <constructor-arg ref="luceneIndexWriterConfig" />
+    </bean>
+    
+    <bean id="luceneWorkingSetIndexWriter" class="org.apache.lucene.index.IndexWriter">
+        <constructor-arg ref="luceneWorkingSetIndexDirectory" />
+        <constructor-arg ref="luceneIndexWriterConfig" />
+    </bean>
+    
+    <bean id="luceneAnalyzers" class="com.cee.news.store.lucene.LuceneAnalyzers" />
+
+    <!-- Backend Services -->
+    
+    <bean id="siteStore" class="com.cee.news.store.lucene.LuceneSiteStore">
+        <property name="indexWriter" ref="luceneSiteIndexWriter" />
+        <property name="analyzers" ref="luceneAnalyzers" />
+    </bean>
+
+    <bean id="articleStore" class="com.cee.news.store.lucene.LuceneArticleStore">
+        <property name="indexWriter" ref="luceneArticleIndexWriter" />
+        <property name="analyzers" ref="luceneAnalyzers" />
+    </bean>
+    
+    <alias name="articleStore" alias="articleSearchService"/>
+    
+    <bean id="workingSetStore" class="com.cee.news.store.lucene.LuceneWorkingSetStore">
+        <property name="indexWriter" ref="luceneWorkingSetIndexWriter" />
+        <property name="analyzers" ref="luceneAnalyzers" />
+    </bean>
+    
+</beans>

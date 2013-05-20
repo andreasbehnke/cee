@@ -35,7 +35,7 @@ public class LuceneTestContext implements TestContext {
 	
 	@Override
 	public void open() {
-		LuceneAnalysers analysers = new LuceneAnalysers();
+		LuceneAnalyzers analysers = new LuceneAnalyzers();
 		siteStore = new LuceneSiteStore(createWriter(), analysers);
 		IndexWriter articleWriter = createWriter();
 		articleStore = new LuceneArticleStore(articleWriter, analysers);

@@ -54,12 +54,12 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		} else {
 			BooleanQuery query = new BooleanQuery();
 			query.setMinimumNumberShouldMatch(1);
-			float boost = articleKeys.size() * 10;
+			float boost = articleKeys.size() * 0.1f;
 			for (ArticleKey articleKey: articleKeys) {
 				Query articleQuery = createArticleQuery(articleKey);
 				articleQuery.setBoost(boost);
 				query.add(articleQuery, BooleanClause.Occur.SHOULD);
-				boost -= 10;
+				boost -= 0.1f;
 			}
 			return query;
 		}
@@ -105,6 +105,8 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		}
 		MoreLikeThis mlt = new MoreLikeThis(searcher.getIndexReader());
 		mlt.setFieldNames(LuceneConstants.ARTICLE_RELATED_SEARCH_FIELDS);
+		mlt.setBoost(true);
+		mlt.setBoostFactor(2);
 		Query relatedQuery = mlt.like(topDocs.scoreDocs[0].doc);
 		
 		BooleanQuery query = new BooleanQuery();
@@ -201,10 +203,12 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		}
 		return article;
 	}
+	
+	public LuceneArticleStore() {}
 
-	public LuceneArticleStore(IndexWriter indexWriter, LuceneAnalysers analysers) {
+	public LuceneArticleStore(IndexWriter indexWriter, LuceneAnalyzers analyzers) {
 		setIndexWriter(indexWriter);
-		setAnalysers(analysers);
+		setAnalyzers(analyzers);
 	}
 
 	@Override
@@ -221,6 +225,16 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		} catch(IOException ioe) {
 			throw new StoreException(site, ioe);
 		}
+	}
+	
+	@Override
+	public boolean contains(EntityKey site, String externalId) throws StoreException {
+		ArticleKey articleKey = ArticleKey.get(null, externalId, site.getKey());
+	    try {
+	        return containsDocument(createArticleQuery(articleKey));
+        } catch (IOException e) {
+        	throw new StoreException(null, e);
+        }
 	}
 	
 	@Override
@@ -277,6 +291,9 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 			} finally {
 				releaseSearcher(searcher);
 			}
+			if (articles.size() != keys.size()) {
+				throw new StoreException("EntityKey list and result list have different size");
+			}
 			return articles;
 		} catch(IOException ioe) {
 			throw new StoreException(null, ioe);
@@ -316,7 +333,7 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 
 	@Override
 	public List<String> getSupportedLanguages() {
-		return getAnalysers().getSupportedLanguages();
+		return getAnalyzers().getSupportedLanguages();
 	}
 
 	@Override

@@ -22,7 +22,6 @@ public abstract class LuceneConstants {
 	
 	public final static Type ENTITY_KEY_LIST_TYPE = new TypeToken<List<EntityKey>>(){}.getType();
 	
-	
 	public static final String FIELD_SITE_NAME = "name";
 	
 	public static final String FIELD_SITE_LANGUAGE = "language";

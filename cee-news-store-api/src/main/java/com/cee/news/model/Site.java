@@ -70,4 +70,9 @@ public class Site {
 	public void setLanguage(String language) {
 		this.language = language;
 	}
+	
+	@Override
+	public String toString() {
+	    return "Site [location=" + location + "; name=" + name + "; language=" + language + "]";
+	}
 }

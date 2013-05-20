@@ -93,9 +93,9 @@ public class LuceneSiteStore extends LuceneStoreBase implements SiteStore {
 	
 	public LuceneSiteStore() {}
 	
-	public LuceneSiteStore(IndexWriter indexWriter, LuceneAnalysers analysers) {
+	public LuceneSiteStore(IndexWriter indexWriter, LuceneAnalyzers analysers) {
 		setIndexWriter(indexWriter);
-		setAnalysers(analysers);
+		setAnalyzers(analysers);
 	}
 
 	@Override
@@ -144,6 +144,9 @@ public class LuceneSiteStore extends LuceneStoreBase implements SiteStore {
                 }
 			} finally {
 				releaseSearcher(searcher);
+			}
+			if (sites.size() != keys.size()) {
+				throw new StoreException("EntityKey list and result list have different size");
 			}
 			return sites;
 		} catch(IOException ioe) {
