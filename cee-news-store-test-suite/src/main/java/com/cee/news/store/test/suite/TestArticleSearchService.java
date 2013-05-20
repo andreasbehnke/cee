@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.cee.news.model.ArticleKey;
@@ -29,7 +28,6 @@ public abstract class TestArticleSearchService extends TestStoreBase {
 
 	private static final String UNRELATED = "Food Issue dog eat cats alambama";
 	
-	@Ignore
 	@Test
 	public void testFindRelatedArticles() throws StoreException, SearchException {
 		SiteStore siteStore = getSiteStore();

@@ -38,6 +38,12 @@ import com.cee.news.store.ArticleStore;
 import com.cee.news.store.StoreException;
 
 public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore, ArticleSearchService {
+	
+	private interface ArticleKeyFilter {
+		
+		boolean accept(String key, ScoreDoc scoreDoc);
+		
+	}
 
 	private ArticleChangeListenerSupport listenerSupport = new ArticleChangeListenerSupport();
 	
@@ -54,12 +60,12 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		} else {
 			BooleanQuery query = new BooleanQuery();
 			query.setMinimumNumberShouldMatch(1);
-			float boost = articleKeys.size() * 0.1f;
+			float boost = articleKeys.size() * 10f;
 			for (ArticleKey articleKey: articleKeys) {
 				Query articleQuery = createArticleQuery(articleKey);
 				articleQuery.setBoost(boost);
 				query.add(articleQuery, BooleanClause.Occur.SHOULD);
-				boost -= 0.1f;
+				boost -= 10f;
 			}
 			return query;
 		}
@@ -97,6 +103,18 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		return query;
 	}
 	
+	private Query boostRelatedQuery(Query relatedQuery) {
+		List<BooleanClause> clauses = ((BooleanQuery)relatedQuery).clauses();
+		for (BooleanClause booleanClause : clauses) {
+	        TermQuery tq = (TermQuery)booleanClause.getQuery();
+	        Float fieldBoost = LuceneConstants.ARTICLE_FULLTEXT_SEARCH_BOOSTS.get(tq.getTerm().field());
+	        if (fieldBoost != null) {
+	        	tq.setBoost(fieldBoost * tq.getBoost());
+	        }
+	    }
+		return relatedQuery;
+	}
+	
 	private Query createRelatedArticlesQuery(List<EntityKey> sites, ArticleKey reference, IndexSearcher searcher, String language) throws IOException {
 		Query articleQuery = createArticleQuery(reference);
 		TopDocs topDocs = searcher.search(articleQuery, 1);
@@ -105,9 +123,8 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		}
 		MoreLikeThis mlt = new MoreLikeThis(searcher.getIndexReader());
 		mlt.setFieldNames(LuceneConstants.ARTICLE_RELATED_SEARCH_FIELDS);
-		mlt.setBoost(true);
-		mlt.setBoostFactor(2);
-		Query relatedQuery = mlt.like(topDocs.scoreDocs[0].doc);
+		mlt.setMaxQueryTerms(10);
+		Query relatedQuery = boostRelatedQuery(mlt.like(topDocs.scoreDocs[0].doc));
 		
 		BooleanQuery query = new BooleanQuery();
 		query.add(new BooleanClause(relatedQuery, Occur.MUST));
@@ -115,7 +132,7 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		return query;
 	}
 	
-	private List<ArticleKey> getKeys(Query query, IndexSearcher searcher, Sort sort, String ignoreKey) throws IOException {
+	private List<ArticleKey> getKeys(Query query, IndexSearcher searcher, Sort sort, ArticleKeyFilter filter) throws IOException {
 		List<ArticleKey> entityKeys = new ArrayList<ArticleKey>();
 		TopDocs topDocs = null;
 		if (sort != null) {
@@ -126,7 +143,7 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
 			Document doc = searcher.doc(scoreDoc.doc);
 			String key = doc.get(LuceneConstants.FIELD_ARTICLE_EXTERNAL_ID);
-			if (!key.equals(ignoreKey)) {
+			if (filter == null || filter.accept(key, scoreDoc)) {
 				String name = doc.get(LuceneConstants.FIELD_ARTICLE_TITLE);
 				String siteName = doc.get(LuceneConstants.FIELD_ARTICLE_SITE);
 				entityKeys.add(ArticleKey.get(name, key, siteName, scoreDoc.score));
@@ -144,8 +161,8 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		}
 	}
 	
-	private List<ArticleKey> getKeys(Query query, IndexSearcher searcher, String ignoreKey) throws IOException {
-		return getKeys(query, searcher, null, ignoreKey);
+	private List<ArticleKey> getKeys(Query query, IndexSearcher searcher, ArticleKeyFilter filter) throws IOException {
+		return getKeys(query, searcher, null, filter);
 	}
 	
 	private List<ArticleKey> getKeys(Query query) throws IOException {
@@ -352,7 +369,44 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		try {
 			IndexSearcher searcher = aquireSearcher();
 			try {
-				return getKeys(createRelatedArticlesQuery(sites, articleKey, searcher, language), searcher, articleKey.getKey());
+				final String relatedKey = articleKey.getKey();
+				BooleanQuery query = (BooleanQuery)createRelatedArticlesQuery(sites, articleKey, searcher, language);
+				
+				return getKeys(
+						query, 
+						searcher, 
+						new ArticleKeyFilter() {
+							
+							boolean isFirst = true;
+							
+							boolean rejectAll = false;
+							
+							float minScore;
+							
+							@Override
+							public boolean accept(String key, ScoreDoc scoreDoc) {
+								if (rejectAll) {
+									return false;
+								}
+								if (relatedKey.equals(key)) {
+									return false;
+								}
+								if (isFirst) {
+									isFirst = false;
+									if (scoreDoc.score < 0.36f) {
+										rejectAll = true;
+										return false;
+									}
+									//calculate min score
+									minScore = scoreDoc.score / 3.3f;
+									return true;
+								}
+								if (scoreDoc.score < minScore) {
+									return false;
+								}
+								return true;
+							}
+						});
 			} finally {
 				releaseSearcher(searcher);
 			}
