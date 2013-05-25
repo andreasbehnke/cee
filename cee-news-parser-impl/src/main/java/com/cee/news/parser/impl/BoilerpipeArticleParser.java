@@ -63,7 +63,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	    	}
 
 	    public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
-	    	BoilerpipeFilter titleFinder = new NormalizedLevenshteinDistance(
+	    	BoilerpipeFilter titleFinder = new DocumentTitleMatchFilter(
 	    			DefaultLabels.TITLE, 
 	    			doc.getTitle(),
 	    			0.1, 
@@ -71,7 +71,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	    	return 	terminatingBlocksFinder.process(doc)
 	        		| titleFinder.process(doc)
 	                | NumWordsRulesClassifier.INSTANCE.process(doc)
-	                | TitleToEndOfContentFilter.INSTANCE.process(doc);
+	                | FindTitleOfContentFilter.INSTANCE.process(doc);
 	    }
 	}
 	
@@ -132,6 +132,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
         	if (articleTitel != null) {
         		textDoc.setTitle(articleTitel);
             }
+        	//de.l3s.boilerpipe.extractors.ArticleExtractor.INSTANCE.process(textDoc);
         	ArticleExtractor.INSTANCE.process(textDoc);
             List<com.cee.news.model.TextBlock> content = article.getContent();
             for (TextBlock block : textDoc.getTextBlocks()) {

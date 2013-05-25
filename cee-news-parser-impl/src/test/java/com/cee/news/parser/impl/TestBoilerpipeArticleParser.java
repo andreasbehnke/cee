@@ -7,6 +7,8 @@ import java.net.URL;
 
 import org.ccil.cowan.tagsoup.Parser;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cee.news.model.Article;
 import com.cee.news.parser.ArticleParser;
@@ -16,6 +18,8 @@ import com.cee.news.parser.net.impl.DefaultWebClient;
 import com.cee.news.parser.net.impl.XmlStreamReaderFactory;
 
 public class TestBoilerpipeArticleParser {
+	
+	private final static Logger LOG = LoggerFactory.getLogger(TestBoilerpipeArticleParser.class);
 	
 	private String getContent(String articleTitle, URL articleLocation) throws ParserException, IOException {
 		Article article = new Article();
@@ -28,22 +32,26 @@ public class TestBoilerpipeArticleParser {
 	
 	private boolean testExpectedContent(String articleTitle, URL articleLocation, String... expectedContents) throws ParserException, IOException {
 		String content = getContent(articleTitle, articleLocation);
+		boolean result = true;
         for (String expectedContent : expectedContents) {
 			if (!content.contains(expectedContent)) {
-				return false;
+				LOG.error("expected text: {}", expectedContent);
+				result = false;
 			}
 		}
-        return true;
+        return result;
 	}
 	
 	private boolean testUnexpectedContent(String articleTitle, URL articleLocation, String... unexpectedContents) throws ParserException, IOException {
 		String content = getContent(articleTitle, articleLocation);
-        for (String unexpectedContent : unexpectedContents) {
+		boolean result = true;
+		for (String unexpectedContent : unexpectedContents) {
 			if (content.contains(unexpectedContent)) {
-				return false;
+				LOG.error("Not expected text: {}", unexpectedContent);
+				result = false;
 			}
 		}
-        return true;
+        return result;
 	}
 	
     @Test
@@ -167,5 +175,23 @@ public class TestBoilerpipeArticleParser {
 				getClass().getResource("issue220.html"), 
 				"ein in Java geschriebenes quelloffenes Webframework für Ajax-Anwendungen",
 				"GWT enthält als Besonderheit einen Java-nach-JavaScript-Compiler"));
+	}
+	
+	@Test
+	public void testParseRegressionIssue279() throws ParserException, IOException {
+		assertTrue(testExpectedContent(
+				"Zu viel Angst vor der Geburt",
+				getClass().getResource("issue279.html"), 
+				"Etwa fünf Prozent der Schwangeren fürchten sich extrem vor einer natürlichen Geburt.",
+				"Unnötige Kaiserschnitte zu vermeiden, sei schon deshalb wünschenswert, weil es durch diese OP öfter zu Komplikationen wie Blutungen, Infektionen und Stillproblemen komme, sagte Utz-Billing."));
+	}
+	
+	@Test
+	public void testParseRegressionIssue280() throws ParserException, IOException {
+		assertTrue(testExpectedContent(
+				"Oliver Welke: „Ich bin irre, ich weiß“",
+				getClass().getResource("issue280.html"), 
+				"Günter Netzer, größter noch lebender Fußballexperte, soll gesagt haben, es gebe im Leben Wichtigeres, als gegen einen Fußball zu treten. Der Mann muss verrückt geworden sein.",
+				" Alle, die irgendwann ein Mikrofon in der Hand gehalten haben, hören sich danach anders an. "));
 	}
 }
