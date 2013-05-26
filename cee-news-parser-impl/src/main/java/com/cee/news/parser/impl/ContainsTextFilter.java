@@ -7,7 +7,7 @@ import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.document.TextBlock;
 import de.l3s.boilerpipe.document.TextDocument;
 
-public class ContainsTextFinder implements BoilerpipeFilter {
+public class ContainsTextFilter implements BoilerpipeFilter {
 
 	private final String label;
 
@@ -17,7 +17,7 @@ public class ContainsTextFinder implements BoilerpipeFilter {
 	
 	private final boolean stopAtFirstMatch;
 
-	public ContainsTextFinder(String label, List<String> matches, int maxNumWords, boolean stopAtFirstMatch) {
+	public ContainsTextFilter(String label, List<String> matches, int maxNumWords, boolean stopAtFirstMatch) {
 		this.label = label;
 		this.matches = matches;
 		this.maxNumWords = maxNumWords;

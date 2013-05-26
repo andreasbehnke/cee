@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.ccil.cowan.tagsoup.Parser;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -193,5 +194,15 @@ public class TestBoilerpipeArticleParser {
 				getClass().getResource("issue280.html"), 
 				"Günter Netzer, größter noch lebender Fußballexperte, soll gesagt haben, es gebe im Leben Wichtigeres, als gegen einen Fußball zu treten. Der Mann muss verrückt geworden sein.",
 				" Alle, die irgendwann ein Mikrofon in der Hand gehalten haben, hören sich danach anders an. "));
+	}
+	
+	@Test
+	public void testParseRegressionIssue281() throws ParserException, IOException {
+		assertTrue(testExpectedContent(
+				"Nato-Aufklärungsdrohne: Abgeordnete fordern Global-Hawk-Beschaffung zu prüfen",
+				//new URL("http://www.faz.net/aktuell/politik/nato-aufklaerungsdrohne-abgeordnete-fordern-global-hawk-beschaffung-zu-pruefen-12194513.html"),
+				getClass().getResource("issue281.html"), 
+				"hinsichtlich des nationalen Drohenprojekts „Euro Hawk“",
+				"De Maizière (CDU) hatte am Freitag den Vorwurf zurückgewiesen, das Drohnenprojekt „Euro Hawk“ zu spät gestoppt zu haben."));
 	}
 }

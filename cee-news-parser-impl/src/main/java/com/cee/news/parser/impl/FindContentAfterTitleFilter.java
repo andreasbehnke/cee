@@ -3,6 +3,9 @@ package com.cee.news.parser.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.l3s.boilerpipe.BoilerpipeFilter;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.document.TextBlock;
@@ -14,9 +17,11 @@ import de.l3s.boilerpipe.labels.DefaultLabels;
  * Removes all text blocks, which are not in between this title block and 
  * the next title block or block labeled "INDICATES_END_OF_TEXT".
  */
-public class FindTitleOfContentFilter implements BoilerpipeFilter {
+public class FindContentAfterTitleFilter implements BoilerpipeFilter {
 	
-	public final static FindTitleOfContentFilter INSTANCE = new FindTitleOfContentFilter();
+	public final static Logger LOG = LoggerFactory.getLogger(FindContentAfterTitleFilter.class);
+	
+	public final static FindContentAfterTitleFilter INSTANCE = new FindContentAfterTitleFilter();
 
 	@Override
 	public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
@@ -40,6 +45,9 @@ public class FindTitleOfContentFilter implements BoilerpipeFilter {
 			return false;
 		}
 		
+		LOG.debug(titleContentBlockCount.toString());
+		LOG.debug(doc.debugString());
+		
 		//find title with max content blocks
 		int maxBlocks = 0;
 		int bestTitle = -1;
@@ -55,7 +63,7 @@ public class FindTitleOfContentFilter implements BoilerpipeFilter {
 		for (TextBlock tb : doc.getTextBlocks().subList(0, bestTitle + 1)) {
 			tb.setIsContent(false);
 		}
-		//find first text block labeled "INDICATES_END_OF_TEXT" of "TITLE
+		//find first text block labeled "INDICATES_END_OF_TEXT" of "TITLE"
 		boolean endOfText = false;
 		for (TextBlock tb : doc.getTextBlocks().subList(bestTitle + 1, doc.getTextBlocks().size())) {
 			if (tb.hasLabel(DefaultLabels.INDICATES_END_OF_TEXT) || tb.hasLabel(DefaultLabels.TITLE)) {

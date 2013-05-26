@@ -51,11 +51,10 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	    	matches.add("have your say");
 	    	
 	    	//german stopwords
-	    	matches.add("kommentar");
 	    	matches.add("kommentieren");
 	    	matches.add("diesen artikel...");
 	    	
-	    	terminatingBlocksFinder = new ContainsTextFinder(
+	    	terminatingBlocksFinder = new ContainsTextFilter(
 	    			DefaultLabels.INDICATES_END_OF_TEXT, 
 	    			matches, 
 	    			6, 
@@ -68,10 +67,10 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	    			doc.getTitle(),
 	    			0.1, 
 	    			false);
-	    	return 	terminatingBlocksFinder.process(doc)
-	        		| titleFinder.process(doc)
-	                | NumWordsRulesClassifier.INSTANCE.process(doc)
-	                | FindTitleOfContentFilter.INSTANCE.process(doc);
+	    	return 	terminatingBlocksFinder.process(doc) |
+	    			titleFinder.process(doc) |
+	                NumWordsRulesClassifier.INSTANCE.process(doc) |
+	                FindContentAfterTitleFilter.INSTANCE.process(doc);
 	    }
 	}
 	
@@ -132,7 +131,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
         	if (articleTitel != null) {
         		textDoc.setTitle(articleTitel);
             }
-        	//de.l3s.boilerpipe.extractors.ArticleExtractor.INSTANCE.process(textDoc);
+
         	ArticleExtractor.INSTANCE.process(textDoc);
             List<com.cee.news.model.TextBlock> content = article.getContent();
             for (TextBlock block : textDoc.getTextBlocks()) {
