@@ -67,10 +67,17 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	    			doc.getTitle(),
 	    			0.1, 
 	    			false);
-	    	return 	terminatingBlocksFinder.process(doc) |
-	    			titleFinder.process(doc) |
-	                NumWordsRulesClassifier.INSTANCE.process(doc) |
-	                FindContentAfterTitleFilter.INSTANCE.process(doc);
+	    	
+	    	boolean changed = terminatingBlocksFinder.process(doc);
+	    	boolean foundTitle = titleFinder.process(doc);
+	    	if (!foundTitle) {
+	    		LOG.warn("Article title not found in content of article {}", doc.getTitle());
+	    		return false;
+	    	}
+	    	changed |= foundTitle; 
+	    	changed |= NumWordsRulesClassifier.INSTANCE.process(doc);
+	    	changed |= FindContentAfterTitleFilter.INSTANCE.process(doc);
+	    	return changed;
 	    }
 	}
 	
@@ -132,7 +139,10 @@ public class BoilerpipeArticleParser implements ArticleParser {
         		textDoc.setTitle(articleTitel);
             }
 
-        	ArticleExtractor.INSTANCE.process(textDoc);
+        	if (!ArticleExtractor.INSTANCE.process(textDoc)) {
+        		LOG.warn("Parsing of article {} failed", article.getLocation());
+        		return null;
+        	}
             List<com.cee.news.model.TextBlock> content = article.getContent();
             for (TextBlock block : textDoc.getTextBlocks()) {
                 if (block.isContent()) {

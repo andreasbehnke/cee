@@ -33,9 +33,12 @@ public class DocumentTitleMatchFilter implements BoilerpipeFilter {
 			if (Levenshtein.normalizedDistance(text, match) < maxDistance) {
 				tb.addLabel(label);
 				changes = true;
-				if (stopAtFirstMatch) {
-					break;
-				}
+			} else if(text.length() < match.length() * 2 && text.endsWith(match)) {
+				tb.addLabel(label);
+				changes = true;
+			}
+			if (changes & stopAtFirstMatch) {
+				break;
 			}
 		}
 		return changes;

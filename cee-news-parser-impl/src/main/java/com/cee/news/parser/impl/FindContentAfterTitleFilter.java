@@ -1,7 +1,12 @@
 package com.cee.news.parser.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +24,9 @@ import de.l3s.boilerpipe.labels.DefaultLabels;
  */
 public class FindContentAfterTitleFilter implements BoilerpipeFilter {
 	
-	public final static Logger LOG = LoggerFactory.getLogger(FindContentAfterTitleFilter.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FindContentAfterTitleFilter.class); 
 	
-	public final static FindContentAfterTitleFilter INSTANCE = new FindContentAfterTitleFilter();
+	public static final FindContentAfterTitleFilter INSTANCE = new FindContentAfterTitleFilter();
 
 	@Override
 	public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
@@ -45,19 +50,33 @@ public class FindContentAfterTitleFilter implements BoilerpipeFilter {
 			return false;
 		}
 		
-		LOG.debug(titleContentBlockCount.toString());
-		LOG.debug(doc.debugString());
-		
 		//find title with max content blocks
+		//sort by text block index
 		int maxBlocks = 0;
 		int bestTitle = -1;
-		for (Map.Entry<Integer, Integer> contentCount : titleContentBlockCount.entrySet()) {
+		List<Map.Entry<Integer, Integer>> entries = new ArrayList<Map.Entry<Integer,Integer>>(titleContentBlockCount.entrySet());
+		Collections.sort(entries, new Comparator<Map.Entry<Integer, Integer>>() {
+			@Override
+            public int compare(Entry<Integer, Integer> o1, Entry<Integer, Integer> o2) {
+	            return o1.getKey().compareTo(o2.getKey());
+            }
+		});
+		
+		//find title text block with max content blocks
+		for (Map.Entry<Integer, Integer> contentCount : entries) {
 			int count = contentCount.getValue().intValue(); 
 	        if (count >= maxBlocks) {
 	        	maxBlocks = contentCount.getValue().intValue();
 	        	bestTitle = contentCount.getKey();
 	        }
         }
+		
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Found title candidates:");
+			LOG.debug(entries.toString());
+			LOG.debug("Document content:");
+			LOG.debug(doc.debugString());
+		}
 		
 		//mark all text blocks before title as no content
 		for (TextBlock tb : doc.getTextBlocks().subList(0, bestTitle + 1)) {

@@ -1,12 +1,11 @@
 package com.cee.news.parser.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URL;
 
 import org.ccil.cowan.tagsoup.Parser;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +57,7 @@ public class TestBoilerpipeArticleParser {
     @Test
     public void testParse() throws ParserException, IOException {
     	assertTrue(testExpectedContent(
-    			null,
+    			"Russischer Ölkonzern Rosneft steigt bei BP ein",
 				getClass().getResource("spiegelArticle.html"), 
 				"Tony Hayward"));
     }
@@ -74,7 +73,7 @@ public class TestBoilerpipeArticleParser {
 	@Test
 	public void testParseRegressionIssue146() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
-				null,
+				"Troika sieht Portugal auf gutem Weg",
 				getClass().getResource("issue146.html"), 
 				"Die Portugiesen selbst sind weniger optimistisch"));
 	}
@@ -83,7 +82,7 @@ public class TestBoilerpipeArticleParser {
     @Test
     public void testParseRegressionIssue205() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
-				null,
+				"Obama schaltet Werbespots in Pakistan",
 				getClass().getResource("issue205.html"), 
 				"In dem 52 Sekunden kurzen und mit Urdu-Untertiteln versehenen Beitrag"));
     }
@@ -91,7 +90,7 @@ public class TestBoilerpipeArticleParser {
     @Test
     public void testParseRegressionIssue206() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
-				null,
+				"Nach Freitagsgebeten Tote bei antiwestlichen Protesten in Pakistan",
 				getClass().getResource("issue206.html"),
 				//first article half
 				"Mehrere westliche Staaten haben aus Furcht vor Ausschreitungen ihre Botschaften in islamischen Ländern geschlossen",
@@ -105,7 +104,7 @@ public class TestBoilerpipeArticleParser {
 	@Test
 	public void testParseRegressionIssue212() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
-				null,
+				"Hisbollah bekennt sich zu Drohneneinsatz",
 				getClass().getResource("issue212.html"), 
 				"Die libanesische Hisbollah erklärte, sie habe das Flugobjekt zu Spionagezwecken eingesetzt"));
 	}
@@ -139,6 +138,10 @@ public class TestBoilerpipeArticleParser {
 	
 	@Test
 	public void testParseRegressionIssue217() throws ParserException, IOException {
+		assertTrue(testExpectedContent(
+				"Niederlage auf Schalke: Nürnberg-Fans belagern Mannschaftsbus",
+				getClass().getResource("issue217.html"), 
+				"Die Lage beruhigte sich erst nach dem Eingreifen der Polizei und von"));
 		assertTrue(testUnexpectedContent(
 				"Niederlage auf Schalke: Nürnberg-Fans belagern Mannschaftsbus",
 				getClass().getResource("issue217.html"), 
@@ -200,9 +203,16 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue281() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Nato-Aufklärungsdrohne: Abgeordnete fordern Global-Hawk-Beschaffung zu prüfen",
-				//new URL("http://www.faz.net/aktuell/politik/nato-aufklaerungsdrohne-abgeordnete-fordern-global-hawk-beschaffung-zu-pruefen-12194513.html"),
 				getClass().getResource("issue281.html"), 
 				"hinsichtlich des nationalen Drohenprojekts „Euro Hawk“",
 				"De Maizière (CDU) hatte am Freitag den Vorwurf zurückgewiesen, das Drohnenprojekt „Euro Hawk“ zu spät gestoppt zu haben."));
+	}
+	
+	@Test
+	public void testParseRegressionIssue282() throws ParserException, IOException {
+		assertTrue(testExpectedContent(
+				"Soldat bei Messerattacke in Paris verletzt",
+				getClass().getResource("issue282.html"), 
+				"In London wurde außerdem ein Freund eines der beiden mutmaßlichen Täter festgenommen."));
 	}
 }
