@@ -141,6 +141,11 @@ public class BoilerpipeArticleParser implements ArticleParser {
         	TextDocument textDoc = boilerpipeHandler.toTextDocument();
         	textDoc.setTitle(articleTitel);
         	String htmlTitle = boilerpipeHandler.getTitle();
+        	int indexOfHyphen = htmlTitle.indexOf(" - ");
+        	if (indexOfHyphen > 0) {
+        		htmlTitle = htmlTitle.substring(0, indexOfHyphen);
+        	}
+        	
         	
         	LOG.debug("extracting main content from {}", article.getLocation());
         	if (!new ArticleExtractor(htmlTitle).process(textDoc)) {
