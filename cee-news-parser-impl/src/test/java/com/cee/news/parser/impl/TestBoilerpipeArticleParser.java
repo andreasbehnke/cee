@@ -112,7 +112,7 @@ public class TestBoilerpipeArticleParser {
 	@Test
 	public void testParseRegressionIssue214() throws ParserException, IOException {
 		assertTrue(testUnexpectedContent(
-				null,
+				"Apple-Preiserhöhung betrifft auch In-App-Käufe",
 				getClass().getResource("issue214.html"), 
 				"Am 26. Oktober kommt Windows 8 in den Handel"));
 	}
@@ -120,7 +120,7 @@ public class TestBoilerpipeArticleParser {
 	@Test
 	public void testParseRegressionIssue215() throws ParserException, IOException {
 		assertTrue(testUnexpectedContent(
-				null,
+				"Ex-Partner von Zuckerberg wegen Milliardenbetrugs verhaftet",
 				getClass().getResource("issue215.html"), 
 				"Aus Datenschutzgründen wird Ihre IP-Adresse nur dann gespeichert"));
 	}
@@ -224,5 +224,15 @@ public class TestBoilerpipeArticleParser {
 				"Der Fotograf Jim Rakete und der Lyriker Gerhard Falkner leben beide in Berlin.",
 				"Die Kulturakademie Tarabya hat einen doppelten Boden. Man ist in Istanbul und ist es nicht.",
 				"Falkner kneift die Augen zusammen, Rakete rückt seine Sonnenbrille zurecht."));
+	}
+	
+	@Test
+	public void testParseRegressionIssue284() throws ParserException, IOException {
+		assertTrue(testExpectedContent(
+				"Fangmengen: EU will Fischerei beschränken",
+				getClass().getResource("issue284.html"), 
+				"Meere sollen besser",
+				"erlaubt sein\", teilte die irische",
+				"Generell hatte das Parlament eine ehrgeizigere Linie verfochten"));
 	}
 }

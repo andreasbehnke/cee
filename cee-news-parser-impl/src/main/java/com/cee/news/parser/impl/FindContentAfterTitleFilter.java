@@ -39,7 +39,7 @@ public class FindContentAfterTitleFilter implements BoilerpipeFilter {
 			if (tb.hasLabel(DefaultLabels.TITLE)) {
 				titleIndex = i;
 				titleContentBlockCount.put(titleIndex, 0);
-			} else if (titleIndex > -1 && i - titleIndex < 10 && tb.isContent()) {
+			} else if (titleIndex > -1 && i - titleIndex < 20 && tb.isContent()) {
 				int count = titleContentBlockCount.get(titleIndex);
 				count++;
 				titleContentBlockCount.put(titleIndex, count);
@@ -72,8 +72,8 @@ public class FindContentAfterTitleFilter implements BoilerpipeFilter {
         }
 		
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Found title candidates:");
-			LOG.debug(entries.toString());
+			LOG.debug("Found title candidates: {}", entries);
+			LOG.debug("Best title candidate: {}", bestTitle);
 		}
 		
 		//mark all text blocks before title as no content

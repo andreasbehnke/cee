@@ -43,10 +43,7 @@ public class LuceneTestContext implements TestContext {
 	}
 
 	@Override
-	public void close() {
-		// TODO Auto-generated method stub
-
-	}
+	public void close() {}
 
 	@Override
 	public SiteStore getSiteStore() {

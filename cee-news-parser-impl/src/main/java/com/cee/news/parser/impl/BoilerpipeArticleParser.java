@@ -36,6 +36,10 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	
 	private final static class ArticleExtractor extends ExtractorBase {
 	    
+		private static final double MAX_LEVENSHTEIN_DISTANCE_HTML_TITLE_MATCH = 0.4;
+
+		private static final double MAX_LEVENSHTEIN_DISTANCE_RSS_TITLE_MATCH = 0.2;
+
 		private final BoilerpipeFilter terminatingBlocksFinder;
 	    
 	    private final String htmlTitle;
@@ -65,16 +69,8 @@ public class BoilerpipeArticleParser implements ArticleParser {
 
 	    @Override
 	    public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
-	    	BoilerpipeFilter titleFinderRSS = new DocumentTitleMatchFilter(
-	    			DefaultLabels.TITLE, 
-	    			doc.getTitle(),
-	    			0.1, 
-	    			false);
-	    	BoilerpipeFilter titleFinderHTML = new DocumentTitleMatchFilter(
-	    			DefaultLabels.TITLE, 
-	    			htmlTitle,
-	    			0.4,
-	    			false);
+	    	BoilerpipeFilter titleFinderRSS = new DocumentTitleMatchFilter(DefaultLabels.TITLE, doc.getTitle(), MAX_LEVENSHTEIN_DISTANCE_RSS_TITLE_MATCH, false);
+	    	BoilerpipeFilter titleFinderHTML = new DocumentTitleMatchFilter(DefaultLabels.TITLE, htmlTitle, MAX_LEVENSHTEIN_DISTANCE_HTML_TITLE_MATCH, false);
 	    	
 	    	boolean changed = terminatingBlocksFinder.process(doc);
 	    	boolean foundTitle = titleFinderRSS.process(doc);
@@ -134,7 +130,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
     	Reader textReader = null;
         try {
         	String articleTitel = article.getTitle();
-        	LOG.debug("start parsing article content of {}", articleTitel);
+        	LOG.debug("start parsing article content of {}", article.getLocation());
         	BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
         	
         	WebResponse response = webClient.openWebResponse(new URL(article.getLocation()));
@@ -146,7 +142,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
         	textDoc.setTitle(articleTitel);
         	String htmlTitle = boilerpipeHandler.getTitle();
         	
-        	LOG.debug("extracting main content from {}", articleTitel);
+        	LOG.debug("extracting main content from {}", article.getLocation());
         	if (!new ArticleExtractor(htmlTitle).process(textDoc)) {
         		LOG.warn("Parsing of article {} failed", article.getLocation());
         		return null;
@@ -161,10 +157,10 @@ public class BoilerpipeArticleParser implements ArticleParser {
                 }
             }
             if (!accept(article)) {
-            	LOG.warn("article with poor content quality found: {}", article.getTitle());
+            	LOG.warn("article with poor content quality found: {}", article.getLocation());
             	return null;
             }
-            LOG.debug("finished parsing article content of {}, found {} textblocks", article.getTitle(), content.size());
+            LOG.debug("finished parsing article content of {}, found {} textblocks", article.getLocation(), content.size());
             return article;
         } catch (BoilerpipeProcessingException e) {
             throw new ParserException(e);

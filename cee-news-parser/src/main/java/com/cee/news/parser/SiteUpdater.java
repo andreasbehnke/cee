@@ -118,10 +118,14 @@ public class SiteUpdater {
 		int articleCount = 0;
 		for (Article article : articles) {
             if (!store.contains(siteKey, article.getExternalId())) {
-            	article = articleParser.parse(article);
-            	if (article != null) {
-            		article.setLanguage(language);
-            		articlesForUpdate.add(article);
+            	try {
+            		article = articleParser.parse(article);
+            		if (article != null) {
+            			article.setLanguage(language);
+            			articlesForUpdate.add(article);
+            		}
+            	} catch(Exception ex) {
+            		LOG.error("Could not parse article {}: {}", article.getLocation(), ex);
             	}
             }
         }
