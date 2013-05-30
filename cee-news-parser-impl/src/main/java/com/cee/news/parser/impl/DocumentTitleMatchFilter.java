@@ -24,6 +24,9 @@ public class DocumentTitleMatchFilter implements BoilerpipeFilter {
 
 	@Override
 	public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
+		if (match == null) {
+			return false;
+		}
 		boolean changes = false;
 		for (TextBlock tb : doc.getTextBlocks()) {
 			String text = tb.getText();

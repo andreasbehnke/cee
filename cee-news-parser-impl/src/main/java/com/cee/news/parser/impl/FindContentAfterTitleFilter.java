@@ -74,8 +74,6 @@ public class FindContentAfterTitleFilter implements BoilerpipeFilter {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Found title candidates:");
 			LOG.debug(entries.toString());
-			LOG.debug("Document content:");
-			LOG.debug(doc.debugString());
 		}
 		
 		//mark all text blocks before title as no content

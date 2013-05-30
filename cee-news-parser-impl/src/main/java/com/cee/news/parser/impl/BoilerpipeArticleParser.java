@@ -35,11 +35,13 @@ import de.l3s.boilerpipe.sax.BoilerpipeHTMLContentHandler;
 public class BoilerpipeArticleParser implements ArticleParser {
 	
 	private final static class ArticleExtractor extends ExtractorBase {
-	    public static final ArticleExtractor INSTANCE = new ArticleExtractor();
 	    
-	    private final BoilerpipeFilter terminatingBlocksFinder;
+		private final BoilerpipeFilter terminatingBlocksFinder;
 	    
-	    private ArticleExtractor() {
+	    private final String htmlTitle;
+	    
+	    private ArticleExtractor(String htmlTitle) {
+	    	this.htmlTitle = htmlTitle;
 	    	List<String> matches = new ArrayList<String>();
 	    	//english stopwords
 	    	matches.add("comments");
@@ -61,17 +63,24 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	    			true);
 	    	}
 
+	    @Override
 	    public boolean process(TextDocument doc) throws BoilerpipeProcessingException {
-	    	BoilerpipeFilter titleFinder = new DocumentTitleMatchFilter(
+	    	BoilerpipeFilter titleFinderRSS = new DocumentTitleMatchFilter(
 	    			DefaultLabels.TITLE, 
 	    			doc.getTitle(),
 	    			0.1, 
 	    			false);
+	    	BoilerpipeFilter titleFinderHTML = new DocumentTitleMatchFilter(
+	    			DefaultLabels.TITLE, 
+	    			htmlTitle,
+	    			0.4,
+	    			false);
 	    	
 	    	boolean changed = terminatingBlocksFinder.process(doc);
-	    	boolean foundTitle = titleFinder.process(doc);
+	    	boolean foundTitle = titleFinderRSS.process(doc);
+	    	foundTitle |= titleFinderHTML.process(doc);
 	    	if (!foundTitle) {
-	    		LOG.warn("Article title not found in content of article {}", doc.getTitle());
+	    		LOG.warn("Title not found in content of article {}", doc.getTitle());
 	    		return false;
 	    	}
 	    	changed |= foundTitle; 
@@ -134,12 +143,11 @@ public class BoilerpipeArticleParser implements ArticleParser {
         	InputSource is = new InputSource(textReader);
         	xmlReader.parse(is);
         	TextDocument textDoc = boilerpipeHandler.toTextDocument();
+        	textDoc.setTitle(articleTitel);
+        	String htmlTitle = boilerpipeHandler.getTitle();
+        	
         	LOG.debug("extracting main content from {}", articleTitel);
-        	if (articleTitel != null) {
-        		textDoc.setTitle(articleTitel);
-            }
-
-        	if (!ArticleExtractor.INSTANCE.process(textDoc)) {
+        	if (!new ArticleExtractor(htmlTitle).process(textDoc)) {
         		LOG.warn("Parsing of article {} failed", article.getLocation());
         		return null;
         	}

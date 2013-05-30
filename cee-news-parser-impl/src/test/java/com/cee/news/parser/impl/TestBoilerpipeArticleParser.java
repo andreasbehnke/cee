@@ -215,4 +215,14 @@ public class TestBoilerpipeArticleParser {
 				getClass().getResource("issue282.html"), 
 				"In London wurde außerdem ein Freund eines der beiden mutmaßlichen Täter festgenommen."));
 	}
+	
+	@Test
+	public void testParseRegressionIssue283() throws ParserException, IOException {
+		assertTrue(testExpectedContent(
+				"In Istanbul sind der Fotograf Jim Rakete und der Lyriker Gerhard Falkner Freunde geworden",
+				getClass().getResource("issue283.html"), 
+				"Der Fotograf Jim Rakete und der Lyriker Gerhard Falkner leben beide in Berlin.",
+				"Die Kulturakademie Tarabya hat einen doppelten Boden. Man ist in Istanbul und ist es nicht.",
+				"Falkner kneift die Augen zusammen, Rakete rückt seine Sonnenbrille zurecht."));
+	}
 }
