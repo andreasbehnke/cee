@@ -123,7 +123,10 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		}
 		MoreLikeThis mlt = new MoreLikeThis(searcher.getIndexReader());
 		mlt.setFieldNames(LuceneConstants.ARTICLE_RELATED_SEARCH_FIELDS);
-		mlt.setMaxQueryTerms(10);
+		mlt.setMaxQueryTerms(20);
+		mlt.setBoost(true);
+		mlt.setMinTermFreq(0);
+		mlt.setMinDocFreq(0);
 		Query relatedQuery = boostRelatedQuery(mlt.like(topDocs.scoreDocs[0].doc));
 		
 		BooleanQuery query = new BooleanQuery();

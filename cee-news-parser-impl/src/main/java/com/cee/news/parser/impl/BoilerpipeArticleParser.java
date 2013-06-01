@@ -59,6 +59,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	    	//german stopwords
 	    	matches.add("kommentieren");
 	    	matches.add("diesen artikel...");
+	    	matches.add("Kommentare zu diesem Artikel");
 	    	
 	    	terminatingBlocksFinder = new ContainsTextFilter(
 	    			DefaultLabels.INDICATES_END_OF_TEXT, 

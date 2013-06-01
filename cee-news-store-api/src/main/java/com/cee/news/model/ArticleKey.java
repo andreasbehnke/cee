@@ -71,7 +71,7 @@ public class ArticleKey extends EntityKey {
 
     @Override
     public String toString() {
-        return "[key=" + getKey() + ";siteKey=" + siteKey + ";name=" + getName() + "]";
+        return "[key=" + getKey() + ";siteKey=" + siteKey + ";name=" + getName() + ";score=" + score + "]";
     }
 }
 
