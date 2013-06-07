@@ -28,7 +28,7 @@ public class TestSiteParser {
     public void testParse() throws IOException, SAXException {
         URL siteLocation = new URL("http://www.test.com/com/cee/news/parser/impl/spiegel.html");
         WebClient webClient = new ClassResourceWebClient();
-        SiteParser parser = new SiteParser(new Parser(), new RomeFeedParser(webClient), webClient);
+        SiteParser parser = new SiteParser(new Parser(), new RomeFeedParser(webClient, new Parser()), webClient);
         Site site = parser.parse(siteLocation);
         assertEquals("SPIEGEL ONLINE - Nachrichten", site.getTitle());
         assertTrue(site.getDescription().startsWith("Deutschlands f"));
@@ -56,7 +56,7 @@ public class TestSiteParser {
         WebClient webClient = Mockito.mock(WebClient.class);
         Mockito.when(webClient.openWebResponse(siteLocation)).thenReturn(response);
         
-        SiteParser parser = new SiteParser(new Parser(), new RomeFeedParser(webClient), webClient);
+        SiteParser parser = new SiteParser(new Parser(), new RomeFeedParser(webClient, new Parser()), webClient);
         Site site = parser.parse(siteLocation);
         assertEquals(site.getLocation(), "http://www.faz.net");
     }

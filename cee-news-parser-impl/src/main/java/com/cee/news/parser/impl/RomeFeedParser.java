@@ -2,6 +2,7 @@ package com.cee.news.parser.impl;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ import org.jdom.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 import com.cee.news.model.Article;
 import com.cee.news.model.Feed;
@@ -33,17 +36,23 @@ import com.sun.syndication.io.WireFeedParser;
 import com.sun.syndication.io.impl.FeedParsers;
 import com.sun.syndication.io.impl.XmlFixerReader;
 
+import de.l3s.boilerpipe.document.TextDocument;
+import de.l3s.boilerpipe.sax.BoilerpipeHTMLContentHandler;
+
 public class RomeFeedParser extends WireFeedInput implements FeedParser {
 	
 	private final static Logger LOG = LoggerFactory.getLogger(RomeFeedParser.class);
 	
 	private static FeedParsers feedParsers =  new FeedParsers();
+	
+	private XMLReader xmlReader;
 
     public RomeFeedParser() {
     }
 
-    public RomeFeedParser(WebClient webClient) {
+    public RomeFeedParser(WebClient webClient, XMLReader xmlReader) {
         setWebClient(webClient);
+        setXmlReader(xmlReader);
     }
     
 	@SuppressWarnings("serial")
@@ -72,6 +81,14 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
      */
 	public void setWebClient(WebClient webClient) {
 		this.webClient = webClient;
+	}
+	
+	/**
+	 * @param xmlReader used to extract text from html descriptions. This xml reader should be solid 
+	 * and able to parse html from the wild, e.g. tagsoup parser.
+	 */
+	public void setXmlReader(XMLReader xmlReader) {
+		this.xmlReader = xmlReader;
 	}
 	
 	private void removeEmptyElements(Element element) {
@@ -130,6 +147,30 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
 		}
     }
     
+    private String extractTextFromHtml(String html) throws IOException, SAXException {
+    	if(xmlReader == null) {
+    		throw new IllegalStateException("XmlReader has not been initialized");
+    	}
+    	Reader reader = null;
+    	try {
+	    	BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
+	    	xmlReader.setContentHandler(boilerpipeHandler);
+	    	reader = new StringReader(html);
+	    	InputSource is = new InputSource(reader);
+	    	xmlReader.parse(is);
+	    	TextDocument textDoc = boilerpipeHandler.toTextDocument();
+	    	String text = textDoc.getText(true, true);
+	    	if (text != null) {
+	    		text = text.trim();
+	    	}
+	    	return text;
+    	} finally {
+    		if (reader != null) {
+    			reader.close();
+    		}
+    	}
+    }
+    
     @SuppressWarnings("unchecked")
 	@Override
     public List<Article> readArticles(final URL feedLocation) throws ParserException, IOException {
@@ -151,7 +192,15 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
             article.setTitle(entry.getTitle());
             SyndContent syndContent = entry.getDescription();
             if (syndContent != null) {
-                article.setShortText(syndContent.getValue());
+            	if ("text/html".equalsIgnoreCase(syndContent.getType())) {
+            		try {
+						article.setShortText(extractTextFromHtml(syndContent.getValue()));
+					} catch (SAXException e) {
+						throw new ParserException("Could not extract text from HTML short text", e);
+					}
+            	} else {
+            		article.setShortText(syndContent.getValue());
+            	}
             }
             String link = entry.getLink();
             String id = entry.getUri();
