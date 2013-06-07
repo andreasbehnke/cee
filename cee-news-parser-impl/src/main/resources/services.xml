@@ -28,6 +28,7 @@
 	
 	<bean id="feedParser" class="com.cee.news.parser.impl.RomeFeedParser" scope="prototype">
 		<property name="webClient" ref="webClient" />
+		<property name="xmlReader" ref="htmlParser" />
 	</bean>
 
 	<bean id="siteUpdater" class="com.cee.news.parser.SiteUpdater" scope="prototype">
