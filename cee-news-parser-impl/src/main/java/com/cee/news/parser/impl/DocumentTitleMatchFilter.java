@@ -40,7 +40,7 @@ public class DocumentTitleMatchFilter implements BoilerpipeFilter {
 	}
 	
 	private boolean checkText(TextBlock tb, String text, String expression) {
-		if (Levenshtein.normalizedDistance(text, title) < maxDistance) {
+		if (Levenshtein.normalizedDistance(text, expression) < maxDistance) {
 			tb.addLabel(label);
 			return true;
 		}
@@ -72,7 +72,9 @@ public class DocumentTitleMatchFilter implements BoilerpipeFilter {
 					}
 				} else if (titleContainsColon) {
 					//check if text matches before / after colon
-					if (!checkText(tb, text, titleBeforeColon)) {
+					boolean isTextBeforeColon = checkText(tb, text, titleBeforeColon);
+					changes |= isTextBeforeColon;
+					if (!isTextBeforeColon) {
 						changes |= checkText(tb, text, titleAfterColon);
 					}
 				}

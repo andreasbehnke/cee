@@ -235,4 +235,14 @@ public class TestBoilerpipeArticleParser {
 				"erlaubt sein\", teilte die irische",
 				"Generell hatte das Parlament eine ehrgeizigere Linie verfochten"));
 	}
+
+	@Test
+	public void testParseRegressionIssue287() throws ParserException, IOException {
+		assertTrue(testExpectedContent(
+				"Armutsbekämpfung bei der UN : Extreme Armut bis 2030 beseitigen",
+				getClass().getResource("issue287.html"), 
+				"Mit einem ehrgeizigen Fahrplan",
+				"Die Politiker stehen einem Gremium aus 27 Regierungsmitgliedern und",
+				"Wachstum und eine Verdopplung des Anteils erneuerbarer Energien"));
+	}
 }
