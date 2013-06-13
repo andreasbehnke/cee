@@ -79,7 +79,7 @@ public class WorkingSetServiceImpl implements WorkingSetService {
 	    	for (EntityKey siteKey : wsd.getSites()) {
 				Site site = siteStore.getSite(siteKey);
 				String siteLang = site.getLanguage().toLowerCase();
-				if (!siteLang.startsWith(workingSetLang) || !workingSetLang.startsWith(siteLang)) {
+				if (!(siteLang.startsWith(workingSetLang) || workingSetLang.startsWith(siteLang))) {
 					sitesWithDifferentLang.add(siteKey);
 				}
 			}

@@ -19,6 +19,7 @@ import com.google.gwt.editor.client.adapters.SimpleEditor;
 import com.google.gwt.editor.client.adapters.TakesValueEditor;
 import com.google.gwt.editor.ui.client.adapters.ValueBoxEditor;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
@@ -182,5 +183,10 @@ public class WorkingSet extends PopupPanel implements WorkingSetView {
 	public void setAvailableLanguages(List<EntityKey> languages, EntityKey defaultLanguage) {
 		listBoxLanguage.setValue(defaultLanguage);
 		listBoxLanguage.setAcceptableValues(languages);
+	}
+	
+	@Override
+	public void addLanguageChangedHandler(ValueChangeHandler<EntityKey> handler) {
+		listBoxLanguage.addValueChangeHandler(handler);
 	}
 }

@@ -21,6 +21,8 @@ import com.cee.news.client.workingset.WorkingSetUpdateResult.State;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -85,7 +87,15 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 				workingSetView.setAvailableLanguages(event.getValues(), languageListModel.getDefaultLanguage());
 			}
 		});
-		
+		workingSetView.addLanguageChangedHandler(new ValueChangeHandler<EntityKey>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<EntityKey> event) {
+				WorkingSetData workingSetData = workingSetView.getData();
+				validateSiteLanguages(workingSetData);
+			}
+		});
+
 		addSiteWorkflow = new AddSiteWorkflow(newSiteWizard);
 		workingSetView.getButtonAddNewSite().addClickHandler(new ClickHandler() {
 			@Override
@@ -113,32 +123,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 			@Override
 			public void onSelectionListChanged(SelectionListChangedEvent<EntityKey> event) {
 				 WorkingSetData workingSetData = workingSetView.getData();
-				 service.validateSiteLanguages(workingSetData, new AsyncCallback<List<EntityKey>>() {
-					
-					@Override
-					public void onSuccess(List<EntityKey> result) {
-						if (result.size() == 0) {
-							workingSetView.getErrorText().setText("");
-						} else {
-							String differentSites = "";
-							boolean first = true;
-							for (EntityKey entityKey : result) {
-								if (first) {
-									first = false;
-								} else {
-									differentSites += ",";
-								}
-								differentSites += entityKey.getName();
-							}
-							showValidationError("The following sites have a different language than working set: " + differentSites + ". This may result in bad search and related documents behaviour!");
-						}
-					}
-					
-					@Override
-					public void onFailure(Throwable caught) {
-						fireErrorEvent(caught, "Could not validate working set");
-					}
-				});
+				 validateSiteLanguages(workingSetData);
 			}
 		});
 		
@@ -158,7 +143,40 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 			}
 		});
 	}
+	
+	private void validateSiteLanguages(WorkingSetData workingSetData) {
+		service.validateSiteLanguages(workingSetData, new AsyncCallback<List<EntityKey>>() {
+			
+			@Override
+			public void onSuccess(List<EntityKey> result) {
+				displayNotificationsSiteLanguageDiffer(result);
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				fireErrorEvent(caught, "Could not validate working set");
+			}
+		});
+	}
 
+	private void displayNotificationsSiteLanguageDiffer(List<EntityKey> sitesWithDifferentLanguage) {
+		if (sitesWithDifferentLanguage.size() == 0) {
+			workingSetView.getErrorText().setText("");
+		} else {
+			String differentSites = "";
+			boolean first = true;
+			for (EntityKey entityKey : sitesWithDifferentLanguage) {
+				if (first) {
+					first = false;
+				} else {
+					differentSites += ",";
+				}
+				differentSites += entityKey.getName();
+			}
+			showValidationError("The following sites have a different language than working set: " + differentSites + ". This may result in bad search and related documents behaviour!");
+		}
+	}
+	
 	public void newWorkingSet() {
 		WorkingSetData workingSetData = new WorkingSetData();
 		workingSetData.setIsNew(true);
