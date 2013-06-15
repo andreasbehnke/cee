@@ -15,13 +15,9 @@
 			</map>
 		</property>
 	</bean>
-	
-	<bean id="webClient" class="com.cee.news.parser.net.ClassResourceWebClient" scope="prototype"/>
-	
-	<!-- configure JCR to use in memory file manager -->
-	<bean id="jcrRepositoryConfig" class="org.apache.jackrabbit.core.config.RepositoryConfig" factory-method="create">
-		<constructor-arg value="classpath:repository.xml" type="java.io.InputStream" />
-		<constructor-arg value="target/repository" />
-	</bean>
 
+	<bean id="webClient" class="com.cee.news.parser.net.ClassResourceWebClient" scope="prototype"/>
+	<bean id="luceneSiteIndexDirectory" class="org.apache.lucene.store.RAMDirectory" />
+    <bean id="luceneWorkingSetIndexDirectory" class="org.apache.lucene.store.RAMDirectory" />
+    <bean id="luceneArticleIndexDirectory" class="org.apache.lucene.store.RAMDirectory" />
 </beans>

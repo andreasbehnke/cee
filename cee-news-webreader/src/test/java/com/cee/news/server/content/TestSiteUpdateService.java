@@ -1,7 +1,6 @@
 package com.cee.news.server.content;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import com.cee.news.client.content.SiteUpdateService;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 
-@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"/testContext.xml"})
 @DirtiesContext(classMode=ClassMode.AFTER_CLASS)

@@ -4,10 +4,9 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
 	<import resource="../../../../../applicationContext.xml"/>
-	
-	<!-- configure JCR to use in memory file manager -->
-    <bean id="jcrRepositoryConfig" class="org.apache.jackrabbit.core.config.RepositoryConfig" factory-method="create">
-        <constructor-arg value="classpath:repository.xml" type="java.io.InputStream" />
-        <constructor-arg value="target/repository1" />
-    </bean>
+
+    <bean id="webClient" class="com.cee.news.parser.net.ClassResourceWebClient" scope="prototype"/>
+    <bean id="luceneSiteIndexDirectory" class="org.apache.lucene.store.RAMDirectory" />
+    <bean id="luceneWorkingSetIndexDirectory" class="org.apache.lucene.store.RAMDirectory" />
+    <bean id="luceneArticleIndexDirectory" class="org.apache.lucene.store.RAMDirectory" />
 </beans>
