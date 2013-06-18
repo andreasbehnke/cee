@@ -52,6 +52,10 @@ interface Styles extends CssResource {
 
     String dialog();
     
+    int dialogFooterHeight();
+    
+    int dialogHeaderHeight();
+    
     String editSet();
     
     String error();
@@ -75,6 +79,10 @@ interface Styles extends CssResource {
     String list();
 
     String listItem();
+    
+    String loading();
+    
+    String loadingGlass();
 
     String navLeft();
 

@@ -11,6 +11,9 @@ public interface Resources extends ClientBundle {
     @Source("icons24.png")
     public DataResource icons();
     
+    @Source("loading.gif")
+    public DataResource loadingIcon();
+    
     @Source("Styles.css")
     public Styles styles();
 }

@@ -1,9 +1,12 @@
 @url ICONS icons;
+@url LOADING_ICON loadingIcon;
 
 @def articleTeaserColumns 3;
 @def articleTeaserHeight 120px;
 @def articleTeaserTop 96px;
 @def relatedArticleColumns 1;
+@def dialogHeaderHeight 34px;
+@def dialogFooterHeight 64px;
 
 /*** reset ***/
 BODY {
@@ -326,7 +329,7 @@ FIELDSET LI {
 
 .dialog .header {
 	position: absolute;
-	height: 34px;
+	height: dialogHeaderHeight;
 	top: 0px;
 	left: 0px;
 	right: 0px;	
@@ -335,11 +338,10 @@ FIELDSET LI {
 
 .dialog .footer {
 	position: absolute;
-	height: 64px;
+	height: dialogFooterHeight;
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
-	padding: 8px 8px 0px 0px;
 	background-color: #E0E0FF;
 	border-radius: 0px 0px 8px 8px;
 }
@@ -423,40 +425,41 @@ FIELDSET LI {
 	right: 8px;
 }
 
+.dialog .footer BUTTON {
+    position: relative;
+    top: 32px;
+    right: 8px;
+    float:right;
+}
+
 .dialog .save {
-	position: relative;
-	top: 32px;
-	float:right;
 }
 
 .dialog .next {
-	position: relative;
-	top: 32px;
-	float:right;
 }
 
 .dialog .cancel {
-	position: relative;
-	top: 32px;
-	float:right;
 }
 
 .dialog .yes {
-	position: relative;
-	top: 32px;
-	float:right;
 }
 
 .dialog .no {
-	position: relative;
-	top: 32px;
-	float:right;
 }
 
 .dialog .ok {
-    position: relative;
-    top: 32px;
-    float:right;
+}
+
+.loadingGlass {
+	position: absolute;
+	top: dialogHeaderHeight;
+	bottom: dialogFooterHeight;
+	left: 0px;
+	right: 0px;
+	background-color: rgba(240, 240, 240, 0.8);
+	background-image: LOADING_ICON;
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
 .error {
@@ -464,6 +467,12 @@ FIELDSET LI {
 	width: 460px;
 	float:right;
 	padding: 2px;
+}
+
+.loading {
+    width: 460px;
+    float:right;
+    padding: 2px;
 }
 
 /*** UI elements ***/

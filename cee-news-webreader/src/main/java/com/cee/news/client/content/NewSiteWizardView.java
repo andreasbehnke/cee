@@ -3,6 +3,7 @@ package com.cee.news.client.content;
 import java.util.List;
 
 import com.cee.news.client.DialogView;
+import com.cee.news.client.async.LoadingInfoView;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
@@ -10,7 +11,7 @@ import com.google.gwt.user.client.ui.HasValue;
 /**
  * The view of the {@link AddSiteWorkflow}
  */
-public interface NewSiteWizardView extends DialogView {
+public interface NewSiteWizardView extends DialogView, LoadingInfoView {
 
 	/**
 	 * Display the location input dialog

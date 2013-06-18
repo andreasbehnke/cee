@@ -7,6 +7,8 @@ import com.cee.news.client.content.NewSiteWizardView;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -52,6 +54,9 @@ public class NewSiteWizard extends PopupPanel implements NewSiteWizardView {
     InlineLabel labelErrorMessage;
     
     @UiField
+    InlineLabel labelLoadingMessage;
+    
+    @UiField
     Button buttonLocationInput;
     
     @UiField
@@ -59,6 +64,8 @@ public class NewSiteWizard extends PopupPanel implements NewSiteWizardView {
     
     @UiField
     Button buttonCancel;
+    
+    private Element loadingGlass;
     
     public NewSiteWizard() {
         cellTableFeeds = new CellTable<FeedData>();
@@ -98,6 +105,8 @@ public class NewSiteWizard extends PopupPanel implements NewSiteWizardView {
         setWidget(uiBinder.createAndBindUi(this));
         setGlassEnabled(true);
         setStyleName(resources.styles().popupPanel());
+        
+        labelLoadingMessage.setVisible(false);
     }
     
     @Override
@@ -162,5 +171,33 @@ public class NewSiteWizard extends PopupPanel implements NewSiteWizardView {
         buttonStoreSite.setEnabled(enabled);
         buttonLocationInput.setEnabled(enabled);
     }
+    
+    private void showLoadingGlassPane() {
+    	if (loadingGlass == null) {
+    		loadingGlass = Document.get().createDivElement();
+    		loadingGlass.addClassName(resources.styles().loadingGlass());
+    	}
+    	getElement().appendChild(loadingGlass);
+    }
+    
+    private void hideLoadingGlassPane() {
+    	if (loadingGlass != null) {
+    		getElement().removeChild(loadingGlass);
+    	}
+    }
 
+    @Override
+    public void showLoading(String message) {
+    	showLoadingGlassPane();
+        labelErrorMessage.setVisible(false);
+        labelLoadingMessage.setText(message);
+        labelLoadingMessage.setVisible(true);
+    }
+    
+    @Override
+    public void hideLoading() {
+    	hideLoadingGlassPane();
+    	labelErrorMessage.setVisible(true);
+        labelLoadingMessage.setVisible(false);
+    }
 }

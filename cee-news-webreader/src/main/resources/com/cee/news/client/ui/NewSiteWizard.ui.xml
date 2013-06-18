@@ -31,6 +31,7 @@
 			<g:Button ui:field="buttonLocationInput" text="Next" styleName="{res.styles.next}" />
             <g:Button ui:field="buttonCancel" text="Cancel" styleName="{res.styles.cancel}" />
             <g:InlineLabel ui:field="labelErrorMessage" styleName="{res.styles.error}" />
+            <g:InlineLabel ui:field="labelLoadingMessage" styleName="{res.styles.loading}" />
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>
