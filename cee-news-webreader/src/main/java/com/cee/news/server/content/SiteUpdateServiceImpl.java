@@ -37,8 +37,6 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private static final String STARTING_UPDATE_SCHEDULER_WITH_A_DELAY_OF = "Starting update scheduler with an initial delay of {} minutes and a periodic delay of {} minutes.";
 
-	private static final String CLEARING_WORK_QUEUE = "Clearing work queue";
-
 	private static final String COULD_NOT_BE_REMOVED_FROM_LIST_OF_SITES_IN_PROGRESS = "{} could not be removed from list of sites in progress";
 
 	private static final String SITE_UPDATE_ENCOUNTERED_AN_ERROR = "Site update %s encountered an error";
@@ -131,7 +129,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	private synchronized void ensureThreadPool() {
 		if (pool == null) {
 			pool = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, workQueue);
-			pool.setThreadFactory( new PrefixCountThreadFactory(SITE_UPDATER_THREAD_PREFIX) );
+			pool.setThreadFactory( new PrefixCountThreadFactory(SITE_UPDATER_THREAD_PREFIX, true) );
 		}
 	}
 
@@ -139,13 +137,6 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 		if (!sitesInProgress.remove(siteKey)) {
 			LOG.warn(COULD_NOT_BE_REMOVED_FROM_LIST_OF_SITES_IN_PROGRESS, siteKey);
 		}
-	}
-
-	@Override
-	public synchronized void clearQueue() {
-		LOG.info(CLEARING_WORK_QUEUE);
-		workQueue.clear();
-		sitesInProgress.clear();
 	}
 
 	@Override
@@ -210,7 +201,7 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	public synchronized void startUpdateScheduler() {
 		if (scheduler == null) {
 			LOG.info(STARTING_UPDATE_SCHEDULER_WITH_A_DELAY_OF, updateSchedulerInitialDelay, updateSchedulerFixedDelay);
-			scheduler = new ScheduledThreadPoolExecutor(1, new PrefixCountThreadFactory(UPDATE_SCHEDULER_THREAD_PREFIX));
+			scheduler = new ScheduledThreadPoolExecutor(1, new PrefixCountThreadFactory(UPDATE_SCHEDULER_THREAD_PREFIX, true));
 			scheduler.scheduleWithFixedDelay(
 					new Runnable() {		
 						@Override
@@ -262,18 +253,6 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			}
 		} catch (Throwable t) {
 			LOG.error(STARTING_SITE_UPDATES_ENCOUNTERED_AN_ERROR, t);
-		}
-	}
-
-	/**
-	 * Stops execution of the thread pool
-	 */
-	public synchronized void shutdown() {
-		if (pool != null) {
-			pool.shutdownNow();
-		}
-		if (scheduler != null) {
-			scheduler.shutdownNow();
 		}
 	}
 

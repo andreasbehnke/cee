@@ -39,7 +39,7 @@
 		<property name="siteUpdater" ref="siteUpdater" />
 	</bean>
 	
-	<bean id="gwtSiteUpdateService" class="com.cee.news.server.content.SiteUpdateServiceImpl" init-method="startUpdateScheduler" destroy-method="shutdown">
+	<bean id="gwtSiteUpdateService" class="com.cee.news.server.content.SiteUpdateServiceImpl" init-method="startUpdateScheduler">
 		<property name="corePoolSize" value="${update.service.core.pool.size}" />
 		<property name="maxPoolSize" value="${update.service.max.pool.size}" />
 		<property name="keepAliveTime" value="${update.service.keep.alive.time}" />		

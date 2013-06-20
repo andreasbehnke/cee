@@ -25,11 +25,6 @@ public interface SiteUpdateService extends RemoteService {
 	FeedData retrieveFeedData(String location);
 	
 	/**
-	 * Removes all commands from queue
-	 */
-	void clearQueue();
-	
-	/**
 	 * Starts the scheduler which triggers the site updates periodically
 	 */
 	void startUpdateScheduler();

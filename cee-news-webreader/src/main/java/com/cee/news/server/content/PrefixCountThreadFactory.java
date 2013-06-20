@@ -15,13 +15,18 @@ public class PrefixCountThreadFactory implements ThreadFactory {
 	
 	private final String prefix;
 	
-	public PrefixCountThreadFactory(String prefix) {
+	private final boolean daemon;
+	
+	public PrefixCountThreadFactory(String prefix, boolean daemon) {
 		this.prefix = prefix;
+		this.daemon = daemon;
 	}
 
 	@Override
 	public Thread newThread(Runnable r) {
-		return new Thread(r, prefix + "#" + count++);
+		Thread t = new Thread(r, prefix + "#" + count++);
+		t.setDaemon(daemon);
+		return t;
 	}
 
 }
