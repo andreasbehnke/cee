@@ -245,10 +245,10 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 	}
 	
 	private void queueSiteUpdate(final EntityKey siteKey) {
-		siteUpdateService.addSiteToUpdateQueue(siteKey, new AsyncCallback<Void>() {
+		siteUpdateService.addSiteToUpdateQueue(siteKey, new AsyncCallback<Boolean>() {
 			
 			@Override
-			public void onSuccess(Void result) {
+			public void onSuccess(Boolean result) {
 				wizard.hide();
 				fireSiteAdded(siteKey);
 			}

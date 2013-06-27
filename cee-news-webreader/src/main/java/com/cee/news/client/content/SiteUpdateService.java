@@ -30,8 +30,10 @@ public interface SiteUpdateService extends RemoteService {
 	void startUpdateScheduler();
 	
 	/**
-	 * Adds the site to the update queue. The update will be performed as soon as possible.
+	 * Adds the site to the update queue, if queue does not contain site. 
+	 * The update will be performed as soon as possible.
 	 * @param siteKey Key of the site to be updated
+	 * @return true, if site has been added or false if site is already queued for update
 	 */
-	void addSiteToUpdateQueue(EntityKey siteKey);
+	boolean addSiteToUpdateQueue(EntityKey siteKey);
 }

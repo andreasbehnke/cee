@@ -34,6 +34,8 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	private static final String STARTING_SITE_UPDATES_ENCOUNTERED_AN_ERROR = "Starting site updates encontered an error";
 
 	private static final String SCHEDULER_STARTING_SITE_UPDATES = "Scheduler starting site updates";
+	
+	private static final String SCHEDULER_QUEUED_SITES_FOR_UPDATE = "Scheduler queued {} sites for update";
 
 	private static final String STARTING_UPDATE_SCHEDULER_WITH_A_DELAY_OF = "Starting update scheduler with an initial delay of {} minutes and a periodic delay of {} minutes.";
 
@@ -215,7 +217,8 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 		}
 	}
 	
-	public synchronized void addSiteToUpdateQueue(final EntityKey siteKey) {
+	@Override
+	public synchronized boolean addSiteToUpdateQueue(final EntityKey siteKey) {
         ensureThreadPool();
         if (!sitesInProgress.contains(siteKey)) {
             Site siteEntity = null;
@@ -241,16 +244,22 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
             command.setSite(siteEntity);
             sitesInProgress.add(siteKey);
             pool.execute(command);
+            return true;
         }
+        return false;
     }
 
 	private void startSiteUpdates() {
 		try {
 			LOG.info(SCHEDULER_STARTING_SITE_UPDATES);
 			List<EntityKey> sites = siteStore.getSitesOrderedByName();
+			int siteCount = 0;
 			for (EntityKey entityKey : sites) {
-				addSiteToUpdateQueue(entityKey);
+				if (addSiteToUpdateQueue(entityKey)) {
+					siteCount++;
+				}
 			}
+			LOG.info(SCHEDULER_QUEUED_SITES_FOR_UPDATE, siteCount);
 		} catch (Throwable t) {
 			LOG.error(STARTING_SITE_UPDATES_ENCOUNTERED_AN_ERROR, t);
 		}
