@@ -402,16 +402,16 @@ FIELDSET LI {
 
 .dialog .pageLocationInput {
 	position: absolute;
-	top: 38px;
-	bottom: 34px;
+	top: dialogHeaderHeight;
+	bottom: dialogFooterHeight;
 	left: 8px;
 	right: 8px;
 }
 
 .dialog .pageFeedSelection {
 	position: absolute;
-	top: 38px;
-	bottom: 34px;
+	top: dialogHeaderHeight;
+	bottom: dialogFooterHeight;
 	left: 8px;
 	right: 8px;
 	overflow-y: scroll;
@@ -420,7 +420,7 @@ FIELDSET LI {
 .dialog .confirmQuestion {
 	position: absolute;
 	top: 38px;
-	bottom: 34px;
+	bottom: dialogFooterHeight;
 	left: 8px;
 	right: 8px;
 }
