@@ -54,23 +54,6 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		return query;
 	}
 	
-	private Query createArticlesQuery(List<ArticleKey> articleKeys) {
-		if (articleKeys.size() == 1) {
-			return createArticleQuery(articleKeys.get(0));
-		} else {
-			BooleanQuery query = new BooleanQuery();
-			query.setMinimumNumberShouldMatch(1);
-			float boost = articleKeys.size() * 10f;
-			for (ArticleKey articleKey: articleKeys) {
-				Query articleQuery = createArticleQuery(articleKey);
-				articleQuery.setBoost(boost);
-				query.add(articleQuery, BooleanClause.Occur.SHOULD);
-				boost -= 10f;
-			}
-			return query;
-		}
-	}
-	
 	private Query createLanguageQuery(String language) {
 		return new TermQuery(new Term(LuceneConstants.FIELD_ARTICLE_LANGUAGE, language));
 	}
@@ -302,19 +285,18 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		try {
 			List<Article> articles = new ArrayList<Article>();
 			IndexSearcher searcher = aquireSearcher();
-			Query query = createArticlesQuery(keys);
 			try {
-				TopDocs topDocs = searcher.search(query, LuceneConstants.MAX_RESULT_SIZE);
-				for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
-	                articles.add(createArticleFromDocument(searcher.doc(scoreDoc.doc), withContent));
-                }
+				for (ArticleKey articleKey : keys) {
+					Document articleDocument = getArticleDocument(articleKey);
+		            articles.add(createArticleFromDocument(articleDocument, withContent));
+	            }
+				if (articles.size() != keys.size()) {
+					throw new StoreException("EntityKey list and result list have different size");
+				}
+				return articles;
 			} finally {
 				releaseSearcher(searcher);
 			}
-			if (articles.size() != keys.size()) {
-				throw new StoreException("EntityKey list and result list have different size");
-			}
-			return articles;
 		} catch(IOException ioe) {
 			throw new StoreException(null, ioe);
 		} catch(ParseException pe) {
