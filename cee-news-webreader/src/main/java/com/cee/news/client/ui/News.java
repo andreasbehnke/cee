@@ -202,6 +202,7 @@ public class News extends Composite implements NewsView, PagingView {
     
     @Override
     public void registerScrollHandler() {
+    	Window.scrollTo(0, 0);
         final Styles styles = Resources.INSTANCE.styles();
         final WindowVerticalScroll verticalScroll = new WindowVerticalScroll(cellListRelated.getElement(), styles.articleTeaserTop());
         scrollRegistration = Window.addWindowScrollHandler(

@@ -3,7 +3,6 @@ package com.cee.news.client.ui;
 import com.cee.news.client.NewsView;
 import com.cee.news.client.PageSwitchView;
 import com.cee.news.client.StartView;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -30,7 +29,6 @@ final class PageSwitch implements PageSwitchView {
         RootPanel.get().remove(newsView);
         RootPanel.get().add(startView);
         startView.registerScrollHandler();
-        Window.scrollTo(0, 0);
     }
 
     @Override
@@ -39,6 +37,5 @@ final class PageSwitch implements PageSwitchView {
         RootPanel.get().remove(startView);
         RootPanel.get().add(newsView);
         newsView.registerScrollHandler();
-        Window.scrollTo(0, 0);
     }
 }

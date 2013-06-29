@@ -22,9 +22,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class Start extends Composite implements StartView {
     
-    //TODO: apply these styles to cells of scroll panel
-    //<div class="clickable teaser column3"><p class="meta">01.02.2011 09:53 - spiegel</p><h1>1 Dieses ist ein sehr spannender Artikel</h1><p>This are the first sentences of the article...</p></div>
-
     private static StartUiBinder uiBinder = GWT.create(StartUiBinder.class);
 
     interface StartUiBinder extends UiBinder<Widget, Start> {
@@ -58,6 +55,8 @@ public class Start extends Composite implements StartView {
     }
     
     private HandlerRegistration scrollRegistration;
+    
+    private int scrollPosition = -1;
     
     @UiField
     WorkingSetSelection workingSetSelection;
@@ -114,6 +113,9 @@ public class Start extends Composite implements StartView {
     
     @Override
     public void registerScrollHandler() {
+    	if (scrollPosition > -1) {
+        	Window.scrollTo(0, scrollPosition);
+        }
         final Styles styles = Resources.INSTANCE.styles();
         final WindowVerticalScroll verticalScroll = new WindowVerticalScroll(cellListLatestArticles.getElement(), styles.articleTeaserTop());
         scrollRegistration = Window.addWindowScrollHandler(
@@ -130,5 +132,6 @@ public class Start extends Composite implements StartView {
             scrollRegistration.removeHandler();
             scrollRegistration = null;
         }
+        scrollPosition = Window.getScrollTop();
     }
 }
