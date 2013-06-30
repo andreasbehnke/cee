@@ -32,6 +32,9 @@ public class EntityKey implements Serializable {
     public EntityKey() {}
 	
 	protected EntityKey(String name, String key) {
+		if (key == null) {
+			throw new IllegalArgumentException("Parameter key must not be null");
+		}
 		this.name = name;
 		this.key = key;
 	}

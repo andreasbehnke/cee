@@ -19,7 +19,10 @@ public class SiteConverter {
 		data.setIsActive(feed.isActive());
 		data.setLocation(feed.getLocation());
 		data.setTitle(feed.getTitle());
-		data.setLanguage(EntityKey.get(feed.getLanguage()));
+		String language = feed.getLanguage();
+		if (language != null) {
+			data.setLanguage(EntityKey.get(language));
+		}
 		return data;
 	}
 	
@@ -30,7 +33,10 @@ public class SiteConverter {
 		data.setLocation(site.getLocation());
 		data.setName(site.getName());
 		data.setTitle(site.getTitle());
-		data.setLanguage(EntityKey.get(site.getLanguage()));
+		String language = site.getLanguage();
+		if (language != null) {
+			data.setLanguage(EntityKey.get(language));
+		}
 		List<FeedData> feeds = new ArrayList<FeedData>();
 		for (Feed feed : site.getFeeds()) {
 			feeds.add(createFromFeed(feed));
