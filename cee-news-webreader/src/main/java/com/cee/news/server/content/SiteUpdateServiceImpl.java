@@ -24,7 +24,7 @@ import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 import com.cee.news.parser.FeedParser;
-import com.cee.news.parser.SiteParser;
+import com.cee.news.parser.impl.SiteParser;
 import com.cee.news.store.SiteStore;
 
 public abstract class SiteUpdateServiceImpl implements SiteUpdateService {

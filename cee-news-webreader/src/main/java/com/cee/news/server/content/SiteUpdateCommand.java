@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cee.news.model.Site;
 import com.cee.news.parser.ParserException;
-import com.cee.news.parser.SiteUpdater;
+import com.cee.news.parser.impl.SiteUpdater;
 import com.cee.news.store.StoreException;
 
 /**

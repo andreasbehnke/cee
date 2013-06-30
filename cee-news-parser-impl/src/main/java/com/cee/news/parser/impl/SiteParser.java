@@ -1,4 +1,4 @@
-package com.cee.news.parser;
+package com.cee.news.parser.impl;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -14,6 +14,7 @@ import org.xml.sax.XMLReader;
 
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
+import com.cee.news.parser.FeedParser;
 import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.WebResponse;
 

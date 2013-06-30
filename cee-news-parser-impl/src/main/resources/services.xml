@@ -31,14 +31,14 @@
 		<property name="xmlReader" ref="htmlParser" />
 	</bean>
 
-	<bean id="siteUpdater" class="com.cee.news.parser.SiteUpdater" scope="prototype">
+	<bean id="siteUpdater" class="com.cee.news.parser.impl.SiteUpdater" scope="prototype">
 		<property name="articleParser" ref="articleParser" />
 		<property name="feedParser" ref="feedParser" />
 		<property name="store" ref="articleStore" />
 		<property name="onlyActiveFeeds" value="true" />
 	</bean>
 
-	<bean id="siteParser" class="com.cee.news.parser.SiteParser" scope="prototype">
+	<bean id="siteParser" class="com.cee.news.parser.impl.SiteParser" scope="prototype">
 		<property name="webClient" ref="webClient" />
     	<property name="reader" ref="htmlParser" />
 		<property name="feedParser" ref="feedParser" />

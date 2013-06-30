@@ -1,4 +1,4 @@
-package com.cee.news.parser;
+package com.cee.news.parser.impl;
 
 import java.net.MalformedURLException;
 import java.net.URL;

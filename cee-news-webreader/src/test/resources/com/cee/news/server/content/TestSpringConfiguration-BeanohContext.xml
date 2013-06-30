@@ -5,7 +5,7 @@
 
 	<import resource="../../../../../applicationContext.xml"/>
 
-    <bean id="webClient" class="com.cee.news.parser.net.ClassResourceWebClient" scope="prototype"/>
+    <bean id="webClient" class="com.cee.news.parser.net.impl.ClassResourceWebClient" scope="prototype"/>
     <bean id="luceneSiteIndexDirectory" class="org.apache.lucene.store.RAMDirectory" />
     <bean id="luceneWorkingSetIndexDirectory" class="org.apache.lucene.store.RAMDirectory" />
     <bean id="luceneArticleIndexDirectory" class="org.apache.lucene.store.RAMDirectory" />

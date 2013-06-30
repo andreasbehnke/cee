@@ -1,4 +1,4 @@
-package com.cee.news.parser;
+package com.cee.news.parser.impl;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -13,6 +13,9 @@ import com.cee.news.model.Article;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
+import com.cee.news.parser.ArticleParser;
+import com.cee.news.parser.FeedParser;
+import com.cee.news.parser.ParserException;
 import com.cee.news.store.ArticleStore;
 import com.cee.news.store.StoreException;
 

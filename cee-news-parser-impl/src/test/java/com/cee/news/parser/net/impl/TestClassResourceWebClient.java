@@ -1,4 +1,4 @@
-package com.cee.news.parser.net;
+package com.cee.news.parser.net.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,10 +10,12 @@ import java.net.URL;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.cee.news.parser.net.impl.ClassResourceWebClient;
+
 public class TestClassResourceWebClient {
 
 	private static final String HELLO_WORLD = "Hello World!";
-	private static final String TESTSITE_URL = "http://www.testsite.com/com/cee/news/parser/net/testSite.html";
+	private static final String TESTSITE_URL = "http://www.testsite.com/com/cee/news/parser/net/impl/testSite.html";
 
 	@Test
 	public void testOpenStream() throws MalformedURLException, IOException {

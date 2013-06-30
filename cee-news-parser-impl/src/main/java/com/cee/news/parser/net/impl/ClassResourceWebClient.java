@@ -1,4 +1,4 @@
-package com.cee.news.parser.net;
+package com.cee.news.parser.net.impl;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+
+import com.cee.news.parser.net.WebClient;
+import com.cee.news.parser.net.WebResponse;
 
 /**
  * The class resource web client tries to map any request to a resource lookup to a local class path lookup.

@@ -17,10 +17,9 @@ import org.xml.sax.SAXException;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 import com.cee.news.parser.ParserException;
-import com.cee.news.parser.SiteParser;
-import com.cee.news.parser.net.ClassResourceWebClient;
 import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.WebResponse;
+import com.cee.news.parser.net.impl.ClassResourceWebClient;
 
 public class TestSiteParser {
     
