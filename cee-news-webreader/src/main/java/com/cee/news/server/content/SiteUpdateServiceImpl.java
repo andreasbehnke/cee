@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 import com.cee.news.client.content.FeedData;
 import com.cee.news.client.content.SiteData;
@@ -24,7 +23,8 @@ import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 import com.cee.news.parser.FeedParser;
-import com.cee.news.parser.impl.SiteParser;
+import com.cee.news.parser.ParserException;
+import com.cee.news.parser.SiteParser;
 import com.cee.news.store.SiteStore;
 
 public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
@@ -154,13 +154,14 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			return info;
 		}
 		try {
-			Site site = parser.parse(locationUrl);
+			Site site = parser.parse(locationUrl).getSite();
+			//TODO: detect site language here?
 			info = SiteConverter.createFromSite(site);
 			info.setState(SiteRetrivalState.ok);
 		} catch (IOException e) {
 			info.setState(SiteRetrivalState.ioError);
 			LOG.error(String.format(COULD_NOT_RETRIEVE_SITE, location), e);
-		} catch (SAXException e) {
+		} catch (ParserException e) {
 			info.setState(SiteRetrivalState.parserError);
 			LOG.error(String.format(COULD_NOT_RETRIEVE_SITE, location), e);
 		} catch (Exception e) {

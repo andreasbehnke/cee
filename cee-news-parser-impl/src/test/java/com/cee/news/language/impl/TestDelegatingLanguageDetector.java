@@ -1,14 +1,14 @@
 package com.cee.news.language.impl;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.*;
-
 import org.junit.Test;
 
+import com.cee.news.HasContent;
 import com.cee.news.language.LanguageDetector;
-import com.cee.news.model.Site;
 
 public class TestDelegatingLanguageDetector {
 
@@ -18,7 +18,7 @@ public class TestDelegatingLanguageDetector {
 		detectors.add( new  LanguageDetector() {
 			
 			@Override
-			public String detect(Site site) {
+			public String detect(HasContent content) {
 				return "de";
 			}
 		});
@@ -32,14 +32,14 @@ public class TestDelegatingLanguageDetector {
 		detectors.add( new  LanguageDetector() {
 			
 			@Override
-			public String detect(Site site) {
+			public String detect(HasContent content) {
 				return "de";
 			}
 		});
 		detectors.add( new  LanguageDetector() {
 			
 			@Override
-			public String detect(Site site) {
+			public String detect(HasContent content) {
 				return "en";
 			}
 		});
@@ -53,14 +53,14 @@ public class TestDelegatingLanguageDetector {
 		detectors.add( new  LanguageDetector() {
 			
 			@Override
-			public String detect(Site site) {
+			public String detect(HasContent content) {
 				return null;
 			}
 		});
 		detectors.add( new  LanguageDetector() {
 			
 			@Override
-			public String detect(Site site) {
+			public String detect(HasContent content) {
 				return "en";
 			}
 		});

@@ -2,8 +2,6 @@ package com.cee.news.parser.impl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +9,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.cee.news.model.Site;
+import com.cee.news.SiteExtraction;
 
 /**
  * Internal handler class which will be registered with the XMLReader for
@@ -24,9 +22,13 @@ import com.cee.news.model.Site;
  */
 public class SiteHandler extends DefaultHandler {
 	
+	private static final String BODY_ELEMENT = "body";
+
 	private static final String CONTENT_ATTRIBUTE = "content";
 
 	private static final String DESCRIPTION_ATTRIBUTE = "description";
+
+	private static final String TITLE_ELEMENT = "title";
 
 	private static final String NAME_ATTRIBUTE = "name";
 
@@ -49,33 +51,26 @@ public class SiteHandler extends DefaultHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(SiteHandler.class);
 
     private enum States {
-        start, header, finished
+        start, header, body, finished
     };
 
     private States state = States.start;
 
     private final URL siteLocation;
     
-    private final Site site = new Site();
-    
-    private final List<String> feedLocations;
+    private final SiteExtraction siteExtraction = new SiteExtraction();
 
     private final StringBuilder characterBuffer = new StringBuilder();
 
     public SiteHandler(final URL base) {
         this.siteLocation = base;
-        this.site.setLocation(base.toExternalForm());
-        feedLocations = new ArrayList<String>();
+        this.siteExtraction.getSite().setLocation(base.toExternalForm());
     }
 
-    public Site getSite() {
-        return site;
+    public SiteExtraction getSiteExtraction() {
+        return siteExtraction;
     }
     
-    public List<String> getFeedLocations() {
-    	return feedLocations;
-    }
-
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         characterBuffer.setLength(0);// reset the character buffer
@@ -104,15 +99,18 @@ public class SiteHandler extends DefaultHandler {
                         	LOG.warn("found feed with invalid url: {}", href);
                             break;// the URL is invalid, ignore feed
                         }
-                        feedLocations.add(location.toExternalForm());
+                        siteExtraction.getFeedLocations().add(location);
                     }
                 }
             } else if (localName.equalsIgnoreCase(META_ELEMENT)) {
                 String name = attributes.getValue(NAME_ATTRIBUTE);
                 if (name != null && name.equalsIgnoreCase(DESCRIPTION_ATTRIBUTE)) {
                 	LOG.debug("found sites description");
-                    site.setDescription(attributes.getValue(CONTENT_ATTRIBUTE));
+                    siteExtraction.getSite().setDescription(attributes.getValue(CONTENT_ATTRIBUTE));
                 }
+            } else if (localName.equalsIgnoreCase(BODY_ELEMENT)) {
+            	LOG.debug("found document body");
+                state = States.body;
             }
             break;
         default:
@@ -122,18 +120,15 @@ public class SiteHandler extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (state == States.header) {
-            if (localName.equalsIgnoreCase(HEAD_ELEMENT)) {
-                state = States.finished;
+        if (state == States.header && localName.equalsIgnoreCase(TITLE_ELEMENT)) {
+            LOG.debug("found sites title");
+            siteExtraction.getSite().setTitle(characterBuffer.toString());
+        } else if (state == States.body) {
+        	if (localName.equalsIgnoreCase(BODY_ELEMENT)) {
+            	state = States.finished;
                 LOG.debug("finished document");
-                // TODO: what is the best practice to stop the XMLReader from
-                // parsing
-                // further HTML code? Documentation says, an exception should be
-                // thrown...
-            } else if (localName.equalsIgnoreCase(TITLE_ATTRIBUTE)) {
-            	LOG.debug("found sites title");
-                site.setTitle(characterBuffer.toString());
-            }
+        	}
+        	siteExtraction.getContent().append(characterBuffer).append('\n');
         }
         characterBuffer.setLength(0);// reset the character buffer
     }

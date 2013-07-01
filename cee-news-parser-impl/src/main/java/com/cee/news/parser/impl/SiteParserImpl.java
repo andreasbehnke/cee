@@ -12,9 +12,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import com.cee.news.SiteExtraction;
 import com.cee.news.model.Feed;
-import com.cee.news.model.Site;
 import com.cee.news.parser.FeedParser;
+import com.cee.news.parser.ParserException;
+import com.cee.news.parser.SiteParser;
 import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.WebResponse;
 
@@ -23,9 +25,9 @@ import com.cee.news.parser.net.WebResponse;
  * Sets the title and the description of the created site using
  * the meta information from document header.
  */
-public class SiteParser {
+public class SiteParserImpl implements SiteParser {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(SiteParser.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SiteParserImpl.class);
 
     private WebClient webClient;
     
@@ -56,9 +58,9 @@ public class SiteParser {
         this.webClient = webClient;
     }
 
-    public SiteParser() {}
+    public SiteParserImpl() {}
     
-    public SiteParser(XMLReader xmlReader, FeedParser feedParser, WebClient webClient) {
+    public SiteParserImpl(XMLReader xmlReader, FeedParser feedParser, WebClient webClient) {
         this.xmlReader = xmlReader;
         this.feedParser = feedParser;
         this.webClient = webClient;
@@ -77,7 +79,8 @@ public class SiteParser {
      * @throws SAXException
      *             If the input source could not be parsed
      */
-    public Site parse(URL siteLocation) throws IOException, SAXException {
+    @Override
+    public SiteExtraction parse(URL siteLocation) throws IOException, ParserException {
         if (xmlReader == null) {
             throw new IllegalStateException("reader property has not been set");
         }
@@ -95,6 +98,8 @@ public class SiteParser {
         	InputSource is = new InputSource(reader);
         	LOG.info("start parsing site document {}", siteLocation);
             xmlReader.parse(is);
+        } catch (SAXException e) { 
+        	throw new ParserException("Could not parse site", e);
         } finally {
         	LOG.info("finished parsing site document {}", siteLocation);
         	if (reader != null) {
@@ -102,21 +107,20 @@ public class SiteParser {
         	}
         }
         
-        Site site = siteHandler.getSite();
+        SiteExtraction siteExtraction = siteHandler.getSiteExtraction();
         //parse all feeds found in site
-        List<String> feedLocations = siteHandler.getFeedLocations();
+        List<URL> feedLocations = siteExtraction.getFeedLocations();
         List<Feed> feeds = new ArrayList<Feed>();
-        for (String feedLocation : feedLocations) {
-        	URL feedUrl = new URL(feedLocation);
-            if (!feedParser.isSupportedFeed(feedUrl)) {
+        for (URL feedLocation : feedLocations) {
+        	if (!feedParser.isSupportedFeed(feedLocation)) {
             	if (LOG.isDebugEnabled()) {
             		LOG.debug("unknown feed type found: {}", feedLocation);
             	}
             } else {
-            	feeds.add(feedParser.parse(feedUrl));
+            	feeds.add(feedParser.parse(feedLocation));
             }
         }
-        site.setFeeds(feeds);
-        return site;
+        siteExtraction.getSite().setFeeds(feeds);
+        return siteExtraction;
     }
 }

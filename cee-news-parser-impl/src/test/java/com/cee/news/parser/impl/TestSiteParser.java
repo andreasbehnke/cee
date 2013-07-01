@@ -12,7 +12,6 @@ import java.net.URL;
 import org.ccil.cowan.tagsoup.Parser;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.xml.sax.SAXException;
 
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
@@ -24,11 +23,11 @@ import com.cee.news.parser.net.impl.ClassResourceWebClient;
 public class TestSiteParser {
     
     @Test
-    public void testParse() throws IOException, SAXException {
+    public void testParse() throws IOException, ParserException {
         URL siteLocation = new URL("http://www.test.com/com/cee/news/parser/impl/spiegel.html");
         WebClient webClient = new ClassResourceWebClient();
-        SiteParser parser = new SiteParser(new Parser(), new RomeFeedParser(webClient, new Parser()), webClient);
-        Site site = parser.parse(siteLocation);
+        SiteParserImpl parser = new SiteParserImpl(new Parser(), new RomeFeedParser(webClient, new Parser()), webClient);
+        Site site = parser.parse(siteLocation).getSite();
         assertEquals("SPIEGEL ONLINE - Nachrichten", site.getTitle());
         assertTrue(site.getDescription().startsWith("Deutschlands f"));
         assertEquals(2, site.getFeeds().size());
@@ -44,7 +43,7 @@ public class TestSiteParser {
     }
 
     @Test
-    public void testParseRegressionIssue190() throws ParserException, IOException, SAXException {
+    public void testParseRegressionIssue190() throws ParserException, IOException {
         URL siteLocation = new URL("http://www.faz.de");
         ByteArrayInputStream inputStream = new ByteArrayInputStream(new byte[]{});
         Reader reader = new InputStreamReader(inputStream);
@@ -55,8 +54,8 @@ public class TestSiteParser {
         WebClient webClient = Mockito.mock(WebClient.class);
         Mockito.when(webClient.openWebResponse(siteLocation)).thenReturn(response);
         
-        SiteParser parser = new SiteParser(new Parser(), new RomeFeedParser(webClient, new Parser()), webClient);
-        Site site = parser.parse(siteLocation);
+        SiteParserImpl parser = new SiteParserImpl(new Parser(), new RomeFeedParser(webClient, new Parser()), webClient);
+        Site site = parser.parse(siteLocation).getSite();
         assertEquals(site.getLocation(), "http://www.faz.net");
     }
 }

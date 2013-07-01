@@ -2,8 +2,8 @@ package com.cee.news.language.impl;
 
 import java.util.List;
 
+import com.cee.news.HasContent;
 import com.cee.news.language.LanguageDetector;
-import com.cee.news.model.Site;
 
 /**
  * Delegates language detection request to a list of {@link LanguageDetector}s.
@@ -17,14 +17,13 @@ public class DelegatingLanguageDetector implements LanguageDetector {
     }
 
 	@Override
-	public String detect(Site site) {
+	public String detect(HasContent content) {
 		for (LanguageDetector detector : detectors) {
-	        String language = detector.detect(site);
+	        String language = detector.detect(content);
 	        if (language != null) {
 	        	return language;
 	        }
         }
 		return null;
 	}
-
 }

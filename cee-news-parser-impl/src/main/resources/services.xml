@@ -38,7 +38,7 @@
 		<property name="onlyActiveFeeds" value="true" />
 	</bean>
 
-	<bean id="siteParser" class="com.cee.news.parser.impl.SiteParser" scope="prototype">
+	<bean id="siteParser" class="com.cee.news.parser.impl.SiteParserImpl" scope="prototype">
 		<property name="webClient" ref="webClient" />
     	<property name="reader" ref="htmlParser" />
 		<property name="feedParser" ref="feedParser" />
