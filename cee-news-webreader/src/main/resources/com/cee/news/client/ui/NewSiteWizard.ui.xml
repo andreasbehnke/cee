@@ -25,6 +25,10 @@
 			<p>Select feeds which should be used for content extraction.</p>
 			<span>Site's Name:</span>
 			<g:TextBox ui:field="textBoxSiteName" />
+			<g:HTMLPanel ui:field="panelLanguageSelection">
+                <span>Language:</span>
+                <g:ValueListBox ui:field="listBoxLanguage" />
+			</g:HTMLPanel>
 		</g:HTMLPanel>
 		<div class="{res.styles.footer}">
             <g:Button ui:field="buttonStoreSite" text="Save" styleName="{res.styles.save}" />

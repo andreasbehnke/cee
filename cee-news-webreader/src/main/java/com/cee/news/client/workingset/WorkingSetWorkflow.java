@@ -85,6 +85,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 			@Override
 			public void onContentListChanged(ListChangedEvent<EntityKey> event) {
 				workingSetView.setAvailableLanguages(event.getValues(), languageListModel.getDefaultLanguage());
+				newSiteWizard.setAvailableLanguages(event.getValues());
 			}
 		});
 		workingSetView.addLanguageChangedHandler(new ValueChangeHandler<EntityKey>() {

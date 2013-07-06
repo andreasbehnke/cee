@@ -9,7 +9,11 @@ public class EntityKeyRenderer implements Renderer<EntityKey> {
 
 	@Override
 	public String render(EntityKey object) {
-		return object.getName();
+		if (object == null) {
+			return "Bitte Auswählen"; //TODO localization
+		} else {
+			return object.getName();
+		}
 	}
 
 	@Override

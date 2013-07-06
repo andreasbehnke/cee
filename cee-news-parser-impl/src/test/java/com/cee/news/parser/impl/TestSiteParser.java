@@ -13,6 +13,8 @@ import org.ccil.cowan.tagsoup.Parser;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.cee.news.SiteExtraction;
+import com.cee.news.language.LanguageDetector;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 import com.cee.news.parser.ParserException;
@@ -26,10 +28,17 @@ public class TestSiteParser {
     public void testParse() throws IOException, ParserException {
         URL siteLocation = new URL("http://www.test.com/com/cee/news/parser/impl/spiegel.html");
         WebClient webClient = new ClassResourceWebClient();
-        SiteParserImpl parser = new SiteParserImpl(new Parser(), new RomeFeedParser(webClient, new Parser()), webClient);
+        LanguageDetector detector = new LanguageDetector() {
+			@Override
+			public String detect(SiteExtraction siteExtraction) {
+				return "ko";
+			}
+		};
+        SiteParserImpl parser = new SiteParserImpl(new Parser(), new RomeFeedParser(webClient, new Parser()), detector, webClient);
         Site site = parser.parse(siteLocation).getSite();
         assertEquals("SPIEGEL ONLINE - Nachrichten", site.getTitle());
         assertTrue(site.getDescription().startsWith("Deutschlands f"));
+        assertEquals("ko", site.getLanguage());
         assertEquals(2, site.getFeeds().size());
         Feed feed = site.getFeeds().get(0);
         assertEquals("SPIEGEL ONLINE - Schlagzeilen", feed.getTitle());
@@ -54,7 +63,13 @@ public class TestSiteParser {
         WebClient webClient = Mockito.mock(WebClient.class);
         Mockito.when(webClient.openWebResponse(siteLocation)).thenReturn(response);
         
-        SiteParserImpl parser = new SiteParserImpl(new Parser(), new RomeFeedParser(webClient, new Parser()), webClient);
+        LanguageDetector detector = new LanguageDetector() {
+			@Override
+			public String detect(SiteExtraction siteExtraction) {
+				return "ko";
+			}
+		};
+        SiteParserImpl parser = new SiteParserImpl(new Parser(), new RomeFeedParser(webClient, new Parser()), detector, webClient);
         Site site = parser.parse(siteLocation).getSite();
         assertEquals(site.getLocation(), "http://www.faz.net");
     }

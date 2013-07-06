@@ -1,6 +1,7 @@
 package com.cee.news.parser.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -58,5 +59,15 @@ public class TestRomeFeedParser {
     			new Parser());
         List<Article> articles = parser.readArticles(getClass().getResource("issue143.xml"));
         assertEquals(42, articles.size());
+    }
+    
+    @Test
+    public void testReadArticlesRegressionIssue297() throws MalformedURLException, ParserException, IOException {
+    	FeedParser parser = new RomeFeedParser(
+    			new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()),
+    			new Parser());
+        List<Article> articles = parser.readArticles(getClass().getResource("issue297.xml"));
+        assertNotNull(articles.get(0).getShortText());
+        assertTrue(articles.get(0).getShortText().contains("Dresden (dpa/sn) - Dresden will"));
     }
 }

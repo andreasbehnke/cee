@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cee.news.client.content.EntityContent;
+import com.cee.news.client.content.FeedData;
 import com.cee.news.client.content.SiteData;
 import com.cee.news.client.content.SiteService;
 import com.cee.news.client.content.SiteUpdateResult;
@@ -119,6 +120,18 @@ public class SiteServiceImpl implements SiteService {
         try {
             if (siteStore.contains(siteData.getName()) && siteData.getIsNew()) {
                 return new SiteUpdateResult(State.entityExists, null);
+            }
+            EntityKey language = siteData.getLanguage();
+            if (language == null)  {
+            	return new SiteUpdateResult(State.languageMissing, null);
+            }
+            //set language for all feeds 
+            for (FeedData feedData : siteData.getFeeds()) {
+	            if (feedData.getLanguage() == null) {
+	            	//if feed does not provide language information,
+	            	//set language to site's language
+	            	feedData.setLanguage(language);
+	            }
             }
             EntityKey key = siteStore.update(SiteConverter.createFromSiteData(siteData));
             return new SiteUpdateResult(State.ok, key);

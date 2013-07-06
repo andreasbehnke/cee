@@ -4,6 +4,7 @@ import com.cee.news.client.async.NotificationCallback;
 import com.cee.news.client.content.AddSiteToWorkingSet;
 import com.cee.news.client.content.ArticleKeyLinkProvider;
 import com.cee.news.client.content.LanguageListModel;
+import com.cee.news.client.content.NewSiteWizardView;
 import com.cee.news.client.content.NewsListContentModel;
 import com.cee.news.client.content.RelatedArticlesContentModel;
 import com.cee.news.client.content.SingleSelectionCellListPresenter;
@@ -14,6 +15,8 @@ import com.cee.news.client.content.SourceSelectionPresenter;
 import com.cee.news.client.content.SourceSelectionView;
 import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.list.CellListPresenter;
+import com.cee.news.client.list.ListChangedEvent;
+import com.cee.news.client.list.ListChangedHandler;
 import com.cee.news.client.list.SelectionChangedEvent;
 import com.cee.news.client.list.SelectionChangedHandler;
 import com.cee.news.client.list.SelectionListChangedEvent;
@@ -95,8 +98,9 @@ public class NewsReader implements EntryPoint {
 		workingSetWorkflow.addErrorHandler(errorHandler);
 		new WorkingSetSelectionPresenter(workingSetListModel, workingSetSelectionView, workingSetWorkflow);
 		
-		//Add Source to Working Set Workflow
-		final AddSiteToWorkingSet addSiteToWorkingSet = new AddSiteToWorkingSet(clientFactory.getAddSiteWizardView(), workingSetListModel, clientFactory.createNotificationView());
+		//Add new Source to Working Set Workflow
+		final NewSiteWizardView addSiteWizardView = clientFactory.getAddSiteWizardView();
+		final AddSiteToWorkingSet addSiteToWorkingSet = new AddSiteToWorkingSet(addSiteWizardView, workingSetListModel, clientFactory.createNotificationView());
 		addSiteToWorkingSet.addErrorHandler(errorHandler);
 		sourceSelectionView.getAddButton().addClickHandler(new ClickHandler() {
             @Override
@@ -114,6 +118,13 @@ public class NewsReader implements EntryPoint {
 						siteAddRemoveListModel.addSelection(event.getEntityKey());
 					}
 				});
+			}
+		});
+		languageListModel.addListChangedHandler(new ListChangedHandler<EntityKey>() {
+			
+			@Override
+			public void onContentListChanged(ListChangedEvent<EntityKey> event) {
+				addSiteWizardView.setAvailableLanguages(event.getValues());
 			}
 		});
 		

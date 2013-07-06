@@ -171,6 +171,36 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
     	}
     }
     
+    private boolean isHtml(SyndContent content) {
+    	String contentType = content.getType();
+    	if (contentType == null) {
+    		return false;
+    	}
+    	contentType = contentType.toLowerCase();
+    	return contentType.contains("html");
+    }
+    
+    private String extractShortText(SyndEntry entry) throws ParserException, IOException {
+    	SyndContent content = entry.getDescription();
+    	if (content == null) {
+    		if (entry.getContents().size() > 0) {
+    			content = (SyndContent)entry.getContents().get(0);
+    		} else {
+    			return null;
+    		}
+    	}
+    	String contentValue = content.getValue();
+    	if (isHtml(content)) {
+    		try {
+    			return extractTextFromHtml(contentValue);
+    		} catch (SAXException e) {
+				throw new ParserException("Could not extract text from HTML short text", e);
+			}
+    	} else {
+    		return contentValue;
+    	}
+    }
+    
     @SuppressWarnings("unchecked")
 	@Override
     public List<Article> readArticles(final URL feedLocation) throws ParserException, IOException {
@@ -190,18 +220,7 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
         for (SyndEntry entry : (List<SyndEntry>) syndFeed.getEntries()) {
             Article article = new Article();
             article.setTitle(entry.getTitle());
-            SyndContent syndContent = entry.getDescription();
-            if (syndContent != null) {
-            	if ("text/html".equalsIgnoreCase(syndContent.getType())) {
-            		try {
-						article.setShortText(extractTextFromHtml(syndContent.getValue()));
-					} catch (SAXException e) {
-						throw new ParserException("Could not extract text from HTML short text", e);
-					}
-            	} else {
-            		article.setShortText(syndContent.getValue());
-            	}
-            }
+            article.setShortText(extractShortText(entry));
             String link = entry.getLink();
             String id = entry.getUri();
             if (id == null) {

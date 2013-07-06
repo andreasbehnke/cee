@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.cee.news.client.async.LoadingInfoAsyncCallback;
 import com.cee.news.client.content.SiteUpdateResult.State;
+import com.cee.news.client.error.ErrorEvent;
+import com.cee.news.client.error.ErrorHandler;
 import com.cee.news.client.error.ErrorSourceBase;
 import com.cee.news.model.EntityKey;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -47,6 +49,14 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 			@Override
 			public void onClick(ClickEvent event) {
 				storeSite();
+			}
+		});
+		addErrorHandler(new ErrorHandler() {
+			
+			@Override
+			public void onError(ErrorEvent event) {
+				//in case of error enable buttons so the user can close dialog
+				wizard.setButtonsEnabled(true);
 			}
 		});
 	}
@@ -97,7 +107,6 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 		
 					@Override
 					public void onFailure(Throwable caught) {
-						wizard.setButtonsEnabled(true);
 						fireErrorEvent(caught, "Could not validate location input");
 					}
 				})
@@ -107,7 +116,8 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 	private void retrieveSiteDataSuccess(SiteData result) {
 	    switch (result.getState()) {
 	    case ok:
-	    	if (result.getFeeds().size() < 1) {
+	    	if (result.getFeeds().size() < 1) {//TODO: detect site language here?
+				
 	    		showErrorMessage("This site does not provide any feed information");
 	    	} else {
 	    		site = result;
@@ -144,7 +154,6 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 					
 					@Override
 					public void onFailure(Throwable caught) {
-						wizard.setButtonsEnabled(true);
 						fireErrorEvent(caught, "Could not validate location input");
 					}
 				})
@@ -197,6 +206,11 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 		wizard.setFeeds(site.getFeeds());
 		wizard.showPageFeedSelection();
 		wizard.setButtonsEnabled(true);
+		if (site.getLanguage() == null) {
+			wizard.showLanguageSelection(true);
+		} else {
+			wizard.showLanguageSelection(false);
+		}
 	}
 
 	private void storeSite() {
@@ -216,13 +230,9 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 			return;
 		}
 		
-		//get site's language from feeds. Default language is en.
-		site.setLanguage(EntityKey.get("en"));
-		for (FeedData feed : site.getFeeds()) {
-			if (feed.getIsActive()) {
-				site.setLanguage(feed.getLanguage());
-				break;
-			}
+		//set site's language from user input if site's language could not be determined
+		if (site.getLanguage() == null) {
+			site.setLanguage(wizard.getSelectedLanguage());
 		}
 		
 		site.setName(wizard.getSiteNameInput().getValue());
@@ -230,10 +240,16 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 			
 			@Override
 			public void onSuccess(SiteUpdateResult result) {
-				if (result.getState() == State.entityExists) {
+				switch (result.getState()) {
+				case entityExists:
 					showErrorMessage("Site with name " + site.getName() + " already exists!");//TODO: localization
-				} else {
+					break;
+				case languageMissing:
+					showErrorMessage("Please select a valid language!");//TODO: localization
+					break;
+				default:
 					queueSiteUpdate(result.getKey());
+					break;
 				}
 			}
 			

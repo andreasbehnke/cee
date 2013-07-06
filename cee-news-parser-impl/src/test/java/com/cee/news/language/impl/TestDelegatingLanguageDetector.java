@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.cee.news.HasContent;
+import com.cee.news.SiteExtraction;
 import com.cee.news.language.LanguageDetector;
 
 public class TestDelegatingLanguageDetector {
@@ -18,7 +18,7 @@ public class TestDelegatingLanguageDetector {
 		detectors.add( new  LanguageDetector() {
 			
 			@Override
-			public String detect(HasContent content) {
+			public String detect(SiteExtraction siteExtraction) {
 				return "de";
 			}
 		});
@@ -32,14 +32,14 @@ public class TestDelegatingLanguageDetector {
 		detectors.add( new  LanguageDetector() {
 			
 			@Override
-			public String detect(HasContent content) {
+			public String detect(SiteExtraction siteExtraction) {
 				return "de";
 			}
 		});
 		detectors.add( new  LanguageDetector() {
 			
 			@Override
-			public String detect(HasContent content) {
+			public String detect(SiteExtraction siteExtraction) {
 				return "en";
 			}
 		});
@@ -53,14 +53,14 @@ public class TestDelegatingLanguageDetector {
 		detectors.add( new  LanguageDetector() {
 			
 			@Override
-			public String detect(HasContent content) {
+			public String detect(SiteExtraction siteExtraction) {
 				return null;
 			}
 		});
 		detectors.add( new  LanguageDetector() {
 			
 			@Override
-			public String detect(HasContent content) {
+			public String detect(SiteExtraction siteExtraction) {
 				return "en";
 			}
 		});

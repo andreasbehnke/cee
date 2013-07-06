@@ -12,6 +12,14 @@
 		</property>
 	</bean>
 	
+	<bean id="languageDetector" class="com.cee.news.language.impl.DelegatingLanguageDetector">
+	   <property name="detectors">
+	       <list>
+	           <bean class="com.cee.news.language.impl.FeedLanguageDetector" />
+	       </list>
+	   </property>
+	</bean>
+	
 	<bean id="htmlParser" class="org.ccil.cowan.tagsoup.Parser" scope="prototype"/>
 	
 	<bean id="articleParser" class="com.cee.news.parser.impl.BoilerpipeArticleParser" scope="prototype">
@@ -42,5 +50,6 @@
 		<property name="webClient" ref="webClient" />
     	<property name="reader" ref="htmlParser" />
 		<property name="feedParser" ref="feedParser" />
+		<property name="languageDetector" ref="languageDetector"/>
 	</bean>
 </beans>	

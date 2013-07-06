@@ -2,7 +2,7 @@ package com.cee.news.language.impl;
 
 import java.util.List;
 
-import com.cee.news.HasContent;
+import com.cee.news.SiteExtraction;
 import com.cee.news.language.LanguageDetector;
 
 /**
@@ -10,14 +10,20 @@ import com.cee.news.language.LanguageDetector;
  */
 public class DelegatingLanguageDetector implements LanguageDetector {
 	
-	private final List<LanguageDetector> detectors;
+	private List<LanguageDetector> detectors;
+	
+	public DelegatingLanguageDetector() {}
 	
 	public DelegatingLanguageDetector(List<LanguageDetector> detectors) {
 	    this.detectors = detectors;
     }
+	
+	public void setDetectors(List<LanguageDetector> detectors) {
+	    this.detectors = detectors;
+    }
 
 	@Override
-	public String detect(HasContent content) {
+	public String detect(SiteExtraction content) {
 		for (LanguageDetector detector : detectors) {
 	        String language = detector.detect(content);
 	        if (language != null) {

@@ -1,11 +1,5 @@
 package com.cee.news.server.content.renderer;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.cee.news.client.content.EntityContent;
 import com.cee.news.model.Article;
 import com.cee.news.model.ArticleKey;
@@ -13,37 +7,31 @@ import com.cee.news.model.TextBlock;
 
 public class NewsContentRenderer extends DefaultContentRenderer<ArticleKey, Article> {
     
-    private static final Logger LOG = LoggerFactory.getLogger(NewsContentRenderer.class);
-
     public static String DESCRIPTION_TEMPLATE = "Description Template";
     
     public static String CONTENT_TEMPLATE = "Content Template";
-    
-    // TODO localized date format
-    protected String formatDate(Calendar calendar) {
-        return SimpleDateFormat.getDateInstance().format(calendar.getTime());
-    }
-    
+
     protected EntityContent<ArticleKey> renderDescription(ArticleKey articleKey, Article article) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("<h3>").append(article.getTitle()).append("</h3>")
-                .append("<p>").append(formatDate(article.getPublishedDate())).append("</p>");
-        if (articleKey.getScore() != -1) {
-            builder.append("<p>").append(articleKey.getScore()).append("</p>");
-        }
-        builder.append("<p>").append(article.getShortText()).append("</p>");
-        return new EntityContent<ArticleKey>(articleKey, builder.toString());
+        StringBuilder buffer = new StringBuilder();
+        new HtmlBuilder(buffer)
+        	.appendHtmlElement("h3", article.getTitle())
+        	.appendIfNotNull("p", article.getPublishedDate())
+        	.appendIfIsNumber("p", articleKey.getScore())
+        	.appendIfNotNull("p", article.getShortText());
+        return new EntityContent<ArticleKey>(articleKey, buffer.toString());
     }
 
     protected EntityContent<ArticleKey> renderContent(ArticleKey articleKey, Article article) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("<h1>").append(article.getTitle()).append("</h1>")
-            .append("<p>").append(formatDate(article.getPublishedDate())).append("</p>")
-            .append("<p><a href=\"").append(article.getLocation()).append("\" target=\"article\">open article</a></p>");
+        StringBuilder buffer = new StringBuilder();
+        HtmlBuilder builder = new HtmlBuilder(buffer)
+        	.appendHtmlElement("h1", article.getTitle())
+        	.appendIfNotNull("p", article.getPublishedDate())
+        	.appendHtmlElement("p", articleKey.getSiteKey())
+        	.appendLink(article.getLocation(), "article", "open article");
         for (TextBlock textBlock : article.getContent()) {
-            builder.append("<p>").append(textBlock.getContent()).append("</p>");
+        	builder.appendHtmlElement("p", textBlock.getContent());
         }
-        return new EntityContent<ArticleKey>(articleKey, builder.toString());
+        return new EntityContent<ArticleKey>(articleKey, buffer.toString());
     }
     
     public EntityContent<ArticleKey> render(ArticleKey key, Article article, String templateName) {
@@ -53,7 +41,6 @@ public class NewsContentRenderer extends DefaultContentRenderer<ArticleKey, Arti
         if (article == null) {
             throw new IllegalArgumentException("Parameter article must not be null");
         }
-        LOG.debug("Render article {} using template {}", key, templateName);
         if (DESCRIPTION_TEMPLATE.equals(templateName)) {
             return renderDescription(key, article);
         } else {

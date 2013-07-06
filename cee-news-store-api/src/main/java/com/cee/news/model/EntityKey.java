@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class EntityKey implements Serializable {
 	
 	private static final long serialVersionUID = -8676630329141286696L;
-
+	
 	private String name;
 	
 	private String key;
@@ -29,7 +29,7 @@ public class EntityKey implements Serializable {
 		this.key = key;
 	}
 	
-    public EntityKey() {}
+	public EntityKey() {}
 	
 	protected EntityKey(String name, String key) {
 		if (key == null) {

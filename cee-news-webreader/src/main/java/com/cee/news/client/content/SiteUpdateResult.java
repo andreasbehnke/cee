@@ -7,7 +7,8 @@ public class SiteUpdateResult implements IsSerializable {
 	
 	public enum State {
 		ok,
-		entityExists
+		entityExists,
+		languageMissing
 	}
 	
 	private State state;

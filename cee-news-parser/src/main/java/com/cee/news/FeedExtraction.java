@@ -2,7 +2,7 @@ package com.cee.news;
 
 import com.cee.news.model.Feed;
 
-public class FeedExtraction implements HasContent {
+public class FeedExtraction {
 	
 	private final Feed feed;
 	

@@ -7,6 +7,9 @@ public class EntityKeyProvider implements ProvidesKey<EntityKey> {
 
 	@Override
 	public Object getKey(EntityKey item) {
+		if (item == null) {
+			return null;
+		}
 		return item.getKey();
 	}
 

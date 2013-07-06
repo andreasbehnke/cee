@@ -13,7 +13,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import com.cee.news.SiteExtraction;
+import com.cee.news.language.LanguageDetector;
 import com.cee.news.model.Feed;
+import com.cee.news.model.Site;
 import com.cee.news.parser.FeedParser;
 import com.cee.news.parser.ParserException;
 import com.cee.news.parser.SiteParser;
@@ -23,7 +25,8 @@ import com.cee.news.parser.net.WebResponse;
 /**
  * Extracts feed URLs from the header of a HTML document.
  * Sets the title and the description of the created site using
- * the meta information from document header.
+ * the meta information from document header. Detects site language
+ * using {@link LanguageDetector}.
  */
 public class SiteParserImpl implements SiteParser {
 	
@@ -34,6 +37,8 @@ public class SiteParserImpl implements SiteParser {
     private XMLReader xmlReader;
     
     private FeedParser feedParser;
+    
+    private LanguageDetector languageDetector;
 
     /**
      * {@link XMLReader} used by the parser.
@@ -57,13 +62,18 @@ public class SiteParserImpl implements SiteParser {
     public void setWebClient(WebClient webClient) {
         this.webClient = webClient;
     }
+    
+    public void setLanguageDetector(LanguageDetector languageDetector) {
+	    this.languageDetector = languageDetector;
+    }
 
     public SiteParserImpl() {}
     
-    public SiteParserImpl(XMLReader xmlReader, FeedParser feedParser, WebClient webClient) {
+    public SiteParserImpl(XMLReader xmlReader, FeedParser feedParser, LanguageDetector languageDetector, WebClient webClient) {
         this.xmlReader = xmlReader;
         this.feedParser = feedParser;
         this.webClient = webClient;
+        this.languageDetector =  languageDetector;
     }
 
     /**
@@ -108,6 +118,7 @@ public class SiteParserImpl implements SiteParser {
         }
         
         SiteExtraction siteExtraction = siteHandler.getSiteExtraction();
+        Site site = siteExtraction.getSite();
         //parse all feeds found in site
         List<URL> feedLocations = siteExtraction.getFeedLocations();
         List<Feed> feeds = new ArrayList<Feed>();
@@ -120,7 +131,9 @@ public class SiteParserImpl implements SiteParser {
             	feeds.add(feedParser.parse(feedLocation));
             }
         }
-        siteExtraction.getSite().setFeeds(feeds);
+        site.setFeeds(feeds);
+        String language = languageDetector.detect(siteExtraction);
+        site.setLanguage(language);
         return siteExtraction;
     }
 }

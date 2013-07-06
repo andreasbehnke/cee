@@ -155,7 +155,6 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 		}
 		try {
 			Site site = parser.parse(locationUrl).getSite();
-			//TODO: detect site language here?
 			info = SiteConverter.createFromSite(site);
 			info.setState(SiteRetrivalState.ok);
 		} catch (IOException e) {

@@ -2,8 +2,11 @@ package com.cee.news.client.ui;
 
 import java.util.List;
 
+import com.cee.news.client.content.EntityKeyProvider;
+import com.cee.news.client.content.EntityKeyRenderer;
 import com.cee.news.client.content.FeedData;
 import com.cee.news.client.content.NewSiteWizardView;
+import com.cee.news.model.EntityKey;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
@@ -22,6 +25,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ValueListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class NewSiteWizard extends PopupPanel implements NewSiteWizardView {
@@ -47,8 +51,14 @@ public class NewSiteWizard extends PopupPanel implements NewSiteWizardView {
     @UiField
     TextBox textBoxSiteName;
 
-    @UiField(provided=true)
+    @UiField(provided = true)
     CellTable<FeedData> cellTableFeeds;
+    
+    @UiField(provided = true)
+    ValueListBox<EntityKey> listBoxLanguage;
+    
+    @UiField
+    HTMLPanel panelLanguageSelection;
     
     @UiField
     InlineLabel labelErrorMessage;
@@ -97,10 +107,17 @@ public class NewSiteWizard extends PopupPanel implements NewSiteWizardView {
         TextColumn<FeedData> columnLanguage = new TextColumn<FeedData>() {
             @Override
             public String getValue(FeedData feed) {
-                return feed.getLanguage().getName();
+            	EntityKey languageKey = feed.getLanguage();
+            	if (languageKey == null) {
+            		return "unknown";
+            	} else {
+            		return languageKey.getName();
+            	}
             }
         };
         cellTableFeeds.addColumn(columnLanguage, "Language");
+        
+        listBoxLanguage = new ValueListBox<EntityKey>(new EntityKeyRenderer(), new EntityKeyProvider());
         
         setWidget(uiBinder.createAndBindUi(this));
         setGlassEnabled(true);
@@ -199,5 +216,20 @@ public class NewSiteWizard extends PopupPanel implements NewSiteWizardView {
     	hideLoadingGlassPane();
     	labelErrorMessage.setVisible(true);
         labelLoadingMessage.setVisible(false);
+    }
+
+	@Override
+    public void setAvailableLanguages(List<EntityKey> languages) {
+		listBoxLanguage.setAcceptableValues(languages);
+    }
+
+	@Override
+    public EntityKey getSelectedLanguage() {
+	    return listBoxLanguage.getValue();
+    }
+
+	@Override
+    public void showLanguageSelection(boolean visible) {
+		panelLanguageSelection.setVisible(visible);
     }
 }

@@ -9,7 +9,7 @@ import com.cee.news.model.Site;
 /**
  * Holds site information extracted from site resource.
  */
-public class SiteExtraction implements HasContent {
+public class SiteExtraction {
 
 	private final Site site;
 	
