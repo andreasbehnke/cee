@@ -39,6 +39,8 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 	private final AddSiteWorkflow addSiteWorkflow;
 	
 	private final LanguageListModel languageListModel;
+	
+	private WorkingSetData currentWorkingSet = null;
 
 	public WorkingSetWorkflow(final WorkingSetListModel workingSetListModel,
 	        final SiteListContentModel siteListModel,
@@ -92,8 +94,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 			
 			@Override
 			public void onValueChange(ValueChangeEvent<EntityKey> event) {
-				WorkingSetData workingSetData = workingSetView.getData();
-				validateSiteLanguages(workingSetData);
+				validateSiteLanguages();
 			}
 		});
 
@@ -123,8 +124,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 			
 			@Override
 			public void onSelectionListChanged(SelectionListChangedEvent<EntityKey> event) {
-				 WorkingSetData workingSetData = workingSetView.getData();
-				 validateSiteLanguages(workingSetData);
+				validateSiteLanguages();
 			}
 		});
 		
@@ -145,19 +145,21 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 		});
 	}
 	
-	private void validateSiteLanguages(WorkingSetData workingSetData) {
-		service.validateSiteLanguages(workingSetData, new AsyncCallback<List<EntityKey>>() {
-			
-			@Override
-			public void onSuccess(List<EntityKey> result) {
-				displayNotificationsSiteLanguageDiffer(result);
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				fireErrorEvent(caught, "Could not validate working set");
-			}
-		});
+	private void validateSiteLanguages() {
+		if (currentWorkingSet != null) {
+			service.validateSiteLanguages(currentWorkingSet, new AsyncCallback<List<EntityKey>>() {
+				
+				@Override
+				public void onSuccess(List<EntityKey> result) {
+					displayNotificationsSiteLanguageDiffer(result);
+				}
+				
+				@Override
+				public void onFailure(Throwable caught) {
+					fireErrorEvent(caught, "Could not validate working set");
+				}
+			});
+		}
 	}
 
 	private void displayNotificationsSiteLanguageDiffer(List<EntityKey> sitesWithDifferentLanguage) {
@@ -236,39 +238,29 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 	}
 	
 	private void showEditor(WorkingSetData wsd) {
+		currentWorkingSet = wsd;
 		workingSetView.getErrorText().setText("");
 	    workingSetView.edit(wsd);
 	    workingSetView.center();
 	}
 
 	private void validate() {
-		final WorkingSetData workingSetData = workingSetView.getData();
+		currentWorkingSet = workingSetView.getData();
 		if (workingSetView.hasValidationErrors()) {
 		    workingSetView.showValidationErrors();
 		    return;
 		}
-		String name = workingSetData.getNewName();
+		String name = currentWorkingSet.getNewName();
 		if (name == null || name.trim().isEmpty()) {
 			showValidationError("Missing or invalid working set name!");
 			return;
 		}
 
-		service.update(workingSetData, new AsyncCallback<WorkingSetUpdateResult>() {
+		service.update(currentWorkingSet, new AsyncCallback<WorkingSetUpdateResult>() {
 
 			@Override
 			public void onSuccess(final WorkingSetUpdateResult result) {
-				if (result.getState() == State.entityExists) {
-					showValidationError("Working Set with name " + workingSetData.getNewName() + " exists!");
-				} else {
-					workingSetView.hide();
-					workingSetListModel.findAllWorkingSets(new NotificationCallback() {
-						
-						@Override
-						public void finished() {
-							workingSetListModel.setSelectedKey(result.getKey());
-						}
-					});
-				}
+				onWorkingSetUpdateSuccess(result);
 			}
 
 			@Override
@@ -276,6 +268,21 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 				fireErrorEvent(caught, "Could not store working set");
 			}
 		});
+	}
+	
+	private void onWorkingSetUpdateSuccess(final WorkingSetUpdateResult result) {
+		if (result.getState() == State.entityExists) {
+			showValidationError("Working Set with name " + currentWorkingSet.getNewName() + " exists!");
+		} else {
+			workingSetView.hide();
+			workingSetListModel.findAllWorkingSets(new NotificationCallback() {
+				
+				@Override
+				public void finished() {
+					workingSetListModel.setSelectedKey(result.getKey());
+				}
+			});
+		}
 	}
 
 	private void showValidationError(String message) {
