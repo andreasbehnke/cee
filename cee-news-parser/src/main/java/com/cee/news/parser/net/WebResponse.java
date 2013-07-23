@@ -2,7 +2,6 @@ package com.cee.news.parser.net;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.net.URL;
 
 public interface WebResponse {
@@ -15,11 +14,11 @@ public interface WebResponse {
 	InputStream openStream() throws IOException;
     
 	/**
-	 * Opens a new {@link Reader} to response data.
+	 * Opens a new {@link ReaderSource} to response data.
 	 * The implementation is responsible for handling multiple reads
 	 * of data stream.
 	 */
-    Reader openReader() throws IOException;
+    ReaderSource openReaderSource() throws IOException;
 
     String getContentType() throws IOException;
     

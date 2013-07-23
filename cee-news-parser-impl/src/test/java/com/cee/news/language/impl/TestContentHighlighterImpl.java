@@ -20,6 +20,7 @@ import com.cee.news.model.TextBlock.ContentExtractionMetaData;
 import com.cee.news.parser.ArticleParser;
 import com.cee.news.parser.ParserException;
 import com.cee.news.parser.impl.ArticleReader;
+import com.cee.news.parser.net.ReaderSource;
 import com.cee.news.parser.net.WebResponse;
 
 public class TestContentHighlighterImpl {
@@ -48,7 +49,7 @@ public class TestContentHighlighterImpl {
 		article.getContent().add(t2);
 		
 		WebResponse response = mock(WebResponse.class);
-		when(response.openReader()).thenReturn(input);
+		when(response.openReaderSource()).thenReturn(new ReaderSource(input, null));
 		
 		ArticleReader articleReader = mock(ArticleReader.class);
 		when(articleReader.readArticle(any(WebResponse.class), any(Article.class), any(ArticleParser.Settings.class))).thenReturn(article);

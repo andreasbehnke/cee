@@ -2,7 +2,8 @@ package com.cee.news.parser.net.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
+
+import com.cee.news.parser.net.ReaderSource;
 
 /**
  * Provides factory methods for creating character readers
@@ -17,6 +18,6 @@ public interface ReaderFactory {
 	 * @return A new reader using the best matching character encoding
 	 * @throws IOException if there are problems when reading from input stream. An IOException should never been thrown if 
 	 */
-	Reader createReader(InputStream inputStream, String contentTypeHint, String characterEncodingHint) throws IOException;
+	ReaderSource createReader(InputStream inputStream, String contentTypeHint, String characterEncodingHint) throws IOException;
 	
 }

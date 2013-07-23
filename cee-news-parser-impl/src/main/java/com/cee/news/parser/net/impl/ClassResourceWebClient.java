@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
+import com.cee.news.parser.net.ReaderSource;
 import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.WebResponse;
 
@@ -35,8 +36,8 @@ public class ClassResourceWebClient implements  WebClient {
 			}
 
 			@Override
-			public Reader openReader() throws IOException {
-				return new InputStreamReader(openStream());
+			public ReaderSource openReaderSource() throws IOException {
+				return new ReaderSource(new InputStreamReader(openStream()), null);
 			}
 
 			@Override
@@ -63,7 +64,7 @@ public class ClassResourceWebClient implements  WebClient {
 
 	@Override
     public Reader openReader(URL location) throws IOException {
-	    return openWebResponse(location).openReader();
+	    return openWebResponse(location).openReaderSource().getReader();
     }
 
 }

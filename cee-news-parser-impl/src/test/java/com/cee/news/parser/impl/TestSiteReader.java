@@ -22,6 +22,7 @@ import com.cee.news.parser.ArticleParser;
 import com.cee.news.parser.FeedParser;
 import com.cee.news.parser.ParserException;
 import com.cee.news.parser.SiteParser;
+import com.cee.news.parser.net.ReaderSource;
 import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.WebResponse;
 import com.cee.news.parser.net.impl.ClassResourceWebClient;
@@ -74,7 +75,7 @@ public class TestSiteReader {
         WebResponse response = Mockito.mock(WebResponse.class);
         Mockito.when(response.getLocation()).thenReturn(new URL("http://www.faz.net"));
         Mockito.when(response.openStream()).thenReturn(inputStream);
-        Mockito.when(response.openReader()).thenReturn(reader);
+        Mockito.when(response.openReaderSource()).thenReturn(new ReaderSource(reader, null));
         WebClient webClient = Mockito.mock(WebClient.class);
         Mockito.when(webClient.openWebResponse(siteLocation)).thenReturn(response);
         

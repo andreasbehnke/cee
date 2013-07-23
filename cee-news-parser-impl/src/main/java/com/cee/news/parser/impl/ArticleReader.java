@@ -53,7 +53,7 @@ public class ArticleReader {
     }
     
     public Article readArticle(WebResponse response, Article article, Settings settings) throws MalformedURLException, IOException {
-    	Reader reader = response.openReader();
+    	Reader reader = response.openReaderSource().getReader();
     	return readArticle(reader, article, settings);
     }
     

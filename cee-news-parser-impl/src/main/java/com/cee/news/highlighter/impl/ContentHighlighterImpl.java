@@ -64,7 +64,7 @@ public class ContentHighlighterImpl implements ContentHighlighter {
 	    }
 	    
 	    xmlReader.setContentHandler(new HighlightHandler(blocks, output, settings));
-	    Reader reader = response.openReader();
+	    Reader reader = response.openReaderSource().getReader();
 	    try {
 	    	xmlReader.parse(new InputSource(reader));
 	    } catch (SAXException e) {

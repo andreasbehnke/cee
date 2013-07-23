@@ -91,7 +91,7 @@ public class SiteReader {
     	Reader reader = null;
     	try {
     		WebResponse response = webClient.openWebResponse(locationUrl);
-    		reader = response.openReader();
+    		reader = response.openReaderSource().getReader();
     		SiteExtraction siteExtraction = siteParser.parse(reader, locationUrl);
     		Site site = siteExtraction.getSite();
     		// use site location from response to handle HTTP redirects

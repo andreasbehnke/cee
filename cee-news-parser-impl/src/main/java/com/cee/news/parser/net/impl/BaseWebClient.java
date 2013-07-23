@@ -10,6 +10,6 @@ public abstract class BaseWebClient implements WebClient {
 
 	@Override
 	public Reader openReader(URL location) throws IOException {
-	    return openWebResponse(location).openReader();
+	    return openWebResponse(location).openReaderSource().getReader();
 	}
 }

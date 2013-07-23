@@ -7,6 +7,7 @@ import java.io.Reader;
 
 import org.apache.commons.io.IOUtils;
 
+import com.cee.news.parser.net.ReaderSource;
 import com.cee.news.parser.net.WebResponse;
 
 
@@ -38,9 +39,7 @@ public abstract class BaseWebResponse implements WebResponse {
 	}
 
 	@Override
-    public final Reader openReader() throws IOException {
+    public final ReaderSource openReaderSource() throws IOException {
     	return readerFactory.createReader(openStream(), getContentType(), getContentEncoding());
     }
-	
-	
 }

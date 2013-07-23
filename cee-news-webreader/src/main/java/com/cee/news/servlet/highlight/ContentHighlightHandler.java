@@ -50,6 +50,8 @@ public class ContentHighlightHandler implements HttpRequestHandler {
 			Article article = articleStore.getArticle(articleKey, false);
 			WebClient webClient = webClientFactory.createWebClient();
 			WebResponse webResponse = webClient.openWebResponse(new URL(article.getLocation()));
+			String contentEncoding = webResponse.openReaderSource().getContentEncoding();
+			response.setCharacterEncoding(contentEncoding);
 			contentHighlighter.highlightContent(response.getWriter(), webResponse, article, new Settings());
 		} catch(StoreException e) {
 			throw new ServletException(e);
