@@ -2,10 +2,10 @@ package com.cee.news.parser.impl;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -13,11 +13,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import com.cee.news.model.Article;
-import com.cee.news.parser.ArticleFilter;
+import com.cee.news.model.TextBlock.ContentExtractionMetaData;
 import com.cee.news.parser.ArticleParser;
 import com.cee.news.parser.ParserException;
-import com.cee.news.parser.net.WebClient;
-import com.cee.news.parser.net.WebResponse;
 
 import de.l3s.boilerpipe.BoilerpipeFilter;
 import de.l3s.boilerpipe.BoilerpipeInput;
@@ -91,54 +89,28 @@ public class BoilerpipeArticleParser implements ArticleParser {
     
     private XMLReader xmlReader;
     
-    private WebClient webClient;
-    
-    private List<ArticleFilter> filters;
-
     public BoilerpipeArticleParser() {}
     
-    public BoilerpipeArticleParser(XMLReader xmlReader, WebClient webClient) {
+    public BoilerpipeArticleParser(XMLReader xmlReader) {
         this.xmlReader = xmlReader;
-    	this.webClient = webClient;
     }
     
     /**
-     * @param webClient Client used to execute web requests
+     * @param xmlReader Reader used to read HTML content from input stream
      */
-    public void setWebClient(WebClient webClient) {
-        this.webClient = webClient;
-    }
-    
-    /**
-     * @param reader Reader used to read HTML content from input stream
-     */
-    public void setReader(XMLReader reader) {
-		this.xmlReader = reader;
+    public void setXmlReader(XMLReader xmlReader) {
+		this.xmlReader = xmlReader;
 	}
     
     @Override
-	public List<ArticleFilter> getFilters() {
-        return filters;
-    }
-
-    @Override
-    public void setFilters(List<ArticleFilter> filters) {
-        this.filters = filters;
-    }
-
-    @Override
-    public Article parse(Article article) throws ParserException, IOException {
-    	Reader textReader = null;
-        try {
+    public Article parse(Reader reader, Article article, Settings settings) throws ParserException, IOException {
+    	try {
         	String articleTitel = article.getTitle();
         	LOG.debug("start parsing article content of {}", article.getLocation());
         	BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
         	
-        	WebResponse response = webClient.openWebResponse(new URL(article.getLocation()));
-        	textReader = response.getReader();
         	xmlReader.setContentHandler(boilerpipeHandler);
-        	InputSource is = new InputSource(textReader);
-        	xmlReader.parse(is);
+        	xmlReader.parse(new InputSource(reader));
         	TextDocument textDoc = boilerpipeHandler.toTextDocument();
         	textDoc.setTitle(articleTitel);
         	String htmlTitle = boilerpipeHandler.getTitle();
@@ -147,7 +119,6 @@ public class BoilerpipeArticleParser implements ArticleParser {
         		htmlTitle = htmlTitle.substring(0, indexOfHyphen);
         	}
         	
-        	
         	LOG.debug("extracting main content from {}", article.getLocation());
         	if (!new ArticleExtractor(htmlTitle).process(textDoc)) {
         		LOG.warn("Parsing of article {} failed", article.getLocation());
@@ -155,36 +126,23 @@ public class BoilerpipeArticleParser implements ArticleParser {
         	}
             List<com.cee.news.model.TextBlock> content = article.getContent();
             for (TextBlock block : textDoc.getTextBlocks()) {
-                if (block.isContent()) {
-                	String[] paragraphs = block.getText().split("\n");
-                	for (String paragraph : paragraphs) {
-                		content.add(new com.cee.news.model.TextBlock(paragraph, block.getNumWords()));
-					}
-                }
-            }
-            if (!accept(article)) {
-            	LOG.warn("article with poor content quality found: {}", article.getLocation());
-            	return null;
+            	if (!block.isContent() && settings.isFilterContentBlocks()) {
+            		continue;
+            	}
+            	String paragraph = block.getText();
+            	com.cee.news.model.TextBlock internalBlock = new com.cee.news.model.TextBlock(paragraph);
+            	if (settings.isProvideMetaData()) {
+            		ContentExtractionMetaData metaData = new ContentExtractionMetaData(block.isContent(), block.toString(), block.getContainedTextElements());
+            		internalBlock.setMetaData(metaData);
+            	}
+            	content.add(internalBlock);
             }
             LOG.debug("finished parsing article content of {}, found {} textblocks", article.getLocation(), content.size());
             return article;
-        } catch (BoilerpipeProcessingException e) {
-            throw new ParserException(e);
-        } catch (SAXException e) {
+        } catch (BoilerpipeProcessingException | SAXException e) {
             throw new ParserException(e);
         } finally {
-        	if (textReader != null) {
-        		textReader.close();
-        	}
+        	IOUtils.closeQuietly(reader);
         }
-    }
-    
-    private boolean accept(Article article) {
-        if (filters != null) {
-            for (ArticleFilter filter : filters) {
-                if (!filter.accept(article)) return false;
-            }
-        }
-        return true;
     }
 }

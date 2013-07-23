@@ -3,8 +3,10 @@ package com.cee.news.parser.impl;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
 import org.ccil.cowan.tagsoup.Parser;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -12,7 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import com.cee.news.model.Article;
 import com.cee.news.parser.ArticleParser;
+import com.cee.news.parser.ArticleParser.Settings;
 import com.cee.news.parser.ParserException;
+import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.impl.DefaultHttpClientFactory;
 import com.cee.news.parser.net.impl.DefaultWebClient;
 import com.cee.news.parser.net.impl.XmlStreamReaderFactory;
@@ -25,8 +29,14 @@ public class TestBoilerpipeArticleParser {
 		Article article = new Article();
 		article.setTitle(articleTitle);
         article.setLocation(articleLocation.toExternalForm());
-        ArticleParser parser = new BoilerpipeArticleParser(new Parser(), new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory()));
-        parser.parse(article);
+        ArticleParser parser = new BoilerpipeArticleParser(new Parser());
+        WebClient webClient = new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory());
+        Reader reader = webClient.openReader(articleLocation);
+        try {
+        	parser.parse(reader, article, new Settings());
+        } finally {
+        	IOUtils.closeQuietly(reader);
+        }
         return article.getContentText();
 	}
 	

@@ -107,8 +107,8 @@ public abstract class TestArticleStore extends TestStoreBase {
 		EntityKey site = Utils.createSite(siteStore, "site2");
         
         List<TextBlock> text = new ArrayList<TextBlock>();
-        text.add(new TextBlock("Hello world!", 2));
-        text.add(new TextBlock("Another hello world!", 3));
+        text.add(new TextBlock("Hello world!"));
+        text.add(new TextBlock("Another hello world!"));
         ArticleKey key = Utils.updateArticle(articleStore, site, "1", "http://www.abc.de/1", 2010, 1, 12, "Short Text", "Title", text);
         
         assertEquals("site2", listener.changedSiteNames.get(0));
@@ -130,7 +130,7 @@ public abstract class TestArticleStore extends TestStoreBase {
         assertEquals(1, article.getContent().size());
         assertEquals(article.getContent().get(0).getContent(), "Another hello world!");
         
-        article.getContent().add(new TextBlock("XYZ", 1));
+        article.getContent().add(new TextBlock("XYZ"));
         articleStore.update(site, article);
         
         article = articleStore.getArticle(key, true);
@@ -201,12 +201,12 @@ public abstract class TestArticleStore extends TestStoreBase {
 		
 		EntityKey site = Utils.createSite(siteStore, "site5");
     	List<TextBlock> text = new ArrayList<TextBlock>();
-        text.add(new TextBlock("Hello world!", 2));
-        text.add(new TextBlock("Another hello world!", 3));
+        text.add(new TextBlock("Hello world!"));
+        text.add(new TextBlock("Another hello world!"));
         ArticleKey key1 = Utils.updateArticle(articleStore, site, "1", "http://www.abc.de/1", 2010, 1, 12, "Short Text", "Title", text);
         text = new ArrayList<TextBlock>();
-        text.add(new TextBlock("A second hello world!", 2));
-        text.add(new TextBlock("Another second hello world!", 3));
+        text.add(new TextBlock("A second hello world!"));
+        text.add(new TextBlock("Another second hello world!"));
         ArticleKey key2 = Utils.updateArticle(articleStore, site, "2", "http://www.abc.de/2", 2012, 1, 12, "Short Text", "Title", text);
         ArticleKey key3 = Utils.updateArticle(articleStore, site, "3", "3", 2012, 12, 3);
         ArticleKey key4 = Utils.updateArticle(articleStore, site, "4", "4", 2012, 12, 3);
@@ -248,9 +248,9 @@ public abstract class TestArticleStore extends TestStoreBase {
 		EntityKey site = Utils.createSite(siteStore, "site6");
         
         List<TextBlock> content = new ArrayList<TextBlock>();
-        content.add(new TextBlock("This are four words", 4));
-        content.add(new TextBlock("foo ba", 2));
-        content.add(new TextBlock("Hello world!", 2));
+        content.add(new TextBlock("This are four words"));
+        content.add(new TextBlock("foo ba"));
+        content.add(new TextBlock("Hello world!"));
         ArticleKey key = Utils.updateArticle(articleStore, site, "1", "http://www.abc.de/1", 2012, 12, 23, null, null, content);
         
         content = articleStore.getArticle(key, true).getContent();

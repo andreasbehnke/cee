@@ -2,31 +2,21 @@ package com.cee.news.parser.net.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.net.URL;
 
-import com.cee.news.parser.net.ReaderFactory;
-import com.cee.news.parser.net.WebResponse;
 
-final class DefaultWebResponse implements WebResponse {
+final class DefaultWebResponse extends BaseWebResponse {
 	
 	private final URL originalLocation;
 	
-	private final ReaderFactory readerFactory;
-
 	DefaultWebResponse(URL location, ReaderFactory readerFactory) {
-		this.readerFactory = readerFactory;
+		super(readerFactory);
 		this.originalLocation = location;
 	}
 
 	@Override
-	public InputStream getStream() throws IOException {
+	protected InputStream openStreamInternal() throws IOException {
 	    return originalLocation.openStream();
-	}
-
-	@Override
-	public Reader getReader() throws IOException {
-		return readerFactory.createReader(getStream(), null, null);
 	}
 
 	@Override

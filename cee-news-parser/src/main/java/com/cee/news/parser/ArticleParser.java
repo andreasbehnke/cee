@@ -1,26 +1,50 @@
 package com.cee.news.parser;
 
 import java.io.IOException;
-import java.util.List;
+import java.io.Reader;
 
 import com.cee.news.model.Article;
+import com.cee.news.model.TextBlock;
+import com.cee.news.model.TextBlock.ContentExtractionMetaData;
 
 public interface ArticleParser {
-    
-    /**
-     * @return The list of filters which will be used to filter articles with poor content quality
-     */
-    List<ArticleFilter> getFilters();
-    
-    void setFilters(List<ArticleFilter> filters);
+	
+	public static class Settings {
+		
+		public static boolean DEFAULT_PROVIDE_META_DATA = false;
+		
+		private boolean provideMetaData = DEFAULT_PROVIDE_META_DATA;
+		
+		public boolean isProvideMetaData() {
+			return provideMetaData;
+		}
 
+		public void setProvideMetaData(boolean provideMetaData) {
+			this.provideMetaData = provideMetaData;
+		}
+
+		public static boolean DEFAULT_FILTER_CONTENT_BLOCKS = true;
+		
+		private boolean filterContentBlocks = DEFAULT_FILTER_CONTENT_BLOCKS;
+
+		public boolean isFilterContentBlocks() {
+			return filterContentBlocks;
+		}
+
+		public void setFilterContentBlocks(boolean filterContentBlocks) {
+			this.filterContentBlocks = filterContentBlocks;
+		}
+	}
+    
     /**
      * Parses the article content page and adds the content {@link TextBlock}s to the article.
-     * @param article The article to be parsed
-     * @return The article with new content added or null if the article content has a poor quality
+     * @param reader Reader to read article content from
+     * @param article The article to be parsed, parser will add {@link TextBlock} to the content of article
+     * @param provideMetaData If true, the parser adds {@link ContentExtractionMetaData} to each generated {@link TextBlock}
+     * @return The article with new content added or null if the article content has a poor quality and could not be parsed
      * @throws ParserException If the source could not be parsed
      * @throws IOException If an IO error occurred
      */
-    Article parse(Article article) throws ParserException, IOException;
+    Article parse(Reader reader, Article article, Settings settings) throws ParserException, IOException;
 
 }

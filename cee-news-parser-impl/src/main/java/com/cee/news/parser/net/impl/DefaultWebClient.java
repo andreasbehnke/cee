@@ -6,15 +6,13 @@ import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cee.news.parser.net.ReaderFactory;
-import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.WebResponse;
 
 /**
  * Default {@link WebClient} implementation uses the {@link HttpClient} for HTTP
  * connections and falls back to the java.net API for all other protocols.
  */
-public class DefaultWebClient implements WebClient {
+public class DefaultWebClient extends BaseWebClient {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultWebClient.class);
 	

@@ -21,6 +21,11 @@
 			<groupId>com.cee</groupId>
 			<artifactId>cee-news-parser</artifactId>
 		</dependency>
+		<dependency>
+            <groupId>com.cee</groupId>
+            <artifactId>cee-news-store-test-suite</artifactId>
+            <scope>test</scope>
+        </dependency>
 
 		<!-- external -->
 		<dependency>
@@ -75,5 +80,26 @@
 			<artifactId>log4j</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+            <groupId>com.sourceallies.beanoh</groupId>
+            <artifactId>beanoh</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 </project>

@@ -2,11 +2,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
 	<!-- Parser -->
-	
-	<bean id="httpClientFactory" class="com.cee.news.parser.net.impl.DefaultHttpClientFactory" />
-	
-	<bean id="webClient" class="com.cee.news.parser.net.impl.DefaultWebClient" scope="prototype">
-		<property name="httpClientFactory" ref="httpClientFactory" />
+	<bean id="webClientFactory" class="com.cee.news.parser.net.impl.DefaultWebClientFactory" scope="prototype">
+		<property name="httpClientFactory">
+		    <bean class="com.cee.news.parser.net.impl.DefaultHttpClientFactory" />
+		</property>
 		<property name="readerFactory">
 			<bean class="com.cee.news.parser.net.impl.XmlStreamReaderFactory" />
 		</property>
@@ -23,33 +22,31 @@
 	<bean id="htmlParser" class="org.ccil.cowan.tagsoup.Parser" scope="prototype"/>
 	
 	<bean id="articleParser" class="com.cee.news.parser.impl.BoilerpipeArticleParser" scope="prototype">
-		<property name="webClient" ref="webClient" />
-		<property name="reader" ref="htmlParser"/>
-		<property name="filters">
-			<list>
-				<bean class="com.cee.news.parser.impl.MinWordCountArticleFilter">
-					<property name="minWordCount" value="30" />
-				</bean>
-			</list>
-		</property>
+		<property name="xmlReader" ref="htmlParser"/>
 	</bean>
 	
 	<bean id="feedParser" class="com.cee.news.parser.impl.RomeFeedParser" scope="prototype">
-		<property name="webClient" ref="webClient" />
 		<property name="xmlReader" ref="htmlParser" />
 	</bean>
-
-	<bean id="siteUpdater" class="com.cee.news.parser.impl.SiteUpdater" scope="prototype">
-		<property name="articleParser" ref="articleParser" />
+    
+    <bean id="siteParser" class="com.cee.news.parser.impl.SiteParserImpl" scope="prototype">
+        <property name="xmlReader" ref="htmlParser" />
+    </bean>
+    
+    <bean id="articleReader" class="com.cee.news.parser.impl.ArticleReader" scope="prototype">
+        <property name="articleParser" ref="articleParser" />
+    </bean>
+    
+	<bean id="siteReader" class="com.cee.news.parser.impl.SiteReader" scope="prototype">
+		<property name="articleReader" ref="articleReader" />
 		<property name="feedParser" ref="feedParser" />
+		<property name="languageDetector" ref="languageDetector" />
+		<property name="siteParser" ref="siteParser" />
 		<property name="store" ref="articleStore" />
-		<property name="onlyActiveFeeds" value="true" />
 	</bean>
 
-	<bean id="siteParser" class="com.cee.news.parser.impl.SiteParserImpl" scope="prototype">
-		<property name="webClient" ref="webClient" />
-    	<property name="reader" ref="htmlParser" />
-		<property name="feedParser" ref="feedParser" />
-		<property name="languageDetector" ref="languageDetector"/>
-	</bean>
-</beans>	
+    <bean id="contentHighlighter" class="com.cee.news.highlighter.impl.ContentHighlighterImpl">
+        <property name="xmlReader" ref="htmlParser" />
+        <property name="articleReader" ref="articleReader" />
+    </bean>
+</beans>

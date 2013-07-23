@@ -200,7 +200,7 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 			IndexableField[] fields = articleDocument.getFields(LuceneConstants.FIELD_ARTICLE_CONTENT);
 			List<TextBlock> blocks = new ArrayList<TextBlock>();
 			for (IndexableField field : fields) {
-	            blocks.add(new TextBlock(field.stringValue(), -1));
+	            blocks.add(new TextBlock(field.stringValue()));
             }
 			article.setContent(blocks);
 		}

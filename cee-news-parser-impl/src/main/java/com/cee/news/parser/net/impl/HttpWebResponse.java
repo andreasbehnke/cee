@@ -2,7 +2,6 @@ package com.cee.news.parser.net.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.net.URL;
 
 import org.apache.http.Header;
@@ -13,25 +12,22 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
-import com.cee.news.parser.net.ReaderFactory;
-import com.cee.news.parser.net.WebResponse;
 
 /**
  * WebResponse implementation for HTTP
  */
-public final class HttpWebResponse implements WebResponse {
+public final class HttpWebResponse extends BaseWebResponse {
 	
 	private final URL originalLocation;
 	
 	private final HttpClient httpClient;
 	
-	private final ReaderFactory readerFactory;
-
 	private HttpEntity entity;
 	
 	private URL location;
     
     public HttpWebResponse(URL location, HttpClient httpClient, ReaderFactory readerFactory) {
+    	super(readerFactory);
 		if (location == null) {
 			throw new IllegalArgumentException("Paramter location must not be null!");
 		}
@@ -44,7 +40,6 @@ public final class HttpWebResponse implements WebResponse {
 		this.originalLocation = location;
 		this.location = location;
 	    this.httpClient = httpClient;
-		this.readerFactory = readerFactory;
 	}
     
     private void executeRequest() throws IOException {
@@ -67,16 +62,11 @@ public final class HttpWebResponse implements WebResponse {
         }
         return entity;
     }
-
-	@Override
-	public InputStream getStream() throws IOException {
-	    return getEntity().getContent();
-	}
-
-	@Override
-	public Reader getReader() throws IOException {
-		return readerFactory.createReader(getStream(), getContentType(), getContentEncoding());
-	}
+    
+    @Override
+    protected InputStream openStreamInternal() throws IOException {
+    	return getEntity().getContent();
+    }
 
 	@Override
 	public String getContentType() throws IOException {
@@ -108,5 +98,4 @@ public final class HttpWebResponse implements WebResponse {
 	    }
         return location;
 	}
-
 }

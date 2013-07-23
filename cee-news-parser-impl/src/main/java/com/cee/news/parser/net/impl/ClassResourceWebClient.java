@@ -15,7 +15,7 @@ import com.cee.news.parser.net.WebResponse;
  * Therefore only the PATH segment of the URL is used to find a resource. This implementation of the WebClient
  * is used for testing purposes.
  */
-public class ClassResourceWebClient implements WebClient {
+public class ClassResourceWebClient implements  WebClient {
 	/**
 	 * Only the path part of the URL is interpreted for retrieving resource from class path
 	 * @see com.cee.news.parser.net.WebClient#openWebResponse(java.net.URL)
@@ -23,9 +23,9 @@ public class ClassResourceWebClient implements WebClient {
 	@Override
 	public WebResponse openWebResponse(final URL location) {
 		return new WebResponse() {
-			
+
 			@Override
-			public InputStream getStream() throws IOException {
+			public InputStream openStream() throws IOException {
 				String path = location.getPath();
 				InputStream is = getClass().getResourceAsStream(path);
 				if (is == null) {
@@ -33,32 +33,37 @@ public class ClassResourceWebClient implements WebClient {
 				}
 				return is;
 			}
-			
+
 			@Override
-			public Reader getReader() throws IOException {
-				return new InputStreamReader(getStream());
+			public Reader openReader() throws IOException {
+				return new InputStreamReader(openStream());
 			}
-			
+
 			@Override
 			public String getContentType() {
 				return null;
 			}
-			
+
 			@Override
 			public String getContentEncoding() {
 				return null;
 			}
-			
+
 			@Override
 			public long getContentLength() {
 				return -1;
 			}
-			
+
 			@Override
 			public URL getLocation() {
 			    return location;
 			}
 		};
 	}
+
+	@Override
+    public Reader openReader(URL location) throws IOException {
+	    return openWebResponse(location).openReader();
+    }
 
 }

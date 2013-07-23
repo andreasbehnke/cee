@@ -5,8 +5,6 @@ package com.cee.news.store.jcr;
  */
 public final class JcrStoreConstants {
     
-    public static final String PROP_WORDS = "news:words";
-
     public static final String PROP_CONTENT = "news:content";
 
     public static final String PROP_PUBLISHED = "news:published";

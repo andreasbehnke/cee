@@ -9,7 +9,6 @@
 [news:textblock]
 primaryitem news:content
 - news:content     (STRING)
-- news:words       (LONG)
 
 [news:article]
 - news:id          (STRING)

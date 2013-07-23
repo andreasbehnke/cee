@@ -34,10 +34,6 @@
 		<property name="workingSetStore" ref="workingSetStore" />
 		<property name="siteStore" ref="siteStore" />
 	</bean>
-
-	<bean id="siteUpdateCommand" class="com.cee.news.server.content.SiteUpdateCommand" scope="prototype">
-		<property name="siteUpdater" ref="siteUpdater" />
-	</bean>
 	
 	<bean id="gwtSiteUpdateService" class="com.cee.news.server.content.SiteUpdateServiceImpl" init-method="startUpdateScheduler">
 		<property name="corePoolSize" value="${update.service.core.pool.size}" />
@@ -46,8 +42,15 @@
 		<property name="updateSchedulerInitialDelay" value="${update.service.scheduler.initial.delay}" />		
 		<property name="updateSchedulerFixedDelay" value="${update.service.scheduler.fixed.delay}" />		
 		<property name="siteStore" ref="siteStore" />
-		<lookup-method name="createSiteUpdateCommand" bean="siteUpdateCommand" />
-		<lookup-method name="createSiteParser" bean="siteParser" />
-		<lookup-method name="createFeedParser" bean="feedParser" />
+		<property name="siteReader" ref="siteReader" />
+		<property name="webClientFactory" ref="webClientFactory" />
+	</bean>
+	
+	<!-- Spring HttpRequestHandlers -->
+	
+	<bean id="contentHighlightHandler" class="com.cee.news.servlet.highlight.ContentHighlightHandler">
+	     <property name="articleStore" ref="articleStore" />
+	     <property name="webClientFactory" ref="webClientFactory" />
+	     <property name="contentHighlighter" ref="contentHighlighter" />
 	</bean>
 </beans>

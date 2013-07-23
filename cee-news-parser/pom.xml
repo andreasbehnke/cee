@@ -17,38 +17,5 @@
 			<groupId>com.cee</groupId>
 			<artifactId>cee-news-store-api</artifactId>
 		</dependency>
-
-		<!-- external -->
-		<dependency>
-			<!-- TODO: Replace with commons-io 2.1 -->
-			<groupId>net.java.dev.rome</groupId>
-			<artifactId>rome</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		
-		<!-- testing -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 </project>

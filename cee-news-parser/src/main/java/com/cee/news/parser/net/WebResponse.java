@@ -7,9 +7,19 @@ import java.net.URL;
 
 public interface WebResponse {
     
-    InputStream getStream() throws IOException;
+	/**
+	 * Opens a new {@link InputStream} to response data.
+	 * The implementation is responsible for handling multiple reads
+	 * of data stream.
+	 */
+	InputStream openStream() throws IOException;
     
-    Reader getReader() throws IOException;
+	/**
+	 * Opens a new {@link Reader} to response data.
+	 * The implementation is responsible for handling multiple reads
+	 * of data stream.
+	 */
+    Reader openReader() throws IOException;
 
     String getContentType() throws IOException;
     

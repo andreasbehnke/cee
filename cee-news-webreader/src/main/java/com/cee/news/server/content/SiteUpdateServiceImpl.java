@@ -2,7 +2,6 @@ package com.cee.news.server.content;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -22,12 +21,13 @@ import com.cee.news.client.error.ServiceException;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
-import com.cee.news.parser.FeedParser;
 import com.cee.news.parser.ParserException;
-import com.cee.news.parser.SiteParser;
+import com.cee.news.parser.impl.SiteReader;
+import com.cee.news.parser.net.WebClient;
+import com.cee.news.parser.net.WebClientFactory;
 import com.cee.news.store.SiteStore;
 
-public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
+public class SiteUpdateServiceImpl implements SiteUpdateService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SiteUpdateServiceImpl.class);
 	
@@ -44,6 +44,12 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	private static final String SITE_UPDATE_ENCOUNTERED_AN_ERROR = "Site update %s encountered an error";
 
 	private static final String COULD_NOT_RETRIEVE_SITE = "Could not retrieve site: %s";
+	
+	private static final String MALFORMED_URL = "The URL {} is malformed";
+	
+	private static final String IO_ERROR = "Resource {} could not be loaded, an IO error occured.";
+	
+	private static final String PARSER_ERROR = "Resource {} could not be loaded, a parser error occured";
 
 	private static final String UPDATE_SCHEDULER_THREAD_PREFIX = "updateScheduler";
 
@@ -64,6 +70,10 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	private List<EntityKey> sitesInProgress = new ArrayList<EntityKey>();
 
 	private SiteStore siteStore;
+	
+	private SiteReader siteReader;
+	
+	private WebClientFactory webClientFactory;
 
 	private ScheduledExecutorService scheduler;
 
@@ -72,6 +82,14 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	public void setSiteStore(SiteStore siteStore) {
 		this.siteStore = siteStore;
 	}
+	
+	public void setSiteReader(SiteReader siteReader) {
+	    this.siteReader = siteReader;
+    }
+	
+	public void setWebClientFactory(WebClientFactory webClientFactory) {
+	    this.webClientFactory = webClientFactory;
+    }
 	
 	/**
 	 * @return the minimum thread pool size
@@ -140,29 +158,32 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			LOG.warn(COULD_NOT_BE_REMOVED_FROM_LIST_OF_SITES_IN_PROGRESS, siteKey);
 		}
 	}
+	
+
+	private WebClient createWebClient() {
+		if (webClientFactory == null) {
+			throw new IllegalStateException("Property webClientFactory has not been set");
+		}
+		return webClientFactory.createWebClient();
+	}
 
 	@Override
 	public SiteData retrieveSiteData(String location) {
-		SiteParser parser = createSiteParser();
 		SiteData info = new SiteData();
 		info.setIsNew(true);
-		URL locationUrl = null;
 		try {
-			locationUrl = new URL(location);
-		} catch (MalformedURLException e) {
-			info.setState(SiteRetrivalState.malformedUrl);
-			return info;
-		}
-		try {
-			Site site = parser.parse(locationUrl).getSite();
+			Site site = siteReader.readSite(createWebClient(), location);
 			info = SiteConverter.createFromSite(site);
 			info.setState(SiteRetrivalState.ok);
+		} catch(MalformedURLException e) {
+			info.setState(SiteRetrivalState.malformedUrl);
+			LOG.warn(MALFORMED_URL, location);
 		} catch (IOException e) {
 			info.setState(SiteRetrivalState.ioError);
-			LOG.error(String.format(COULD_NOT_RETRIEVE_SITE, location), e);
+			LOG.warn(IO_ERROR, location);
 		} catch (ParserException e) {
 			info.setState(SiteRetrivalState.parserError);
-			LOG.error(String.format(COULD_NOT_RETRIEVE_SITE, location), e);
+			LOG.warn(PARSER_ERROR, location);
 		} catch (Exception e) {
 			String message = String.format(COULD_NOT_RETRIEVE_SITE, location);
 			LOG.error(message, e);
@@ -173,28 +194,25 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	
 	@Override
 	public FeedData retrieveFeedData(String location) {
-		FeedParser feedParser = createFeedParser();
 		FeedData info = new FeedData();
 		info.setIsNew(true);
-		URL locationUrl = null;
 		try {
-			locationUrl = new URL(location);
-		} catch (MalformedURLException e) {
-			info.setState(SiteRetrivalState.malformedUrl);
-			return info;
-		}
-		try {
-			if (!feedParser.isSupportedFeed(locationUrl)) {
-				info.setState(SiteRetrivalState.parserError);
-				LOG.error(String.format(COULD_NOT_RETRIEVE_SITE, location));
-				return info;
-			}
-			Feed feed = feedParser.parse(locationUrl);
+			Feed feed = siteReader.readFeed(createWebClient(), location);
 			info = SiteConverter.createFromFeed(feed);
 			info.setState(SiteRetrivalState.ok);
+		} catch(MalformedURLException e) {
+			info.setState(SiteRetrivalState.malformedUrl);
+			LOG.warn(MALFORMED_URL, location);
 		} catch (IOException e) {
 			info.setState(SiteRetrivalState.ioError);
-			LOG.error(String.format(COULD_NOT_RETRIEVE_SITE, location), e);
+			LOG.warn(IO_ERROR, location);
+		} catch (ParserException e) {
+			info.setState(SiteRetrivalState.parserError);
+			LOG.warn(PARSER_ERROR, location);
+		} catch (Exception e) {
+			String message = String.format(COULD_NOT_RETRIEVE_SITE, location);
+			LOG.error(message, e);
+			throw new ServiceException(message);
 		}
 		return info;
 	}
@@ -221,15 +239,15 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 	public synchronized boolean addSiteToUpdateQueue(final EntityKey siteKey) {
         ensureThreadPool();
         if (!sitesInProgress.contains(siteKey)) {
-            Site siteEntity = null;
+            Site site = null;
             try {
-                siteEntity = siteStore.getSite(siteKey);
+                site = siteStore.getSite(siteKey);
             } catch (Exception e) {
                 String message = String.format(COULD_NOT_RETRIEVE_SITE, siteKey);
                 LOG.error(message, e);
                 throw new ServiceException(message);
             }
-            SiteUpdateCommand command = createSiteUpdateCommand();
+            SiteUpdateCommand command = new SiteUpdateCommand(createWebClient(), siteReader, site);
             command.addCommandCallback(new CommandCallback() {
                 @Override
                 public void notifyFinished() {
@@ -237,11 +255,10 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
                 }
                 @Override
                 public void notifyError(Exception ex) {
-                    String message = String.format(SITE_UPDATE_ENCOUNTERED_AN_ERROR, siteKey);
+                	String message = String.format(SITE_UPDATE_ENCOUNTERED_AN_ERROR, siteKey);
                     LOG.error(message, ex);
                 }
             });
-            command.setSite(siteEntity);
             sitesInProgress.add(siteKey);
             pool.execute(command);
             return true;
@@ -264,19 +281,4 @@ public abstract class SiteUpdateServiceImpl implements SiteUpdateService {
 			LOG.error(STARTING_SITE_UPDATES_ENCOUNTERED_AN_ERROR, t);
 		}
 	}
-
-	/**
-	 * @return A update site command prepared with all dependencies
-	 */
-	protected abstract SiteUpdateCommand createSiteUpdateCommand();
-
-	/**
-	 * @return A site parser prepared with all dependencies
-	 */
-	protected abstract SiteParser createSiteParser();
-	
-	/**
-	 * @return A feed parser instance prepared with all dependencies
-	 */
-	protected abstract FeedParser createFeedParser();
 }

@@ -1,6 +1,12 @@
 package com.cee.news.server.content.renderer;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import org.apache.commons.logging.Log;
+
 import com.cee.news.client.content.EntityContent;
+import com.cee.news.client.error.ServiceException;
 import com.cee.news.model.Article;
 import com.cee.news.model.ArticleKey;
 import com.cee.news.model.TextBlock;
@@ -23,13 +29,19 @@ public class NewsContentRenderer extends DefaultContentRenderer<ArticleKey, Arti
 
     protected EntityContent<ArticleKey> renderContent(ArticleKey articleKey, Article article) {
         StringBuilder buffer = new StringBuilder();
-        HtmlBuilder builder = new HtmlBuilder(buffer)
-        	.appendHtmlElement("h1", article.getTitle())
-        	.appendIfNotNull("p", article.getPublishedDate())
-        	.appendHtmlElement("p", articleKey.getSiteKey())
-        	.appendLink(article.getLocation(), "article", "open article");
-        for (TextBlock textBlock : article.getContent()) {
-        	builder.appendHtmlElement("p", textBlock.getContent());
+        try {
+        	String encodedSiteKey = URLEncoder.encode(articleKey.getSiteKey(), "UTF-8");
+        	String encodedArticleKey = URLEncoder.encode(articleKey.getKey(), "UTF-8");
+        	HtmlBuilder builder = new HtmlBuilder(buffer)
+	        	.appendHtmlElement("h1", article.getTitle())
+	        	.appendIfNotNull("p", article.getPublishedDate())
+	        	.appendHtmlElement("p", articleKey.getSiteKey())
+	        	.appendLink("http://127.0.0.1:8888/NewsReader/content/highlight/" + encodedSiteKey + "/" + encodedArticleKey, "article", "open article");
+	        for (TextBlock textBlock : article.getContent()) {
+	        	builder.appendHtmlElement("p", textBlock.getContent());
+	        }
+        } catch (UnsupportedEncodingException e) {
+	        throw new ServiceException(e.getMessage());
         }
         return new EntityContent<ArticleKey>(articleKey, buffer.toString());
     }

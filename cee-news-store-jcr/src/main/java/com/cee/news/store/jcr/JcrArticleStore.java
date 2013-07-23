@@ -13,7 +13,6 @@ import static com.cee.news.store.jcr.JcrStoreConstants.PROP_LOCATION;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_PUBLISHED;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_SHORT_TEXT;
 import static com.cee.news.store.jcr.JcrStoreConstants.PROP_TITLE;
-import static com.cee.news.store.jcr.JcrStoreConstants.PROP_WORDS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +124,6 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             for (TextBlock text : article.getContent()) {
                 Node textNode = articleNode.addNode(NODE_CONTENT, NODE_TEXTBLOCK);
                 textNode.setProperty(PROP_CONTENT, text.getContent());
-                textNode.setProperty(PROP_WORDS, text.getNumWords());
             }
         } catch (RepositoryException e) {
             throw new StoreException(article, "Could not persist article", e);
@@ -177,7 +175,7 @@ public class JcrArticleStore extends JcrStoreBase implements ArticleStore {
             NodeIterator iter = articleNode.getNodes(NODE_CONTENT);
             while (iter.hasNext()) {
                 Node textNode = iter.nextNode();
-                content.add(new TextBlock(textNode.getProperty(PROP_CONTENT).getString(), (int) textNode.getProperty(PROP_WORDS).getLong()));
+                content.add(new TextBlock(textNode.getProperty(PROP_CONTENT).getString()));
             }
         } catch (RepositoryException e) {
             throw new StoreException("Could not retrieve text blocks of article", e);

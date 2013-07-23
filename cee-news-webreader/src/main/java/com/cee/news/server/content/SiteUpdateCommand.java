@@ -7,40 +7,34 @@ import org.slf4j.LoggerFactory;
 
 import com.cee.news.model.Site;
 import com.cee.news.parser.ParserException;
-import com.cee.news.parser.impl.SiteUpdater;
+import com.cee.news.parser.impl.SiteReader;
+import com.cee.news.parser.net.WebClient;
 import com.cee.news.store.StoreException;
 
 /**
- * Work item which uses a {@link SiteUpdater} internally
+ * Work item which uses a {@link SiteReader} internally
  */
 public class SiteUpdateCommand extends AbstractCommand {
 	
 	private static final Logger log = LoggerFactory.getLogger(SiteUpdateCommand.class);
 	
-	private SiteUpdater siteUpdater;
+	private final WebClient webClient;
 	
-	private Site site;
+	private final SiteReader siteReader;
+	
+	private final Site site;
 
-	public void setSite(Site site) {
-		this.site = site;
-	}
-	
-	public void setSiteUpdater(SiteUpdater updater) {
-		this.siteUpdater = updater;
-	}
-	
+	public SiteUpdateCommand(WebClient webClient, SiteReader siteReader, Site site) {
+	    this.webClient = webClient;
+	    this.siteReader = siteReader;
+	    this.site = site;
+    }
+
 	@Override
 	protected void runInternal() {
-		if (siteUpdater == null) {
-			throw new IllegalStateException("Missing site updater");
-		}
-		if (site == null) {
-			throw new IllegalStateException("Missing site to update");
-		}
-		
 		try {
-			log.info("Updating site {} at location {}", site.getName(), site.getLocation());
-			siteUpdater.update(site);
+			log.info("Start updating site {} at location {}", site.getName(), site.getLocation());
+			siteReader.update(webClient, site);
 			log.info("Finished updating site {} at location {}", site.getName(), site.getLocation());
 		} catch (ParserException e) {
 			log.error("Could not parse articles of site", e);

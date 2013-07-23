@@ -1,4 +1,4 @@
-package com.cee.news.parser.net;
+package com.cee.news.parser.net.impl;
 
 import java.io.IOException;
 import java.io.InputStream;

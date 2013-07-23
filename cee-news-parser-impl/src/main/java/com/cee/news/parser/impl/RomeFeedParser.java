@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -23,8 +24,6 @@ import com.cee.news.model.Article;
 import com.cee.news.model.Feed;
 import com.cee.news.parser.FeedParser;
 import com.cee.news.parser.ParserException;
-import com.cee.news.parser.net.WebClient;
-import com.cee.news.parser.net.WebResponse;
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -40,28 +39,27 @@ import de.l3s.boilerpipe.document.TextDocument;
 import de.l3s.boilerpipe.sax.BoilerpipeHTMLContentHandler;
 
 public class RomeFeedParser extends WireFeedInput implements FeedParser {
-	
+
 	private final static Logger LOG = LoggerFactory.getLogger(RomeFeedParser.class);
-	
-	private static FeedParsers feedParsers =  new FeedParsers();
-	
+
+	private static FeedParsers feedParsers = new FeedParsers();
+
 	private XMLReader xmlReader;
 
-    public RomeFeedParser() {
-    }
+	public RomeFeedParser() {
+	}
 
-    public RomeFeedParser(WebClient webClient, XMLReader xmlReader) {
-        setWebClient(webClient);
-        setXmlReader(xmlReader);
-    }
-    
+	public RomeFeedParser(XMLReader xmlReader) {
+		setXmlReader(xmlReader);
+	}
+
 	@SuppressWarnings("serial")
 	private class EmptyElementFilter implements Filter {
 
 		@Override
 		public boolean matches(Object obj) {
 			if (obj instanceof Element) {
-				Element element = (Element)obj;
+				Element element = (Element) obj;
 				int attributeCount = element.getAttributes().size();
 				int contentCount = element.getContentSize();
 				boolean isEmpty = element.getTextTrim() == null || element.getTextTrim().isEmpty();
@@ -71,180 +69,162 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
 			}
 			return false;
 		}
-		
+
 	}
-	
-	private WebClient webClient;
-	
-    /**
-     * @param webClient Client used to execute web requests
-     */
-	public void setWebClient(WebClient webClient) {
-		this.webClient = webClient;
-	}
-	
+
 	/**
-	 * @param xmlReader used to extract text from html descriptions. This xml reader should be solid 
-	 * and able to parse html from the wild, e.g. tagsoup parser.
+	 * @param xmlReader
+	 *            used to extract text from html descriptions. This xml reader
+	 *            should be solid and able to parse html from the wild, e.g.
+	 *            tagsoup parser.
 	 */
 	public void setXmlReader(XMLReader xmlReader) {
 		this.xmlReader = xmlReader;
 	}
-	
+
 	private void removeEmptyElements(Element element) {
 		element.removeContent(new EmptyElementFilter());
-		for (Object	obj : element.getContent()) {
+		for (Object obj : element.getContent()) {
 			if (obj instanceof Element) {
-				removeEmptyElements((Element)obj);
+				removeEmptyElements((Element) obj);
 			}
 		}
 	}
-	
-	private Document openDocument(final URL feedLocation) throws JDOMException, IOException {
-		SAXBuilder saxBuilder = createSAXBuilder();
-		WebResponse response = webClient.openWebResponse(feedLocation);
-	    Document document = null;
-	    Reader reader = null;
-	    try {
-	    	reader = new XmlFixerReader(response.getReader());
-	    	document = saxBuilder.build(new InputSource(reader));
-	    } finally {
-	    	if (reader != null)
-	    		reader.close();
-	    }
-	    removeEmptyElements(document.getRootElement());
-	    return document;
-	}
-    
-    private SyndFeed readFeed(final URL feedLocation) throws IllegalArgumentException, FeedException, IOException, JDOMException {
-        return new SyndFeedInput().build(openDocument(feedLocation));
-    }
 
-    @Override
-    public boolean isSupportedFeed(final URL feedLocation) throws IOException {
-        Document document = null;
+	private Document openDocument(final Reader reader) throws JDOMException, IOException {
+		Reader input = null;
 		try {
-			document = openDocument(feedLocation);
-		} catch (JDOMException e) {
+			SAXBuilder saxBuilder = createSAXBuilder();
+			input = new XmlFixerReader(reader);
+			Document document = saxBuilder.build(new InputSource(input));
+			removeEmptyElements(document.getRootElement());
+			return document;
+		} finally {
+			IOUtils.closeQuietly(input);
+		}
+	}
+
+	private SyndFeed readFeed(final Reader reader) throws IllegalArgumentException, FeedException, IOException, JDOMException {
+		return new SyndFeedInput().build(openDocument(reader));
+	}
+
+	public boolean isSupportedFeed(Document document) throws IOException {
+		WireFeedParser parser = feedParsers.getParserFor(document);
+		return parser != null;
+	}
+
+	@Override
+	public Feed parse(Reader reader, URL location) throws ParserException, IOException {
+		try {
+			Document document = openDocument(reader);
+			if (!isSupportedFeed(document)) {
+				throw new ParserException("Unsupported feed found at " + location);
+			}
+			SyndFeedInput input = new SyndFeedInput();
+			SyndFeed syndFeed = input.build(document);
+			Feed feed = new Feed(location.toExternalForm(), syndFeed.getTitle());
+			String language = syndFeed.getLanguage();
+			feed.setLanguage(language);
+			return feed;
+		} catch (JDOMException | IllegalArgumentException | FeedException e) {
+			throw new ParserException("Could not parse feed " + location, e);
+		}
+	}
+
+	private String extractTextFromHtml(String html) throws IOException, SAXException {
+		if (xmlReader == null) {
+			throw new IllegalStateException("XmlReader has not been initialized");
+		}
+		Reader reader = null;
+		try {
+			BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
+			xmlReader.setContentHandler(boilerpipeHandler);
+			reader = new StringReader(html);
+			InputSource is = new InputSource(reader);
+			xmlReader.parse(is);
+			TextDocument textDoc = boilerpipeHandler.toTextDocument();
+			String text = textDoc.getText(true, true);
+			if (text != null) {
+				text = text.trim();
+			}
+			return text;
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
+	}
+
+	private boolean isHtml(SyndContent content) {
+		String contentType = content.getType();
+		if (contentType == null) {
 			return false;
 		}
-        WireFeedParser parser = feedParsers.getParserFor(document);
-        return parser != null;
-    }
-    
-    @Override
-    public Feed parse(URL feedLocation) throws IOException {
-    	try {
-    		Document document = openDocument(feedLocation);
-    		SyndFeedInput input = new SyndFeedInput();
-    		SyndFeed syndFeed = input.build(document);
-    		Feed feed = new Feed(feedLocation.toExternalForm(), syndFeed.getTitle());
-    		String language = syndFeed.getLanguage();
-    		feed.setLanguage(language);
-    		return feed;
-		} catch (JDOMException | IllegalArgumentException | FeedException e) {
-			throw new IOException(e);
+		contentType = contentType.toLowerCase();
+		return contentType.contains("html");
+	}
+
+	private String extractShortText(SyndEntry entry) throws ParserException, IOException {
+		SyndContent content = entry.getDescription();
+		if (content == null) {
+			if (entry.getContents().size() > 0) {
+				content = (SyndContent) entry.getContents().get(0);
+			} else {
+				return null;
+			}
 		}
-    }
-    
-    private String extractTextFromHtml(String html) throws IOException, SAXException {
-    	if(xmlReader == null) {
-    		throw new IllegalStateException("XmlReader has not been initialized");
-    	}
-    	Reader reader = null;
-    	try {
-	    	BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
-	    	xmlReader.setContentHandler(boilerpipeHandler);
-	    	reader = new StringReader(html);
-	    	InputSource is = new InputSource(reader);
-	    	xmlReader.parse(is);
-	    	TextDocument textDoc = boilerpipeHandler.toTextDocument();
-	    	String text = textDoc.getText(true, true);
-	    	if (text != null) {
-	    		text = text.trim();
-	    	}
-	    	return text;
-    	} finally {
-    		if (reader != null) {
-    			reader.close();
-    		}
-    	}
-    }
-    
-    private boolean isHtml(SyndContent content) {
-    	String contentType = content.getType();
-    	if (contentType == null) {
-    		return false;
-    	}
-    	contentType = contentType.toLowerCase();
-    	return contentType.contains("html");
-    }
-    
-    private String extractShortText(SyndEntry entry) throws ParserException, IOException {
-    	SyndContent content = entry.getDescription();
-    	if (content == null) {
-    		if (entry.getContents().size() > 0) {
-    			content = (SyndContent)entry.getContents().get(0);
-    		} else {
-    			return null;
-    		}
-    	}
-    	String contentValue = content.getValue();
-    	if (isHtml(content)) {
-    		try {
-    			return extractTextFromHtml(contentValue);
-    		} catch (SAXException e) {
+		String contentValue = content.getValue();
+		if (isHtml(content)) {
+			try {
+				return extractTextFromHtml(contentValue);
+			} catch (SAXException e) {
 				throw new ParserException("Could not extract text from HTML short text", e);
 			}
-    	} else {
-    		return contentValue;
-    	}
-    }
-    
-    @SuppressWarnings("unchecked")
-	@Override
-    public List<Article> readArticles(final URL feedLocation) throws ParserException, IOException {
-        List<Article> articles = new ArrayList<Article>();
+		} else {
+			return contentValue;
+		}
+	}
 
-        SyndFeed syndFeed = null;
-        try {
-            syndFeed = readFeed(feedLocation);
-        } catch (IllegalArgumentException e) {
-            throw new ParserException("Unknown type of feed.", e);
-        } catch (FeedException e) {
-            throw new ParserException("Could not parse feed.", e);
-        } catch (JDOMException e) {
-        	throw new ParserException("Could not parse feed.", e);
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Article> readArticles(final Reader reader, final URL feedLocation) throws ParserException, IOException {
+		List<Article> articles = new ArrayList<Article>();
+		SyndFeed syndFeed = null;
+		try {
+			syndFeed = readFeed(reader);
+		} catch (JDOMException | IllegalArgumentException | FeedException e) {
+			throw new ParserException("Could not parse feed", e);
 		}
 
-        for (SyndEntry entry : (List<SyndEntry>) syndFeed.getEntries()) {
-            Article article = new Article();
-            article.setTitle(entry.getTitle());
-            article.setShortText(extractShortText(entry));
-            String link = entry.getLink();
-            String id = entry.getUri();
-            if (id == null) {
-                id = link;
-            }
-            article.setExternalId(id);
-            try {
-            	URL articleUrl = new URL(feedLocation, link);//check for well formed URL
-                article.setLocation(articleUrl.toExternalForm());
-            } catch (MalformedURLException e) {
-            	LOG.warn("The feed {} contains article with invalid URL {}", feedLocation, link);
-                continue;
-            }
-            if (entry.getPublishedDate() != null) {
-                Calendar cal = Calendar.getInstance();
-                cal.clear();
-                cal.setTime(entry.getPublishedDate());
-                article.setPublishedDate(cal);
-            } else {
-                article.setPublishedDate(Calendar.getInstance());
-            }
-            articles.add(article);
-        }
+		for (SyndEntry entry : (List<SyndEntry>) syndFeed.getEntries()) {
+			Article article = new Article();
+			article.setTitle(entry.getTitle());
+			article.setShortText(extractShortText(entry));
+			String link = entry.getLink();
+			String id = entry.getUri();
+			if (id == null) {
+				id = link;
+			}
+			article.setExternalId(id);
+			try {
+				URL articleUrl = new URL(feedLocation, link);// check for well
+				                                             // formed URL
+				article.setLocation(articleUrl.toExternalForm());
+			} catch (MalformedURLException e) {
+				LOG.warn("The feed {} contains article with invalid URL {}", feedLocation, link);
+				continue;
+			}
+			if (entry.getPublishedDate() != null) {
+				Calendar cal = Calendar.getInstance();
+				cal.clear();
+				cal.setTime(entry.getPublishedDate());
+				article.setPublishedDate(cal);
+			} else {
+				article.setPublishedDate(Calendar.getInstance());
+			}
+			articles.add(article);
+		}
 
-        return articles;
-    }
+		return articles;
+	}
 }
