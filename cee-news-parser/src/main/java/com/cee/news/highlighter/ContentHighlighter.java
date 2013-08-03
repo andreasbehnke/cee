@@ -2,6 +2,7 @@ package com.cee.news.highlighter;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.net.URL;
 
 import com.cee.news.model.Article;
 import com.cee.news.parser.ParserException;
@@ -11,41 +12,98 @@ public interface ContentHighlighter {
 	
 	public static class Settings {
 		
-		public static final boolean DEFAULT_HIGHLIGHT_CONTENT_BLOCK = true;
+		/**
+		 * Content of the current entity, it depends on the template
+		 */
+		public static final String PARAMETER_CONTENT = "CONTENT";
+		/**
+		 * The ID of the referenced text block
+		 */
+		public static final String PARAMETER_ID = "ID";
+		/**
+		 * Random string which is a constant value for the complete parsing process.
+		 * Use this namespace to create unique keys for HTML id elements. 
+		 */
+		public static final String PARAMETER_NAMESPACE = "NAMESPACE";
 		
-		private boolean highlightContentBlock = DEFAULT_HIGHLIGHT_CONTENT_BLOCK;
+		private String headerTemplate;
+		private boolean highlightContentBlock;
+		private String contentBlockTemplate;
+		private URL baseUrl;
+		private boolean rewriteUrls;
+		private boolean showBlockMetadata;
+		private String metadataTemplate;
+		private String metadataContainerTemplate;
+		private String metadataIconTemplate;
 		
+		public String getHeaderTemplate() {
+			return headerTemplate;
+		}
+		public void setHeaderTemplate(String headerTemplate) {
+			this.headerTemplate = headerTemplate;
+		}
 		public boolean isHighlightContentBlock() {
 			return highlightContentBlock;
 		}
-
 		public void setHighlightContentBlock(boolean highlightContentBlock) {
 			this.highlightContentBlock = highlightContentBlock;
 		}
-
-		public static final String DEFAULT_CONTENT_BLOCK_START = "<span style=\"color: #000000; background-color: #fdff66\">";
+		public String getContentBlockTemplate() {
+			return contentBlockTemplate;
+		}
+		public void setContentBlockTemplate(String contentBlockTemplate) {
+			this.contentBlockTemplate = contentBlockTemplate;
+		}
+		public URL getBaseUrl() {
+			return baseUrl;
+		}
+		public void setBaseUrl(URL baseUrl) {
+			this.baseUrl = baseUrl;
+		}
+		public boolean isRewriteUrls() {
+			return rewriteUrls;
+		}
+		public void setRewriteUrls(boolean rewriteUrls) {
+			this.rewriteUrls = rewriteUrls;
+		}
+		public boolean isShowBlockMetadata() {
+			return showBlockMetadata;
+		}
+		public void setShowBlockMetadata(boolean showBlockMetadata) {
+			this.showBlockMetadata = showBlockMetadata;
+		}
+		public String getMetadataTemplate() {
+			return metadataTemplate;
+		}
+		public void setMetadataTemplate(String metadataTemplate) {
+			this.metadataTemplate = metadataTemplate;
+		}
+		public String getMetadataContainerTemplate() {
+			return metadataContainerTemplate;
+		}
+		public void setMetadataContainerTemplate(String metadataContainerTemplate) {
+			this.metadataContainerTemplate = metadataContainerTemplate;
+		}
+		public String getMetadataIconTemplate() {
+			return metadataIconTemplate;
+		}
+		public void setMetadataIconTemplate(String metadataIconTemplate) {
+			this.metadataIconTemplate = metadataIconTemplate;
+		}
 		
-		private String contentBlockStart = DEFAULT_CONTENT_BLOCK_START;
-				
-		public String getContentBlockStart() {
-			return contentBlockStart;
-		}
-
-		public void setContentBlockStart(String contentBlockStart) {
-			this.contentBlockStart = contentBlockStart;
-		}
-
-		private static final String DEFAULT_CONTENT_BLOCK_END = "</span>";
+		public Settings() {}
 		
-		private String contentBlockEnd = DEFAULT_CONTENT_BLOCK_END;
-
-		public String getContentBlockEnd() {
-			return contentBlockEnd;
-		}
-
-		public void setContentBlockEnd(String contentBlockEnd) {
-			this.contentBlockEnd = contentBlockEnd;
-		}
+		public Settings(String headerTemplate, boolean highlightContentBlock, String contentBlockTemplate, URL baseUrl, boolean rewriteUrls, boolean showBlockMetadata, String metadataTemplate, String metadataContainerTemplate, String metadataIconTemplate) {
+	        this.headerTemplate = headerTemplate;
+	        this.highlightContentBlock = highlightContentBlock;
+	        this.contentBlockTemplate = contentBlockTemplate;
+	        this.baseUrl = baseUrl;
+	        this.rewriteUrls = rewriteUrls;
+	        this.showBlockMetadata = showBlockMetadata;
+	        this.metadataTemplate = metadataTemplate;
+	        this.metadataContainerTemplate = metadataContainerTemplate;
+	        this.metadataIconTemplate = metadataIconTemplate;
+        }
 	}
 	
 	public void highlightContent(Writer output, WebResponse webResponse, Article article, Settings settings) throws ParserException, IOException;

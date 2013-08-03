@@ -19,18 +19,18 @@
 	   </property>
 	</bean>
 	
-	<bean id="htmlParser" class="org.ccil.cowan.tagsoup.Parser" scope="prototype"/>
+	<bean id="xmlReaderFactory" class="com.cee.news.parser.impl.TagsoupXmlReaderFactory" />
 	
 	<bean id="articleParser" class="com.cee.news.parser.impl.BoilerpipeArticleParser" scope="prototype">
-		<property name="xmlReader" ref="htmlParser"/>
+		<property name="xmlReaderFactory" ref="xmlReaderFactory"/>
 	</bean>
 	
 	<bean id="feedParser" class="com.cee.news.parser.impl.RomeFeedParser" scope="prototype">
-		<property name="xmlReader" ref="htmlParser" />
+		<property name="xmlReaderFactory" ref="xmlReaderFactory" />
 	</bean>
     
     <bean id="siteParser" class="com.cee.news.parser.impl.SiteParserImpl" scope="prototype">
-        <property name="xmlReader" ref="htmlParser" />
+        <property name="xmlReaderFactory" ref="xmlReaderFactory" />
     </bean>
     
     <bean id="articleReader" class="com.cee.news.parser.impl.ArticleReader" scope="prototype">
@@ -45,8 +45,15 @@
 		<property name="store" ref="articleStore" />
 	</bean>
 
-    <bean id="contentHighlighter" class="com.cee.news.highlighter.impl.ContentHighlighterImpl">
-        <property name="xmlReader" ref="htmlParser" />
+    <bean id="templateCache" class="com.cee.news.highlighter.impl.TemplateCache" scope="prototype">
+        <property name="readerFactory">
+            <bean class="com.cee.news.parser.net.impl.XmlStreamReaderFactory" />
+        </property>
+    </bean>
+	
+    <bean id="contentHighlighter" class="com.cee.news.highlighter.impl.ContentHighlighterImpl" scope="prototype">
+        <property name="xmlReaderFactory" ref="xmlReaderFactory" />
         <property name="articleReader" ref="articleReader" />
+        <property name="templateCache" ref="templateCache" />
     </bean>
 </beans>

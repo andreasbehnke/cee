@@ -7,7 +7,6 @@ import java.io.Reader;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.ccil.cowan.tagsoup.Parser;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,7 @@ public class TestBoilerpipeArticleParser {
 		Article article = new Article();
 		article.setTitle(articleTitle);
         article.setLocation(articleLocation.toExternalForm());
-        ArticleParser parser = new BoilerpipeArticleParser(new Parser());
+        ArticleParser parser = new BoilerpipeArticleParser(new TagsoupXmlReaderFactory());
         WebClient webClient = new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory());
         Reader reader = webClient.openReader(articleLocation);
         try {

@@ -15,7 +15,7 @@
 	
 	<!-- GWT Services -->
 	
-	<bean id="gwtLanguageService" class="com.cee.news.server.content.LanguageServiceImpl" scope="request" autowire="byType">
+	<bean id="gwtLanguageService" class="com.cee.news.server.content.LanguageServiceImpl" scope="request">
 		<property name="searchService" ref="articleSearchService" />
 	</bean>
 
@@ -48,7 +48,7 @@
 	
 	<!-- Spring HttpRequestHandlers -->
 	
-	<bean id="contentHighlightHandler" class="com.cee.news.servlet.highlight.ContentHighlightHandler">
+	<bean id="contentHighlightHandler" class="com.cee.news.servlet.highlight.ContentHighlightHandler" scope="request">
 	     <property name="articleStore" ref="articleStore" />
 	     <property name="webClientFactory" ref="webClientFactory" />
 	     <property name="contentHighlighter" ref="contentHighlighter" />

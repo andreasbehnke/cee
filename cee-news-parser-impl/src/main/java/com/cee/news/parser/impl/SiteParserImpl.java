@@ -22,29 +22,18 @@ import com.cee.news.parser.SiteParser;
  * the meta information from document header. Detects site language
  * using {@link LanguageDetector}.
  */
-public class SiteParserImpl implements SiteParser {
+public class SiteParserImpl extends XmlReaderProvider implements SiteParser {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SiteParserImpl.class);
 
-    private XMLReader xmlReader;
-    
-    /**
-     * {@link XMLReader} used by the parser.
-     * @param xmlReader
-     *            The XMLReader instance used to parse HTML content
-     */
-    public void setXmlReader(XMLReader xmlReader) {
-        this.xmlReader = xmlReader;
-    }
-
     public SiteParserImpl() {}
     
-    public SiteParserImpl(XMLReader xmlReader) {
-        this.xmlReader = xmlReader;
+    public SiteParserImpl(SaxXmlReaderFactory xmlReaderFactory) {
+        super(xmlReaderFactory);
     }
 
     /**
-     * Parses the HTML content and extracts all feeds using the provided reader.
+     * Parses the HTML content and extracts all feeds using the provided reade;r.
      * The feed instances are created by the feedService for each LINK element
      * with a rel attribute set to "alternate".
      * 
@@ -58,11 +47,8 @@ public class SiteParserImpl implements SiteParser {
      */
     @Override
     public SiteExtraction parse(Reader reader, URL siteLocation) throws IOException, ParserException {
-        if (xmlReader == null) {
-            throw new IllegalStateException("reader property has not been set");
-        }
-
-        SiteHandler siteHandler = new SiteHandler(siteLocation);
+        XMLReader xmlReader = createXmlReader();
+    	SiteHandler siteHandler = new SiteHandler(siteLocation);
         xmlReader.setContentHandler(siteHandler);
         try {
         	InputSource is = new InputSource(reader);

@@ -30,7 +30,7 @@ import de.l3s.boilerpipe.sax.BoilerpipeHTMLContentHandler;
 /**
  * Implementation of {@link ArticleParser} using the {@link BoilerpipeInput} of the boilerpipe library.
  */
-public class BoilerpipeArticleParser implements ArticleParser {
+public class BoilerpipeArticleParser extends XmlReaderProvider implements ArticleParser {
 	
 	private final static class ArticleExtractor extends ExtractorBase {
 	    
@@ -87,20 +87,11 @@ public class BoilerpipeArticleParser implements ArticleParser {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(BoilerpipeArticleParser.class);
     
-    private XMLReader xmlReader;
-    
     public BoilerpipeArticleParser() {}
     
-    public BoilerpipeArticleParser(XMLReader xmlReader) {
-        this.xmlReader = xmlReader;
+    public BoilerpipeArticleParser(SaxXmlReaderFactory xmlReaderFactory) {
+        super(xmlReaderFactory);
     }
-    
-    /**
-     * @param xmlReader Reader used to read HTML content from input stream
-     */
-    public void setXmlReader(XMLReader xmlReader) {
-		this.xmlReader = xmlReader;
-	}
     
     @Override
     public Article parse(Reader reader, Article article, Settings settings) throws ParserException, IOException {
@@ -109,6 +100,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
         	LOG.debug("start parsing article content of {}", article.getLocation());
         	BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
         	
+        	XMLReader xmlReader = createXmlReader();
         	xmlReader.setContentHandler(boilerpipeHandler);
         	xmlReader.parse(new InputSource(reader));
         	TextDocument textDoc = boilerpipeHandler.toTextDocument();
@@ -132,7 +124,7 @@ public class BoilerpipeArticleParser implements ArticleParser {
             	String paragraph = block.getText();
             	com.cee.news.model.TextBlock internalBlock = new com.cee.news.model.TextBlock(paragraph);
             	if (settings.isProvideMetaData()) {
-            		ContentExtractionMetaData metaData = new ContentExtractionMetaData(block.isContent(), block.toString(), block.getContainedTextElements());
+            		ContentExtractionMetaData metaData = new ContentExtractionMetaData(content.size(), block.isContent(), block.toString(), block.getContainedTextElements());
             		internalBlock.setMetaData(metaData);
             	}
             	content.add(internalBlock);

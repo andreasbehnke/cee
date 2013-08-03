@@ -44,13 +44,17 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
 
 	private static FeedParsers feedParsers = new FeedParsers();
 
-	private XMLReader xmlReader;
+	private XmlReaderProvider xmlReaderProvider;
 
 	public RomeFeedParser() {
 	}
 
-	public RomeFeedParser(XMLReader xmlReader) {
-		setXmlReader(xmlReader);
+	public RomeFeedParser(SaxXmlReaderFactory xmlReaderFactory) {
+		xmlReaderProvider = new XmlReaderProvider(xmlReaderFactory);
+	}
+	
+	public void setXmlReaderFactory(SaxXmlReaderFactory xmlReaderFactory) {
+		xmlReaderProvider = new XmlReaderProvider(xmlReaderFactory);
 	}
 
 	@SuppressWarnings("serial")
@@ -70,16 +74,6 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
 			return false;
 		}
 
-	}
-
-	/**
-	 * @param xmlReader
-	 *            used to extract text from html descriptions. This xml reader
-	 *            should be solid and able to parse html from the wild, e.g.
-	 *            tagsoup parser.
-	 */
-	public void setXmlReader(XMLReader xmlReader) {
-		this.xmlReader = xmlReader;
 	}
 
 	private void removeEmptyElements(Element element) {
@@ -132,11 +126,9 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
 	}
 
 	private String extractTextFromHtml(String html) throws IOException, SAXException {
-		if (xmlReader == null) {
-			throw new IllegalStateException("XmlReader has not been initialized");
-		}
 		Reader reader = null;
 		try {
+			XMLReader xmlReader = xmlReaderProvider.createXmlReader();
 			BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
 			xmlReader.setContentHandler(boilerpipeHandler);
 			reader = new StringReader(html);

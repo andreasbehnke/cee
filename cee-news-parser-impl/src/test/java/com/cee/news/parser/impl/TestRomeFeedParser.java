@@ -12,7 +12,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.ccil.cowan.tagsoup.Parser;
 import org.junit.Test;
 
 import com.cee.news.model.Article;
@@ -26,7 +25,7 @@ import com.cee.news.parser.net.impl.XmlStreamReaderFactory;
 public class TestRomeFeedParser {
 	
 	private FeedParser createFeedParser() {
-		return new RomeFeedParser(new Parser());
+		return new RomeFeedParser(new TagsoupXmlReaderFactory());
 	}
 	
 	private Reader openReader(URL location) throws IOException {

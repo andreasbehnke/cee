@@ -14,6 +14,7 @@ import org.springframework.web.HttpRequestHandler;
 import com.cee.news.client.error.ServiceException;
 import com.cee.news.highlighter.ContentHighlighter;
 import com.cee.news.highlighter.ContentHighlighter.Settings;
+import com.cee.news.highlighter.impl.DefaultSettings;
 import com.cee.news.model.Article;
 import com.cee.news.model.ArticleKey;
 import com.cee.news.parser.ParserException;
@@ -48,11 +49,14 @@ public class ContentHighlightHandler implements HttpRequestHandler {
 		try {
 		    ArticleKey articleKey = getArticleKey(request);
 			Article article = articleStore.getArticle(articleKey, false);
+			
 			WebClient webClient = webClientFactory.createWebClient();
 			WebResponse webResponse = webClient.openWebResponse(new URL(article.getLocation()));
 			String contentEncoding = webResponse.openReaderSource().getContentEncoding();
 			response.setCharacterEncoding(contentEncoding);
-			contentHighlighter.highlightContent(response.getWriter(), webResponse, article, new Settings());
+			
+			Settings settings = DefaultSettings.createDefaultSettings(new URL(article.getLocation()));
+			contentHighlighter.highlightContent(response.getWriter(), webResponse, article, settings);
 		} catch(StoreException e) {
 			throw new ServletException(e);
 		} catch (ParserException e) {

@@ -10,7 +10,6 @@ import java.io.Reader;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.ccil.cowan.tagsoup.Parser;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -30,9 +29,9 @@ import com.cee.news.parser.net.impl.ClassResourceWebClient;
 public class TestSiteReader {
 	
 	private SiteReader createSiteReader() {
-		FeedParser feedParser = new RomeFeedParser(new Parser());
-		SiteParser siteParser = new SiteParserImpl(new Parser());
-		ArticleParser articleParser = new BoilerpipeArticleParser(new Parser());
+		FeedParser feedParser = new RomeFeedParser(new TagsoupXmlReaderFactory());
+		SiteParser siteParser = new SiteParserImpl(new TagsoupXmlReaderFactory());
+		ArticleParser articleParser = new BoilerpipeArticleParser(new TagsoupXmlReaderFactory());
 		LanguageDetector languageDetector = new LanguageDetector() {
 			@Override
 			public String detect(SiteExtraction siteExtraction) {

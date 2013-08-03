@@ -8,7 +8,6 @@ import java.io.Reader;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.ccil.cowan.tagsoup.Parser;
 import org.junit.Test;
 
 import com.cee.news.SiteExtraction;
@@ -21,7 +20,7 @@ public class TestSiteParser {
 	
 	private SiteExtraction readSite(URL siteLocation) throws IOException, ParserException {
 		WebClient webClient = new ClassResourceWebClient();
-        SiteParserImpl parser = new SiteParserImpl(new Parser());
+        SiteParserImpl parser = new SiteParserImpl(new TagsoupXmlReaderFactory());
         Reader reader = webClient.openReader(siteLocation);
         try {
         	return parser.parse(reader, siteLocation);

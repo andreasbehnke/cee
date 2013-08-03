@@ -19,9 +19,11 @@ import com.cee.news.model.TextBlock;
 import com.cee.news.parser.ArticleParser;
 import com.cee.news.parser.ParserException;
 import com.cee.news.parser.impl.ArticleReader;
+import com.cee.news.parser.impl.SaxXmlReaderFactory;
+import com.cee.news.parser.impl.XmlReaderProvider;
 import com.cee.news.parser.net.WebResponse;
 
-public class ContentHighlighterImpl implements ContentHighlighter {
+public class ContentHighlighterImpl extends XmlReaderProvider implements ContentHighlighter {
 	
 	private final static Logger LOG = LoggerFactory.getLogger(ContentHighlighterImpl.class);
 	
@@ -29,23 +31,24 @@ public class ContentHighlighterImpl implements ContentHighlighter {
 	
 	private ArticleReader articleReader;
 	
-	private XMLReader xmlReader;
+	private TemplateCache templateCache;
 	
 	public ContentHighlighterImpl() {}
 	
-	public ContentHighlighterImpl(ArticleReader articleReader, XMLReader xmlReader) {
+	public ContentHighlighterImpl(ArticleReader articleReader, SaxXmlReaderFactory xmlReaderFactory, TemplateCache templateCache) {
+		super(xmlReaderFactory);
 	    this.articleReader = articleReader;
-	    this.xmlReader = xmlReader;
+	    this.templateCache = templateCache;
     }
 	
 	public void setArticleReader(ArticleReader articleReader) {
 	    this.articleReader = articleReader;
     }
-
-	public void setXmlReader(XMLReader xmlReader) {
-	    this.xmlReader = xmlReader;
-    }
 	
+	public void setTemplateCache(TemplateCache templateCache) {
+	    this.templateCache = templateCache;
+    }
+
 	@Override
     public void highlightContent(Writer output, WebResponse response, Article article,  Settings settings) throws ParserException, IOException {
 	    List<String> issues = new ArrayList<String>();
@@ -63,7 +66,8 @@ public class ContentHighlighterImpl implements ContentHighlighter {
 	    	blocks = article.getContent();
 	    }
 	    
-	    xmlReader.setContentHandler(new HighlightHandler(blocks, output, settings));
+	    XMLReader xmlReader = createXmlReader();
+	    xmlReader.setContentHandler(new HighlightHandler(blocks, output, settings, templateCache));
 	    Reader reader = response.openReaderSource().getReader();
 	    try {
 	    	xmlReader.parse(new InputSource(reader));
