@@ -1,4 +1,4 @@
-package com.cee.news.language.impl;
+package com.cee.news.highlighter.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
