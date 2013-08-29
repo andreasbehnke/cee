@@ -35,7 +35,7 @@ public class ArticleReader {
     	try {
     		return articleParser.parse(reader, article, settings);
     	} catch(Exception ex) {
-    		LOG.error("Could not parse article {}: {}", article.getLocation(), ex);
+    		LOG.error("Could not parse article " + article.getLocation(), ex);
     		return null;
     	} finally {
     		IOUtils.closeQuietly(reader);

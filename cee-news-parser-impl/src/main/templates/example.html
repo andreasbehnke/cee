@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+    P {
+        max-width: 350px;
+    }
+</style>
+<style type="text/css">
+    .NAMESPACEhighlight {
+        color: #000000;
+        background-color: #fdff66
+    }
+    .NAMESPACEmetaIcon {
+        width: 18px;
+        height: 18px;
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QANwA3AKuKYlacAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QcfBTAPkRzXAQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAACwSURBVDjLY2CgEDAyMDAw/P///z9ZmhkZGVlgHAuLNSRpPnEihIGBgYGBBZcCMzNxBn5+NoaPH38xMDAwMJw69RKrOhZcmidNskUR8/HZwvDmzQ8MtUzYDDh16iVDZuYBOD8z8wBWzTgNYGBgYDh//g1WNtEGEAsGsQGOjtJwtqGhCGkGqKkJMLS3W8L506c7MIiIcBCfDm7d+sDg47MFRQxXNOJMibg0UD0zURoJDADRSzKO0aLJvgAAAABJRU5ErkJggg==');
+        background-repeat: no-repeat;
+        display: inline-block;
+        float: left;
+        cursor: pointer;
+    }
+    .NAMESPACEmetaData {
+        max-width: 250px;
+        display: none;
+        position: absolute;
+        background-color: #ffffff;
+        border-style: solid;
+        border-width: 2px;
+        border-radius: 4px;
+        border-color: #3737ab;
+        
+        font-family: sans-serif;
+        font-size: 12pt;
+        
+        padding: 4px;
+    }
+</style>
+<script type="text/javascript">
+    function NAMESPACEshowMetaInformation(element, id) {
+    	id = 'NAMESPACE' + id;
+    	position = element.getBoundingClientRect();
+    	
+    	metaElement = document.getElementById(id);
+        var display = metaElement.style.display;
+        if (display == "block") {
+        	metaElement.style.display = "none";
+        } else {
+        	metaElement.style.left = (position.right + window.scrollX) + "px";
+        	metaElement.style.top = (position.top + window.scrollY) + "px";
+    	    metaElement.style.display = "block";
+        }
+    }
+</script>
+</head>
+<body>
+<p><span class="NAMESPACEmetaIcon" onclick="NAMESPACEshowMetaInformation(this, 100)"></span><span class="NAMESPACEhighlight">fhsdklf hfhsdklfh sdjklfhs dklfh sdkljfhasdkl jfhasdjkfhsdkajfh fh ksjfhegtdfjxcm,bneruioghk jkhsdf gkjhdfgkl hsdfuigh dfgjkdf gjklhdfgkl hdl ghdkfg ksd</span></p>
+<p><span class="NAMESPACEmetaIcon" onclick="NAMESPACEshowMetaInformation(this, 102)"></span>sdfgdfk sdfjklg jkldfg dklfg dfkg dsfgjdfgjldgjsdg dkg dklsg lkdjg dfjgklöjsdf lgjksdfögjsdf gjsdfö gjkldf ögj dflgjösdflkgj dfskg dsfklgj dfkls gdfsj glkdfjs ggfsdfg</p>
+<p>sdfgdfk sdfjklg jkldfg dklfg dfkg dsfgjdfgjldgjsdg dkg dklsg lkdjg dfjgklöjsdf lgjksdfögjsdf gjsdfö gjkldf ögj dflgjösdflkgj dfskg dsfklgj dfkls gdfsj glkdfjs ggfsdfg</p>
+
+<div class="NAMESPACEmetaData" id="NAMESPACE100">
+Metadata of Textblock 100<br>
+fhasdfkljhasdfjkl dhfjkasdh fjkhsd kfh asdklfhasdf asdjkfh sdkjfh jkasdh fkasdhf sdh 
+</div>
+<div class="NAMESPACEmetaData" id="NAMESPACE102">
+Metadata of Textblock 102<br>
+fhasdfkljhasdfjkl dhfjkasdh fjkhsd kfh asdklfhasdf asdjkfh sdkjfh jkasdh fkasdhf sdh 
+</div>
+</body>
+</html>

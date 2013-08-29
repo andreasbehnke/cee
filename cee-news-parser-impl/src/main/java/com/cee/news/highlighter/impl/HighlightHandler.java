@@ -1,15 +1,10 @@
 package com.cee.news.highlighter.impl;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.BitSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
-import java.util.UUID;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -18,7 +13,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.cee.news.highlighter.ContentHighlighter.Settings;
 import com.cee.news.model.TextBlock;
-import com.cee.news.model.TextBlock.ContentExtractionMetaData;
+import com.cee.news.model.ContentExtractionMetaData;
 
 public class HighlightHandler extends DefaultHandler {
 	
@@ -42,15 +37,9 @@ public class HighlightHandler extends DefaultHandler {
 	
 	private final BitSet containedTextBlocks;
 	
-	private final Writer output;
-	
+	private final HighlightWriter writer;
+
 	private final Settings settings;
-	
-	private final TemplateCache templateCache;
-	
-	private final UUID namespace = UUID.randomUUID();
-	
-	private final Map<String, String> parameters;
 	
 	private HtmlState htmlState = HtmlState.head;
 	
@@ -58,12 +47,12 @@ public class HighlightHandler extends DefaultHandler {
 	
 	private int characterElementIdx = 0;
 
-	public HighlightHandler(final List<TextBlock> blocks, final Writer output, final Settings settings, final TemplateCache templateCache) {
+	public HighlightHandler(final List<TextBlock> blocks, final HighlightWriter writer, final Settings settings) {
 		if (blocks == null) {
 			throw new IllegalArgumentException("parameter blocks must not be null");
 		}
-		if (output == null) {
-			throw new IllegalArgumentException("parameter output must not be null");
+		if (writer == null) {
+			throw new IllegalArgumentException("parameter writer must not be null");
 		}
 		if (settings == null) {
 			throw new IllegalArgumentException("parameter settings must not be null");
@@ -71,16 +60,12 @@ public class HighlightHandler extends DefaultHandler {
 		if (settings.getBaseUrl() == null && settings.isRewriteUrls()) {
 			throw new IllegalArgumentException("Base URL setting required for rewriting URLs");
 		}
-		if ((settings.getMetadataContainerTemplate() != null && settings.getMetadataTemplate() == null) || (settings.getMetadataContainerTemplate() == null && settings.getMetadataTemplate() != null)) {
-			throw new IllegalArgumentException("if setting metadataContainerTemplate is set, setting metadataTemplate must also be present");
-		}
-		if (templateCache == null) {
-			throw new IllegalArgumentException("Parameter templateCache must not be null");
+		if (settings.isShowBlockMetadata() && (settings.getMetadataContainerTemplate() == null || settings.getMetadataTemplate() == null)) {
+			throw new IllegalArgumentException("if setting showBlockMetadata = true, metadataTemplate and metaDataContainerTemplate must be present");
 		}
 		this.textBlocks = blocks;
-		this.output = output;
+		this.writer = writer;
 		this.settings = settings;
-		this.templateCache = templateCache;
 		metaDataStack = new Stack<ContentExtractionMetaData>();
 		containedTextBlocks = new BitSet();
 		for (int i = blocks.size() -1; i > -1; i--) {
@@ -88,8 +73,6 @@ public class HighlightHandler extends DefaultHandler {
 			metaDataStack.add(md);
 			containedTextBlocks.or(md.getContainedTextBlocks());
 		}
-		parameters = new HashMap<String, String>();
-		parameters.put(Settings.PARAMETER_NAMESPACE, namespace.toString());
 	}
 	
 	private boolean isContainedTextBlock() {
@@ -110,88 +93,7 @@ public class HighlightHandler extends DefaultHandler {
 		}
 		return metaData;
 	}
-	
-	private void write(String text) {
-		try {
-	        output.write(text);
-        } catch (IOException e) {
-	        throw new RuntimeException(e);
-        }
-	}
 
-	private void write(char[] ch, int start, int length) {
-		try {
-	        output.write(ch, start, length);
-        } catch (IOException e) {
-	        throw new RuntimeException(e);
-        }
-	}
-	
-	private void writeStartTag(String qname, Attributes attributes, String[] attributeOverrides) {
-		try {
-	        output.append('<')
-	        	.append(qname);
-	        for (int i = 0; i < attributes.getLength(); i++) {
-				final String attr = attributes.getQName(i);
-				String value = null;
-				if (attributeOverrides != null) {
-					value = attributeOverrides[i];
-				}
-				if (value == null) {
-					value = attributes.getValue(i);
-				}
-				output.append(' ')
-					.append(attr)
-					.append("=\"")
-					.append(value)
-					.append("\"");
-			}
-	        output.append('>');
-        } catch (IOException e) {
-	        throw new RuntimeException(e);
-        }
-	}
-	
-	private void writeEndTag(String qname) {
-		try {
-	        output.append("</")
-	        	.append(qname)
-	        	.append('>');
-        } catch (IOException e) {
-	        throw new RuntimeException(e);
-        }
-	}
-	
-	private void writeTemplate(String template) {
-		write(templateCache.fillTemplate(template, parameters));
-	}
-	
-	private void writeHeaderTemplate() {
-		writeTemplate(settings.getHeaderTemplate());
-	}
-	
-	private void writeMetadataContainerTemplate() {
-		StringBuilder content = new StringBuilder();
-		for (TextBlock textBlock : textBlocks) {
-			ContentExtractionMetaData metaData = textBlock.getMetaData();
-	        parameters.put(Settings.PARAMETER_CONTENT, metaData.toString());
-	        parameters.put(Settings.PARAMETER_ID, metaData.getId() + "");
-	        content.append(templateCache.fillTemplate(settings.getMetadataTemplate(), parameters));
-        }
-		parameters.put(Settings.PARAMETER_CONTENT, content.toString());
-		writeTemplate(settings.getMetadataContainerTemplate());
-	}
-	
-	private void writeMetadataIconTemplate(ContentExtractionMetaData metaData) {
-		parameters.put(Settings.PARAMETER_ID, metaData.getId() + "");
-		writeTemplate(settings.getMetadataIconTemplate());
-	}
-	
-	private void writeContentBlockTemplate(String content) {
-		parameters.put(Settings.PARAMETER_CONTENT, content);
-		writeTemplate(settings.getContentBlockTemplate());
-	}
-	
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		characterElementIdx++;
@@ -202,14 +104,14 @@ public class HighlightHandler extends DefaultHandler {
 			highlightContentBlock = settings.isHighlightContentBlock() && metaData.isContent();
 			boolean showMetadataIcon = settings.isShowBlockMetadata() && (blockState == BlockState.firstTextOfBlock);
 			if (showMetadataIcon) {
-				writeMetadataIconTemplate(metaData);
+				writer.writeMetadataIconTemplate(metaData);
 			}
 			if (highlightContentBlock) {
-				writeContentBlockTemplate(new String(ch, start, length));
+				writer.writeContentBlockTemplate(new String(ch, start, length));
 			}
 		} 
 		if (!highlightContentBlock) {
-			write(ch, start, length);
+			writer.write(ch, start, length);
 		}
 	}
 	
@@ -263,7 +165,7 @@ public class HighlightHandler extends DefaultHandler {
 			}
 		}
 		
-		writeStartTag(qname, attributes, attributeOverrides);
+		writer.writeStartTag(qname, attributes, attributeOverrides);
     }
 
 	@Override
@@ -275,15 +177,15 @@ public class HighlightHandler extends DefaultHandler {
 			// add base tag
 			AttributesImpl attributesImpl = new AttributesImpl();
 			attributesImpl.addAttribute("", "", "href", "", getBaseUrl());
-			writeStartTag("base", attributesImpl, null);
-			writeEndTag("base");
+			writer.writeStartTag("base", attributesImpl, null);
+			writer.writeEndTag("base");
 		}
 		if (isHeader && settings.getHeaderTemplate() != null) {
-			writeHeaderTemplate();
+			writer.writeHeaderTemplate();
 		}
 		if (isBody && settings.isShowBlockMetadata()) {
-			writeMetadataContainerTemplate();
+			writer.writeMetadataContainerTemplate(textBlocks);
 		}
-		writeEndTag(qname);
+		writer.writeEndTag(qname);
     }
 }

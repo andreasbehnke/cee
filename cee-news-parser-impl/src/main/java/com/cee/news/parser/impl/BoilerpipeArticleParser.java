@@ -13,7 +13,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import com.cee.news.model.Article;
-import com.cee.news.model.TextBlock.ContentExtractionMetaData;
+import com.cee.news.model.ContentExtractionMetaData;
 import com.cee.news.parser.ArticleParser;
 import com.cee.news.parser.ParserException;
 
@@ -124,7 +124,7 @@ public class BoilerpipeArticleParser extends XmlReaderProvider implements Articl
             	String paragraph = block.getText();
             	com.cee.news.model.TextBlock internalBlock = new com.cee.news.model.TextBlock(paragraph);
             	if (settings.isProvideMetaData()) {
-            		ContentExtractionMetaData metaData = new ContentExtractionMetaData(content.size(), block.isContent(), block.toString(), block.getContainedTextElements());
+            		ContentExtractionMetaData metaData = new ContentExtractionMetaDataFactory().create(content.size(), block);
             		internalBlock.setMetaData(metaData);
             	}
             	content.add(internalBlock);

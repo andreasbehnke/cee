@@ -1,14 +1,70 @@
 <style type="text/css">
-    .highlightContentBlock {
+    .{NAMESPACE}highlight {
         color: #000000;
         background-color: #fdff66
     }
-    .highlightMetadataIcon {
-        background-color: 0055d3;
-        color: #ffffff;
-        width: 1em;
-        height: 1em;
-        font-size: 0.8em;
-        display: inline-block
+    .{NAMESPACE}metaIcon {
+        width: 18px;
+        height: 18px;
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QANwA3AKuKYlacAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QcfBTAPkRzXAQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAACwSURBVDjLY2CgEDAyMDAw/P///z9ZmhkZGVlgHAuLNSRpPnEihIGBgYGBBZcCMzNxBn5+NoaPH38xMDAwMJw69RKrOhZcmidNskUR8/HZwvDmzQ8MtUzYDDh16iVDZuYBOD8z8wBWzTgNYGBgYDh//g1WNtEGEAsGsQGOjtJwtqGhCGkGqKkJMLS3W8L506c7MIiIcBCfDm7d+sDg47MFRQxXNOJMibg0UD0zURoJDADRSzKO0aLJvgAAAABJRU5ErkJggg==');
+        background-repeat: no-repeat;
+        display: inline-block;
+        float: left;
+        cursor: pointer;
     }
+    .{NAMESPACE}metaData {
+        min-width: 300px;
+        display: none;
+        position: absolute;
+        background-color: #ffffff;
+        border-style: solid;
+        border-width: 2px;
+        border-radius: 4px;
+        border-color: #3737ab;
+        
+        font-family: sans-serif;
+        font-size: 12pt;
+        
+        padding: 4px;
+    }
+	.{NAMESPACE}metaData dt {
+		float: left;
+		clear: left;
+		text-align: right;
+		font-weight: bold;
+		color: #3737ab;
+	    width: 220px;
+	    line-height: 20px;
+	}
+	.{NAMESPACE}metaData dt:after {
+	    content: ":";
+	}
+	.{NAMESPACE}metaData dd {
+	    margin-left: 230px;
+        line-height: 20px;
+	}
 </style>
+<script type="text/javascript">
+    function {NAMESPACE}showMetaInformation(event, element, id) {
+        id = '{NAMESPACE}' + id;
+        position = element.getBoundingClientRect();
+        
+        metaElement = document.getElementById(id);
+        var display = metaElement.style.display;
+        if (display == "block") {
+            metaElement.style.display = "none";
+        } else {
+            metaElement.style.left = (position.right + window.scrollX) + "px";
+            metaElement.style.top = (position.top + window.scrollY) + "px";
+            metaElement.style.display = "block";
+        }
+        
+        if (event.stopPropagation){
+        	event.preventDefault();
+            event.stopPropagation();
+        }
+        else if(window.event){
+           window.event.cancelBubble=true;
+        }
+    }
+</script>

@@ -67,7 +67,8 @@ public class ContentHighlighterImpl extends XmlReaderProvider implements Content
 	    }
 	    
 	    XMLReader xmlReader = createXmlReader();
-	    xmlReader.setContentHandler(new HighlightHandler(blocks, output, settings, templateCache));
+	    HighlightWriter writer = new HighlightWriter(output, templateCache, settings);
+	    xmlReader.setContentHandler(new HighlightHandler(blocks, writer, settings));
 	    Reader reader = response.openReaderSource().getReader();
 	    try {
 	    	xmlReader.parse(new InputSource(reader));

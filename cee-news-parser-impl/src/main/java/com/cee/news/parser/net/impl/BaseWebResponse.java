@@ -3,7 +3,6 @@ package com.cee.news.parser.net.impl;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 
 import org.apache.commons.io.IOUtils;
 

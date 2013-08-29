@@ -16,7 +16,7 @@ public class XmlReaderProvider {
 		this.xmlReaderFactory = xmlReaderFactory;
 	}
 	
-	public XMLReader createXmlReader() {
+	protected XMLReader createXmlReader() {
 		return xmlReaderFactory.createXmlReader();
 	}
 

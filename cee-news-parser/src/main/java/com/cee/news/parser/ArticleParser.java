@@ -5,7 +5,7 @@ import java.io.Reader;
 
 import com.cee.news.model.Article;
 import com.cee.news.model.TextBlock;
-import com.cee.news.model.TextBlock.ContentExtractionMetaData;
+import com.cee.news.model.ContentExtractionMetaData;
 
 public interface ArticleParser {
 	

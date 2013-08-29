@@ -16,6 +16,12 @@ public class TemplateCache {
 	
 	private ReaderFactory readerFactory;
 	
+	public TemplateCache() {}
+	
+	public TemplateCache(ReaderFactory readerFactory) {
+	    this.readerFactory = readerFactory;
+    }
+
 	public void setReaderFactory(ReaderFactory readerFactory) {
 		this.readerFactory = readerFactory;
 	}
