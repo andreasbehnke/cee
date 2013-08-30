@@ -15,7 +15,7 @@
 	
 	<!-- GWT Services -->
 	
-	<bean id="gwtLanguageService" class="com.cee.news.server.content.LanguageServiceImpl" scope="request">
+	<bean id="gwtLanguageService" class="com.cee.news.server.content.LanguageServiceImpl">
 		<property name="searchService" ref="articleSearchService" />
 	</bean>
 

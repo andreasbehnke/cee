@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.ServletRequest;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import com.cee.news.client.content.LanguageList;
 import com.cee.news.client.content.LanguageService;
@@ -16,8 +16,6 @@ public class LanguageServiceImpl implements LanguageService {
 	
 	private ArticleSearchService searchService;
 	
-	private ServletRequest request;
-	
 	public ArticleSearchService getSearchService() {
 		return searchService;
 	}
@@ -26,14 +24,6 @@ public class LanguageServiceImpl implements LanguageService {
 		this.searchService = searchService;
 	}
 	
-	public ServletRequest getRequest() {
-		return request;
-	}
-
-	public void setRequest(ServletRequest request) {
-		this.request = request;
-	}
-
 	@Override
 	public LanguageList getSupportedLanguages() {
 		List<String> langIds = searchService.getSupportedLanguages();
@@ -44,7 +34,7 @@ public class LanguageServiceImpl implements LanguageService {
 		List<EntityKey> languages = new ArrayList<EntityKey>();
 		int defaultLanguageIndex = 0;
 		String defaultLanguage = "en";
-		Locale currentUserLocale = request.getLocale();
+		Locale currentUserLocale = LocaleContextHolder.getLocaleContext().getLocale();
 		if (currentUserLocale != null) {
 			defaultLanguage = currentUserLocale.getLanguage();
 		}
