@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cee.news.SiteExtraction;
-import com.cee.news.language.LanguageDetector;
+import com.cee.news.language.impl.SiteLanguageDetector;
 import com.cee.news.model.Article;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
@@ -36,7 +36,7 @@ public class SiteReader {
     
     private SiteParser siteParser;
     
-    private LanguageDetector languageDetector;
+    private SiteLanguageDetector siteLanguageDetector;
 
     private ArticleStore store;
     
@@ -45,12 +45,12 @@ public class SiteReader {
     public SiteReader() {
     }
 
-    public SiteReader(ArticleStore store, ArticleReader articleReader, FeedParser feedParser, SiteParser siteParser, LanguageDetector languageDetector) {
+    public SiteReader(ArticleStore store, ArticleReader articleReader, FeedParser feedParser, SiteParser siteParser, SiteLanguageDetector siteLanguageDetector) {
         this.store = store;
         this.articleReader = articleReader;
         this.feedParser = feedParser;
         this.siteParser = siteParser;
-        this.languageDetector = languageDetector;
+        this.siteLanguageDetector = siteLanguageDetector;
     }
     
     public void setArticleReader(ArticleReader articleReader) {
@@ -65,11 +65,11 @@ public class SiteReader {
 	    this.siteParser = siteParser;
     }
     
-    public void setLanguageDetector(LanguageDetector languageDetector) {
-	    this.languageDetector = languageDetector;
-    }
+    public void setSiteLanguageDetector(SiteLanguageDetector siteLanguageDetector) {
+		this.siteLanguageDetector = siteLanguageDetector;
+	}
 
-    public void setStore(ArticleStore store) {
+	public void setStore(ArticleStore store) {
         this.store = store;
     }
     
@@ -98,8 +98,8 @@ public class SiteReader {
     		site.setLocation(response.getLocation().toExternalForm());
     		// read all site's feeds
     		site.setFeeds(readFeeds(webClient, siteExtraction.getFeedLocations()));
-    		// detetect site's language
-    		site.setLanguage(languageDetector.detect(siteExtraction));
+    		// detect site's language
+    		site.setLanguage(siteLanguageDetector.detect(siteExtraction));
     		return site;
     	} finally {
     		IOUtils.closeQuietly(reader);
@@ -137,7 +137,7 @@ public class SiteReader {
         return siteArticleCount;
     }
  
-    private List<Article> processArticles(WebClient webClient, List<Article> articles, EntityKey siteKey, String language) throws MalformedURLException, StoreException, IOException {
+    private List<Article> processArticles(WebClient webClient, List<Article> articles, EntityKey siteKey, String language) throws MalformedURLException, StoreException, IOException, ParserException {
     	List<Article> articlesForUpdate = new ArrayList<Article>();
 		for (Article article : articles) {
             if (!store.contains(siteKey, article.getExternalId())) {

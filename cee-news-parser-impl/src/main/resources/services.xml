@@ -11,10 +11,12 @@
 		</property>
 	</bean>
 	
-	<bean id="languageDetector" class="com.cee.news.language.impl.DelegatingLanguageDetector">
+	<bean id="languageDetector" class="com.cee.news.language.impl.LanguageDetectorImpl" />
+	
+	<bean id="siteLanguageDetector" class="com.cee.news.language.impl.SiteLanguageDetector">
 	   <property name="detectors">
 	       <list>
-	           <bean class="com.cee.news.language.impl.FeedLanguageDetector" />
+	           <ref bean="languageDetector" />
 	       </list>
 	   </property>
 	</bean>
@@ -40,7 +42,7 @@
 	<bean id="siteReader" class="com.cee.news.parser.impl.SiteReader" scope="prototype">
 		<property name="articleReader" ref="articleReader" />
 		<property name="feedParser" ref="feedParser" />
-		<property name="languageDetector" ref="languageDetector" />
+		<property name="siteLanguageDetector" ref="siteLanguageDetector" />
 		<property name="siteParser" ref="siteParser" />
 		<property name="store" ref="articleStore" />
 	</bean>
