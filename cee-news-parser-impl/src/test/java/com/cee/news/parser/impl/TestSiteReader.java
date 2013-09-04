@@ -8,13 +8,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.cee.news.SiteExtraction;
 import com.cee.news.language.LanguageDetector;
+import com.cee.news.language.impl.SiteLanguageDetector;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 import com.cee.news.parser.ArticleParser;
@@ -34,11 +36,13 @@ public class TestSiteReader {
 		ArticleParser articleParser = new BoilerpipeArticleParser(new TagsoupXmlReaderFactory());
 		LanguageDetector languageDetector = new LanguageDetector() {
 			@Override
-			public String detect(SiteExtraction siteExtraction) {
+			public String detect(String text) {
 				return "ko";
 			}
 		};
-		SiteReader siteReader = new SiteReader(null, new ArticleReader(articleParser), feedParser, siteParser, languageDetector);
+		List<LanguageDetector> detectors = new ArrayList<LanguageDetector>();
+		detectors.add(languageDetector);
+		SiteReader siteReader = new SiteReader(null, new ArticleReader(articleParser), feedParser, siteParser, new SiteLanguageDetector(detectors));
 		return siteReader;
 	}
 	
@@ -51,7 +55,7 @@ public class TestSiteReader {
         Site site = siteReader.readSite(webClient, siteLocation.toExternalForm());
         assertEquals("SPIEGEL ONLINE - Nachrichten", site.getTitle());
         assertTrue(site.getDescription().startsWith("Deutschlands f"));
-        assertEquals("ko", site.getLanguage());
+        assertEquals("de", site.getLanguage());
         assertEquals(2, site.getFeeds().size());
         Feed feed = site.getFeeds().get(0);
         assertEquals("SPIEGEL ONLINE - Schlagzeilen", feed.getTitle());

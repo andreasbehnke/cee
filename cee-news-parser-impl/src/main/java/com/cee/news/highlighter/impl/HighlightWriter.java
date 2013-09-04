@@ -93,6 +93,10 @@ public class HighlightWriter {
 		writeTemplate(settings.getHeaderTemplate());
 	}
 	
+	public void writeIssueContainerTemplate(List<String> issues) {
+		
+	}
+	
 	public void writeMetadataContainerTemplate(List<TextBlock> textBlocks) {
 		StringBuilder content = new StringBuilder();
 		for (TextBlock textBlock : textBlocks) {

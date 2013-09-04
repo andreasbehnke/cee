@@ -7,7 +7,25 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.cee.news.parser.net.impl.XmlStreamReaderFactory;
+
 public class TestTemplateCache {
+	
+	@Test
+	public void testGetTemplateContent() {
+		TemplateCache templateCache = new TemplateCache();
+		String templateResource = "Simple Resource";
+		String result = templateCache.getTemplateContent(templateResource);
+		assertEquals(templateResource, result);
+	}
+
+	@Test
+	public void testGetTemplateContentResource() {
+		TemplateCache templateCache = new TemplateCache(new XmlStreamReaderFactory());
+		String templateResource = "classpath:/com/cee/news/highlighter/impl/testTemplateCache.txt";
+		String result = templateCache.getTemplateContent(templateResource);
+		assertEquals("Hello World!", result);
+	}
 
 	@Test
 	public void testFillTemplate() {

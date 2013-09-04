@@ -3,6 +3,7 @@ package com.cee.news.highlighter.impl;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,6 @@ import org.xml.sax.XMLReader;
 
 import com.cee.news.highlighter.ContentHighlighter;
 import com.cee.news.model.Article;
-import com.cee.news.model.TextBlock;
 import com.cee.news.parser.ArticleParser;
 import com.cee.news.parser.ParserException;
 import com.cee.news.parser.impl.ArticleReader;
@@ -50,25 +50,20 @@ public class ContentHighlighterImpl extends XmlReaderProvider implements Content
     }
 
 	@Override
-    public void highlightContent(Writer output, WebResponse response, Article article,  Settings settings) throws ParserException, IOException {
+    public void highlightContent(Writer output, WebResponse response, Article article,  Settings settings) throws MalformedURLException, IOException, ParserException {
 	    List<String> issues = new ArrayList<String>();
 	    ArticleParser.Settings parserSettings = new ArticleParser.Settings();
 	    parserSettings.setProvideMetaData(true);
 	    parserSettings.setFilterContentBlocks(false);
-	    article = articleReader.readArticle(response, article, parserSettings);
-	    
-		List<TextBlock> blocks = null;
-	    if (article == null) {
-	    	blocks = new ArrayList<TextBlock>();
+	    try {
+	    	article = articleReader.readArticle(response, article, parserSettings);
+	    } catch(ParserException pe) {
 	    	LOG.warn(ISSUE_COULD_NOT_PARSE_ARTICLE);
 	    	issues.add(ISSUE_COULD_NOT_PARSE_ARTICLE);
-	    } else {
-	    	blocks = article.getContent();
 	    }
-	    
-	    XMLReader xmlReader = createXmlReader();
+		XMLReader xmlReader = createXmlReader();
 	    HighlightWriter writer = new HighlightWriter(output, templateCache, settings);
-	    xmlReader.setContentHandler(new HighlightHandler(blocks, writer, settings));
+	    xmlReader.setContentHandler(new HighlightHandler(article.getContent(), issues, writer, settings));
 	    Reader reader = response.openReaderSource().getReader();
 	    try {
 	    	xmlReader.parse(new InputSource(reader));

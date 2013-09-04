@@ -11,6 +11,8 @@ import org.apache.commons.io.IOUtils;
 import com.cee.news.parser.net.impl.ReaderFactory;
 
 public class TemplateCache {
+	
+	private final static String RESOURCE_SCHEME = "classpath:";
 
 	private final Map<String, String> templates = new HashMap<String, String>();
 	
@@ -30,9 +32,9 @@ public class TemplateCache {
 		Reader reader = null;
 		InputStream input = null;
 		try {
-			input = getClass().getClassLoader().getResourceAsStream(templateResource);
+			input = getClass().getResourceAsStream(templateResource);
 			if (input == null) {
-				return templateResource;
+				throw new IllegalArgumentException("Template resource " + templateResource + " not found!");
 			} else {
 				reader = readerFactory.createReader(input, "text/html", "UTF-8").getReader();
 				return IOUtils.toString(reader);
@@ -46,12 +48,20 @@ public class TemplateCache {
 	}
 
 	public String getTemplateContent(String templateResource) {
-		String content = templates.get(templateResource);
-		if (content == null) {
-			content = readContent(templateResource);
-			templates.put(templateResource, content);
+		if (templateResource == null) {
+			throw new IllegalArgumentException("Paramter templateResource must not be null");
 		}
-		return content;
+		if (templateResource.startsWith(RESOURCE_SCHEME)) {
+			String resourcePath = templateResource.substring(RESOURCE_SCHEME.length());
+			String content = templates.get(resourcePath);
+			if (content == null) {
+				content = readContent(resourcePath);
+				templates.put(resourcePath, content);
+			}
+			return content;
+		} else {
+			return templateResource;
+		}
 	}
 	
 	private String createPlaceholder(String parameterName) {

@@ -26,7 +26,7 @@ public class TestHighlightHandler {
 		settings.setBaseUrl(documentLocation);
 		settings.setRewriteUrls(true);
 		HighlightWriter writer = new HighlightWriter(output, new TemplateCache(), settings);
-		HighlightHandler handler = new HighlightHandler(new ArrayList<TextBlock>(), writer, settings);
+		HighlightHandler handler = new HighlightHandler(new ArrayList<TextBlock>(), new ArrayList<String>(), writer, settings);
 
 		handler.startElement("", "", "a", attributes);
 		assertEquals("<a href=\"http://www.test.de/home/img/pic.jpeg\">", output.getBuffer().toString());

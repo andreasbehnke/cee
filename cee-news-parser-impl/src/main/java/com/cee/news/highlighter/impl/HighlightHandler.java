@@ -12,8 +12,8 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.cee.news.highlighter.ContentHighlighter.Settings;
-import com.cee.news.model.TextBlock;
 import com.cee.news.model.ContentExtractionMetaData;
+import com.cee.news.model.TextBlock;
 
 public class HighlightHandler extends DefaultHandler {
 	
@@ -33,6 +33,8 @@ public class HighlightHandler extends DefaultHandler {
 
 	private final List<TextBlock> textBlocks;
 	
+	private final List<String> issues;
+	
 	private final Stack<ContentExtractionMetaData> metaDataStack;
 	
 	private final BitSet containedTextBlocks;
@@ -47,9 +49,12 @@ public class HighlightHandler extends DefaultHandler {
 	
 	private int characterElementIdx = 0;
 
-	public HighlightHandler(final List<TextBlock> blocks, final HighlightWriter writer, final Settings settings) {
+	public HighlightHandler(final List<TextBlock> blocks, final List<String> issues, final HighlightWriter writer, final Settings settings) {
 		if (blocks == null) {
 			throw new IllegalArgumentException("parameter blocks must not be null");
+		}
+		if (issues == null) {
+			throw new IllegalArgumentException("parameter issues must not be null");
 		}
 		if (writer == null) {
 			throw new IllegalArgumentException("parameter writer must not be null");
@@ -64,6 +69,7 @@ public class HighlightHandler extends DefaultHandler {
 			throw new IllegalArgumentException("if setting showBlockMetadata = true, metadataTemplate and metaDataContainerTemplate must be present");
 		}
 		this.textBlocks = blocks;
+		this.issues = issues;
 		this.writer = writer;
 		this.settings = settings;
 		metaDataStack = new Stack<ContentExtractionMetaData>();
