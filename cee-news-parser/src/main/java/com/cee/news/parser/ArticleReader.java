@@ -1,4 +1,4 @@
-package com.cee.news.parser.impl;
+package com.cee.news.parser;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -8,9 +8,7 @@ import java.net.URL;
 import org.apache.commons.io.IOUtils;
 
 import com.cee.news.model.Article;
-import com.cee.news.parser.ArticleParser;
 import com.cee.news.parser.ArticleParser.Settings;
-import com.cee.news.parser.ParserException;
 import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.WebResponse;
 

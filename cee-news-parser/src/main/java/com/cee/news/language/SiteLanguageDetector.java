@@ -1,9 +1,8 @@
-package com.cee.news.language.impl;
+package com.cee.news.language;
 
 import java.util.List;
 
 import com.cee.news.SiteExtraction;
-import com.cee.news.language.LanguageDetector;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 

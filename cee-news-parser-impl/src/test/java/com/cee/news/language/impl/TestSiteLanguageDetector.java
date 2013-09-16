@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.cee.news.SiteExtraction;
 import com.cee.news.language.LanguageDetector;
+import com.cee.news.language.SiteLanguageDetector;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 

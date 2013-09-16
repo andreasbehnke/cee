@@ -22,7 +22,7 @@ import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 import com.cee.news.parser.ParserException;
-import com.cee.news.parser.impl.SiteReader;
+import com.cee.news.parser.SiteReader;
 import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.WebClientFactory;
 import com.cee.news.store.SiteStore;
