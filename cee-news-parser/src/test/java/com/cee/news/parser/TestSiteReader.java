@@ -1,35 +1,36 @@
 package com.cee.news.parser;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.RETURNS_SMART_NULLS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.mockito.ArgumentMatcher;
 
 import com.cee.news.SiteExtraction;
-import com.cee.news.language.LanguageDetector;
 import com.cee.news.language.SiteLanguageDetector;
+import com.cee.news.model.Article;
+import com.cee.news.model.ArticleKey;
+import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
-import com.cee.news.parser.ArticleParser;
-import com.cee.news.parser.FeedParser;
-import com.cee.news.parser.ParserException;
-import com.cee.news.parser.SiteParser;
-import com.cee.news.parser.SiteReader;
-import com.cee.news.parser.ArticleReader;
 import com.cee.news.parser.net.ReaderSource;
 import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.WebResponse;
+import com.cee.news.store.ArticleStore;
+import com.cee.news.store.StoreException;
 
 public class TestSiteReader {
 
@@ -46,6 +47,22 @@ public class TestSiteReader {
 		
 		assertSame(feed, new SiteReader(null, null, feedParser, null, null).readFeed(webClient, location));
 		verify(reader).close();
+	}
+	
+	@Test(expected = IOException.class)
+	public void testReadFeedThrowsIOException() throws MalformedURLException, ParserException, IOException {
+		String location = "http://www.mysite.com/feed.rss";
+		URL locationUrl = new URL(location);
+		Reader reader = mock(Reader.class);
+		WebClient webClient = mock(WebClient.class);
+		when(webClient.openReader(locationUrl)).thenReturn(reader);
+		FeedParser feedParser = mock(FeedParser.class);
+		when(feedParser.parse(reader, locationUrl)).thenThrow(new IOException());
+		try {
+			new SiteReader(null, null, feedParser, null, null).readFeed(webClient, location);	
+		} finally {
+			verify(reader).close();	
+		}
 	}
 	
 	@Test
@@ -105,67 +122,136 @@ public class TestSiteReader {
 		verify(reader).close();
 	}
 	
-	/*
-	private SiteReader createSiteReader() {
-		FeedParser feedParser = new RomeFeedParser(new TagsoupXmlReaderFactory());
-		SiteParser siteParser = new SiteParserImpl(new TagsoupXmlReaderFactory());
-		ArticleParser articleParser = new BoilerpipeArticleParser(new TagsoupXmlReaderFactory());
-		LanguageDetector languageDetector = new LanguageDetector() {
-			@Override
-			public String detect(String text) {
-				return "ko";
-			}
-		};
-		List<LanguageDetector> detectors = new ArrayList<LanguageDetector>();
-		detectors.add(languageDetector);
-		SiteReader siteReader = new SiteReader(null, new ArticleReader(articleParser), feedParser, siteParser, new SiteLanguageDetector(detectors));
-		return siteReader;
-	}import com.cee.news.parser.net.impl.ClassResourceWebClient;
-
+	@Test(expected = IOException.class)
+	public void testReadSiteThrowsIOException() throws IOException, ParserException {
+		String location = "http://www.mysite.com";
+		URL locationUrl = new URL(location);
+		WebClient webClient = mock(WebClient.class);
+		WebResponse response = mock(WebResponse.class);
+		when(webClient.openWebResponse(locationUrl)).thenReturn(response);
+		ReaderSource readerSource = mock(ReaderSource.class);
+		when(response.openReaderSource()).thenReturn(readerSource);
+		Reader reader = mock(Reader.class);
+		when(readerSource.getReader()).thenReturn(reader);
+		
+		SiteParser siteParser = mock(SiteParser.class);
+		when(siteParser.parse(reader, locationUrl)).thenThrow(new IOException());
+		
+		try {
+			new SiteReader(null, null, null, siteParser, null).readSite(webClient, location);
+		} finally {
+			verify(reader).close();
+		}
+	}
 	
-    @Test
-    public void testReadSite() throws IOException, ParserException {
-        URL siteLocation = new URL("http://www.test.com/com/cee/news/parser/impl/spiegel.html");
-        WebClient webClient = new ClassResourceWebClient();
-        SiteReader siteReader = createSiteReader();
-        
-        Site site = siteReader.readSite(webClient, siteLocation.toExternalForm());
-        assertEquals("SPIEGEL ONLINE - Nachrichten", site.getTitle());
-        assertTrue(site.getDescription().startsWith("Deutschlands f"));
-        assertEquals("de", site.getLanguage());
-        assertEquals(2, site.getFeeds().size());
-        Feed feed = site.getFeeds().get(0);
-        assertEquals("SPIEGEL ONLINE - Schlagzeilen", feed.getTitle());
-        assertEquals("de", feed.getLanguage());
-        assertEquals(new URL(siteLocation, "spiegelSchlagzeilen.rss").toExternalForm(), feed.getLocation());
-        feed = site.getFeeds().get(1);
-        assertEquals("SPIEGEL ONLINE - Nachrichten", feed.getTitle());
-        assertEquals("de", feed.getLanguage());
-        assertEquals(new URL(siteLocation, "spiegelNachrichten.rss").toExternalForm(), feed.getLocation());
+	private class IsArticleListOfNElements extends ArgumentMatcher<List<Article>> {
+		
+		private final int n;
+		
+		public IsArticleListOfNElements(int n) {
+			this.n = n;
+		}
 
-    }
- 
+		@SuppressWarnings("unchecked")
+		@Override
+		public boolean matches(Object list) {
+			return ((List<Article>)list).size() == n;
+		}
+		
+	}
+	
 	@Test
-    public void testParseRegressionIssue190() throws ParserException, IOException {
-        URL siteLocation = new URL("http://www.faz.de");
-        
-        // create mock for web client which simulates HTTP redirect from faz.de to faz.net
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(new byte[]{});
-        Reader reader = new InputStreamReader(inputStream);
-        WebResponse response = Mockito.mock(WebResponse.class);
-        Mockito.when(response.getLocation()).thenReturn(new URL("http://www.faz.net"));
-        Mockito.when(response.openStream()).thenReturn(inputStream);
-        Mockito.when(response.openReaderSource()).thenReturn(new ReaderSource(reader, null));
-        WebClient webClient = Mockito.mock(WebClient.class);
-        Mockito.when(webClient.openWebResponse(siteLocation)).thenReturn(response);
-        
-        SiteReader siteReader = createSiteReader();
-        try {
-        	Site site = siteReader.readSite(webClient, "http://www.faz.de");
-            assertEquals(site.getLocation(), "http://www.faz.net");
-        } finally {
-        	IOUtils.closeQuietly(reader);
-        }
-    }
-    */
+	public void testUpdate() throws IOException, ParserException, StoreException {
+		Site site = new Site();
+		site.setName("My Site");
+		site.setLanguage("en");
+		Feed feed1 = new Feed();
+		feed1.setActive(true);
+		feed1.setLocation("http://feed1");
+		URL feed1URL = new URL(feed1.getLocation());
+		Reader feed1Reader = mock(Reader.class);
+		Feed inactiveFeed = new Feed();
+		inactiveFeed.setActive(false);
+		inactiveFeed.setLocation("http://feed2");
+		Feed feedWithoutArticles = new Feed();
+		feedWithoutArticles.setActive(true);
+		feedWithoutArticles.setLocation("http://feed3");
+		URL feed3URL = new URL(feedWithoutArticles.getLocation());
+		Reader feed3Reader = mock(Reader.class);
+		site.getFeeds().add(feed1);
+		site.getFeeds().add(inactiveFeed);
+		site.getFeeds().add(feedWithoutArticles);
+		
+		WebClient webClient = mock(WebClient.class, RETURNS_SMART_NULLS);
+		when(webClient.openReader(eq(feed1URL))).thenReturn(feed1Reader);
+		when(webClient.openReader(eq(feed3URL))).thenReturn(feed3Reader);
+		
+		Article existingArticle = new Article();
+		existingArticle.setExternalId("existingArticle");
+		Article unparsableArticle = new Article();
+		unparsableArticle.setExternalId("unparseable");
+		Article article1 = new Article();
+		article1.setExternalId("article1");
+		Article article2 = new Article();
+		article2.setExternalId("article2");
+		
+		FeedParser feedParser = mock(FeedParser.class, RETURNS_SMART_NULLS);
+		List<Article> feed1Articles = new ArrayList<Article>();
+		when(feedParser.readArticles(feed1Reader, feed1URL)).thenReturn(feed1Articles);
+		List<Article> feed3Articles = new ArrayList<Article>();
+		feed3Articles.add(unparsableArticle);
+		feed3Articles.add(existingArticle);
+		feed3Articles.add(article1);
+		feed3Articles.add(article2);
+		when(feedParser.readArticles(feed3Reader, feed3URL)).thenReturn(feed3Articles);
+		
+		ArticleStore articleStore = mock(ArticleStore.class, RETURNS_SMART_NULLS);
+		when(articleStore.contains(eq(EntityKey.get("My Site")), eq("existingArticle"))).thenReturn(true);
+		when(articleStore.contains(eq(EntityKey.get("My Site")), eq("unparseable"))).thenReturn(false);
+		when(articleStore.contains(eq(EntityKey.get("My Site")), eq("article1"))).thenReturn(false);
+		when(articleStore.contains(eq(EntityKey.get("My Site")), eq("article2"))).thenReturn(false);
+
+		ArticleReader articleReader = mock(ArticleReader.class, RETURNS_SMART_NULLS);
+		when(articleReader.readArticle(webClient, unparsableArticle)).thenReturn(null);
+		when(articleReader.readArticle(webClient, article1)).thenReturn(article1);
+		when(articleReader.readArticle(webClient, article2)).thenReturn(article2);
+		
+		@SuppressWarnings("unchecked")
+		List<ArticleKey> feed1ArticleKeys = mock(List.class, RETURNS_SMART_NULLS);
+		when(feed1ArticleKeys.size()).thenReturn(2);
+		@SuppressWarnings("unchecked")
+		List<ArticleKey> feed3ArticleKeys = mock(List.class, RETURNS_SMART_NULLS);
+		when(feed3ArticleKeys.size()).thenReturn(0);
+		when(articleStore.addNewArticles(eq(EntityKey.get("My Site")), argThat(new IsArticleListOfNElements(2)))).thenReturn(feed1ArticleKeys);
+		when(articleStore.addNewArticles(eq(EntityKey.get("My Site")), argThat(new IsArticleListOfNElements(0)))).thenReturn(feed3ArticleKeys);
+
+		assertEquals(2, new SiteReader(articleStore, articleReader, feedParser, null, null).update(webClient, site));
+		
+		verify(feed1Reader).close();
+		verify(feed3Reader).close();
+	}
+	
+	@Test(expected = IOException.class)
+	public void testUpdateThrowsIOException() throws IOException, ParserException, StoreException {
+		Site site = new Site();
+		site.setName("My Site");
+		Feed feed1 = new Feed();
+		feed1.setActive(true);
+		feed1.setLocation("http://feed1");
+		URL feed1URL = new URL(feed1.getLocation());
+		Reader feed1Reader = mock(Reader.class);
+		site.getFeeds().add(feed1);
+		
+		WebClient webClient = mock(WebClient.class, RETURNS_SMART_NULLS);
+		when(webClient.openReader(eq(feed1URL))).thenReturn(feed1Reader);
+		
+		FeedParser feedParser = mock(FeedParser.class, RETURNS_SMART_NULLS);
+		when(feedParser.readArticles(feed1Reader, feed1URL)).thenThrow(new IOException());
+
+		try {
+			new SiteReader(null, null, feedParser, null, null).update(webClient, site);
+		} finally {
+			verify(feed1Reader).close();	
+		}	
+	}
 }
