@@ -17,7 +17,6 @@ import com.cee.news.model.Article;
 import com.cee.news.model.EntityKey;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
-import com.cee.news.parser.ArticleReader;
 import com.cee.news.parser.net.WebClient;
 import com.cee.news.parser.net.WebResponse;
 import com.cee.news.store.ArticleStore;

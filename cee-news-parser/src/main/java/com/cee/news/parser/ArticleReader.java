@@ -26,7 +26,7 @@ public class ArticleReader {
 	    this.articleParser = articleParser;
     }
 	
-	public Article readArticle(Reader reader, Article article, Settings settings) throws MalformedURLException, IOException, ParserException {
+	private Article readArticle(Reader reader, Article article, Settings settings) throws MalformedURLException, IOException, ParserException {
     	try {
     		return articleParser.parse(reader, article, settings);
     	} finally {
