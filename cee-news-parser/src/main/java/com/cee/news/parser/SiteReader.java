@@ -159,9 +159,7 @@ public class SiteReader {
     			siteArticleCount += processFeed(webClient, feed, siteKey, language);
             }
         }
-    	if (LOG.isInfoEnabled() && siteArticleCount > 0) {
-    		LOG.info("found {} new articles in site {}", siteArticleCount, siteName);
-    	}
-        return siteArticleCount;
+    	LOG.info("found {} new articles in site {}", siteArticleCount, siteName);
+    	return siteArticleCount;
     }
 }
