@@ -1,4 +1,4 @@
-package com.cee.news.highlighter.impl;
+package com.cee.news.highlighter;
 
 import java.net.URL;
 

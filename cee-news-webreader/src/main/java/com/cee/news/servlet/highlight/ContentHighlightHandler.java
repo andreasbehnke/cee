@@ -13,8 +13,8 @@ import org.springframework.web.HttpRequestHandler;
 
 import com.cee.news.client.error.ServiceException;
 import com.cee.news.highlighter.ContentHighlighter;
+import com.cee.news.highlighter.DefaultSettings;
 import com.cee.news.highlighter.ContentHighlighter.Settings;
-import com.cee.news.highlighter.impl.DefaultSettings;
 import com.cee.news.model.Article;
 import com.cee.news.model.ArticleKey;
 import com.cee.news.parser.ParserException;
