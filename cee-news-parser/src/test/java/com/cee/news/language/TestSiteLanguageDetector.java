@@ -1,6 +1,6 @@
-package com.cee.news.language.impl;
+package com.cee.news.language;
 
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.cee.news.SiteExtraction;
-import com.cee.news.language.LanguageDetector;
-import com.cee.news.language.SiteLanguageDetector;
 import com.cee.news.model.Feed;
 import com.cee.news.model.Site;
 
@@ -96,5 +94,10 @@ public class TestSiteLanguageDetector {
 		feed.setLanguage("ko");
 		site.getFeeds().add(feed);
 		assertEquals("ko", detector.detect(siteExtraction));
+	}
+	
+	@Test
+	public void testNoMatch() {
+		assertNull(new SiteLanguageDetector().detect(new SiteExtraction()));
 	}
 }

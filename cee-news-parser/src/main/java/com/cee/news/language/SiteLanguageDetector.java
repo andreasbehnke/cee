@@ -41,12 +41,14 @@ public class SiteLanguageDetector {
         	return language;
         }
 		String text = siteExtraction.getContent().toString();
-		for (LanguageDetector detector : detectors) {
-	        language = detector.detect(text);
-	        if (language != null) {
-	        	return language;
-	        }
-        }
+		if (detectors != null) {
+			for (LanguageDetector detector : detectors) {
+				language = detector.detect(text);
+				if (language != null) {
+					return language;
+				}
+			}
+		}
 		return null;
 	}
 }
