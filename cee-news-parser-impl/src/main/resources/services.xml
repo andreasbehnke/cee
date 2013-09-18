@@ -13,7 +13,7 @@
 	
 	<bean id="languageDetector" class="com.cee.news.language.impl.LanguageDetectorImpl" />
 	
-	<bean id="siteLanguageDetector" class="com.cee.news.language.impl.SiteLanguageDetector">
+	<bean id="siteLanguageDetector" class="com.cee.news.language.SiteLanguageDetector">
 	   <property name="detectors">
 	       <list>
 	           <ref bean="languageDetector" />
@@ -35,11 +35,11 @@
         <property name="xmlReaderFactory" ref="xmlReaderFactory" />
     </bean>
     
-    <bean id="articleReader" class="com.cee.news.parser.impl.ArticleReader" scope="prototype">
+    <bean id="articleReader" class="com.cee.news.parser.ArticleReader" scope="prototype">
         <property name="articleParser" ref="articleParser" />
     </bean>
     
-	<bean id="siteReader" class="com.cee.news.parser.impl.SiteReader" scope="prototype">
+	<bean id="siteReader" class="com.cee.news.parser.SiteReader" scope="prototype">
 		<property name="articleReader" ref="articleReader" />
 		<property name="feedParser" ref="feedParser" />
 		<property name="siteLanguageDetector" ref="siteLanguageDetector" />
