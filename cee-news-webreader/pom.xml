@@ -35,6 +35,40 @@
 				</dependency>
 			</dependencies>
 		</profile>
+		<profile>
+			<id>jcr</id>
+			<activation>
+				<property>
+					<name>store</name>
+					<value>jcr</value>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>com.cee</groupId>
+					<artifactId>cee-news-store-jcr</artifactId>
+					<type>jar</type>
+					<scope>runtime</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>lucene</id>
+			<activation>
+				<property>
+					<name>store</name>
+					<value>lucene</value>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+		            <groupId>com.cee</groupId>
+		            <artifactId>cee-news-store-lucene</artifactId>
+		            <type>jar</type>
+		            <scope>runtime</scope>
+		        </dependency>
+	        </dependencies>
+		</profile>
 	</profiles>
 
 	<dependencies>
@@ -63,35 +97,13 @@
 			<type>jar</type>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- dependency>
-			<groupId>com.cee</groupId>
-			<artifactId>cee-news-store-jcr</artifactId>
-			<type>jar</type>
-			<scope>runtime</scope>
-		</dependency -->
-		<dependency>
-            <groupId>com.cee</groupId>
-            <artifactId>cee-news-store-lucene</artifactId>
-            <type>jar</type>
-            <scope>runtime</scope>
-        </dependency>
 		
 		<!-- external -->
-		<!-- dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
-			<scope>runtime</scope>
-		</dependency -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- dependency>
-			<groupId>org.apache.jackrabbit</groupId>
-			<artifactId>jackrabbit-core</artifactId>
-			<scope>runtime</scope>
-		</dependency -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
@@ -126,11 +138,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.ccil.cowan.tagsoup</groupId>
-			<artifactId>tagsoup</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
