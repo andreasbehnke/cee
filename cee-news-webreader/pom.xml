@@ -22,20 +22,6 @@
 	
 	<profiles>
 		<profile>
-			<id>development</id>
-			<properties>
-				<gwtModule>com.cee.news.DevNewsReader</gwtModule>
-				<gwtDraftCompile>true</gwtDraftCompile>
-				<warExcludes>repository/**,repository.xml,**/*.log,WEB-INF/deploy/**,WEB-INF/lib/**,WEB-INF/NewsReader/**,WEB-INF/classes</warExcludes>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
 			<id>jcr</id>
 			<activation>
 				<property>
