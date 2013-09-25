@@ -1,3 +1,6 @@
 **/.classpath
 **/.project
 **/.settings/*
+/index
+/repository
+/derby.log

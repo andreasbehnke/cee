@@ -136,6 +136,7 @@
 			-->
 			<id>lucene</id>
 			<activation>
+				<activeByDefault>true</activeByDefault>
 				<property>
 					<name>store</name>
 					<value>lucene</value>
