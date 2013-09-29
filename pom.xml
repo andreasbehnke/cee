@@ -18,7 +18,13 @@
 		<jetty.version>9.0.0.M0</jetty.version>
 		<source.encoding>UTF-8</source.encoding>
 	</properties>
-
+	<repositories>
+		<repository>
+			<id>boilerpipe</id>
+			<name>boilerpipe</name>
+			<url>http://boilerpipe.googlecode.com/svn/repo</url>
+		</repository>
+	</repositories>
 	<distributionManagement>
 		<repository>
 			<id>internal</id>
@@ -91,13 +97,13 @@
 				</property>
 			</activation>
 			<modules>
-				<module>cee-news-store-jcr</module>
+				<module>cee-store-jcr</module>
 			</modules>
 			<dependencyManagement>
 				<dependencies>
 					<dependency>
 						<groupId>com.cee</groupId>
-						<artifactId>cee-news-store-jcr</artifactId>
+						<artifactId>cee-store-jcr</artifactId>
 						<version>${project.version}</version>
 					</dependency>
 					<dependency>
@@ -146,13 +152,13 @@
 		        <lucene.version>4.3.0</lucene.version>
 			</properties>
 			<modules>
-				<module>cee-news-store-lucene</module>
+				<module>cee-store-lucene</module>
 			</modules>
 			<dependencyManagement>
 				<dependencies>
 					<dependency>
 						<groupId>com.cee</groupId>
-						<artifactId>cee-news-store-lucene</artifactId>
+						<artifactId>cee-store-lucene</artifactId>
 						<version>${project.version}</version>
 					</dependency>
 					<dependency>
@@ -181,16 +187,16 @@
 	</profiles>
 
 	<modules>
-		<module>cee-news-parser</module>
-		<module>cee-news-parser-impl</module>
-		<module>cee-news-store-api</module>
-		<module>cee-news-search-api</module>
-		<module>cee-news-store-test-suite</module>
-		<module>cee-news-webreader</module>
-		<module>cee-news-webreader-tomcat6</module>
-		<module>cee-news-webreader-jetty7</module>
+		<module>cee-parser</module>
+		<module>cee-parser-impl</module>
+		<module>cee-store-api</module>
+		<module>cee-search-api</module>
+		<module>cee-store-test-suite</module>
+		<module>cee-webreader</module>
+		<module>cee-webreader-tomcat</module>
+		<module>cee-webreader-jetty</module>
 		<module>jetty-starter</module>
-		<module>newsreader</module>
+		<module>webreader</module>
 	</modules>
 
 	<dependencyManagement>
@@ -198,55 +204,55 @@
 			<!-- internal -->
 			<dependency>
 				<groupId>com.cee</groupId>
-				<artifactId>cee-news-parser</artifactId>
+				<artifactId>cee-parser</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
-				<artifactId>cee-news-parser-impl</artifactId>
+				<artifactId>cee-parser-impl</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
-				<artifactId>cee-news-regression-test</artifactId>
+				<artifactId>cee-regression-test</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
-				<artifactId>cee-news-search-api</artifactId>
+				<artifactId>cee-search-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
-				<artifactId>cee-news-store-api</artifactId>
+				<artifactId>cee-store-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
-				<artifactId>cee-news-store-api</artifactId>
+				<artifactId>cee-store-api</artifactId>
 				<classifier>sources</classifier>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
-				<artifactId>cee-news-store-test-suite</artifactId>
+				<artifactId>cee-store-test-suite</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
-				<artifactId>cee-news-test-web</artifactId>
-				<version>${project.version}</version>
-				<type>war</type>
-			</dependency>
-			<dependency>
-				<groupId>com.cee</groupId>
-				<artifactId>cee-news-webreader</artifactId>
+				<artifactId>cee-test-web</artifactId>
 				<version>${project.version}</version>
 				<type>war</type>
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
-				<artifactId>cee-news-webreader-tomcat6</artifactId>
+				<artifactId>cee-webreader</artifactId>
+				<version>${project.version}</version>
+				<type>war</type>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
+				<artifactId>cee-webreader-tomcat</artifactId>
 				<version>${project.version}</version>
 				<type>war</type>
 			</dependency>
@@ -258,7 +264,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
-				<artifactId>newsreader</artifactId>
+				<artifactId>webreader</artifactId>
 				<version>${project.version}</version>
 				<type>war</type>
 			</dependency>

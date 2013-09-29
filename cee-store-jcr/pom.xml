@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>cee-news-store-jcr</artifactId>
+	<artifactId>cee-store-jcr</artifactId>
 	<name>Content Extraction Engine - News Store JCR</name>
 	<description>JCR implementation of the news store API</description>
 
@@ -16,11 +16,11 @@
 		<!-- internal -->
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-search-api</artifactId>
+			<artifactId>cee-search-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-store-api</artifactId>
+			<artifactId>cee-store-api</artifactId>
 		</dependency>
 
 		<!-- external -->
@@ -45,7 +45,7 @@
 		<!-- testing -->
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-store-test-suite</artifactId>
+			<artifactId>cee-store-test-suite</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

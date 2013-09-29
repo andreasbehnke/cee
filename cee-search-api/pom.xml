@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>cee-news-search-api</artifactId>
+	<artifactId>cee-search-api</artifactId>
 	<name>Content Extraction Engine - News Search API</name>
 	<description>Service API for the news search features</description>
 
@@ -14,7 +14,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-store-api</artifactId>
+			<artifactId>cee-store-api</artifactId>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>newsreader</artifactId>
+	<artifactId>webreader</artifactId>
 	<packaging>war</packaging>
 	<name>News Reader</name>
 	<description>Runnable WAR using embedded jetty</description>
@@ -103,7 +103,7 @@
 		<!-- internal -->
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-webreader</artifactId>
+			<artifactId>cee-webreader</artifactId>
 			<type>war</type>
 		</dependency>
 		<dependency>

@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>cee-news-webreader</artifactId>
+	<artifactId>cee-webreader</artifactId>
 	<packaging>war</packaging>
 	<name>News Reader</name>
 		
@@ -15,9 +15,9 @@
 
 	<properties>
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-		<gwtModule>com.cee.news.NewsReader</gwtModule>
+		<gwtModule>com.cee.news.webreader</gwtModule>
 		<gwtDraftCompile>false</gwtDraftCompile>
-		<warExcludes>repository/**,repository.xml,**/*.log,WEB-INF/deploy/**,WEB-INF/lib/**,WEB-INF/NewsReader/**,WEB-INF/jetty-web.xml,WEB-INF/classes</warExcludes>
+		<warExcludes>repository/**,repository.xml,**/*.log,WEB-INF/deploy/**,WEB-INF/lib/**,WEB-INF/webreader/**,WEB-INF/jetty-web.xml,WEB-INF/classes</warExcludes>
 	</properties>
 	
 	<profiles>
@@ -32,7 +32,7 @@
 			<dependencies>
 				<dependency>
 					<groupId>com.cee</groupId>
-					<artifactId>cee-news-store-jcr</artifactId>
+					<artifactId>cee-store-jcr</artifactId>
 					<type>jar</type>
 					<scope>runtime</scope>
 				</dependency>
@@ -50,7 +50,7 @@
 			<dependencies>
 				<dependency>
 		            <groupId>com.cee</groupId>
-		            <artifactId>cee-news-store-lucene</artifactId>
+		            <artifactId>cee-store-lucene</artifactId>
 		            <type>jar</type>
 		            <scope>runtime</scope>
 		        </dependency>
@@ -62,25 +62,25 @@
 		<!-- internal -->
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-search-api</artifactId>
+			<artifactId>cee-search-api</artifactId>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-store-api</artifactId>
+			<artifactId>cee-store-api</artifactId>
 			<classifier>sources</classifier>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-parser</artifactId>
+			<artifactId>cee-parser</artifactId>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-parser-impl</artifactId>
+			<artifactId>cee-parser-impl</artifactId>
 			<type>jar</type>
 			<scope>runtime</scope>
 		</dependency>
@@ -170,7 +170,7 @@
 				<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
 					documentation at codehaus.org -->
 				<configuration>
-					<runTarget>NewsReader.html</runTarget>
+					<runTarget>webreader.html</runTarget>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
 					<!-- i18nMessagesBundle>com.cee.news.client.Messages</i18nMessagesBundle -->
 					<!-- cssFiles>

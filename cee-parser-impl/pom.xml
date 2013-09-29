@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>cee-news-parser-impl</artifactId>
+	<artifactId>cee-parser-impl</artifactId>
 	<name>Content Extraction Engine - News Parser Implementations</name>
 	<description>Default implementations of the parser framework</description>
 	
@@ -15,15 +15,15 @@
 		<!-- internal -->
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-store-api</artifactId>
+			<artifactId>cee-store-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-news-parser</artifactId>
+			<artifactId>cee-parser</artifactId>
 		</dependency>
 		<dependency>
             <groupId>com.cee</groupId>
-            <artifactId>cee-news-store-test-suite</artifactId>
+            <artifactId>cee-store-test-suite</artifactId>
             <scope>test</scope>
         </dependency>
 
