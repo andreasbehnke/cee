@@ -3,9 +3,9 @@ package com.cee.news.store.jcr;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 
-import com.cee.news.store.StoreException;
-import com.cee.news.store.test.suite.TestArticleStore;
-import com.cee.news.store.test.suite.TestContext;
+import org.cee.news.store.StoreException;
+import org.cee.store.test.suite.TestArticleStore;
+import org.cee.store.test.suite.TestContext;
 
 public class TestJcrArticleStore extends TestArticleStore {
 

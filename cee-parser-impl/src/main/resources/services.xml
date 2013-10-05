@@ -2,18 +2,18 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
 	<!-- Parser -->
-	<bean id="webClientFactory" class="com.cee.news.parser.net.impl.DefaultWebClientFactory" scope="prototype">
+	<bean id="webClientFactory" class="org.cee.parser.net.impl.DefaultWebClientFactory" scope="prototype">
 		<property name="httpClientFactory">
-		    <bean class="com.cee.news.parser.net.impl.DefaultHttpClientFactory" />
+		    <bean class="org.cee.parser.net.impl.DefaultHttpClientFactory" />
 		</property>
 		<property name="readerFactory">
-			<bean class="com.cee.news.parser.net.impl.XmlStreamReaderFactory" />
+			<bean class="org.cee.parser.net.impl.XmlStreamReaderFactory" />
 		</property>
 	</bean>
 	
-	<bean id="languageDetector" class="com.cee.news.language.impl.LanguageDetectorImpl" />
+	<bean id="languageDetector" class="org.cee.language.impl.LanguageDetectorImpl" />
 	
-	<bean id="siteLanguageDetector" class="com.cee.news.language.SiteLanguageDetector">
+	<bean id="siteLanguageDetector" class="org.cee.language.SiteLanguageDetector">
 	   <property name="detectors">
 	       <list>
 	           <ref bean="languageDetector" />
@@ -21,25 +21,25 @@
 	   </property>
 	</bean>
 	
-	<bean id="xmlReaderFactory" class="com.cee.news.parser.impl.TagsoupXmlReaderFactory" />
+	<bean id="xmlReaderFactory" class="org.cee.parser.impl.TagsoupXmlReaderFactory" />
 	
-	<bean id="articleParser" class="com.cee.news.parser.impl.BoilerpipeArticleParser" scope="prototype">
+	<bean id="articleParser" class="org.cee.parser.impl.BoilerpipeArticleParser" scope="prototype">
 		<property name="xmlReaderFactory" ref="xmlReaderFactory"/>
 	</bean>
 	
-	<bean id="feedParser" class="com.cee.news.parser.impl.RomeFeedParser" scope="prototype">
+	<bean id="feedParser" class="org.cee.parser.impl.RomeFeedParser" scope="prototype">
 		<property name="xmlReaderFactory" ref="xmlReaderFactory" />
 	</bean>
     
-    <bean id="siteParser" class="com.cee.news.parser.impl.SiteParserImpl" scope="prototype">
+    <bean id="siteParser" class="org.cee.parser.impl.SiteParserImpl" scope="prototype">
         <property name="xmlReaderFactory" ref="xmlReaderFactory" />
     </bean>
     
-    <bean id="articleReader" class="com.cee.news.parser.ArticleReader" scope="prototype">
+    <bean id="articleReader" class="org.cee.parser.ArticleReader" scope="prototype">
         <property name="articleParser" ref="articleParser" />
     </bean>
     
-	<bean id="siteReader" class="com.cee.news.parser.SiteReader" scope="prototype">
+	<bean id="siteReader" class="org.cee.parser.SiteReader" scope="prototype">
 		<property name="articleReader" ref="articleReader" />
 		<property name="feedParser" ref="feedParser" />
 		<property name="siteLanguageDetector" ref="siteLanguageDetector" />
@@ -47,13 +47,13 @@
 		<property name="store" ref="articleStore" />
 	</bean>
 
-    <bean id="templateCache" class="com.cee.news.highlighter.impl.TemplateCache" scope="prototype">
+    <bean id="templateCache" class="org.cee.highlighter.impl.TemplateCache" scope="prototype">
         <property name="readerFactory">
-            <bean class="com.cee.news.parser.net.impl.XmlStreamReaderFactory" />
+            <bean class="org.cee.parser.net.impl.XmlStreamReaderFactory" />
         </property>
     </bean>
 	
-    <bean id="contentHighlighter" class="com.cee.news.highlighter.impl.ContentHighlighterImpl" scope="prototype">
+    <bean id="contentHighlighter" class="org.cee.highlighter.impl.ContentHighlighterImpl" scope="prototype">
         <property name="xmlReaderFactory" ref="xmlReaderFactory" />
         <property name="articleReader" ref="articleReader" />
         <property name="templateCache" ref="templateCache" />

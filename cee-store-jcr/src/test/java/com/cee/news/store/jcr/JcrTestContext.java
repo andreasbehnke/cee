@@ -9,12 +9,11 @@ import javax.jcr.SimpleCredentials;
 
 import org.apache.jackrabbit.core.TransientRepository;
 import org.apache.jackrabbit.core.config.RepositoryConfig;
-
-import com.cee.news.search.ArticleSearchService;
-import com.cee.news.store.ArticleStore;
-import com.cee.news.store.SiteStore;
-import com.cee.news.store.WorkingSetStore;
-import com.cee.news.store.test.suite.TestContext;
+import org.cee.news.store.ArticleStore;
+import org.cee.news.store.SiteStore;
+import org.cee.news.store.WorkingSetStore;
+import org.cee.search.ArticleSearchService;
+import org.cee.store.test.suite.TestContext;
 
 public class JcrTestContext implements TestContext {
 

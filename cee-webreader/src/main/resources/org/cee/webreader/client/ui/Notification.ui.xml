@@ -1,0 +1,15 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.dom.client" xmlns:l="urn:import:org.cee.client.list" >
+	<ui:with type="org.cee.webreader.client.ui.Resources" field="res" />
+	<g:HTMLPanel styleName="{res.styles.dialog} {res.styles.confirm}">
+			<div class="{res.styles.header} {res.styles.horizontalGradient}">
+				<h1><g:InlineLabel ui:field="labelTitle" /></h1>
+			</div>
+			<div class="{res.styles.confirmQuestion}">
+				<g:InlineLabel ui:field="labelMessage" />
+			</div>
+			<div class="{res.styles.footer}">
+				<g:Button ui:field="buttonOk" text="Ok" styleName="{res.styles.ok}" />
+			</div>
+	</g:HTMLPanel>
+</ui:UiBinder>

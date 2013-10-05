@@ -55,23 +55,23 @@
         <constructor-arg ref="luceneIndexWriterConfig" />
     </bean>
     
-    <bean id="luceneAnalyzers" class="com.cee.news.store.lucene.LuceneAnalyzers" />
+    <bean id="luceneAnalyzers" class="org.cee.store.lucene.LuceneAnalyzers" />
 
     <!-- Backend Services -->
     
-    <bean id="siteStore" class="com.cee.news.store.lucene.LuceneSiteStore">
+    <bean id="siteStore" class="org.cee.store.lucene.LuceneSiteStore">
         <property name="indexWriter" ref="luceneSiteIndexWriter" />
         <property name="analyzers" ref="luceneAnalyzers" />
     </bean>
 
-    <bean id="articleStore" class="com.cee.news.store.lucene.LuceneArticleStore">
+    <bean id="articleStore" class="org.cee.store.lucene.LuceneArticleStore">
         <property name="indexWriter" ref="luceneArticleIndexWriter" />
         <property name="analyzers" ref="luceneAnalyzers" />
     </bean>
     
     <alias name="articleStore" alias="articleSearchService"/>
     
-    <bean id="workingSetStore" class="com.cee.news.store.lucene.LuceneWorkingSetStore">
+    <bean id="workingSetStore" class="org.cee.store.lucene.LuceneWorkingSetStore">
         <property name="indexWriter" ref="luceneWorkingSetIndexWriter" />
         <property name="analyzers" ref="luceneAnalyzers" />
     </bean>

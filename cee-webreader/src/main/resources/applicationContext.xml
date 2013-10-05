@@ -15,27 +15,27 @@
 	
 	<!-- GWT Services -->
 	
-	<bean id="gwtLanguageService" class="com.cee.news.server.content.LanguageServiceImpl">
+	<bean id="gwtLanguageService" class="org.cee.webreader.server.content.LanguageServiceImpl">
 		<property name="searchService" ref="articleSearchService" />
 	</bean>
 
-	<bean id="gwtNewsService" class="com.cee.news.server.content.NewsServiceImpl">
+	<bean id="gwtNewsService" class="org.cee.webreader.server.content.NewsServiceImpl">
 		<property name="workingSetStore" ref="workingSetStore" />
 		<property name="articleStore" ref="articleStore" />
 		<property name="articleSearchService" ref="articleSearchService" />
 	</bean>
 
-	<bean id="gwtSiteService" class="com.cee.news.server.content.SiteServiceImpl">
+	<bean id="gwtSiteService" class="org.cee.webreader.server.content.SiteServiceImpl">
 		<property name="siteStore" ref="siteStore" />
 		<property name="workingSetStore" ref="workingSetStore" />
 	</bean>
 
-	<bean id="gwtWorkingSetService" class="com.cee.news.server.workingset.WorkingSetServiceImpl">
+	<bean id="gwtWorkingSetService" class="org.cee.webreader.server.workingset.WorkingSetServiceImpl">
 		<property name="workingSetStore" ref="workingSetStore" />
 		<property name="siteStore" ref="siteStore" />
 	</bean>
 	
-	<bean id="gwtSiteUpdateService" class="com.cee.news.server.content.SiteUpdateServiceImpl" init-method="startUpdateScheduler">
+	<bean id="gwtSiteUpdateService" class="org.cee.webreader.server.content.SiteUpdateServiceImpl" init-method="startUpdateScheduler">
 		<property name="corePoolSize" value="${update.service.core.pool.size}" />
 		<property name="maxPoolSize" value="${update.service.max.pool.size}" />
 		<property name="keepAliveTime" value="${update.service.keep.alive.time}" />		
@@ -48,7 +48,7 @@
 	
 	<!-- Spring HttpRequestHandlers -->
 	
-	<bean id="contentHighlightHandler" class="com.cee.news.servlet.highlight.ContentHighlightHandler" scope="request">
+	<bean id="contentHighlightHandler" class="org.cee.webreader.servlet.highlight.ContentHighlightHandler" scope="request">
 	     <property name="articleStore" ref="articleStore" />
 	     <property name="webClientFactory" ref="webClientFactory" />
 	     <property name="contentHighlighter" ref="contentHighlighter" />

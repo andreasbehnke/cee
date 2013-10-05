@@ -25,16 +25,15 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.RowIterator;
 
 import org.apache.jackrabbit.util.Text;
-
-import com.cee.news.model.Article;
-import com.cee.news.model.ArticleKey;
-import com.cee.news.model.EntityKey;
-import com.cee.news.model.TextBlock;
-import com.cee.news.model.WorkingSet;
-import com.cee.news.store.ArticleChangeListener;
-import com.cee.news.store.ArticleChangeListenerSupport;
-import com.cee.news.store.ArticleStore;
-import com.cee.news.store.StoreException;
+import org.cee.news.model.Article;
+import org.cee.news.model.ArticleKey;
+import org.cee.news.model.EntityKey;
+import org.cee.news.model.TextBlock;
+import org.cee.news.model.WorkingSet;
+import org.cee.news.store.ArticleChangeListener;
+import org.cee.news.store.ArticleChangeListenerSupport;
+import org.cee.news.store.ArticleStore;
+import org.cee.news.store.StoreException;
 
 /**
  * JCR implementation of the store {@link NewsStore}

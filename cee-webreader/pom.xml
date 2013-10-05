@@ -15,7 +15,7 @@
 
 	<properties>
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-		<gwtModule>com.cee.news.webreader</gwtModule>
+		<gwtModule>org.cee.webreader.webreader</gwtModule>
 		<gwtDraftCompile>false</gwtDraftCompile>
 		<warExcludes>repository/**,repository.xml,**/*.log,WEB-INF/deploy/**,WEB-INF/lib/**,WEB-INF/webreader/**,WEB-INF/jetty-web.xml,WEB-INF/classes</warExcludes>
 	</properties>
@@ -172,7 +172,7 @@
 				<configuration>
 					<runTarget>webreader.html</runTarget>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
-					<!-- i18nMessagesBundle>com.cee.news.client.Messages</i18nMessagesBundle -->
+					<!-- i18nMessagesBundle>org.cee.client.Messages</i18nMessagesBundle -->
 					<!-- cssFiles>
 						<cssFile>com/cee/news/client/ui/Styles.css</cssFile>
 					</cssFiles -->

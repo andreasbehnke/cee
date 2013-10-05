@@ -19,14 +19,13 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
 import org.apache.jackrabbit.util.Text;
+import org.cee.news.model.EntityKey;
+import org.cee.news.model.Feed;
+import org.cee.news.model.Site;
+import org.cee.news.store.SiteStore;
+import org.cee.news.store.StoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.cee.news.model.EntityKey;
-import com.cee.news.model.Feed;
-import com.cee.news.model.Site;
-import com.cee.news.store.SiteStore;
-import com.cee.news.store.StoreException;
 
 /**
  * JCR implementation of the {@link SiteStore}

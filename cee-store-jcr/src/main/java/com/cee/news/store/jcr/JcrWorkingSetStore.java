@@ -18,13 +18,12 @@ import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
+import org.cee.news.model.EntityKey;
+import org.cee.news.model.WorkingSet;
+import org.cee.news.store.StoreException;
+import org.cee.news.store.WorkingSetStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.cee.news.model.EntityKey;
-import com.cee.news.model.WorkingSet;
-import com.cee.news.store.StoreException;
-import com.cee.news.store.WorkingSetStore;
 
 /**
  * JCR implementation of the {@link WorkingSetStore}.
