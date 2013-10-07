@@ -97,7 +97,7 @@ public class SiteReader {
             			articlesForUpdate.add(article);
             		}
         		} catch (IOException e) {
-    				LOG.error("Could not retrieve article", e);
+    				LOG.warn("Could not retrieve article, an io error occured");
     			} catch (ParserException e) {
     				LOG.error("Could not parse article", e);
 				}
@@ -163,7 +163,7 @@ public class SiteReader {
     			try  {
     				siteArticleCount += processFeed(webClient, feed, siteKey, language);
     			} catch (IOException e) {
-    				LOG.error("Could not retrieve feed", e);
+    				LOG.warn("Could not retrieve feed, an io error occured");
     			} catch (ParserException e) {
     				LOG.error("Could not parse feed", e);
 				}
