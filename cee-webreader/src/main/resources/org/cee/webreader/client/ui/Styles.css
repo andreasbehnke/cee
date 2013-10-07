@@ -185,13 +185,13 @@ FIELDSET LI {
 }
 
 .search .icon.delete {
-	top: -3px;
+	top: -1px;
 	right: 21px;
 	position: absolute;
 }
 
 .search .icon.lense {
-	top: -3px;
+	top: -1px;
 	right: -3px;
 	position: absolute;
 }
