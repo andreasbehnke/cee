@@ -88,7 +88,7 @@ public class TestSiteReader {
 		siteExtraction.getFeedLocations().add(feed2Url);
 		siteExtraction.getFeedLocations().add(feed3Url);
 		SiteParser siteParser = mock(SiteParser.class);
-		when(siteParser.parse(reader, locationUrl)).thenReturn(siteExtraction);
+		when(siteParser.parse(reader, redirectedLocationUrl)).thenReturn(siteExtraction);
 		
 		Feed feed1 = new Feed();
 		Feed feed2 = new Feed();
@@ -131,6 +131,7 @@ public class TestSiteReader {
 		when(webClient.openWebResponse(locationUrl)).thenReturn(response);
 		ReaderSource readerSource = mock(ReaderSource.class);
 		when(response.openReaderSource()).thenReturn(readerSource);
+		when(response.getLocation()).thenReturn(locationUrl);
 		Reader reader = mock(Reader.class);
 		when(readerSource.getReader()).thenReturn(reader);
 		

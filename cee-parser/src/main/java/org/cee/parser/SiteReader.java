@@ -97,9 +97,9 @@ public class SiteReader {
             			articlesForUpdate.add(article);
             		}
         		} catch (IOException e) {
-    				LOG.warn("Could not retrieve article, an io error occured");
+    				LOG.warn("Could not retrieve article {}, an io error occured", article.getLocation());
     			} catch (ParserException e) {
-    				LOG.error("Could not parse article", e);
+    				LOG.warn("Could not parse article {}", article.getLocation());
 				}
             }
         }
@@ -129,15 +129,15 @@ public class SiteReader {
     }
     
     public Site readSite(WebClient webClient, String location) throws MalformedURLException, ParserException, IOException {
-    	URL locationUrl = new URL(location);
     	Reader reader = null;
     	try {
-    		WebResponse response = webClient.openWebResponse(locationUrl);
-    		reader = response.openReaderSource().getReader();
+    		WebResponse response = webClient.openWebResponse(new URL(location));
+    		URL locationUrl = response.getLocation();
+        	reader = response.openReaderSource().getReader();
     		SiteExtraction siteExtraction = siteParser.parse(reader, locationUrl);
     		Site site = siteExtraction.getSite();
     		// use site location from response to handle HTTP redirects
-    		site.setLocation(response.getLocation().toExternalForm());
+    		site.setLocation(locationUrl.toExternalForm());
     		// read all site's feeds
     		site.setFeeds(readFeeds(webClient, siteExtraction.getFeedLocations()));
     		// detect site's language
@@ -163,9 +163,9 @@ public class SiteReader {
     			try  {
     				siteArticleCount += processFeed(webClient, feed, siteKey, language);
     			} catch (IOException e) {
-    				LOG.warn("Could not retrieve feed, an io error occured");
+    				LOG.warn("Could not retrieve feed {}, an io error occured", feed.getLocation());
     			} catch (ParserException e) {
-    				LOG.error("Could not parse feed", e);
+    				LOG.warn("Could not parse feed {}", feed.getLocation());
 				}
             }
         }
