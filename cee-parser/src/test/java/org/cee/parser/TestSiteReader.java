@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.RETURNS_SMART_NULLS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -25,11 +26,6 @@ import org.cee.news.model.Feed;
 import org.cee.news.model.Site;
 import org.cee.news.store.ArticleStore;
 import org.cee.news.store.StoreException;
-import org.cee.parser.ArticleReader;
-import org.cee.parser.FeedParser;
-import org.cee.parser.ParserException;
-import org.cee.parser.SiteParser;
-import org.cee.parser.SiteReader;
 import org.cee.parser.net.ReaderSource;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebResponse;
@@ -194,6 +190,8 @@ public class TestSiteReader {
 		existingArticle.setExternalId("existingArticle");
 		Article unparsableArticle = new Article();
 		unparsableArticle.setExternalId("unparseable");
+		Article throwsException = new Article();
+		throwsException.setExternalId("throwsException");
 		Article article1 = new Article();
 		article1.setExternalId("article1");
 		Article article2 = new Article();
@@ -205,6 +203,7 @@ public class TestSiteReader {
 		List<Article> feed3Articles = new ArrayList<Article>();
 		feed3Articles.add(unparsableArticle);
 		feed3Articles.add(existingArticle);
+		feed3Articles.add(throwsException);
 		feed3Articles.add(article1);
 		feed3Articles.add(article2);
 		when(feedParser.readArticles(feed3Reader, feed3URL)).thenReturn(feed3Articles);
@@ -217,6 +216,7 @@ public class TestSiteReader {
 
 		ArticleReader articleReader = mock(ArticleReader.class, RETURNS_SMART_NULLS);
 		when(articleReader.readArticle(webClient, unparsableArticle)).thenReturn(null);
+		when(articleReader.readArticle(webClient, throwsException)).thenThrow(new IOException());
 		when(articleReader.readArticle(webClient, article1)).thenReturn(article1);
 		when(articleReader.readArticle(webClient, article2)).thenReturn(article2);
 		
@@ -235,8 +235,9 @@ public class TestSiteReader {
 		verify(feed3Reader).close();
 	}
 	
-	@Test(expected = IOException.class)
-	public void testUpdateThrowsIOException() throws IOException, ParserException, StoreException {
+	
+	@Test
+	public void testUpdateFeedParserThrowsIOException() throws IOException, ParserException, StoreException {
 		Site site = new Site();
 		site.setName("My Site");
 		Feed feed1 = new Feed();
@@ -244,18 +245,55 @@ public class TestSiteReader {
 		feed1.setLocation("http://feed1");
 		URL feed1URL = new URL(feed1.getLocation());
 		Reader feed1Reader = mock(Reader.class);
+		Feed feed2 = new Feed();
+		feed2.setActive(true);
+		feed2.setLocation("http://feed2");
+		URL feed2URL = new URL(feed2.getLocation());
+		Reader feed2Reader = mock(Reader.class);
 		site.getFeeds().add(feed1);
+		site.getFeeds().add(feed2);
 		
-		WebClient webClient = mock(WebClient.class, RETURNS_SMART_NULLS);
+		WebClient webClient = mock(WebClient.class);
 		when(webClient.openReader(eq(feed1URL))).thenReturn(feed1Reader);
+		when(webClient.openReader(eq(feed2URL))).thenReturn(feed2Reader);
 		
-		FeedParser feedParser = mock(FeedParser.class, RETURNS_SMART_NULLS);
-		when(feedParser.readArticles(feed1Reader, feed1URL)).thenThrow(new IOException());
-
-		try {
-			new SiteReader(null, null, feedParser, null, null).update(webClient, site);
-		} finally {
-			verify(feed1Reader).close();	
-		}	
+		FeedParser feedParser = mock(FeedParser.class);
+		
+		when(feedParser.readArticles(same(feed1Reader), eq(feed1URL))).thenThrow(new IOException());
+		when(feedParser.readArticles(same(feed2Reader), eq(feed2URL))).thenReturn(new ArrayList<Article>());
+		
+		new SiteReader(null, null, feedParser, null, null).update(webClient, site);
+		verify(feedParser).readArticles(same(feed1Reader), eq(feed1URL));
+		verify(feed1Reader).close();
+		verify(feedParser).readArticles(same(feed2Reader), eq(feed2URL));
+		verify(feed2Reader).close();	
+	}
+	
+	@Test
+	public void testUpdateWebClientThrowsIOExceptionForFeedUrl() throws IOException, ParserException, StoreException {
+		Site site = new Site();
+		site.setName("My Site");
+		Feed feed1 = new Feed();
+		feed1.setActive(true);
+		feed1.setLocation("http://feed1");
+		URL feed1URL = new URL(feed1.getLocation());
+		Feed feed2 = new Feed();
+		feed2.setActive(true);
+		feed2.setLocation("http://feed2");
+		URL feed2URL = new URL(feed2.getLocation());
+		Reader feed2Reader = mock(Reader.class);
+		site.getFeeds().add(feed1);
+		site.getFeeds().add(feed2);
+		
+		WebClient webClient = mock(WebClient.class);
+		when(webClient.openReader(eq(feed1URL))).thenThrow(new IOException());
+		when(webClient.openReader(eq(feed2URL))).thenReturn(feed2Reader);
+		
+		FeedParser feedParser = mock(FeedParser.class);
+		when(feedParser.readArticles(same(feed2Reader), eq(feed2URL))).thenReturn(new ArrayList<Article>());
+		
+		new SiteReader(null, null, feedParser, null, null).update(webClient, site);
+		verify(feedParser).readArticles(same(feed2Reader), eq(feed2URL));
+		verify(feed2Reader).close();	
 	}
 }

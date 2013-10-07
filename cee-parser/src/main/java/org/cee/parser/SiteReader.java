@@ -86,15 +86,21 @@ public class SiteReader {
     	return feeds;
     }
     
-    private List<Article> processArticles(WebClient webClient, List<Article> articles, EntityKey siteKey, String language) throws MalformedURLException, StoreException, IOException, ParserException {
+    private List<Article> processArticles(WebClient webClient, List<Article> articles, EntityKey siteKey, String language) throws StoreException {
     	List<Article> articlesForUpdate = new ArrayList<Article>();
 		for (Article article : articles) {
             if (!store.contains(siteKey, article.getExternalId())) {
-            	article = articleReader.readArticle(webClient, article);
-            	if (article != null) {
-        			article.setLanguage(language);
-        			articlesForUpdate.add(article);
-        		}
+            	try {
+            		article = articleReader.readArticle(webClient, article);
+            		if (article != null) {
+            			article.setLanguage(language);
+            			articlesForUpdate.add(article);
+            		}
+        		} catch (IOException e) {
+    				LOG.error("Could not retrieve article", e);
+    			} catch (ParserException e) {
+    				LOG.error("Could not parse article", e);
+				}
             }
         }
 		return articlesForUpdate;
@@ -146,7 +152,7 @@ public class SiteReader {
      * Reads the content syndication feed of the site and adds all new articles
      * to the site. The article content is read from the articles web-site.
      */
-    public int update(WebClient webClient, Site site) throws StoreException, MalformedURLException, ParserException, IOException {
+    public int update(WebClient webClient, Site site) throws StoreException {
         String siteName = site.getName();
     	LOG.info("starting update for site {}", siteName);
         EntityKey siteKey = EntityKey.get(siteName);
@@ -154,7 +160,13 @@ public class SiteReader {
         int siteArticleCount = 0;
     	for (Feed feed : site.getFeeds()) {
     		if (feed.isActive()) {
-    			siteArticleCount += processFeed(webClient, feed, siteKey, language);
+    			try  {
+    				siteArticleCount += processFeed(webClient, feed, siteKey, language);
+    			} catch (IOException e) {
+    				LOG.error("Could not retrieve feed", e);
+    			} catch (ParserException e) {
+    				LOG.error("Could not parse feed", e);
+				}
             }
         }
     	LOG.info("found {} new articles in site {}", siteArticleCount, siteName);

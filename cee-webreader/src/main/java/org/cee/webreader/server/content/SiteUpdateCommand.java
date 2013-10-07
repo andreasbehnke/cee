@@ -35,14 +35,8 @@ public class SiteUpdateCommand extends AbstractCommand {
 			log.info("Start updating site {} at location {}", site.getName(), site.getLocation());
 			siteReader.update(webClient, site);
 			log.info("Finished updating site {} at location {}", site.getName(), site.getLocation());
-		} catch (ParserException e) {
-			log.error("Could not parse articles of site", e);
-			throw new RuntimeException(e);
 		} catch (StoreException e) {
 			log.error("Could not store articles of site", e);
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			log.error("Could not read site or site article", e);
 			throw new RuntimeException(e);
 		}
 	}
