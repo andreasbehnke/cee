@@ -76,4 +76,28 @@ public abstract class TestArticleSearchService extends TestStoreBase {
         Assert.assertEquals(6, result.size());
 	}
     
+	@Test
+    public void testFindArticlesEmptySearch() throws StoreException, SearchException {
+		SiteStore siteStore = getSiteStore();
+		ArticleStore articleStore = getArticleStore();
+		ArticleSearchService articleSearchService = getArticleSearchService();
+		EntityKey site = Utils.createSite(siteStore, "http://www.abc.de");
+        EntityKey site2 = Utils.createSite(siteStore, "site2");
+        Utils.updateArticle(articleStore, site, "1", "http://www.abc.de/1", 2010, 1, 12, "Title", TEXT);
+        Utils.updateArticle(articleStore, site, "2", "http://www.abc.de/2", 2010, 1, 12, "Title", SCORE2);
+        Utils.updateArticle(articleStore, site, "3", "http://www.abc.de/3", 2010, 1, 12, "Title", SCORE1);
+        Utils.updateArticle(articleStore, site2, "4", "http://www.xyz.de/4", 2010, 1, 12, "Title", SCORE3);
+        Utils.updateArticle(articleStore, site, "5", "http://www.abc.de/5", 2010, 1, 12, "Title", SCORE5);
+        ArticleKey path6 = Utils.updateArticle(articleStore, site, "6", "http://www.abc.de/6", 2010, 1, 12, "Title", UNRELATED);
+    
+        List<EntityKey> sites = new ArrayList<EntityKey>();
+        sites.add(site);
+        sites.add(site2);
+        List<ArticleKey> result = articleSearchService.findArticles(sites, "", "en");
+        Assert.assertEquals(0, result.size());
+        result = articleSearchService.findArticles(sites, "*", "en");
+        Assert.assertEquals(0, result.size());
+        result = articleSearchService.findArticles(sites, "~", "en");
+        Assert.assertEquals(0, result.size());
+	}
 }

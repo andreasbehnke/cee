@@ -15,6 +15,7 @@ import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queries.mlt.MoreLikeThis;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
@@ -74,7 +75,7 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 		Analyzer analyzer = getAnalyzer(language);
 		
 		MultiFieldQueryParser parser = new MultiFieldQueryParser(LuceneConstants.VERSION, LuceneConstants.ARTICLE_FULLTEXT_SEARCH_FIELDS, analyzer, LuceneConstants.ARTICLE_FULLTEXT_SEARCH_BOOSTS);
-		Query fulltextQuery = parser.parse(fulltextSearchQuery);
+		Query fulltextQuery = parser.parse(QueryParser.escape(fulltextSearchQuery));
 		Query sitesQuery = createQueryArticlesOfSites(sites);
 		Query languageQuery = createLanguageQuery(language);
 		
@@ -340,6 +341,9 @@ public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore,
 	@Override
 	public List<ArticleKey> findArticles(List<EntityKey> sites, String fulltextSearchQuery, String language) throws SearchException {
 		try {
+			if (fulltextSearchQuery.trim().length() == 0) {
+				return new ArrayList<ArticleKey>();
+			}
 			return getKeys(createFindArticlesQuery(sites, fulltextSearchQuery, language));
 		} catch(IOException ioe) {
 			throw new SearchException("Could not search for \"" + fulltextSearchQuery + "\"", ioe);
