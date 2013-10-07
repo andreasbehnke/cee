@@ -31,7 +31,7 @@
         </constructor-arg>
     </bean>
     
-    <bean id="jcrSessionManager" class="org.cee.news.store.jcr.ThreadLocalSessionManager" destroy-method="closeSessions">
+    <bean id="jcrSessionManager" class="org.cee.store.jcr.ThreadLocalSessionManager" destroy-method="closeSessions">
        <property name="repository" ref="jcrRepository" />
        <property name="credentials" ref="jcrCredentials" />
     </bean>
@@ -40,7 +40,7 @@
         <constructor-arg ref="jcrCredentials" />
     </bean>
     
-    <bean class="org.cee.news.store.jcr.JcrStoreInitializer" init-method="registerNodeTypes">
+    <bean class="org.cee.store.jcr.JcrStoreInitializer" init-method="registerNodeTypes">
         <property name="session">
             <bean factory-bean="jcrRepository" factory-method="login">
                 <constructor-arg ref="jcrCredentials" />
@@ -50,19 +50,19 @@
 
     <!-- Backend Services -->
     
-    <bean id="siteStore" class="org.cee.news.store.jcr.JcrSiteStore">
+    <bean id="siteStore" class="org.cee.store.jcr.JcrSiteStore">
         <property name="sessionManager" ref="jcrSessionManager" />
     </bean>
 
-    <bean id="articleStore" class="org.cee.news.store.jcr.JcrArticleStore">
+    <bean id="articleStore" class="org.cee.store.jcr.JcrArticleStore">
         <property name="sessionManager" ref="jcrSessionManager" />
     </bean>
     
-    <bean id="articleSearchService" class="org.cee.news.store.jcr.JcrArticleSearchService">
+    <bean id="articleSearchService" class="org.cee.store.jcr.JcrArticleSearchService">
         <property name="sessionManager" ref="jcrSessionManager" />
     </bean>
 
-    <bean id="workingSetStore" class="org.cee.news.store.jcr.JcrWorkingSetStore">
+    <bean id="workingSetStore" class="org.cee.store.jcr.JcrWorkingSetStore">
         <property name="sessionManager" ref="jcrSessionManager" />
     </bean>
     
