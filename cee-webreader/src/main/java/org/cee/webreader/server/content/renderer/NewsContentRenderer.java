@@ -56,7 +56,7 @@ public class NewsContentRenderer extends DefaultContentRenderer<ArticleKey, Arti
 	        	.appendHtmlElement("h1", article.getTitle())
 	        	.appendIfNotNull("p", article.getPublishedDate())
 	        	.appendHtmlElement("p", articleKey.getSiteKey())
-	        	.appendLink("http://127.0.0.1:8888/NewsReader/content/highlight/" + encodedSiteKey + "/" + encodedArticleKey, "article", "open article");
+	        	.appendLink("/NewsReader/content/highlight/" + encodedSiteKey + "/" + encodedArticleKey, "article", "open article");
 	        for (TextBlock textBlock : article.getContent()) {
 	        	builder.appendHtmlElement("p", textBlock.getContent());
 	        }
