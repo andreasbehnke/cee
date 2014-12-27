@@ -211,6 +211,7 @@
 		<module>cee-store-api</module>
 		<module>cee-search-api</module>
 		<module>cee-store-test-suite</module>
+		<module>cee-processing</module>	
 		<module>cee-webreader</module>
 		<module>cee-webreader-tomcat</module>
 		<module>cee-webreader-jetty</module>
@@ -254,9 +255,8 @@
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
-				<artifactId>cee-test-web</artifactId>
+				<artifactId>cee-processing</artifactId>
 				<version>${project.version}</version>
-				<type>war</type>
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
