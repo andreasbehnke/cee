@@ -233,11 +233,6 @@
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
-				<artifactId>cee-regression-test</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cee</groupId>
 				<artifactId>cee-search-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
