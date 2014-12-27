@@ -260,6 +260,12 @@
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
+				<artifactId>cee-processing</artifactId>
+				<classifier>sources</classifier>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
 				<artifactId>cee-webreader</artifactId>
 				<version>${project.version}</version>
 				<type>war</type>
