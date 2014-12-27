@@ -1,4 +1,4 @@
-package org.cee.webreader.server.content;
+package org.cee.processing;
 
 /*
  * #%L

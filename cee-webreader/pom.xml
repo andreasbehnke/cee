@@ -80,6 +80,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
+			<artifactId>cee-processing</artifactId>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.cee</groupId>
 			<artifactId>cee-parser-impl</artifactId>
 			<type>jar</type>
 			<scope>runtime</scope>

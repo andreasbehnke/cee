@@ -1,4 +1,4 @@
-package org.cee.webreader.server.content;
+package org.cee.processing;
 
 /*
  * #%L
@@ -20,11 +20,8 @@ package org.cee.webreader.server.content;
  * #L%
  */
 
-import java.io.IOException;
-
 import org.cee.news.model.Site;
 import org.cee.news.store.StoreException;
-import org.cee.parser.ParserException;
 import org.cee.parser.SiteReader;
 import org.cee.parser.net.WebClient;
 import org.slf4j.Logger;

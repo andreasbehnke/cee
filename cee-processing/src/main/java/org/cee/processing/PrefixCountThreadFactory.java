@@ -1,4 +1,7 @@
-package org.cee.webreader.server.content;
+/**
+ * 
+ */
+package org.cee.processing;
 
 /*
  * #%L
@@ -20,15 +23,30 @@ package org.cee.webreader.server.content;
  * #L%
  */
 
+import java.util.concurrent.ThreadFactory;
+
 /**
- * Command which can be executed by the crawler
+ * ThreadFactory which provides a unique name for every 
+ * created thread by appending a counter to the given name prefix
  */
-public interface Command extends Runnable {
+public class PrefixCountThreadFactory implements ThreadFactory {
 	
-	/**
-	 * Register a callback which will be called when this command finishes execution.
-	 * @param callback The callback being notified about command finish and command errors
-	 */
-	void addCommandCallback(CommandCallback callback);
+	private int count = 0;
+	
+	private final String prefix;
+	
+	private final boolean daemon;
+	
+	public PrefixCountThreadFactory(String prefix, boolean daemon) {
+		this.prefix = prefix;
+		this.daemon = daemon;
+	}
+
+	@Override
+	public Thread newThread(Runnable r) {
+		Thread t = new Thread(r, prefix + "#" + count++);
+		t.setDaemon(daemon);
+		return t;
+	}
 
 }

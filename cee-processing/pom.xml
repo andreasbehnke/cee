@@ -18,6 +18,10 @@
 			<groupId>com.cee</groupId>
 			<artifactId>cee-store-api</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.cee</groupId>
+			<artifactId>cee-parser</artifactId>
+		</dependency>
 		
 		<!-- external -->
 		<dependency>

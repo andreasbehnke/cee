@@ -1,4 +1,5 @@
-package org.cee.webreader.server.content;
+package org.cee.processing;
+
 
 /*
  * #%L
@@ -20,9 +21,15 @@ package org.cee.webreader.server.content;
  * #L%
  */
 
-public interface CommandCallback {
+/**
+ * Command which can be executed by the crawler
+ */
+public interface Command extends Runnable {
 	
-	void notifyFinished();
+	/**
+	 * Register a callback which will be called when this command finishes execution.
+	 * @param callback The callback being notified about command finish and command errors
+	 */
+	void addCommandCallback(CommandCallback callback);
 
-	void notifyError(Exception ex);
 }
