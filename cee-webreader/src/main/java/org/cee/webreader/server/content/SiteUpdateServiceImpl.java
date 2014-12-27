@@ -31,7 +31,7 @@ import org.cee.parser.ParserException;
 import org.cee.parser.SiteReader;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebClientFactory;
-import org.cee.processing.UpdateScheduler;
+import org.cee.processing.schedule.UpdateScheduler;
 import org.cee.webreader.client.content.FeedData;
 import org.cee.webreader.client.content.SiteData;
 import org.cee.webreader.client.content.SiteData.SiteRetrivalState;

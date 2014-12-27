@@ -32,7 +32,7 @@
 	</bean>
 	
 	<!-- UpdateScheduler -->
-	<bean id="updateScheduler" class="org.cee.processing.UpdateScheduler" init-method="start">
+	<bean id="updateScheduler" class="org.cee.processing.schedule.UpdateScheduler" init-method="start">
 		<property name="corePoolSize" value="${update.service.core.pool.size}" />
 		<property name="maxPoolSize" value="${update.service.max.pool.size}" />
 		<property name="keepAliveTime" value="${update.service.keep.alive.time}" />		

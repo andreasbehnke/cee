@@ -1,7 +1,5 @@
-/**
- * 
- */
-package org.cee.processing;
+package org.cee.processing.schedule;
+
 
 /*
  * #%L
@@ -23,30 +21,15 @@ package org.cee.processing;
  * #L%
  */
 
-import java.util.concurrent.ThreadFactory;
-
 /**
- * ThreadFactory which provides a unique name for every 
- * created thread by appending a counter to the given name prefix
+ * Command which can be executed by the crawler
  */
-public class PrefixCountThreadFactory implements ThreadFactory {
+public interface Command extends Runnable {
 	
-	private int count = 0;
-	
-	private final String prefix;
-	
-	private final boolean daemon;
-	
-	public PrefixCountThreadFactory(String prefix, boolean daemon) {
-		this.prefix = prefix;
-		this.daemon = daemon;
-	}
-
-	@Override
-	public Thread newThread(Runnable r) {
-		Thread t = new Thread(r, prefix + "#" + count++);
-		t.setDaemon(daemon);
-		return t;
-	}
+	/**
+	 * Register a callback which will be called when this command finishes execution.
+	 * @param callback The callback being notified about command finish and command errors
+	 */
+	void addCommandCallback(CommandCallback callback);
 
 }

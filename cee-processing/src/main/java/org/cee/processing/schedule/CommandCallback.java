@@ -1,5 +1,4 @@
-package org.cee.processing;
-
+package org.cee.processing.schedule;
 
 /*
  * #%L
@@ -21,15 +20,9 @@ package org.cee.processing;
  * #L%
  */
 
-/**
- * Command which can be executed by the crawler
- */
-public interface Command extends Runnable {
+public interface CommandCallback {
 	
-	/**
-	 * Register a callback which will be called when this command finishes execution.
-	 * @param callback The callback being notified about command finish and command errors
-	 */
-	void addCommandCallback(CommandCallback callback);
+	void notifyFinished();
 
+	void notifyError(Exception ex);
 }

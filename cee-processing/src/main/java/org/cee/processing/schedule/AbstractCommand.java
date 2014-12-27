@@ -1,4 +1,4 @@
-package org.cee.processing;
+package org.cee.processing.schedule;
 
 /*
  * #%L
