@@ -20,19 +20,9 @@
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
-
-	<bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="ignoreResourceNotFound" value="true" />
-		<property name="locations">
-			<list>
-				<value>classpath*:default.properties</value>
-				<value>file:${configFile}</value>
-			</list>
-		</property>
-	</bean>
 	
 	<import resource="classpath*:services.xml" />
-	
+
 	<!-- GWT Services -->
 	
 	<bean id="gwtLanguageService" class="org.cee.webreader.server.content.LanguageServiceImpl">
@@ -55,14 +45,9 @@
 		<property name="siteStore" ref="siteStore" />
 	</bean>
 	
-	<bean id="gwtSiteUpdateService" class="org.cee.webreader.server.content.SiteUpdateServiceImpl" init-method="startUpdateScheduler">
-		<property name="corePoolSize" value="${update.service.core.pool.size}" />
-		<property name="maxPoolSize" value="${update.service.max.pool.size}" />
-		<property name="keepAliveTime" value="${update.service.keep.alive.time}" />		
-		<property name="updateSchedulerInitialDelay" value="${update.service.scheduler.initial.delay}" />		
-		<property name="updateSchedulerFixedDelay" value="${update.service.scheduler.fixed.delay}" />		
-		<property name="siteStore" ref="siteStore" />
+	<bean id="gwtSiteUpdateService" class="org.cee.webreader.server.content.SiteUpdateServiceImpl">
 		<property name="siteReader" ref="siteReader" />
+		<property name="updateScheduler" ref="updateScheduler" />
 		<property name="webClientFactory" ref="webClientFactory" />
 	</bean>
 	
