@@ -21,6 +21,8 @@ package org.cee.webreader.client.content;
  */
 
 import org.cee.news.model.EntityKey;
+import org.cee.processing.site.FeedData;
+import org.cee.processing.site.SiteData;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;

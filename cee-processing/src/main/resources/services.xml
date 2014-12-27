@@ -42,4 +42,10 @@
 		<property name="siteReader" ref="siteReader" />
 		<property name="webClientFactory" ref="webClientFactory" />
 	</bean>
+	
+	<!-- SiteProcessor -->
+	<bean id="siteProcessor" class="org.cee.processing.site.SiteProcessor">
+		<property name="siteReader" ref="siteReader" />
+		<property name="webClientFactory" ref="webClientFactory" />
+	</bean>
 </beans>

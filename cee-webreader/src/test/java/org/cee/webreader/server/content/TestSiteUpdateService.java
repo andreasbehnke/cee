@@ -22,9 +22,9 @@ package org.cee.webreader.server.content;
 
 import org.cee.news.model.Feed;
 import org.cee.news.model.Site;
-import org.cee.webreader.client.content.SiteData;
+import org.cee.processing.site.SiteData;
+import org.cee.processing.site.SiteData.SiteRetrivalState;
 import org.cee.webreader.client.content.SiteUpdateService;
-import org.cee.webreader.client.content.SiteData.SiteRetrivalState;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

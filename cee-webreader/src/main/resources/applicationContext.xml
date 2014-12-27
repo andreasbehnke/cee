@@ -46,9 +46,8 @@
 	</bean>
 	
 	<bean id="gwtSiteUpdateService" class="org.cee.webreader.server.content.SiteUpdateServiceImpl">
-		<property name="siteReader" ref="siteReader" />
+		<property name="siteProcessor" ref="siteProcessor" />
 		<property name="updateScheduler" ref="updateScheduler" />
-		<property name="webClientFactory" ref="webClientFactory" />
 	</bean>
 	
 	<!-- Spring HttpRequestHandlers -->

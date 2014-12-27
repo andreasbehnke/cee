@@ -1,4 +1,4 @@
-package org.cee.webreader.client.content;
+package org.cee.processing.site;
 
 /*
  * #%L
@@ -23,7 +23,7 @@ package org.cee.webreader.client.content;
 import java.io.Serializable;
 
 import org.cee.news.model.EntityKey;
-import org.cee.webreader.client.content.SiteData.SiteRetrivalState;
+import org.cee.processing.site.SiteData.SiteRetrivalState;
 
 /**
  * Bean holding all view data of a feet
