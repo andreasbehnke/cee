@@ -20,16 +20,17 @@ package org.cee.webreader.client.content;
  * #L%
  */
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.cee.news.model.EntityKey;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-
 /**
  * Bean holding all view data of a site
  */
-public class SiteData implements IsSerializable {
+public class SiteData implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	public enum SiteRetrivalState {
 		ok, malformedUrl, ioError, parserError

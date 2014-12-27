@@ -20,15 +20,17 @@ package org.cee.webreader.client.content;
  * #L%
  */
 
+import java.io.Serializable;
+
 import org.cee.news.model.EntityKey;
 import org.cee.webreader.client.content.SiteData.SiteRetrivalState;
-
-import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * Bean holding all view data of a feet
  */
-public class FeedData implements IsSerializable {
+public class FeedData implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private boolean isNew = true;
 
