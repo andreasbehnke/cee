@@ -20,5 +20,5 @@
   -->
 
 <module>
-	<source path="site" includes="FeedData.java,SiteData.java" />
+	<source path="site/model" includes="FeedData.java,SiteData.java" />
 </module>

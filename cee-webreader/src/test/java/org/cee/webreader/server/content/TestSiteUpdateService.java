@@ -22,8 +22,8 @@ package org.cee.webreader.server.content;
 
 import org.cee.news.model.Feed;
 import org.cee.news.model.Site;
-import org.cee.processing.site.SiteData;
-import org.cee.processing.site.SiteData.SiteRetrivalState;
+import org.cee.processing.site.model.SiteData;
+import org.cee.processing.site.model.SiteData.SiteRetrivalState;
 import org.cee.webreader.client.content.SiteUpdateService;
 import org.junit.Assert;
 import org.junit.Test;

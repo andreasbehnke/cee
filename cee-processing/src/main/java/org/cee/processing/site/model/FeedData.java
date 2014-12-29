@@ -1,4 +1,4 @@
-package org.cee.processing.site;
+package org.cee.processing.site.model;
 
 /*
  * #%L
@@ -21,36 +21,28 @@ package org.cee.processing.site;
  */
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.cee.news.model.EntityKey;
+import org.cee.processing.site.model.SiteData.SiteRetrivalState;
 
 /**
- * Bean holding all view data of a site
+ * Bean holding all view data of a feet
  */
-public class SiteData implements Serializable {
+public class FeedData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public enum SiteRetrivalState {
-		ok, malformedUrl, ioError, parserError
-	}
-
-	private SiteRetrivalState state;
-
 	private boolean isNew = true;
-
-	private String name;
 
 	private String location;
 
 	private String title;
 
-	private String description;
+	private boolean active;
+	
+	private SiteRetrivalState state;
 	
 	private EntityKey language;
-
-	private List<FeedData> feeds;
 
 	public boolean getIsNew() {
 		return isNew;
@@ -59,21 +51,13 @@ public class SiteData implements Serializable {
 	public void setIsNew(boolean isNew) {
 		this.isNew = isNew;
 	}
-
+	
 	public SiteRetrivalState getState() {
 		return state;
 	}
-
+	
 	public void setState(SiteRetrivalState state) {
 		this.state = state;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getLocation() {
@@ -92,20 +76,12 @@ public class SiteData implements Serializable {
 		this.title = title;
 	}
 
-	public String getDescription() {
-		return description;
+	public boolean getIsActive() {
+		return active;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public List<FeedData> getFeeds() {
-		return feeds;
-	}
-
-	public void setFeeds(List<FeedData> feeds) {
-		this.feeds = feeds;
+	public void setIsActive(boolean active) {
+		this.active = active;
 	}
 
 	public EntityKey getLanguage() {

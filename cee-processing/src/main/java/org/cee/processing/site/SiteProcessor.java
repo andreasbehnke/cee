@@ -9,7 +9,9 @@ import org.cee.parser.ParserException;
 import org.cee.parser.SiteReader;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebClientFactory;
-import org.cee.processing.site.SiteData.SiteRetrivalState;
+import org.cee.processing.site.model.FeedData;
+import org.cee.processing.site.model.SiteData;
+import org.cee.processing.site.model.SiteData.SiteRetrivalState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
