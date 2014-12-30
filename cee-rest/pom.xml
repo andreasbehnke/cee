@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>cee-rest</artifactId>
+	<packaging>war</packaging>
+	<name>Content Extraction Engine - REST Services</name>
+		
+	<parent>
+		<groupId>com.cee</groupId>
+		<artifactId>cee</artifactId>
+		<version>1.7-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<properties>
+		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+	</properties>
+	
+	<profiles>
+		<profile>
+			<id>jcr</id>
+			<activation>
+				<property>
+					<name>store</name>
+					<value>jcr</value>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>com.cee</groupId>
+					<artifactId>cee-store-jcr</artifactId>
+					<type>jar</type>
+					<scope>runtime</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>lucene</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>store</name>
+					<value>lucene</value>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+		            <groupId>com.cee</groupId>
+		            <artifactId>cee-store-lucene</artifactId>
+		            <type>jar</type>
+		            <scope>runtime</scope>
+		        </dependency>
+	        </dependencies>
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<!-- internal -->
+		<dependency>
+			<groupId>com.cee</groupId>
+			<artifactId>cee-search-api</artifactId>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.cee</groupId>
+			<artifactId>cee-store-api</artifactId>
+			<classifier>sources</classifier>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.cee</groupId>
+			<artifactId>cee-parser</artifactId>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.cee</groupId>
+			<artifactId>cee-processing</artifactId>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.cee</groupId>
+			<artifactId>cee-parser-impl</artifactId>
+			<type>jar</type>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<!-- external -->
+		<dependency>
+			<groupId>com.sourceallies.beanoh</groupId>
+			<artifactId>beanoh</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xercesImpl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>apache-log4j-extras</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<scope>compile</scope>
+			<!-- Compile time dependecies is only required for the GWT Spring Servlet. Move this Servlet to another project! -->
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

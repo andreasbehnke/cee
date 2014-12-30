@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+	
+	<!-- Spring context -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath://applicationContext.xml</param-value>
+	</context-param>
+	<listener>
+    	<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+  	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>springGwtRemoteServiceServlet</servlet-name>
+		<servlet-class>org.spring4gwt.server.SpringGwtRemoteServiceServlet</servlet-class>
+	</servlet>
+	<servlet>
+	    <servlet-name>contentHighlightHandler</servlet-name>
+	    <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>springGwtRemoteServiceServlet</servlet-name>
+		<url-pattern>/NewsReader/services/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>contentHighlightHandler</servlet-name>
+        <url-pattern>/NewsReader/content/highlight/*</url-pattern>
+    </servlet-mapping>
+	
+	<welcome-file-list>
+		<welcome-file>NewsReader.html</welcome-file>
+	</welcome-file-list>
+	
+</web-app>

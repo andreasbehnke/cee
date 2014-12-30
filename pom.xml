@@ -211,7 +211,8 @@
 		<module>cee-store-api</module>
 		<module>cee-search-api</module>
 		<module>cee-store-test-suite</module>
-		<module>cee-processing</module>	
+		<module>cee-processing</module>
+		<module>cee-rest</module>	
 		<module>cee-webreader</module>
 		<module>cee-webreader-tomcat</module>
 		<module>cee-webreader-jetty</module>

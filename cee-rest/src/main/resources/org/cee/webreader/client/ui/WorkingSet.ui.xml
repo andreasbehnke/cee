@@ -1,0 +1,49 @@
+<!--
+  #%L
+  News Reader
+  %%
+  Copyright (C) 2013 Andreas Behnke
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.dom.client" xmlns:l="urn:import:org.cee.webreader.client.list" >
+	<ui:with type="org.cee.webreader.client.ui.Resources" field="res" />
+	<g:HTMLPanel styleName="{res.styles.dialog} {res.styles.workingSet}">
+			<div class="{res.styles.header} {res.styles.horizontalGradient}">
+				<h1>Edit Working Set</h1>
+			</div>
+			<div class="{res.styles.workingSetName}">
+				<span>Working Set Name:</span>
+				<g:TextBox ui:field="newNameEditor" />
+				<span>Language:</span>
+				<g:ValueListBox ui:field="listBoxLanguage" />
+			</div>
+			<div class="{res.styles.availableSites}">
+				<div class="{res.styles.label}">Available Sites:</div>
+				<l:ListPanel ui:field="availableSitesList" styleName="{res.styles.list}" />
+				<g:Button ui:field="buttonAddNewSite" text="Add New Site" styleName="{res.styles.addNewSite}" />
+			</div>
+			<div class="{res.styles.selectedSites}">
+				<div class="{res.styles.label}">Selected Sites:</div>
+				<l:ListPanel ui:field="selectedSitesList" styleName="{res.styles.list}" />
+				<g:Button ui:field="buttonRemoveAllSites" text="Remove All Sites" styleName="{res.styles.removeAllSites}" />
+			</div>
+			<div class="{res.styles.footer}">
+				<g:Button ui:field="buttonSave" text="Save" styleName="{res.styles.save}" />
+				<g:Button ui:field="buttonCancel" text="Cancel" styleName="{res.styles.cancel}" />
+                <g:InlineLabel ui:field="labelErrorMessage" styleName="{res.styles.error}" />
+			</div>
+	</g:HTMLPanel>
+</ui:UiBinder>
