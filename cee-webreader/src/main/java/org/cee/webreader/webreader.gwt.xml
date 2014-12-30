@@ -31,6 +31,7 @@
 	<!-- <inherits name="com.google.gwt.user.theme.dark.Dark"/> -->
 
 	<inherits name="org.cee.news.NewsModel" />
+	<inherits name="org.cee.processing.ProcessingModel" />
 	
 	<!-- Specify the app entry point class. -->
 	<entry-point class="org.cee.webreader.client.NewsReader" />

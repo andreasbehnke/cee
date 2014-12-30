@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.cee.webreader.server.content;
+package org.cee.processing.schedule;
 
 /*
  * #%L

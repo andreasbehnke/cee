@@ -1,4 +1,4 @@
-package org.cee.webreader.servlet.highlight;
+package org.cee.highlighter.impl;
 
 /*
  * #%L
@@ -40,7 +40,6 @@ import org.cee.parser.ParserException;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebClientFactory;
 import org.cee.parser.net.WebResponse;
-import org.cee.webreader.client.error.ServiceException;
 import org.springframework.web.HttpRequestHandler;
 
 public class ContentHighlightHandler implements HttpRequestHandler {
@@ -97,7 +96,7 @@ public class ContentHighlightHandler implements HttpRequestHandler {
 		try {
 	        return URLDecoder.decode(input, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-	        throw new ServiceException(e.getLocalizedMessage());
+	        throw new RuntimeException(e);
         }
 	}
 }

@@ -1,4 +1,4 @@
-package org.cee.webreader.server.content;
+package org.cee.processing.site;
 
 /*
  * #%L
@@ -26,8 +26,8 @@ import java.util.List;
 import org.cee.news.model.EntityKey;
 import org.cee.news.model.Feed;
 import org.cee.news.model.Site;
-import org.cee.webreader.client.content.FeedData;
-import org.cee.webreader.client.content.SiteData;
+import org.cee.processing.site.model.FeedData;
+import org.cee.processing.site.model.SiteData;
 
 public class SiteConverter {
 

@@ -1,4 +1,4 @@
-package org.cee.webreader.client.content;
+package org.cee.processing.site.model;
 
 /*
  * #%L
@@ -20,27 +20,37 @@ package org.cee.webreader.client.content;
  * #L%
  */
 
-import org.cee.news.model.EntityKey;
-import org.cee.webreader.client.content.SiteData.SiteRetrivalState;
+import java.io.Serializable;
+import java.util.List;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
+import org.cee.news.model.EntityKey;
 
 /**
- * Bean holding all view data of a feet
+ * Bean holding all view data of a site
  */
-public class FeedData implements IsSerializable {
+public class SiteData implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	public enum SiteRetrivalState {
+		ok, malformedUrl, ioError, parserError
+	}
+
+	private SiteRetrivalState state;
 
 	private boolean isNew = true;
+
+	private String name;
 
 	private String location;
 
 	private String title;
 
-	private boolean active;
-	
-	private SiteRetrivalState state;
+	private String description;
 	
 	private EntityKey language;
+
+	private List<FeedData> feeds;
 
 	public boolean getIsNew() {
 		return isNew;
@@ -49,13 +59,21 @@ public class FeedData implements IsSerializable {
 	public void setIsNew(boolean isNew) {
 		this.isNew = isNew;
 	}
-	
+
 	public SiteRetrivalState getState() {
 		return state;
 	}
-	
+
 	public void setState(SiteRetrivalState state) {
 		this.state = state;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getLocation() {
@@ -74,12 +92,20 @@ public class FeedData implements IsSerializable {
 		this.title = title;
 	}
 
-	public boolean getIsActive() {
-		return active;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setIsActive(boolean active) {
-		this.active = active;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<FeedData> getFeeds() {
+		return feeds;
+	}
+
+	public void setFeeds(List<FeedData> feeds) {
+		this.feeds = feeds;
 	}
 
 	public EntityKey getLanguage() {

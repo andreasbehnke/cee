@@ -20,14 +20,15 @@ package org.cee.webreader.client.workingset;
  * #L%
  */
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.cee.news.model.EntityKey;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-
-public class WorkingSetUpdateResult implements IsSerializable {
+public class WorkingSetUpdateResult implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	public enum State {
 		ok,
 		entityExists,
