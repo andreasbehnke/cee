@@ -78,4 +78,11 @@
         <property name="articleReader" ref="articleReader" />
         <property name="templateCache" ref="templateCache" />
     </bean>
+    
+	<!-- Spring HttpRequestHandlers -->
+	<bean id="contentHighlightHandler" class="org.cee.highlighter.impl.ContentHighlightHandler" scope="request">
+	     <property name="articleStore" ref="articleStore" />
+	     <property name="webClientFactory" ref="webClientFactory" />
+	     <property name="contentHighlighter" ref="contentHighlighter" />
+	</bean>
 </beans>

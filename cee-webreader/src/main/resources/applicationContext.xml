@@ -49,12 +49,4 @@
 		<property name="siteProcessor" ref="siteProcessor" />
 		<property name="updateScheduler" ref="updateScheduler" />
 	</bean>
-	
-	<!-- Spring HttpRequestHandlers -->
-	
-	<bean id="contentHighlightHandler" class="org.cee.webreader.servlet.highlight.ContentHighlightHandler" scope="request">
-	     <property name="articleStore" ref="articleStore" />
-	     <property name="webClientFactory" ref="webClientFactory" />
-	     <property name="contentHighlighter" ref="contentHighlighter" />
-	</bean>
 </beans>
