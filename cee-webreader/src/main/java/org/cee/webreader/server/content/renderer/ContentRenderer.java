@@ -23,7 +23,7 @@ package org.cee.webreader.server.content.renderer;
 
 import java.util.List;
 
-import org.cee.webreader.client.content.EntityContent;
+import org.cee.client.EntityContent;
 
 public interface ContentRenderer<K,T> {
     

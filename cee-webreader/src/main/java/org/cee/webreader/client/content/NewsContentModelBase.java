@@ -24,6 +24,7 @@ package org.cee.webreader.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cee.client.EntityContent;
 import org.cee.news.model.ArticleKey;
 import org.cee.webreader.client.list.CellListContentModel;
 import org.cee.webreader.client.list.ContentModel;
@@ -35,7 +36,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public abstract class NewsContentModelBase extends DefaultListModel<ArticleKey> implements ContentModel<ArticleKey>, CellListContentModel<ArticleKey> {
 
-    protected final NewsServiceAsync newsService = NewsServiceAsync.Util.getInstance();
+    protected final GwtNewsServiceAsync newsService = GwtNewsServiceAsync.Util.getInstance();
 
     @Override
     public void getContentTitle(final HasSafeHtml target, ArticleKey key) {

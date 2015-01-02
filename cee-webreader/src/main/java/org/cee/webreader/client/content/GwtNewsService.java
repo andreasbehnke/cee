@@ -24,6 +24,7 @@ package org.cee.webreader.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cee.client.EntityContent;
 import org.cee.news.model.ArticleKey;
 import org.cee.news.model.EntityKey;
 
@@ -34,7 +35,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * Provides access to the news
  */
 @RemoteServiceRelativePath("services/gwtNewsService")
-public interface NewsService extends RemoteService {
+public interface GwtNewsService extends RemoteService {
 
     List<ArticleKey> getArticlesOfSite(EntityKey siteKey);
 	

@@ -20,5 +20,8 @@
   -->
 
 <module>
-	<source path="site/model" includes="FeedData.java,SiteData.java" />
+	<source path="" includes="EntityContent.java" />
+	<source path="language" includes="LanguageList.java" />
+	<source path="workingset" includes="WorkingSetData.java,WorkingSetUpdateResult.java" />
+	<source path="site" includes="FeedData.java,SiteData.java,SiteUpdateResult.java" />
 </module>

@@ -25,13 +25,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import org.cee.client.language.LanguageList;
 import org.cee.news.model.EntityKey;
 import org.cee.search.ArticleSearchService;
-import org.cee.webreader.client.content.LanguageList;
-import org.cee.webreader.client.content.LanguageService;
+import org.cee.webreader.client.content.GwtLanguageService;
 import org.springframework.context.i18n.LocaleContextHolder;
 
-public class LanguageServiceImpl implements LanguageService {
+public class LanguageServiceImpl implements GwtLanguageService {
 	
 	private ArticleSearchService searchService;
 	

@@ -21,6 +21,7 @@ package org.cee.webreader.client.content;
  */
 
 
+import org.cee.client.EntityContent;
 import org.cee.webreader.client.list.CellListContentModel;
 import org.cee.webreader.client.list.CellListPresenter;
 import org.cee.webreader.client.list.ListModel;

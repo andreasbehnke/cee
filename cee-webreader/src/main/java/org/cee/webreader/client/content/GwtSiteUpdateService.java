@@ -20,9 +20,9 @@ package org.cee.webreader.client.content;
  * #L%
  */
 
+import org.cee.client.site.FeedData;
+import org.cee.client.site.SiteData;
 import org.cee.news.model.EntityKey;
-import org.cee.processing.site.model.FeedData;
-import org.cee.processing.site.model.SiteData;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -31,7 +31,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * Asynchronously update service. Updates the articles of sites.
  */
 @RemoteServiceRelativePath("services/gwtSiteUpdateService")
-public interface SiteUpdateService extends RemoteService {
+public interface GwtSiteUpdateService extends RemoteService {
 	
 	/**
 	 * Retrieves all sites information from a given web url

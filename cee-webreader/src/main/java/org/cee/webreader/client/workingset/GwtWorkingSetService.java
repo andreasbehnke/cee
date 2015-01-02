@@ -23,13 +23,15 @@ package org.cee.webreader.client.workingset;
 
 import java.util.List;
 
+import org.cee.client.workingset.WorkingSetData;
+import org.cee.client.workingset.WorkingSetUpdateResult;
 import org.cee.news.model.EntityKey;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("services/gwtWorkingSetService")
-public interface WorkingSetService extends RemoteService {
+public interface GwtWorkingSetService extends RemoteService {
 	
 	List<EntityKey> getWorkingSetsOrderedByName();
 	

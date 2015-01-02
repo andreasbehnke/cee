@@ -20,18 +20,18 @@ package org.cee.webreader.server.content;
  * #L%
  */
 
+import org.cee.client.site.FeedData;
+import org.cee.client.site.SiteData;
 import org.cee.news.model.EntityKey;
 import org.cee.news.store.StoreException;
 import org.cee.processing.schedule.UpdateScheduler;
 import org.cee.processing.site.SiteProcessor;
-import org.cee.processing.site.model.FeedData;
-import org.cee.processing.site.model.SiteData;
-import org.cee.webreader.client.content.SiteUpdateService;
+import org.cee.webreader.client.content.GwtSiteUpdateService;
 import org.cee.webreader.client.error.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SiteUpdateServiceImpl implements SiteUpdateService {
+public class SiteUpdateServiceImpl implements GwtSiteUpdateService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SiteUpdateServiceImpl.class);
 	

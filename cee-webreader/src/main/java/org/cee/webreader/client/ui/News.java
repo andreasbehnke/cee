@@ -23,9 +23,9 @@ package org.cee.webreader.client.ui;
 
 import java.util.List;
 
+import org.cee.client.EntityContent;
 import org.cee.news.model.ArticleKey;
 import org.cee.webreader.client.NewsView;
-import org.cee.webreader.client.content.EntityContent;
 import org.cee.webreader.client.content.EntityContentCell;
 import org.cee.webreader.client.content.EntityContentKeyProvider;
 import org.cee.webreader.client.list.IncreaseVisibleRangeScrollHandler;

@@ -24,6 +24,7 @@ package org.cee.webreader.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cee.client.EntityContent;
 import org.cee.news.model.EntityKey;
 import org.cee.webreader.client.async.NotificationCallback;
 import org.cee.webreader.client.list.CellListContentModel;
@@ -39,7 +40,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public class SiteListContentModel extends DefaultListModel<EntityKey> implements ContentModel<EntityKey>, CellListContentModel<EntityKey> {
 
-    private SiteServiceAsync service = SiteServiceAsync.Util.getInstance();
+    private GwtSiteServiceAsync service = GwtSiteServiceAsync.Util.getInstance();
     
     public void findAllSites() {
         findAllSites((NotificationCallback)null);

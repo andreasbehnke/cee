@@ -24,6 +24,9 @@ package org.cee.webreader.server.workingset;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cee.client.workingset.WorkingSetData;
+import org.cee.client.workingset.WorkingSetUpdateResult;
+import org.cee.client.workingset.WorkingSetUpdateResult.State;
 import org.cee.news.model.EntityKey;
 import org.cee.news.model.Site;
 import org.cee.news.model.WorkingSet;
@@ -31,14 +34,11 @@ import org.cee.news.store.SiteStore;
 import org.cee.news.store.StoreException;
 import org.cee.news.store.WorkingSetStore;
 import org.cee.webreader.client.error.ServiceException;
-import org.cee.webreader.client.workingset.WorkingSetData;
-import org.cee.webreader.client.workingset.WorkingSetService;
-import org.cee.webreader.client.workingset.WorkingSetUpdateResult;
-import org.cee.webreader.client.workingset.WorkingSetUpdateResult.State;
+import org.cee.webreader.client.workingset.GwtWorkingSetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class WorkingSetServiceImpl implements WorkingSetService {
+public class WorkingSetServiceImpl implements GwtWorkingSetService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(WorkingSetServiceImpl.class);
 

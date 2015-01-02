@@ -20,6 +20,7 @@ package org.cee.webreader.client.content;
  * #L%
  */
 
+import org.cee.client.EntityContent;
 import org.cee.webreader.client.util.SafeHtmlUtil;
 
 import com.google.gwt.cell.client.AbstractCell;

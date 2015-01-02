@@ -20,6 +20,10 @@
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
+			<artifactId>cee-client-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cee</groupId>
 			<artifactId>cee-parser</artifactId>
 		</dependency>
 		

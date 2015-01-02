@@ -22,6 +22,7 @@ package org.cee.webreader.client.content;
 
 import java.util.List;
 
+import org.cee.client.language.LanguageList;
 import org.cee.news.model.EntityKey;
 import org.cee.webreader.client.async.NotificationCallback;
 import org.cee.webreader.client.list.DefaultListModel;
@@ -30,7 +31,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class LanguageListModel extends DefaultListModel<EntityKey> {
     
-    private final LanguageServiceAsync languageService = LanguageServiceAsync.Util.getInstance();
+    private final GwtLanguageServiceAsync languageService = GwtLanguageServiceAsync.Util.getInstance();
     
     private EntityKey defaultLanguage;
     

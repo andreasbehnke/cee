@@ -23,12 +23,12 @@ package org.cee.webreader.client.content;
 
 import java.util.List;
 
+import org.cee.client.workingset.WorkingSetUpdateResult;
+import org.cee.client.workingset.WorkingSetUpdateResult.State;
 import org.cee.news.model.EntityKey;
 import org.cee.webreader.client.NotificationView;
 import org.cee.webreader.client.workingset.WorkingSetListModel;
-import org.cee.webreader.client.workingset.WorkingSetUpdateResult;
-import org.cee.webreader.client.workingset.WorkingSetUpdateResult.State;
-import org.cee.webreader.client.workingset.WorkingSetServiceAsync;
+import org.cee.webreader.client.workingset.GwtWorkingSetServiceAsync;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -36,7 +36,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class AddSiteToWorkingSet extends AddSiteWorkflow implements SiteAddedHandler {
 
-    private final WorkingSetServiceAsync workingSetService = WorkingSetServiceAsync.Util.getInstance();
+    private final GwtWorkingSetServiceAsync workingSetService = GwtWorkingSetServiceAsync.Util.getInstance();
     
     private final WorkingSetListModel workingSetListModel;
     

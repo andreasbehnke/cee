@@ -1,4 +1,4 @@
-package org.cee.processing.site.model;
+package org.cee.client.site;
 
 /*
  * #%L

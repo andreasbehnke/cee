@@ -23,9 +23,10 @@ package org.cee.webreader.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cee.client.site.FeedData;
+import org.cee.client.site.SiteData;
+import org.cee.client.site.SiteUpdateResult;
 import org.cee.news.model.EntityKey;
-import org.cee.processing.site.model.FeedData;
-import org.cee.processing.site.model.SiteData;
 import org.cee.webreader.client.async.LoadingInfoAsyncCallback;
 import org.cee.webreader.client.error.ErrorEvent;
 import org.cee.webreader.client.error.ErrorHandler;
@@ -44,9 +45,9 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 
 	protected final NewSiteWizardView wizard;
 
-	protected final SiteUpdateServiceAsync siteUpdateService = SiteUpdateServiceAsync.Util.getInstance();
+	protected final GwtSiteUpdateServiceAsync siteUpdateService = GwtSiteUpdateServiceAsync.Util.getInstance();
 
-	protected final SiteServiceAsync siteService = SiteServiceAsync.Util.getInstance();
+	protected final GwtSiteServiceAsync siteService = GwtSiteServiceAsync.Util.getInstance();
 	
 	protected final LoadingInfoAsyncCallback loadingCallback;
 	

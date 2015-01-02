@@ -26,13 +26,13 @@ import java.util.List;
 import org.cee.news.model.EntityKey;
 import org.cee.webreader.client.async.NotificationCallback;
 import org.cee.webreader.client.list.DefaultListModel;
-import org.cee.webreader.client.workingset.WorkingSetServiceAsync;
+import org.cee.webreader.client.workingset.GwtWorkingSetServiceAsync;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class WorkingSetListModel extends DefaultListModel<EntityKey> {
     
-    private final WorkingSetServiceAsync workingSetService = WorkingSetServiceAsync.Util.getInstance();
+    private final GwtWorkingSetServiceAsync workingSetService = GwtWorkingSetServiceAsync.Util.getInstance();
     
     public void findAllWorkingSets() {
     	this.findAllWorkingSets(null);
