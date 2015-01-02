@@ -20,6 +20,8 @@ package org.cee.webreader.client.content;
  * #L%
  */
 
+import org.cee.client.language.LanguageList;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
