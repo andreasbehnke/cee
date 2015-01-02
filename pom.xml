@@ -245,12 +245,18 @@
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
+				<artifactId>cee-store-api</artifactId>
+				<classifier>sources</classifier>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
 				<artifactId>cee-client-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
-				<artifactId>cee-store-api</artifactId>
+				<artifactId>cee-client-api</artifactId>
 				<classifier>sources</classifier>
 				<version>${project.version}</version>
 			</dependency>
