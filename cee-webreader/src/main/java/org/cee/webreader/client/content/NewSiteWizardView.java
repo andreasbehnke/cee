@@ -22,8 +22,8 @@ package org.cee.webreader.client.content;
 
 import java.util.List;
 
+import org.cee.client.site.FeedData;
 import org.cee.news.model.EntityKey;
-import org.cee.processing.site.model.FeedData;
 import org.cee.webreader.client.DialogView;
 import org.cee.webreader.client.async.LoadingInfoView;
 

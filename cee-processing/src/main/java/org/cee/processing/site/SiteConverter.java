@@ -23,11 +23,11 @@ package org.cee.processing.site;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cee.client.site.FeedData;
+import org.cee.client.site.SiteData;
 import org.cee.news.model.EntityKey;
 import org.cee.news.model.Feed;
 import org.cee.news.model.Site;
-import org.cee.processing.site.model.FeedData;
-import org.cee.processing.site.model.SiteData;
 
 public class SiteConverter {
 

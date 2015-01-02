@@ -24,6 +24,7 @@ package org.cee.webreader.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cee.client.EntityContent;
 import org.cee.news.model.ArticleKey;
 import org.cee.news.model.EntityKey;
 

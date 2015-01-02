@@ -24,8 +24,10 @@ package org.cee.webreader.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cee.client.EntityContent;
+import org.cee.client.site.SiteData;
+import org.cee.client.site.SiteUpdateResult;
 import org.cee.news.model.EntityKey;
-import org.cee.processing.site.model.SiteData;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;

@@ -24,6 +24,7 @@ package org.cee.webreader.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cee.client.EntityContent;
 import org.cee.news.model.EntityKey;
 import org.cee.webreader.client.async.NotificationCallback;
 import org.cee.webreader.client.list.CellListContentModel;

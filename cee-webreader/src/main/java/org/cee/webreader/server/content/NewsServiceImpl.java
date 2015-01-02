@@ -24,6 +24,7 @@ package org.cee.webreader.server.content;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cee.client.EntityContent;
 import org.cee.news.model.ArticleKey;
 import org.cee.news.model.EntityKey;
 import org.cee.news.model.WorkingSet;
@@ -31,7 +32,6 @@ import org.cee.news.store.ArticleStore;
 import org.cee.news.store.StoreException;
 import org.cee.news.store.WorkingSetStore;
 import org.cee.search.ArticleSearchService;
-import org.cee.webreader.client.content.EntityContent;
 import org.cee.webreader.client.content.GwtNewsService;
 import org.cee.webreader.client.error.ServiceException;
 import org.cee.webreader.server.content.renderer.NewsContentRenderer;

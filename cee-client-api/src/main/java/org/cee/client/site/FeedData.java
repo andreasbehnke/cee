@@ -1,4 +1,4 @@
-package org.cee.processing.site.model;
+package org.cee.client.site;
 
 /*
  * #%L
@@ -22,8 +22,8 @@ package org.cee.processing.site.model;
 
 import java.io.Serializable;
 
+import org.cee.client.site.SiteData.SiteRetrivalState;
 import org.cee.news.model.EntityKey;
-import org.cee.processing.site.model.SiteData.SiteRetrivalState;
 
 /**
  * Bean holding all view data of a feet

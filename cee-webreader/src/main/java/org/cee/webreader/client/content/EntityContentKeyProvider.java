@@ -20,6 +20,8 @@ package org.cee.webreader.client.content;
  * #L%
  */
 
+import org.cee.client.EntityContent;
+
 import com.google.gwt.view.client.ProvidesKey;
 
 public class EntityContentKeyProvider<K> implements ProvidesKey<EntityContent<K>> {

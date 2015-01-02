@@ -21,6 +21,7 @@ package org.cee.webreader.client.content;
  */
 
 
+import org.cee.client.EntityContent;
 import org.cee.news.model.EntityKey;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
