@@ -39,7 +39,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public class SiteListContentModel extends DefaultListModel<EntityKey> implements ContentModel<EntityKey>, CellListContentModel<EntityKey> {
 
-    private SiteServiceAsync service = SiteServiceAsync.Util.getInstance();
+    private GwtSiteServiceAsync service = GwtSiteServiceAsync.Util.getInstance();
     
     public void findAllSites() {
         findAllSites((NotificationCallback)null);

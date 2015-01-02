@@ -34,7 +34,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * Provides access to the news
  */
 @RemoteServiceRelativePath("services/gwtNewsService")
-public interface NewsService extends RemoteService {
+public interface GwtNewsService extends RemoteService {
 
     List<ArticleKey> getArticlesOfSite(EntityKey siteKey);
 	

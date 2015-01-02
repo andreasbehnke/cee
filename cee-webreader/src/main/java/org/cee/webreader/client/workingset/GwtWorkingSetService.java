@@ -29,7 +29,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("services/gwtWorkingSetService")
-public interface WorkingSetService extends RemoteService {
+public interface GwtWorkingSetService extends RemoteService {
 	
 	List<EntityKey> getWorkingSetsOrderedByName();
 	

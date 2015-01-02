@@ -44,9 +44,9 @@ public class AddSiteWorkflow extends ErrorSourceBase {
 
 	protected final NewSiteWizardView wizard;
 
-	protected final SiteUpdateServiceAsync siteUpdateService = SiteUpdateServiceAsync.Util.getInstance();
+	protected final GwtSiteUpdateServiceAsync siteUpdateService = GwtSiteUpdateServiceAsync.Util.getInstance();
 
-	protected final SiteServiceAsync siteService = SiteServiceAsync.Util.getInstance();
+	protected final GwtSiteServiceAsync siteService = GwtSiteServiceAsync.Util.getInstance();
 	
 	protected final LoadingInfoAsyncCallback loadingCallback;
 	

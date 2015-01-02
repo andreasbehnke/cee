@@ -51,7 +51,7 @@ public class WorkingSetWorkflow extends ErrorSourceBase {
 
 	private final WorkingSetListModel workingSetListModel;
 
-	private final WorkingSetServiceAsync service = WorkingSetServiceAsync.Util.getInstance();
+	private final GwtWorkingSetServiceAsync service = GwtWorkingSetServiceAsync.Util.getInstance();
 
 	private final WorkingSetView workingSetView;
 	

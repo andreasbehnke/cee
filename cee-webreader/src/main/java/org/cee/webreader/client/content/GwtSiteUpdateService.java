@@ -31,7 +31,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * Asynchronously update service. Updates the articles of sites.
  */
 @RemoteServiceRelativePath("services/gwtSiteUpdateService")
-public interface SiteUpdateService extends RemoteService {
+public interface GwtSiteUpdateService extends RemoteService {
 	
 	/**
 	 * Retrieves all sites information from a given web url

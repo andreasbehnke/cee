@@ -35,7 +35,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public abstract class NewsContentModelBase extends DefaultListModel<ArticleKey> implements ContentModel<ArticleKey>, CellListContentModel<ArticleKey> {
 
-    protected final NewsServiceAsync newsService = NewsServiceAsync.Util.getInstance();
+    protected final GwtNewsServiceAsync newsService = GwtNewsServiceAsync.Util.getInstance();
 
     @Override
     public void getContentTitle(final HasSafeHtml target, ArticleKey key) {

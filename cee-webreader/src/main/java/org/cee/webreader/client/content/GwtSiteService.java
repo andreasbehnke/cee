@@ -31,7 +31,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("services/gwtSiteService")
-public interface SiteService extends RemoteService {
+public interface GwtSiteService extends RemoteService {
 
 	/**
 	 * @return List of all available sites names
