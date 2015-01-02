@@ -210,6 +210,7 @@
 		<module>cee-parser-impl</module>
 		<module>cee-store-api</module>
 		<module>cee-search-api</module>
+		<module>cee-client-api</module>
 		<module>cee-store-test-suite</module>
 		<module>cee-processing</module>	
 		<module>cee-webreader</module>
@@ -240,6 +241,11 @@
 			<dependency>
 				<groupId>com.cee</groupId>
 				<artifactId>cee-store-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
+				<artifactId>cee-client-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
