@@ -23,11 +23,11 @@ package org.cee.webreader.client.content;
 
 import java.util.List;
 
+import org.cee.client.workingset.WorkingSetUpdateResult;
+import org.cee.client.workingset.WorkingSetUpdateResult.State;
 import org.cee.news.model.EntityKey;
 import org.cee.webreader.client.NotificationView;
 import org.cee.webreader.client.workingset.WorkingSetListModel;
-import org.cee.webreader.client.workingset.WorkingSetUpdateResult;
-import org.cee.webreader.client.workingset.WorkingSetUpdateResult.State;
 import org.cee.webreader.client.workingset.GwtWorkingSetServiceAsync;
 
 import com.google.gwt.event.dom.client.ClickEvent;

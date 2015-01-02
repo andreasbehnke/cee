@@ -10,6 +10,14 @@
 		<version>1.7-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.cee</groupId>
+			<artifactId>cee-store-api</artifactId>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>

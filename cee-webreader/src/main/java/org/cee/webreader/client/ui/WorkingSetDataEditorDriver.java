@@ -21,7 +21,7 @@ package org.cee.webreader.client.ui;
  */
 
 
-import org.cee.webreader.client.workingset.WorkingSetData;
+import org.cee.client.workingset.WorkingSetData;
 
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 

@@ -30,6 +30,7 @@
 	<inherits name="com.google.gwt.user.theme.chrome.Chrome" />
 	<!-- <inherits name="com.google.gwt.user.theme.dark.Dark"/> -->
 
+	<inherits name="org.cee.client.ClientModel" />
 	<inherits name="org.cee.news.NewsModel" />
 	<inherits name="org.cee.processing.ProcessingModel" />
 	

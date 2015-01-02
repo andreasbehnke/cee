@@ -22,6 +22,7 @@ package org.cee.webreader.client.workingset;
 
 import java.util.List;
 
+import org.cee.client.workingset.WorkingSetData;
 import org.cee.news.model.EntityKey;
 import org.cee.webreader.client.DialogView;
 import org.cee.webreader.client.EditorView;

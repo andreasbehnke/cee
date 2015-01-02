@@ -23,6 +23,7 @@ package org.cee.webreader.client.ui;
 
 import java.util.List;
 
+import org.cee.client.workingset.WorkingSetData;
 import org.cee.news.model.EntityKey;
 import org.cee.webreader.client.content.EntityKeyProvider;
 import org.cee.webreader.client.content.EntityKeyRenderer;
@@ -30,7 +31,6 @@ import org.cee.webreader.client.list.ListPanel;
 import org.cee.webreader.client.list.ListView;
 import org.cee.webreader.client.list.SelectionListChangedHandler;
 import org.cee.webreader.client.list.SelectionListEditor;
-import org.cee.webreader.client.workingset.WorkingSetData;
 import org.cee.webreader.client.workingset.WorkingSetView;
 
 import com.google.gwt.core.client.GWT;
