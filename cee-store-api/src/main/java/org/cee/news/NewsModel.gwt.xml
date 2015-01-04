@@ -20,5 +20,5 @@
   -->
 
 <module>
-	<source path="model" includes="EntityKey.java,ArticleKey.java,SearchHit.java" />
+	<source path="model" includes="EntityKey.java,ArticleKey.java,SearchHit.java,WorkingSet.java" />
 </module>

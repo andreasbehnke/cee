@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cee.news.model.EntityKey;
+import org.cee.news.model.WorkingSet;
 
 /**
  * Bean holding all view data of a working set
@@ -43,6 +44,16 @@ public class WorkingSetData implements Serializable {
     private EntityKey language;
     
     private List<EntityKey> sites = new ArrayList<EntityKey>();
+    
+    public WorkingSetData() {}
+    
+    public WorkingSetData(WorkingSet workingSet) {
+    	this.isNew = false;
+    	this.newName = workingSet.getName();
+    	this.oldName = workingSet.getName();
+    	this.sites = workingSet.getSites();
+    	this.language = EntityKey.get(workingSet.getLanguage());
+    }
 
     /**
      * @return If true, this bean is a new created working set, otherwise this working set should be updated

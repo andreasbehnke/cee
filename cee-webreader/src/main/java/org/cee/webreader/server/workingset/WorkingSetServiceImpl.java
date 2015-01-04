@@ -77,14 +77,7 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
     @Override
     public WorkingSetData getWorkingSet(EntityKey workingSetKey) {
         try {
-            WorkingSet workingSet = workingSetStore.getWorkingSet(workingSetKey);
-            WorkingSetData wsd = new WorkingSetData();
-            wsd.setIsNew(false);
-            wsd.setNewName(workingSet.getName());
-            wsd.setOldName(workingSet.getName());
-            wsd.setSites(workingSet.getSites());
-            wsd.setLanguage(EntityKey.get(workingSet.getLanguage()));
-            return wsd;
+        	return new WorkingSetData(workingSetStore.getWorkingSet(workingSetKey));
         } catch (StoreException e) {
         	LOG.error(COULD_NOT_RETRIEVE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_RETRIEVE_WORKING_SET);
