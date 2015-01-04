@@ -214,7 +214,7 @@
 		<module>cee-store-test-suite</module>
 		<module>cee-processing</module>
 		<module>cee-rest</module>	
-		<module>cee-webreader</module>
+		<!--module>cee-webreader</module-->
 		<module>cee-webreader-tomcat</module>
 		<module>cee-webreader-jetty</module>
 		<module>jetty-starter</module>
@@ -276,6 +276,12 @@
 				<artifactId>cee-processing</artifactId>
 				<classifier>sources</classifier>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
+				<artifactId>cee-rest</artifactId>
+				<version>${project.version}</version>
+				<type>war</type>
 			</dependency>
 			<dependency>
 				<groupId>com.cee</groupId>
@@ -381,6 +387,11 @@
 		        <version>3.0.1</version>
 			</dependency>
 			<dependency>
+				<groupId>javax.ws.rs</groupId>
+		    		<artifactId>javax.ws.rs-api</artifactId>
+		    		<version>2.0.1</version>
+			</dependency>
+			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>4.8.2</version>
@@ -430,7 +441,7 @@
 				<type>jar</type>
 				<version>${jetty.version}</version>
 			</dependency>
-	        <dependency>
+	        	<dependency>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-io</artifactId>
 				<type>jar</type>
@@ -442,7 +453,7 @@
 				<type>jar</type>
 				<version>${jetty.version}</version>
 			</dependency>
-	        <dependency>
+			<dependency>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-server</artifactId>
 				<type>jar</type>
@@ -472,7 +483,27 @@
 				<type>jar</type>
 				<version>${jetty.version}</version>
 			</dependency>
-			
+
+			<!-- jersey -->
+			<dependency>
+				<groupId>org.glassfish.jersey.containers</groupId>
+				<artifactId>jersey-container-servlet-core</artifactId>
+				<version>2.14</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+			    <groupId>org.glassfish.jersey.media</groupId>
+			    <artifactId>jersey-media-moxy</artifactId>
+			    <version>2.14</version>
+			    <scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jersey.ext</groupId>
+				<artifactId>jersey-spring3</artifactId>
+				<version>2.14</version>
+				<scope>runtime</scope>
+			</dependency>
+
 			<dependency>
 				<groupId>org.mockito</groupId>
   				<artifactId>mockito-core</artifactId>  
