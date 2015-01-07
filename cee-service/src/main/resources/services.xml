@@ -21,8 +21,15 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-	<bean id="workingSetService" class="org.cee.service.WorkingSetService">
+	<bean id="workingSetService" class="org.cee.service.workingset.WorkingSetService">
 		<property name="workingSetStore" ref="workingSetStore"/>
 		<property name="siteStore" ref="siteStore"/>
+	</bean>
+	<bean id="siteService" class="org.cee.service.site.SiteService">
+		<property name="workingSetStore" ref="workingSetStore"/>
+		<property name="siteStore" ref="siteStore"/>
+	</bean>
+	<bean id="languageService" class="org.cee.service.language.LanguageService">
+		<property name="searchService" ref="articleSearchService"/>
 	</bean>
 </beans>

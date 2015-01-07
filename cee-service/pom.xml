@@ -19,11 +19,23 @@
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
+			<artifactId>cee-search-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cee</groupId>
 			<artifactId>cee-client-api</artifactId>
 		</dependency>
 
 		<!-- external -->
-	
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		
 		<!-- testing -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -33,11 +45,6 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>  
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
