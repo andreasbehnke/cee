@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.cee.client.site.FeedData;
+import org.cee.client.site.SiteConverter;
 import org.cee.client.site.SiteData;
 import org.cee.client.site.SiteData.SiteRetrivalState;
 import org.cee.news.model.Feed;

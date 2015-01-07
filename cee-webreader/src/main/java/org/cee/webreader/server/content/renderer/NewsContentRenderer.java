@@ -24,7 +24,6 @@ package org.cee.webreader.server.content.renderer;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import org.apache.commons.logging.Log;
 import org.cee.client.EntityContent;
 import org.cee.news.model.Article;
 import org.cee.news.model.ArticleKey;
