@@ -27,7 +27,7 @@ import org.cee.client.workingset.WorkingSetData;
 import org.cee.client.workingset.WorkingSetUpdateResult;
 import org.cee.news.model.EntityKey;
 import org.cee.news.store.StoreException;
-import org.cee.service.WorkingSetService;
+import org.cee.service.workingset.WorkingSetService;
 import org.cee.webreader.client.error.ServiceException;
 import org.cee.webreader.client.workingset.GwtWorkingSetService;
 import org.slf4j.Logger;
@@ -56,7 +56,7 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
     @Override
     public List<EntityKey> getWorkingSetsOrderedByName() {
         try {
-            return workingSetService.getWorkingSetsOrderedByName();
+            return workingSetService.orderedByName();
         } catch (StoreException e) {
         	LOG.error(COULD_NOT_RETRIEVE_WORKING_SET_LIST, e);
             throw new ServiceException(COULD_NOT_RETRIEVE_WORKING_SET_LIST);
@@ -66,7 +66,7 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
     @Override
     public WorkingSetData getWorkingSet(EntityKey workingSetKey) {
         try {
-        	return workingSetService.getWorkingSet(workingSetKey);
+        	return workingSetService.get(workingSetKey);
         } catch (StoreException e) {
         	LOG.error(COULD_NOT_RETRIEVE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_RETRIEVE_WORKING_SET);
@@ -96,7 +96,7 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
     @Override
     public WorkingSetUpdateResult addSiteToWorkingSet(EntityKey workingSetKey, EntityKey siteKey) {
         try {
-        	return workingSetService.addSiteToWorkingSet(workingSetKey, siteKey);
+        	return workingSetService.addSite(workingSetKey, siteKey);
         } catch (StoreException e) {
         	LOG.error(COULD_NOT_UPDATE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_UPDATE_WORKING_SET);
@@ -106,7 +106,7 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
     @Override
     public void deleteWorkingSet(EntityKey workingSetKey) {
     	try {
-    		workingSetService.deleteWorkingSet(workingSetKey);
+    		workingSetService.delete(workingSetKey);
 		} catch (StoreException e) {
 			LOG.error(COULD_NOT_DELETE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_DELETE_WORKING_SET);

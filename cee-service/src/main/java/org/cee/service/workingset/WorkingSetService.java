@@ -1,4 +1,4 @@
-package org.cee.service;
+package org.cee.service.workingset;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +27,11 @@ public class WorkingSetService {
 		this.siteStore = siteStore;
 	}
     
-    public List<EntityKey> getWorkingSetsOrderedByName() throws StoreException {
+    public List<EntityKey> orderedByName() throws StoreException {
         return workingSetStore.getWorkingSetsOrderedByName();
     }
 
-    public WorkingSetData getWorkingSet(EntityKey workingSetKey) throws StoreException {
+    public WorkingSetData get(EntityKey workingSetKey) throws StoreException {
         return new WorkingSetData(workingSetStore.getWorkingSet(workingSetKey));
     }
     
@@ -76,13 +76,13 @@ public class WorkingSetService {
         return result;
     }
     
-    public WorkingSetUpdateResult addSiteToWorkingSet(EntityKey workingSetKey, EntityKey siteKey) throws StoreException {
-        WorkingSetData workingSet = getWorkingSet(workingSetKey);
+    public WorkingSetUpdateResult addSite(EntityKey workingSetKey, EntityKey siteKey) throws StoreException {
+        WorkingSetData workingSet = get(workingSetKey);
         workingSet.getSites().add(siteKey);
         return update(workingSet);
     }
     
-    public void deleteWorkingSet(EntityKey workingSetKey) throws StoreException {
+    public void delete(EntityKey workingSetKey) throws StoreException {
     	workingSetStore.delete(workingSetKey);
     }
 }
