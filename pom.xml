@@ -213,6 +213,7 @@
 		<module>cee-client-api</module>
 		<module>cee-store-test-suite</module>
 		<module>cee-processing</module>	
+		<module>cee-service</module>
 		<module>cee-webreader</module>
 		<module>cee-webreader-tomcat</module>
 		<module>cee-webreader-jetty</module>
@@ -274,6 +275,11 @@
 				<groupId>com.cee</groupId>
 				<artifactId>cee-processing</artifactId>
 				<classifier>sources</classifier>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
+				<artifactId>cee-service</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

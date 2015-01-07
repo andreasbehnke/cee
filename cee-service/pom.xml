@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>cee-service</artifactId>
+	<name>Content Extraction Engine - Services</name>
+	<description>Services used by client implementations</description>
+	
+	<parent>
+		<groupId>com.cee</groupId>
+		<artifactId>cee</artifactId>
+		<version>1.7-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<dependencies>
+		<!-- internal -->
+		<dependency>
+			<groupId>com.cee</groupId>
+			<artifactId>cee-store-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cee</groupId>
+			<artifactId>cee-client-api</artifactId>
+		</dependency>
+
+		<!-- external -->
+	
+		<!-- testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>  
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

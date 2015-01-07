@@ -103,6 +103,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
+			<artifactId>cee-service</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.cee</groupId>
 			<artifactId>cee-parser-impl</artifactId>
 			<type>jar</type>
 			<scope>runtime</scope>

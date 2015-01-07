@@ -41,8 +41,7 @@
 	</bean>
 
 	<bean id="gwtWorkingSetService" class="org.cee.webreader.server.workingset.WorkingSetServiceImpl">
-		<property name="workingSetStore" ref="workingSetStore" />
-		<property name="siteStore" ref="siteStore" />
+		<property name="workingSetService" ref="workingSetService" />
 	</bean>
 	
 	<bean id="gwtSiteUpdateService" class="org.cee.webreader.server.content.SiteUpdateServiceImpl">
