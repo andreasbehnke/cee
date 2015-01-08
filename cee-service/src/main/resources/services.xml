@@ -29,6 +29,11 @@
 		<property name="workingSetStore" ref="workingSetStore"/>
 		<property name="siteStore" ref="siteStore"/>
 	</bean>
+	<bean id="articleService" class="org.cee.service.article.ArticleService">
+		<property name="workingSetStore" ref="workingSetStore"/>
+		<property name="articleStore" ref="articleStore"/>
+		<property name="articleSearchService" ref="articleSearchService"/>
+	</bean>
 	<bean id="languageService" class="org.cee.service.language.LanguageService">
 		<property name="searchService" ref="articleSearchService"/>
 	</bean>
