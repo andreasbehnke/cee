@@ -67,7 +67,7 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
     public WorkingSetData getWorkingSet(EntityKey workingSetKey) {
         try {
         	return workingSetService.get(workingSetKey);
-        } catch (StoreException e) {
+        } catch (Exception e) {
         	LOG.error(COULD_NOT_RETRIEVE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_RETRIEVE_WORKING_SET);
         }
@@ -97,7 +97,7 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
     public WorkingSetUpdateResult addSiteToWorkingSet(EntityKey workingSetKey, EntityKey siteKey) {
         try {
         	return workingSetService.addSite(workingSetKey, siteKey);
-        } catch (StoreException e) {
+        } catch (Exception e) {
         	LOG.error(COULD_NOT_UPDATE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_UPDATE_WORKING_SET);
         }

@@ -6,6 +6,7 @@ import java.util.List;
 import org.cee.client.workingset.WorkingSetData;
 import org.cee.client.workingset.WorkingSetUpdateResult;
 import org.cee.client.workingset.WorkingSetUpdateResult.State;
+import org.cee.service.EntityNotFoundException;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
 import org.cee.store.site.Site;
@@ -31,8 +32,12 @@ public class WorkingSetService {
         return workingSetStore.getWorkingSetsOrderedByName();
     }
 
-    public WorkingSetData get(EntityKey workingSetKey) throws StoreException {
-        return new WorkingSetData(workingSetStore.getWorkingSet(workingSetKey));
+    public WorkingSetData get(EntityKey workingSetKey) throws StoreException, EntityNotFoundException {
+    	WorkingSet ws = workingSetStore.getWorkingSet(workingSetKey);
+    	if (ws == null) {
+    		throw new EntityNotFoundException(workingSetKey);
+    	}
+        return new WorkingSetData(ws);
     }
     
     public List<EntityKey> validateSiteLanguages(WorkingSetData wsd) throws StoreException {
@@ -76,7 +81,7 @@ public class WorkingSetService {
         return result;
     }
     
-    public WorkingSetUpdateResult addSite(EntityKey workingSetKey, EntityKey siteKey) throws StoreException {
+    public WorkingSetUpdateResult addSite(EntityKey workingSetKey, EntityKey siteKey) throws StoreException, EntityNotFoundException {
         WorkingSetData workingSet = get(workingSetKey);
         workingSet.getSites().add(siteKey);
         return update(workingSet);

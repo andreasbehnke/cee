@@ -9,6 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.cee.client.workingset.WorkingSetData;
+import org.cee.service.EntityNotFoundException;
 import org.cee.service.workingset.WorkingSetService;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
@@ -35,7 +36,7 @@ public class WorkingSetResource {
 	@GET
 	@Path("{key}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public WorkingSetData get(@PathParam("key") String key) throws StoreException {
+	public WorkingSetData get(@PathParam("key") String key) throws StoreException, EntityNotFoundException {
 		return workingSetService.get(EntityKey.get(key));
 	}
 }
