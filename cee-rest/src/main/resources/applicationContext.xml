@@ -35,7 +35,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
 	
 	<import resource="classpath*:services.xml" />
 
-	<bean class="org.cee.rest.WorkingSetResource">
-		<property name="workingSetStore" ref="workingSetStore" />
+	<bean class="org.cee.rest.workingset.WorkingSetResource">
+		<property name="workingSetService" ref="workingSetService" />
 	</bean>
 </beans>

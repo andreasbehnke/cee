@@ -59,19 +59,7 @@
 		<!-- internal -->
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-search-api</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.cee</groupId>
-			<artifactId>cee-store-api</artifactId>
-			<classifier>sources</classifier>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.cee</groupId>
-			<artifactId>cee-parser</artifactId>
+			<artifactId>cee-service</artifactId>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
