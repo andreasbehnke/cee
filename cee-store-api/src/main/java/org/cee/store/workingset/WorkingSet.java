@@ -1,4 +1,4 @@
-package org.cee.news.model;
+package org.cee.store.workingset;
 
 /*
  * #%L
@@ -23,6 +23,8 @@ package org.cee.news.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.cee.store.EntityKey;
 
 /**
  * A set of sites. The user can manage one site in different working sets for different purposes.

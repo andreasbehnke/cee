@@ -8,13 +8,13 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.Site;
-import org.cee.news.store.SiteStore;
-import org.cee.news.store.StoreException;
 import org.cee.parser.SiteReader;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebClientFactory;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.site.Site;
+import org.cee.store.site.SiteStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

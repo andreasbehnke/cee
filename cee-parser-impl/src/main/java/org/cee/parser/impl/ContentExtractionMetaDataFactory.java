@@ -23,8 +23,8 @@ package org.cee.parser.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cee.news.model.ContentExtractionMetaData;
-import org.cee.news.model.ContentExtractionMetaData.Property;
+import org.cee.store.article.ContentExtractionMetaData;
+import org.cee.store.article.ContentExtractionMetaData.Property;
 
 import de.l3s.boilerpipe.document.TextBlock;
 

@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.cee.client.site.FeedData;
+import org.cee.client.site.SiteConverter;
 import org.cee.client.site.SiteData;
 import org.cee.client.site.SiteData.SiteRetrivalState;
-import org.cee.news.model.Feed;
-import org.cee.news.model.Site;
 import org.cee.parser.ParserException;
 import org.cee.parser.SiteReader;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebClientFactory;
+import org.cee.store.site.Feed;
+import org.cee.store.site.Site;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

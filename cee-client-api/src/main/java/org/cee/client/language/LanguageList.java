@@ -23,7 +23,7 @@ package org.cee.client.language;
 import java.io.Serializable;
 import java.util.List;
 
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 
 public class LanguageList implements Serializable {
 

@@ -60,10 +60,11 @@
 
 	<dependencies>
 		<!-- internal -->
+		<!-- GWT sources -->
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-search-api</artifactId>
-			<type>jar</type>
+			<artifactId>cee-client-api</artifactId>
+			<classifier>sources</classifier>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -74,21 +75,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-client-api</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.cee</groupId>
-			<artifactId>cee-client-api</artifactId>
+			<artifactId>cee-processing</artifactId>
 			<classifier>sources</classifier>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.cee</groupId>
-			<artifactId>cee-parser</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
+		
+		<!-- binary -->
 		<dependency>
 			<groupId>com.cee</groupId>
 			<artifactId>cee-processing</artifactId>
@@ -97,8 +89,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-processing</artifactId>
-			<classifier>sources</classifier>
+			<artifactId>cee-service</artifactId>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

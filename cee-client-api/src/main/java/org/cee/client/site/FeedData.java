@@ -23,7 +23,7 @@ package org.cee.client.site;
 import java.io.Serializable;
 
 import org.cee.client.site.SiteData.SiteRetrivalState;
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 
 /**
  * Bean holding all view data of a feet

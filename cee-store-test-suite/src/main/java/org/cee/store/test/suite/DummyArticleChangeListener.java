@@ -23,9 +23,9 @@ package org.cee.store.test.suite;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cee.news.model.Article;
-import org.cee.news.model.EntityKey;
-import org.cee.news.store.ArticleChangeListener;
+import org.cee.store.EntityKey;
+import org.cee.store.article.Article;
+import org.cee.store.article.ArticleChangeListener;
 
 public class DummyArticleChangeListener implements ArticleChangeListener {
 	

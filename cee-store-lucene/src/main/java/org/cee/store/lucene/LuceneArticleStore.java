@@ -46,17 +46,17 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-import org.cee.news.model.Article;
-import org.cee.news.model.ArticleKey;
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.TextBlock;
-import org.cee.news.model.WorkingSet;
-import org.cee.news.store.ArticleChangeListener;
-import org.cee.news.store.ArticleChangeListenerSupport;
-import org.cee.news.store.ArticleStore;
-import org.cee.news.store.StoreException;
 import org.cee.search.ArticleSearchService;
 import org.cee.search.SearchException;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.article.Article;
+import org.cee.store.article.ArticleChangeListener;
+import org.cee.store.article.ArticleChangeListenerSupport;
+import org.cee.store.article.ArticleKey;
+import org.cee.store.article.ArticleStore;
+import org.cee.store.article.TextBlock;
+import org.cee.store.workingset.WorkingSet;
 
 public class LuceneArticleStore extends LuceneStoreBase implements ArticleStore, ArticleSearchService {
 	

@@ -22,10 +22,10 @@ package org.cee.webreader.server.content;
 
 import org.cee.client.site.FeedData;
 import org.cee.client.site.SiteData;
-import org.cee.news.model.EntityKey;
-import org.cee.news.store.StoreException;
 import org.cee.processing.schedule.UpdateScheduler;
 import org.cee.processing.site.SiteProcessor;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
 import org.cee.webreader.client.content.GwtSiteUpdateService;
 import org.cee.webreader.client.error.ServiceException;
 import org.slf4j.Logger;

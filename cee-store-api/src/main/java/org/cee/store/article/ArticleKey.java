@@ -1,4 +1,6 @@
-package org.cee.news.model;
+package org.cee.store.article;
+
+import org.cee.store.EntityKey;
 
 /*
  * #%L

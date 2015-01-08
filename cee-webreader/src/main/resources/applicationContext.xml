@@ -26,23 +26,19 @@
 	<!-- GWT Services -->
 	
 	<bean id="gwtLanguageService" class="org.cee.webreader.server.content.LanguageServiceImpl">
-		<property name="searchService" ref="articleSearchService" />
+		<property name="languageService" ref="languageService" />
 	</bean>
 
 	<bean id="gwtNewsService" class="org.cee.webreader.server.content.NewsServiceImpl">
-		<property name="workingSetStore" ref="workingSetStore" />
-		<property name="articleStore" ref="articleStore" />
-		<property name="articleSearchService" ref="articleSearchService" />
+		<property name="articleService" ref="articleService" />
 	</bean>
 
 	<bean id="gwtSiteService" class="org.cee.webreader.server.content.SiteServiceImpl">
-		<property name="siteStore" ref="siteStore" />
-		<property name="workingSetStore" ref="workingSetStore" />
+		<property name="siteService" ref="siteService" />
 	</bean>
 
 	<bean id="gwtWorkingSetService" class="org.cee.webreader.server.workingset.WorkingSetServiceImpl">
-		<property name="workingSetStore" ref="workingSetStore" />
-		<property name="siteStore" ref="siteStore" />
+		<property name="workingSetService" ref="workingSetService" />
 	</bean>
 	
 	<bean id="gwtSiteUpdateService" class="org.cee.webreader.server.content.SiteUpdateServiceImpl">

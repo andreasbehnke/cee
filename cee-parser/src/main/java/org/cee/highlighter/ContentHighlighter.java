@@ -24,9 +24,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
 
-import org.cee.news.model.Article;
 import org.cee.parser.ParserException;
 import org.cee.parser.net.WebResponse;
+import org.cee.store.article.Article;
 
 public interface ContentHighlighter {
 	

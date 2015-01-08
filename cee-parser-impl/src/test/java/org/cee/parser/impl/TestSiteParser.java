@@ -29,12 +29,12 @@ import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
 import org.cee.SiteExtraction;
-import org.cee.news.model.Site;
 import org.cee.parser.ParserException;
 import org.cee.parser.impl.SiteParserImpl;
 import org.cee.parser.impl.TagsoupXmlReaderFactory;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.impl.ClassResourceWebClient;
+import org.cee.store.site.Site;
 import org.junit.Test;
 
 public class TestSiteParser {

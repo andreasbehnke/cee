@@ -23,13 +23,13 @@ package org.cee.store.test.suite;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cee.news.model.ArticleKey;
-import org.cee.news.model.EntityKey;
-import org.cee.news.store.ArticleStore;
-import org.cee.news.store.SiteStore;
-import org.cee.news.store.StoreException;
 import org.cee.search.ArticleSearchService;
 import org.cee.search.SearchException;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.article.ArticleKey;
+import org.cee.store.article.ArticleStore;
+import org.cee.store.site.SiteStore;
 import org.junit.Assert;
 import org.junit.Test;
 

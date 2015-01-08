@@ -26,8 +26,8 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.List;
 
-import org.cee.news.model.Article;
-import org.cee.news.model.Feed;
+import org.cee.store.article.Article;
+import org.cee.store.site.Feed;
 
 /**
  * Fetches all articles of a feed. This parser will not retrieve the article content,

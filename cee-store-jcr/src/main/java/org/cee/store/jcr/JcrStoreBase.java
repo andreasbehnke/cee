@@ -14,8 +14,8 @@ import javax.jcr.query.Row;
 import javax.jcr.query.RowIterator;
 
 import org.apache.jackrabbit.util.Text;
-import org.cee.news.model.ArticleKey;
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
+import org.cee.store.article.ArticleKey;
 
 public abstract class JcrStoreBase {
     

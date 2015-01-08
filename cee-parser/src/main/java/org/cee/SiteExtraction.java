@@ -24,7 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cee.news.model.Site;
+import org.cee.store.site.Site;
 
 /**
  * Holds site information extracted from site resource.

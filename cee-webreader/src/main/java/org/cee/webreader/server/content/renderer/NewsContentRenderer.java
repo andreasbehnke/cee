@@ -24,11 +24,10 @@ package org.cee.webreader.server.content.renderer;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import org.apache.commons.logging.Log;
 import org.cee.client.EntityContent;
-import org.cee.news.model.Article;
-import org.cee.news.model.ArticleKey;
-import org.cee.news.model.TextBlock;
+import org.cee.store.article.Article;
+import org.cee.store.article.ArticleKey;
+import org.cee.store.article.TextBlock;
 import org.cee.webreader.client.error.ServiceException;
 
 public class NewsContentRenderer extends DefaultContentRenderer<ArticleKey, Article> {

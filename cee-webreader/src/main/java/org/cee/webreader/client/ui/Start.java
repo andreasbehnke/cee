@@ -22,7 +22,7 @@ package org.cee.webreader.client.ui;
 
 
 import org.cee.client.EntityContent;
-import org.cee.news.model.ArticleKey;
+import org.cee.store.article.ArticleKey;
 import org.cee.webreader.client.StartView;
 import org.cee.webreader.client.content.EntityContentCell;
 import org.cee.webreader.client.content.EntityContentKeyProvider;

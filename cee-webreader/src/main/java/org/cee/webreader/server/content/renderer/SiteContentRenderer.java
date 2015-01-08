@@ -22,8 +22,8 @@ package org.cee.webreader.server.content.renderer;
 
 
 import org.cee.client.EntityContent;
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.Site;
+import org.cee.store.EntityKey;
+import org.cee.store.site.Site;
 
 public class SiteContentRenderer extends DefaultContentRenderer<EntityKey, Site> {
 

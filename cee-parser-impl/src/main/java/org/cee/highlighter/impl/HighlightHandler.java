@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Stack;
 
 import org.cee.highlighter.ContentHighlighter.Settings;
-import org.cee.news.model.ContentExtractionMetaData;
-import org.cee.news.model.TextBlock;
+import org.cee.store.article.ContentExtractionMetaData;
+import org.cee.store.article.TextBlock;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;

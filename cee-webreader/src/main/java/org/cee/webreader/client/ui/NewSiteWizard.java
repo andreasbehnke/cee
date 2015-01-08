@@ -24,7 +24,7 @@ package org.cee.webreader.client.ui;
 import java.util.List;
 
 import org.cee.client.site.FeedData;
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 import org.cee.webreader.client.content.EntityKeyProvider;
 import org.cee.webreader.client.content.EntityKeyRenderer;
 import org.cee.webreader.client.content.NewSiteWizardView;

@@ -213,6 +213,7 @@
 		<module>cee-client-api</module>
 		<module>cee-store-test-suite</module>
 		<module>cee-processing</module>
+		<module>cee-service</module>
 		<module>cee-rest</module>	
 		<!--module>cee-webreader</module-->
 		<module>cee-webreader-tomcat</module>
@@ -275,6 +276,11 @@
 				<groupId>com.cee</groupId>
 				<artifactId>cee-processing</artifactId>
 				<classifier>sources</classifier>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cee</groupId>
+				<artifactId>cee-service</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -441,7 +447,7 @@
 				<type>jar</type>
 				<version>${jetty.version}</version>
 			</dependency>
-	        	<dependency>
+	        <dependency>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-io</artifactId>
 				<type>jar</type>
@@ -453,7 +459,7 @@
 				<type>jar</type>
 				<version>${jetty.version}</version>
 			</dependency>
-			<dependency>
+	        <dependency>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-server</artifactId>
 				<type>jar</type>
@@ -548,6 +554,11 @@
             <dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 			<dependency>

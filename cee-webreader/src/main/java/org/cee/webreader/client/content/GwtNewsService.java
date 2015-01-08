@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cee.client.EntityContent;
-import org.cee.news.model.ArticleKey;
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
+import org.cee.store.article.ArticleKey;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;

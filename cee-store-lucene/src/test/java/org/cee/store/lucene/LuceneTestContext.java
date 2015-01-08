@@ -28,16 +28,16 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
-import org.cee.news.store.ArticleStore;
-import org.cee.news.store.SiteStore;
-import org.cee.news.store.WorkingSetStore;
 import org.cee.search.ArticleSearchService;
+import org.cee.store.article.ArticleStore;
 import org.cee.store.lucene.LuceneAnalyzers;
 import org.cee.store.lucene.LuceneArticleStore;
 import org.cee.store.lucene.LuceneConstants;
 import org.cee.store.lucene.LuceneSiteStore;
 import org.cee.store.lucene.LuceneWorkingSetStore;
+import org.cee.store.site.SiteStore;
 import org.cee.store.test.suite.TestContext;
+import org.cee.store.workingset.WorkingSetStore;
 
 public class LuceneTestContext implements TestContext {
 

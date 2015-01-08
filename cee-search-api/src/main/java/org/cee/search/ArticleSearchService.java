@@ -22,8 +22,8 @@ package org.cee.search;
 
 import java.util.List;
 
-import org.cee.news.model.ArticleKey;
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
+import org.cee.store.article.ArticleKey;
 
 /**
  * The search service provides methods for fulltext search and for finding similar articles

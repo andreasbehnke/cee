@@ -36,10 +36,6 @@ import java.util.List;
 import org.cee.highlighter.ContentHighlighter.Settings;
 import org.cee.highlighter.impl.ContentHighlighterImpl;
 import org.cee.highlighter.impl.TemplateCache;
-import org.cee.news.model.Article;
-import org.cee.news.model.ContentExtractionMetaData;
-import org.cee.news.model.TextBlock;
-import org.cee.news.model.ContentExtractionMetaData.Property;
 import org.cee.parser.ArticleParser;
 import org.cee.parser.ArticleReader;
 import org.cee.parser.ParserException;
@@ -48,6 +44,10 @@ import org.cee.parser.impl.TagsoupXmlReaderFactory;
 import org.cee.parser.net.ReaderSource;
 import org.cee.parser.net.WebResponse;
 import org.cee.parser.net.impl.XmlStreamReaderFactory;
+import org.cee.store.article.Article;
+import org.cee.store.article.ContentExtractionMetaData;
+import org.cee.store.article.TextBlock;
+import org.cee.store.article.ContentExtractionMetaData.Property;
 import org.junit.Test;
 
 public class TestContentHighlighterImpl {

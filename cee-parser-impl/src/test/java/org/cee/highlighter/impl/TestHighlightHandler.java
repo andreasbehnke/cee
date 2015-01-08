@@ -31,7 +31,7 @@ import org.cee.highlighter.ContentHighlighter.Settings;
 import org.cee.highlighter.impl.HighlightHandler;
 import org.cee.highlighter.impl.HighlightWriter;
 import org.cee.highlighter.impl.TemplateCache;
-import org.cee.news.model.TextBlock;
+import org.cee.store.article.TextBlock;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;

@@ -24,8 +24,8 @@ package org.cee.webreader.client.content;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cee.news.model.ArticleKey;
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
+import org.cee.store.article.ArticleKey;
 import org.cee.webreader.client.async.NotificationCallback;
 import org.cee.webreader.client.list.SelectionChangedEvent;
 import org.cee.webreader.client.list.SelectionChangedHandler;

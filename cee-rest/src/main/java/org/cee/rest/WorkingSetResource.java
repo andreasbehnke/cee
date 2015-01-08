@@ -7,9 +7,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.cee.news.model.EntityKey;
-import org.cee.news.store.StoreException;
-import org.cee.news.store.WorkingSetStore;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.workingset.WorkingSetStore;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
 

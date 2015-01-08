@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cee.client.EntityContent;
-import org.cee.news.model.ArticleKey;
+import org.cee.store.article.ArticleKey;
 import org.cee.webreader.client.list.CellListContentModel;
 import org.cee.webreader.client.list.ContentModel;
 import org.cee.webreader.client.list.DefaultListModel;

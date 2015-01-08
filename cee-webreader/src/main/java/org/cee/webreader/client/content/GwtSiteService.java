@@ -27,7 +27,7 @@ import java.util.List;
 import org.cee.client.EntityContent;
 import org.cee.client.site.SiteData;
 import org.cee.client.site.SiteUpdateResult;
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;

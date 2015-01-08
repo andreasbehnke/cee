@@ -21,7 +21,7 @@ package org.cee.webreader.client.content;
  */
 
 
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 
 import com.google.gwt.event.shared.GwtEvent;
 

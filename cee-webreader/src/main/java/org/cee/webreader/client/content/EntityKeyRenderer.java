@@ -22,7 +22,7 @@ package org.cee.webreader.client.content;
 
 import java.io.IOException;
 
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 
 import com.google.gwt.text.shared.Renderer;
 

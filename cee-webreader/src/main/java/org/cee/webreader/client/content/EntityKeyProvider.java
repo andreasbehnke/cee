@@ -20,7 +20,7 @@ package org.cee.webreader.client.content;
  * #L%
  */
 
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 
 import com.google.gwt.view.client.ProvidesKey;
 

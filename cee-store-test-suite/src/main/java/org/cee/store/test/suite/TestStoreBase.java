@@ -20,10 +20,10 @@ package org.cee.store.test.suite;
  * #L%
  */
 
-import org.cee.news.store.ArticleStore;
-import org.cee.news.store.SiteStore;
-import org.cee.news.store.WorkingSetStore;
 import org.cee.search.ArticleSearchService;
+import org.cee.store.article.ArticleStore;
+import org.cee.store.site.SiteStore;
+import org.cee.store.workingset.WorkingSetStore;
 import org.junit.After;
 import org.junit.Before;
 

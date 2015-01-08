@@ -27,10 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.cee.news.model.Article;
-import org.cee.news.model.ContentExtractionMetaData;
 import org.cee.parser.ArticleParser;
 import org.cee.parser.ParserException;
+import org.cee.store.article.Article;
+import org.cee.store.article.ContentExtractionMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -136,13 +136,13 @@ public class BoilerpipeArticleParser extends XmlReaderProvider implements Articl
         		LOG.warn("Parsing of article {} failed", article.getLocation());
         		return null;
         	}
-            List<org.cee.news.model.TextBlock> content = article.getContent();
+            List<org.cee.store.article.TextBlock> content = article.getContent();
             for (TextBlock block : textDoc.getTextBlocks()) {
             	if (!block.isContent() && settings.isFilterContentBlocks()) {
             		continue;
             	}
             	String paragraph = block.getText();
-            	org.cee.news.model.TextBlock internalBlock = new org.cee.news.model.TextBlock(paragraph);
+            	org.cee.store.article.TextBlock internalBlock = new org.cee.store.article.TextBlock(paragraph);
             	if (settings.isProvideMetaData()) {
             		ContentExtractionMetaData metaData = new ContentExtractionMetaDataFactory().create(content.size(), block);
             		internalBlock.setMetaData(metaData);

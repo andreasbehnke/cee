@@ -28,8 +28,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cee.highlighter.ContentHighlighter.Settings;
-import org.cee.news.model.ContentExtractionMetaData;
-import org.cee.news.model.TextBlock;
+import org.cee.store.article.ContentExtractionMetaData;
+import org.cee.store.article.TextBlock;
 import org.xml.sax.Attributes;
 
 public class HighlightWriter {

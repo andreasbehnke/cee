@@ -23,14 +23,14 @@ package org.cee.store.test.suite;
 import java.util.Calendar;
 import java.util.List;
 
-import org.cee.news.model.Article;
-import org.cee.news.model.ArticleKey;
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.Site;
-import org.cee.news.model.TextBlock;
-import org.cee.news.store.ArticleStore;
-import org.cee.news.store.SiteStore;
-import org.cee.news.store.StoreException;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.article.Article;
+import org.cee.store.article.ArticleKey;
+import org.cee.store.article.ArticleStore;
+import org.cee.store.article.TextBlock;
+import org.cee.store.site.Site;
+import org.cee.store.site.SiteStore;
 
 public class Utils {
 	

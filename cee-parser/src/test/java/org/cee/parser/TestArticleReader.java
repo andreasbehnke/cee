@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 
-import org.cee.news.model.Article;
 import org.cee.parser.ArticleParser;
 import org.cee.parser.ArticleReader;
 import org.cee.parser.ParserException;
@@ -35,6 +34,7 @@ import org.cee.parser.ArticleParser.Settings;
 import org.cee.parser.net.ReaderSource;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebResponse;
+import org.cee.store.article.Article;
 import org.junit.Test;
 
 public class TestArticleReader {

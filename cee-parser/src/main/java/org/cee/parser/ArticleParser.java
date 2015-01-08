@@ -24,9 +24,9 @@ package org.cee.parser;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.cee.news.model.Article;
-import org.cee.news.model.ContentExtractionMetaData;
-import org.cee.news.model.TextBlock;
+import org.cee.store.article.Article;
+import org.cee.store.article.ContentExtractionMetaData;
+import org.cee.store.article.TextBlock;
 
 public interface ArticleParser {
 	

@@ -1,4 +1,4 @@
-package org.cee.news.store;
+package org.cee.store.workingset;
 
 /*
  * #%L
@@ -20,10 +20,25 @@ package org.cee.news.store;
  * #L%
  */
 
-import org.cee.news.model.Article;
-import org.cee.news.model.EntityKey;
 
-public interface ArticleChangeListener {
+import java.util.List;
 
-	void onArticleChanged(EntityKey site, Article article);
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+
+public interface WorkingSetStore {
+
+    EntityKey update(WorkingSet workingSet) throws StoreException;
+    
+    void rename(String oldName, String newName) throws StoreException;
+    
+    void delete(EntityKey key) throws StoreException;
+    
+    boolean contains(String name) throws StoreException;
+    
+    WorkingSet getWorkingSet(EntityKey key) throws StoreException;
+    
+    long getWorkingSetCount() throws StoreException;
+    
+    List<EntityKey> getWorkingSetsOrderedByName() throws StoreException;
 }
