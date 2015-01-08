@@ -34,7 +34,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 
 import com.google.gson.Gson;
 

@@ -21,7 +21,7 @@ package org.cee.webreader.client.content;
  */
 
 
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 import org.cee.webreader.client.list.KeyLink;
 import org.cee.webreader.client.list.KeyLinkResolver;
 

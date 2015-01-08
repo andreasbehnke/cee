@@ -7,11 +7,11 @@ import org.cee.client.site.SiteConverter;
 import org.cee.client.site.SiteData;
 import org.cee.client.site.SiteUpdateResult;
 import org.cee.client.site.SiteUpdateResult.State;
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.Site;
-import org.cee.news.store.SiteStore;
-import org.cee.news.store.StoreException;
-import org.cee.news.store.WorkingSetStore;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.site.Site;
+import org.cee.store.site.SiteStore;
+import org.cee.store.workingset.WorkingSetStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

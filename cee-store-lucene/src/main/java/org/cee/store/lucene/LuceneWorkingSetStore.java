@@ -32,10 +32,10 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.WorkingSet;
-import org.cee.news.store.StoreException;
-import org.cee.news.store.WorkingSetStore;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.workingset.WorkingSet;
+import org.cee.store.workingset.WorkingSetStore;
 
 public class LuceneWorkingSetStore extends LuceneStoreBase implements WorkingSetStore {
 

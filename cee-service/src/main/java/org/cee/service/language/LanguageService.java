@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Locale;
 
 import org.cee.client.language.LanguageList;
-import org.cee.news.model.EntityKey;
 import org.cee.search.ArticleSearchService;
+import org.cee.store.EntityKey;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 public class LanguageService {

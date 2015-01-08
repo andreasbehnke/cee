@@ -37,11 +37,11 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.Feed;
-import org.cee.news.model.Site;
-import org.cee.news.store.SiteStore;
-import org.cee.news.store.StoreException;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.site.Feed;
+import org.cee.store.site.Site;
+import org.cee.store.site.SiteStore;
 
 public class LuceneSiteStore extends LuceneStoreBase implements SiteStore {
 	

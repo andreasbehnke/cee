@@ -32,14 +32,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.cee.highlighter.ContentHighlighter;
 import org.cee.highlighter.DefaultSettings;
 import org.cee.highlighter.ContentHighlighter.Settings;
-import org.cee.news.model.Article;
-import org.cee.news.model.ArticleKey;
-import org.cee.news.store.ArticleStore;
-import org.cee.news.store.StoreException;
 import org.cee.parser.ParserException;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebClientFactory;
 import org.cee.parser.net.WebResponse;
+import org.cee.store.StoreException;
+import org.cee.store.article.Article;
+import org.cee.store.article.ArticleKey;
+import org.cee.store.article.ArticleStore;
 import org.springframework.web.HttpRequestHandler;
 
 public class ContentHighlightHandler implements HttpRequestHandler {

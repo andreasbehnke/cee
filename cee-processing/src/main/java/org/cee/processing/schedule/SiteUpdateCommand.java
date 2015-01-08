@@ -20,10 +20,10 @@ package org.cee.processing.schedule;
  * #L%
  */
 
-import org.cee.news.model.Site;
-import org.cee.news.store.StoreException;
 import org.cee.parser.SiteReader;
 import org.cee.parser.net.WebClient;
+import org.cee.store.StoreException;
+import org.cee.store.site.Site;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

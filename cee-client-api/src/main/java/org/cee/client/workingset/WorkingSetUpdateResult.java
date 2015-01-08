@@ -23,7 +23,7 @@ package org.cee.client.workingset;
 import java.io.Serializable;
 import java.util.List;
 
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 
 public class WorkingSetUpdateResult implements Serializable {
 	

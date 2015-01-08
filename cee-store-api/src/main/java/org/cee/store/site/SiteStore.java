@@ -1,4 +1,4 @@
-package org.cee.news.store;
+package org.cee.store.site;
 
 /*
  * #%L
@@ -23,8 +23,8 @@ package org.cee.news.store;
 
 import java.util.List;
 
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.Site;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
 
 /**
  * The site store is responsible for making sites persistent

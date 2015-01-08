@@ -6,12 +6,12 @@ import java.util.List;
 import org.cee.client.workingset.WorkingSetData;
 import org.cee.client.workingset.WorkingSetUpdateResult;
 import org.cee.client.workingset.WorkingSetUpdateResult.State;
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.Site;
-import org.cee.news.model.WorkingSet;
-import org.cee.news.store.SiteStore;
-import org.cee.news.store.StoreException;
-import org.cee.news.store.WorkingSetStore;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.site.Site;
+import org.cee.store.site.SiteStore;
+import org.cee.store.workingset.WorkingSet;
+import org.cee.store.workingset.WorkingSetStore;
 
 public class WorkingSetService {
 	

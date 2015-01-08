@@ -28,8 +28,8 @@ import java.util.Map;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.util.Version;
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.Feed;
+import org.cee.store.EntityKey;
+import org.cee.store.site.Feed;
 
 import com.google.gson.reflect.TypeToken;
 

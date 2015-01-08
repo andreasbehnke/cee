@@ -23,7 +23,7 @@ package org.cee.webreader.client.workingset;
 
 import java.util.List;
 
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 import org.cee.webreader.client.list.ListChangedEvent;
 import org.cee.webreader.client.list.ListChangedHandler;
 import org.cee.webreader.client.list.ListModel;

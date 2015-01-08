@@ -26,10 +26,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.cee.news.model.Article;
 import org.cee.parser.ArticleParser.Settings;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebResponse;
+import org.cee.store.article.Article;
 
 public class ArticleReader {
 

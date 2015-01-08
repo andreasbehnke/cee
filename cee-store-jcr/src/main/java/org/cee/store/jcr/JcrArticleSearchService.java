@@ -15,10 +15,10 @@ import javax.jcr.query.Row;
 import javax.jcr.query.RowIterator;
 
 import org.apache.jackrabbit.util.Text;
-import org.cee.news.model.ArticleKey;
-import org.cee.news.model.EntityKey;
 import org.cee.search.ArticleSearchService;
 import org.cee.search.SearchException;
+import org.cee.store.EntityKey;
+import org.cee.store.article.ArticleKey;
 
 public class JcrArticleSearchService extends JcrStoreBase implements ArticleSearchService {
 

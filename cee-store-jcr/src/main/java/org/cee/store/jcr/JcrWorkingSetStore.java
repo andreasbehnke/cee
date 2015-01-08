@@ -18,10 +18,10 @@ import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.WorkingSet;
-import org.cee.news.store.StoreException;
-import org.cee.news.store.WorkingSetStore;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.workingset.WorkingSet;
+import org.cee.store.workingset.WorkingSetStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

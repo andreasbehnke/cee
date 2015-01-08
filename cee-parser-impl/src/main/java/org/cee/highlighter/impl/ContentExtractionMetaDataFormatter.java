@@ -20,8 +20,8 @@ package org.cee.highlighter.impl;
  * #L%
  */
 
-import org.cee.news.model.ContentExtractionMetaData;
-import org.cee.news.model.ContentExtractionMetaData.Property;
+import org.cee.store.article.ContentExtractionMetaData;
+import org.cee.store.article.ContentExtractionMetaData.Property;
 
 /**
  * Provides simple HTML formatted output for {@link ContentExtractionMetaData} as a simple HTML definition list.

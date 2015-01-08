@@ -22,7 +22,7 @@ package org.cee.webreader.client.content;
 
 
 import org.cee.client.EntityContent;
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.cellview.client.CellList;

@@ -25,7 +25,7 @@ import java.util.List;
 import org.cee.client.workingset.WorkingSetData;
 import org.cee.client.workingset.WorkingSetUpdateResult;
 import org.cee.client.workingset.WorkingSetUpdateResult.State;
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 import org.cee.webreader.client.ConfirmView;
 import org.cee.webreader.client.async.NotificationCallback;
 import org.cee.webreader.client.content.AddSiteWorkflow;

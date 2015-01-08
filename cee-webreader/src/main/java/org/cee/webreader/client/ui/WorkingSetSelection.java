@@ -25,7 +25,7 @@ package org.cee.webreader.client.ui;
 
 import java.util.List;
 
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 import org.cee.webreader.client.workingset.WorkingSetSelectionView;
 
 import com.google.gwt.core.client.GWT;

@@ -33,7 +33,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.cee.news.model.Article;
 import org.cee.parser.FeedParser;
 import org.cee.parser.ParserException;
 import org.cee.parser.impl.RomeFeedParser;
@@ -42,6 +41,7 @@ import org.cee.parser.net.WebClient;
 import org.cee.parser.net.impl.DefaultHttpClientFactory;
 import org.cee.parser.net.impl.DefaultWebClient;
 import org.cee.parser.net.impl.XmlStreamReaderFactory;
+import org.cee.store.article.Article;
 import org.junit.Test;
 
 public class TestRomeFeedParser {

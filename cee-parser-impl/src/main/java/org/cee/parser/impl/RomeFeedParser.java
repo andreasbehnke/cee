@@ -31,10 +31,10 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.cee.news.model.Article;
-import org.cee.news.model.Feed;
 import org.cee.parser.FeedParser;
 import org.cee.parser.ParserException;
+import org.cee.store.article.Article;
+import org.cee.store.site.Feed;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

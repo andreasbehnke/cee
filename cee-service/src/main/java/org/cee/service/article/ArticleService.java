@@ -3,15 +3,15 @@ package org.cee.service.article;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cee.news.model.Article;
-import org.cee.news.model.ArticleKey;
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.WorkingSet;
-import org.cee.news.store.ArticleStore;
-import org.cee.news.store.StoreException;
-import org.cee.news.store.WorkingSetStore;
 import org.cee.search.ArticleSearchService;
 import org.cee.search.SearchException;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.article.Article;
+import org.cee.store.article.ArticleKey;
+import org.cee.store.article.ArticleStore;
+import org.cee.store.workingset.WorkingSet;
+import org.cee.store.workingset.WorkingSetStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

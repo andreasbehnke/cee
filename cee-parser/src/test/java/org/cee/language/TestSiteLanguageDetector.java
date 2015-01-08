@@ -28,8 +28,8 @@ import java.util.List;
 import org.cee.SiteExtraction;
 import org.cee.language.LanguageDetector;
 import org.cee.language.SiteLanguageDetector;
-import org.cee.news.model.Feed;
-import org.cee.news.model.Site;
+import org.cee.store.site.Feed;
+import org.cee.store.site.Site;
 import org.junit.Test;
 
 public class TestSiteLanguageDetector {

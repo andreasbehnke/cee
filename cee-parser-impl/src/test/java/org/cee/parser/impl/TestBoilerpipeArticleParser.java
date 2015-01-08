@@ -28,7 +28,6 @@ import java.io.Reader;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.cee.news.model.Article;
 import org.cee.parser.ArticleParser;
 import org.cee.parser.ParserException;
 import org.cee.parser.ArticleParser.Settings;
@@ -38,6 +37,7 @@ import org.cee.parser.net.WebClient;
 import org.cee.parser.net.impl.DefaultHttpClientFactory;
 import org.cee.parser.net.impl.DefaultWebClient;
 import org.cee.parser.net.impl.XmlStreamReaderFactory;
+import org.cee.store.article.Article;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

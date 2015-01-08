@@ -22,8 +22,8 @@ package org.cee.webreader.server.content;
 
 import org.cee.client.site.SiteData;
 import org.cee.client.site.SiteData.SiteRetrivalState;
-import org.cee.news.model.Feed;
-import org.cee.news.model.Site;
+import org.cee.store.site.Feed;
+import org.cee.store.site.Site;
 import org.cee.webreader.client.content.GwtSiteUpdateService;
 import org.junit.Assert;
 import org.junit.Test;

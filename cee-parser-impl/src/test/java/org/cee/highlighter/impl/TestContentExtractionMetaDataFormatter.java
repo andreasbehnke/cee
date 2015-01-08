@@ -27,8 +27,8 @@ import java.util.BitSet;
 import java.util.List;
 
 import org.cee.highlighter.impl.ContentExtractionMetaDataFormatter;
-import org.cee.news.model.ContentExtractionMetaData;
-import org.cee.news.model.ContentExtractionMetaData.Property;
+import org.cee.store.article.ContentExtractionMetaData;
+import org.cee.store.article.ContentExtractionMetaData.Property;
 import org.junit.Test;
 
 public class TestContentExtractionMetaDataFormatter {

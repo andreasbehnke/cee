@@ -25,8 +25,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.WorkingSet;
+import org.cee.store.EntityKey;
+import org.cee.store.workingset.WorkingSet;
 
 /**
  * Bean holding all view data of a working set

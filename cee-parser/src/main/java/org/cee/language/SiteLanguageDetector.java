@@ -23,8 +23,8 @@ package org.cee.language;
 import java.util.List;
 
 import org.cee.SiteExtraction;
-import org.cee.news.model.Feed;
-import org.cee.news.model.Site;
+import org.cee.store.site.Feed;
+import org.cee.store.site.Site;
 
 /**
  * Tries to detect site's language by using site feeds. If this fails,

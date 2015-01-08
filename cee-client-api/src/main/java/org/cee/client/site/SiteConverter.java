@@ -25,9 +25,9 @@ import java.util.List;
 
 import org.cee.client.site.FeedData;
 import org.cee.client.site.SiteData;
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.Feed;
-import org.cee.news.model.Site;
+import org.cee.store.EntityKey;
+import org.cee.store.site.Feed;
+import org.cee.store.site.Site;
 
 public class SiteConverter {
 

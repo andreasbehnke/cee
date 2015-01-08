@@ -22,7 +22,7 @@ package org.cee.client.site;
 
 import java.io.Serializable;
 
-import org.cee.news.model.EntityKey;
+import org.cee.store.EntityKey;
 
 public class SiteUpdateResult implements Serializable {
 	

@@ -12,7 +12,7 @@ import javax.jcr.Workspace;
 
 import org.apache.jackrabbit.commons.cnd.CndImporter;
 import org.apache.jackrabbit.commons.cnd.ParseException;
-import org.cee.news.store.StoreException;
+import org.cee.store.StoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

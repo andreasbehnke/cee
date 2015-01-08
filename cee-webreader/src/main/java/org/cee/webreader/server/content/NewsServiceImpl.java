@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cee.client.EntityContent;
-import org.cee.news.model.ArticleKey;
-import org.cee.news.model.EntityKey;
-import org.cee.news.store.StoreException;
 import org.cee.service.article.ArticleService;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.article.ArticleKey;
 import org.cee.webreader.client.content.GwtNewsService;
 import org.cee.webreader.client.error.ServiceException;
 import org.cee.webreader.server.content.renderer.NewsContentRenderer;

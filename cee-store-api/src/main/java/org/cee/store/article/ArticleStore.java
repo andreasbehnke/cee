@@ -1,4 +1,4 @@
-package org.cee.news.store;
+package org.cee.store.article;
 
 /*
  * #%L
@@ -23,10 +23,9 @@ package org.cee.news.store;
 
 import java.util.List;
 
-import org.cee.news.model.Article;
-import org.cee.news.model.ArticleKey;
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.WorkingSet;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.workingset.WorkingSet;
 
 /**
  * The article store is responsible for making articles persistent and providing fulltext search.

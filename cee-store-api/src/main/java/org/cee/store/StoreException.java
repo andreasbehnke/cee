@@ -1,4 +1,4 @@
-package org.cee.news.store;
+package org.cee.store;
 
 /*
  * #%L

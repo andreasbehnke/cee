@@ -3,7 +3,7 @@ package org.cee.store.jcr;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 
-import org.cee.news.store.StoreException;
+import org.cee.store.StoreException;
 import org.cee.store.test.suite.TestArticleSearchService;
 import org.cee.store.test.suite.TestContext;
 

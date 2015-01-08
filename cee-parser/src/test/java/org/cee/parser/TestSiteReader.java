@@ -39,16 +39,16 @@ import java.util.List;
 
 import org.cee.SiteExtraction;
 import org.cee.language.SiteLanguageDetector;
-import org.cee.news.model.Article;
-import org.cee.news.model.ArticleKey;
-import org.cee.news.model.EntityKey;
-import org.cee.news.model.Feed;
-import org.cee.news.model.Site;
-import org.cee.news.store.ArticleStore;
-import org.cee.news.store.StoreException;
 import org.cee.parser.net.ReaderSource;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebResponse;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
+import org.cee.store.article.Article;
+import org.cee.store.article.ArticleKey;
+import org.cee.store.article.ArticleStore;
+import org.cee.store.site.Feed;
+import org.cee.store.site.Site;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 

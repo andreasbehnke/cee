@@ -25,9 +25,9 @@ import java.util.List;
 
 import org.cee.client.workingset.WorkingSetData;
 import org.cee.client.workingset.WorkingSetUpdateResult;
-import org.cee.news.model.EntityKey;
-import org.cee.news.store.StoreException;
 import org.cee.service.workingset.WorkingSetService;
+import org.cee.store.EntityKey;
+import org.cee.store.StoreException;
 import org.cee.webreader.client.error.ServiceException;
 import org.cee.webreader.client.workingset.GwtWorkingSetService;
 import org.slf4j.Logger;
