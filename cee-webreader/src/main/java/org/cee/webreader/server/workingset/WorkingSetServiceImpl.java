@@ -107,7 +107,7 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
     public void deleteWorkingSet(EntityKey workingSetKey) {
     	try {
     		workingSetService.delete(workingSetKey);
-		} catch (StoreException e) {
+		} catch (Exception e) {
 			LOG.error(COULD_NOT_DELETE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_DELETE_WORKING_SET);
 		}

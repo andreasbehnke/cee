@@ -66,6 +66,9 @@ public class WorkingSetService {
         	result.setSitesWithDifferentLang(sitesWithDifferentLang);
         }
         if (!wsd.getIsNew() && !newName.equals(oldName)) {
+        	if (workingSetStore.getWorkingSet(EntityKey.get(oldName)) != null) {
+        		return new WorkingSetUpdateResult(State.entityExists, null, wsd, null);
+        	}
             workingSetStore.rename(oldName, newName);
         }
         WorkingSet workingSet = null;
@@ -87,7 +90,10 @@ public class WorkingSetService {
         return update(workingSet);
     }
     
-    public void delete(EntityKey workingSetKey) throws StoreException {
+    public void delete(EntityKey workingSetKey) throws StoreException, EntityNotFoundException {
+    	if (!workingSetStore.contains(workingSetKey.getKey())) {
+    		throw new EntityNotFoundException(workingSetKey);
+    	}
     	workingSetStore.delete(workingSetKey);
     }
 }
