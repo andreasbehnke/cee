@@ -56,18 +56,19 @@ public class WorkingSetService {
     public WorkingSetUpdateResult update(WorkingSetData wsd) throws StoreException {
         String newName = wsd.getNewName();
         String oldName = wsd.getOldName();
-        if (wsd.getIsNew() && workingSetStore.getWorkingSet(EntityKey.get(newName)) != null) {
-            return new WorkingSetUpdateResult(State.entityExists, null, wsd, null);
+        EntityKey newKey = EntityKey.get(newName);
+        if (wsd.getIsNew() && workingSetStore.getWorkingSet(newKey) != null) {
+            return new WorkingSetUpdateResult(State.entityExists, null, wsd, newKey);
         }
         List<EntityKey> sitesWithDifferentLang = validateSiteLanguages(wsd);
-        WorkingSetUpdateResult result = new WorkingSetUpdateResult(State.ok, null, wsd, null);
+        WorkingSetUpdateResult result = new WorkingSetUpdateResult(State.ok, null, wsd, newKey);
         if (sitesWithDifferentLang.size() > 0) {
         	result.setState(State.siteLanguagesDiffer);
         	result.setSitesWithDifferentLang(sitesWithDifferentLang);
         }
         if (!wsd.getIsNew() && !newName.equals(oldName)) {
-        	if (workingSetStore.getWorkingSet(EntityKey.get(oldName)) != null) {
-        		return new WorkingSetUpdateResult(State.entityExists, null, wsd, null);
+        	if (workingSetStore.getWorkingSet(newKey) != null) {
+        		return new WorkingSetUpdateResult(State.entityExists, null, wsd, newKey);
         	}
             workingSetStore.rename(oldName, newName);
         }

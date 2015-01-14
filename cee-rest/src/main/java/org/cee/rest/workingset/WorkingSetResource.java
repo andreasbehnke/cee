@@ -13,8 +13,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.cee.client.workingset.WorkingSetData;
 import org.cee.client.workingset.WorkingSetUpdateResult;
-import org.cee.client.workingset.WorkingSetUpdateResult.State;
 import org.cee.rest.exception.DuplicateKeyException;
+import org.cee.rest.exception.ValidationException;
 import org.cee.service.EntityNotFoundException;
 import org.cee.service.workingset.WorkingSetService;
 import org.cee.store.EntityKey;
@@ -51,22 +51,26 @@ public class WorkingSetResource {
 		return workingSetService.validateSiteLanguages(workingSetData);
 	}
 	
-	private WorkingSetUpdateResult createOrUpdate(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException {
+	private WorkingSetUpdateResult createOrUpdate(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException {
 		WorkingSetUpdateResult result = workingSetService.update(workingSetData);
-		if (result.getState() == State.entityExists) {
-			throw new DuplicateKeyException(result.getKey());
+		switch (result.getState()) {
+		case entityExists:
+			throw new DuplicateKeyException(result);
+		case siteLanguagesDiffer:
+			throw new ValidationException(result);
+		default:
+			return result;
 		}
-		return result;
 	}
 	
 	@POST
-	public WorkingSetUpdateResult create(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException {
+	public WorkingSetUpdateResult create(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException {
 		workingSetData.setIsNew(true);
 		return createOrUpdate(workingSetData);
 	}
 	
 	@PUT
-	public WorkingSetUpdateResult update(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException {
+	public WorkingSetUpdateResult update(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException {
 		workingSetData.setIsNew(false);
 		return createOrUpdate(workingSetData);
 	}
