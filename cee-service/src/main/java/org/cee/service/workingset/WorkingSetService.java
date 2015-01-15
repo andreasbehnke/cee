@@ -42,14 +42,16 @@ public class WorkingSetService {
     
     public List<EntityKey> validateSiteLanguages(WorkingSetData wsd) throws StoreException {
     	List<EntityKey> sitesWithDifferentLang = new ArrayList<EntityKey>();
-    	String workingSetLang = wsd.getLanguage().getKey().toLowerCase();
-    	for (EntityKey siteKey : wsd.getSites()) {
-			Site site = siteStore.getSite(siteKey);
-			String siteLang = site.getLanguage().toLowerCase();
-			if (!(siteLang.startsWith(workingSetLang) || workingSetLang.startsWith(siteLang))) {
-				sitesWithDifferentLang.add(siteKey);
+    	if (wsd.getSites() != null) {
+	    	String workingSetLang = wsd.getLanguage().getKey().toLowerCase();
+	    	for (EntityKey siteKey : wsd.getSites()) {
+				Site site = siteStore.getSite(siteKey);
+				String siteLang = site.getLanguage().toLowerCase();
+				if (!(siteLang.startsWith(workingSetLang) || workingSetLang.startsWith(siteLang))) {
+					sitesWithDifferentLang.add(siteKey);
+				}
 			}
-		}
+    	}
     	return sitesWithDifferentLang;
     }
     

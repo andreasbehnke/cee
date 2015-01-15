@@ -1,5 +1,6 @@
 package org.cee.rest.workingset;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.DELETE;
@@ -14,7 +15,9 @@ import javax.ws.rs.core.MediaType;
 import org.cee.client.workingset.WorkingSetData;
 import org.cee.client.workingset.WorkingSetUpdateResult;
 import org.cee.rest.exception.DuplicateKeyException;
+import org.cee.rest.exception.MissingParameterException;
 import org.cee.rest.exception.ValidationException;
+import org.cee.rest.exception.ValidationIssue;
 import org.cee.service.EntityNotFoundException;
 import org.cee.service.workingset.WorkingSetService;
 import org.cee.store.EntityKey;
@@ -45,13 +48,39 @@ public class WorkingSetResource {
 		return workingSetService.get(EntityKey.get(key));
 	}
 	
+	private void checkNotNull(String fieldName, Object field, List<ValidationIssue> issues) {
+		if (field == null) {
+			issues.add(new ValidationIssue(fieldName, "Field " + fieldName + " must not be not empty"));
+		}
+	}
+	
+	private void validateInput(WorkingSetData workingSetData) throws ValidationException {
+		List<ValidationIssue> issues = new ArrayList<>();
+		checkNotNull("newName", workingSetData.getNewName(), issues);
+		checkNotNull("language", workingSetData.getLanguage(), issues);
+		if (!issues.isEmpty()) {
+			throw new ValidationException(issues);
+		}
+		if (workingSetData.getSites() == null) {
+			workingSetData.setSites(new ArrayList<EntityKey>());
+		}
+	}
+	
 	@POST
 	@Path("validateSiteLanguage")
-	public List<EntityKey> validateSiteLanguage(WorkingSetData workingSetData) throws StoreException {
+	public List<EntityKey> validateSiteLanguage(WorkingSetData workingSetData) throws StoreException, MissingParameterException, ValidationException {
+		if (workingSetData == null) {
+			throw new MissingParameterException("workingSetData");
+		}
+		validateInput(workingSetData);
 		return workingSetService.validateSiteLanguages(workingSetData);
 	}
 	
-	private WorkingSetUpdateResult createOrUpdate(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException {
+	private WorkingSetUpdateResult createOrUpdate(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException, MissingParameterException {
+		if (workingSetData == null) {
+			throw new MissingParameterException("workingSetData");
+		}
+		validateInput(workingSetData);
 		WorkingSetUpdateResult result = workingSetService.update(workingSetData);
 		switch (result.getState()) {
 		case entityExists:
@@ -64,13 +93,13 @@ public class WorkingSetResource {
 	}
 	
 	@POST
-	public WorkingSetUpdateResult create(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException {
+	public WorkingSetUpdateResult create(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException, MissingParameterException {
 		workingSetData.setIsNew(true);
 		return createOrUpdate(workingSetData);
 	}
 	
 	@PUT
-	public WorkingSetUpdateResult update(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException {
+	public WorkingSetUpdateResult update(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException, MissingParameterException {
 		workingSetData.setIsNew(false);
 		return createOrUpdate(workingSetData);
 	}
