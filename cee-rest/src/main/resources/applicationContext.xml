@@ -34,8 +34,12 @@ http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context.xsd">
 	
 	<import resource="classpath*:services.xml" />
-
+	
 	<bean class="org.cee.rest.workingset.WorkingSetResource">
 		<property name="workingSetService" ref="workingSetService" />
+	</bean>
+	
+	<bean class="org.cee.rest.site.SiteResource">
+		<property name="siteService" ref="siteService" />
 	</bean>
 </beans>

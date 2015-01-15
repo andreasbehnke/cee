@@ -7,10 +7,12 @@ import org.cee.client.site.SiteConverter;
 import org.cee.client.site.SiteData;
 import org.cee.client.site.SiteUpdateResult;
 import org.cee.client.site.SiteUpdateResult.State;
+import org.cee.service.EntityNotFoundException;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
 import org.cee.store.site.Site;
 import org.cee.store.site.SiteStore;
+import org.cee.store.workingset.WorkingSet;
 import org.cee.store.workingset.WorkingSetStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +41,12 @@ public class SiteService {
     	return siteStore.getSitesOrderedByName();
     }
 
-    public List<EntityKey> sitesOfWorkingSet(EntityKey workingSetKey) throws StoreException {
-        return workingSetStore.getWorkingSet(workingSetKey).getSites();
+    public List<EntityKey> sitesOfWorkingSet(EntityKey workingSetKey) throws StoreException, EntityNotFoundException {
+    	WorkingSet workingSet = workingSetStore.getWorkingSet(workingSetKey);
+    	if (workingSet == null) {
+    		throw new EntityNotFoundException(workingSetKey);
+    	}
+        return workingSet.getSites();
     }
     
     public Site get(EntityKey siteKey) throws StoreException {
