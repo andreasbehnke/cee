@@ -4,10 +4,11 @@ import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.cee.client.site.SiteData;
 import org.cee.service.EntityNotFoundException;
 import org.cee.service.site.SiteService;
 import org.cee.store.EntityKey;
@@ -28,11 +29,19 @@ public class SiteResource {
 	}
 	
 	@GET
-	public List<EntityKey> orderedByName(@QueryParam("workingSet") String workingSetKey) throws StoreException, EntityNotFoundException {
-		if (workingSetKey == null) {
-			return siteService.orderedByName();
-		} else {
-			return siteService.sitesOfWorkingSet(EntityKey.get(workingSetKey));
-		}
+	public List<EntityKey> orderedByName() throws StoreException, EntityNotFoundException {
+		return siteService.orderedByName();
+	}
+	
+	@GET
+	@Path("ofWorkingSet/{key}")
+	public List<EntityKey> ofWorkingSet(@PathParam("key") String workingSetKey) throws StoreException, EntityNotFoundException {
+		return siteService.sitesOfWorkingSet(EntityKey.get(workingSetKey));
+	}
+	
+	@GET
+	@Path("get/{key}")
+	public SiteData get(@PathParam("key") String key) throws StoreException, EntityNotFoundException {
+		return siteService.get(EntityKey.get(key));
 	}
 }

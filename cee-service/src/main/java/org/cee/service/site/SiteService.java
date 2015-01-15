@@ -49,8 +49,12 @@ public class SiteService {
         return workingSet.getSites();
     }
     
-    public Site get(EntityKey siteKey) throws StoreException {
-    	return siteStore.getSite(siteKey);
+    public SiteData get(EntityKey siteKey) throws StoreException, EntityNotFoundException {
+    	Site site = siteStore.getSite(siteKey);
+    	if (site == null) {
+    		throw new EntityNotFoundException(siteKey);
+    	}
+    	return SiteConverter.createFromSite(site, false);
     }
     
     public List<Site> get(List<EntityKey> siteKeys) throws StoreException {

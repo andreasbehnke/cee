@@ -43,7 +43,7 @@ public class WorkingSetResource {
 	}
 	
 	@GET
-	@Path("{key}")
+	@Path("get/{key}")
 	public WorkingSetData get(@PathParam("key") String key) throws StoreException, EntityNotFoundException {
 		return workingSetService.get(EntityKey.get(key));
 	}
@@ -66,7 +66,7 @@ public class WorkingSetResource {
 		}
 	}
 	
-	@POST
+	@PUT
 	@Path("validateSiteLanguage")
 	public List<EntityKey> validateSiteLanguage(WorkingSetData workingSetData) throws StoreException, MissingParameterException, ValidationException {
 		if (workingSetData == null) {

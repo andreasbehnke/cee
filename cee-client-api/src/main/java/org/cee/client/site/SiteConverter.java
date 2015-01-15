@@ -46,9 +46,9 @@ public class SiteConverter {
 		return data;
 	}
 	
-	public static SiteData createFromSite(final Site site) {
+	public static SiteData createFromSite(final Site site, boolean isNew) {
 		SiteData data = new SiteData();
-		data.setIsNew(true);
+		data.setIsNew(isNew);
 		data.setDescription(site.getDescription());
 		data.setLocation(site.getLocation());
 		data.setName(site.getName());

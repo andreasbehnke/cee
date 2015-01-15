@@ -50,7 +50,7 @@ public class SiteProcessor {
 		info.setIsNew(true);
 		try {
 			Site site = siteReader.readSite(createWebClient(), location);
-			info = SiteConverter.createFromSite(site);
+			info = SiteConverter.createFromSite(site, true);
 			info.setState(SiteRetrivalState.ok);
 		} catch(MalformedURLException e) {
 			info.setState(SiteRetrivalState.malformedUrl);
