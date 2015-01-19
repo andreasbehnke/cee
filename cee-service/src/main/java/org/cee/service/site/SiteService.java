@@ -1,5 +1,6 @@
 package org.cee.service.site;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.cee.client.site.FeedData;
@@ -57,8 +58,13 @@ public class SiteService {
     	return SiteConverter.createFromSite(site, false);
     }
     
-    public List<Site> get(List<EntityKey> siteKeys) throws StoreException {
-    	return siteStore.getSites(siteKeys);
+    public List<SiteData> get(List<EntityKey> siteKeys) throws StoreException {
+    	List<SiteData> siteDatas = new ArrayList<>();
+    	List<Site> sites = siteStore.getSites(siteKeys);
+    	for (Site site : sites) {
+    		siteDatas.add(SiteConverter.createFromSite(site, false));
+    	}
+    	return siteDatas;
     }
 
     public String guessUniqueSiteName(String name) {

@@ -22,13 +22,13 @@ package org.cee.webreader.server.content.renderer;
 
 
 import org.cee.client.EntityContent;
+import org.cee.client.site.SiteData;
 import org.cee.store.EntityKey;
-import org.cee.store.site.Site;
 
-public class SiteContentRenderer extends DefaultContentRenderer<EntityKey, Site> {
+public class SiteContentRenderer extends DefaultContentRenderer<EntityKey, SiteData> {
 
     @Override
-    public EntityContent<EntityKey> render(EntityKey key, Site site, String templateName) {
+    public EntityContent<EntityKey> render(EntityKey key, SiteData site, String templateName) {
         if (key == null) {
             throw new IllegalArgumentException("Parameter key must not be null");
         }

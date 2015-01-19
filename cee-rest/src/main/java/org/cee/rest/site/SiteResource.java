@@ -1,5 +1,6 @@
 package org.cee.rest.site;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -8,6 +9,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cee.client.site.SiteData;
 import org.cee.service.EntityNotFoundException;
 import org.cee.service.site.SiteService;
@@ -43,5 +45,12 @@ public class SiteResource {
 	@Path("get/{key}")
 	public SiteData get(@PathParam("key") String key) throws StoreException, EntityNotFoundException {
 		return siteService.get(EntityKey.get(key));
+	}
+	
+	@GET
+	@Path("getAll/{keyList}")
+	public List<SiteData> getAll(@PathParam("keyList") String keyList) throws StoreException, EntityNotFoundException {
+		List<String> keys =	Arrays.asList(StringUtils.split(keyList,','));
+		return siteService.get(EntityKey.fromList(keys));
 	}
 }

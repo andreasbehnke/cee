@@ -77,7 +77,7 @@ public class SiteServiceImpl implements GwtSiteService {
     @Override
     public EntityContent<EntityKey> getHtmlDescription(EntityKey siteKey) {
         try {
-            Site site = siteService.get(siteKey);
+            SiteData site = siteService.get(siteKey);
             return renderer.render(siteKey, site, null);
         } catch (Exception e) {
             LOG.error(COULD_NOT_RETRIEVE_SITE_DESCRIPTION, e);

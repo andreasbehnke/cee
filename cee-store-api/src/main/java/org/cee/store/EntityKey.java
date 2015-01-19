@@ -21,6 +21,8 @@ package org.cee.store;
  */
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Key-name pair referencing an entity within a store
@@ -66,6 +68,14 @@ public class EntityKey implements Serializable {
 	public static EntityKey get(String name, String key) {
         return new EntityKey(name, key);
     }
+	
+	public static List<EntityKey> fromList(List<String> keys) {
+		List<EntityKey> result = new ArrayList<>();
+		for (String key : keys) {
+			result.add(EntityKey.get(key));
+		}
+		return result;
+	}
 	
 	@Override
 	public int hashCode() {
