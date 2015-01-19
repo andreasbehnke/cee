@@ -53,4 +53,10 @@ public class SiteResource {
 		List<String> keys =	Arrays.asList(StringUtils.split(keyList,','));
 		return siteService.get(EntityKey.fromList(keys));
 	}
+	
+	@GET
+	@Path("guessUniqueSiteName/{proposal}")
+	public String guessUniqueSiteName(@PathParam("proposal") String proposal) {
+		return siteService.guessUniqueSiteName(proposal);
+	}
 }
