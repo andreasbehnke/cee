@@ -25,6 +25,8 @@ import java.util.List;
 
 import org.cee.client.workingset.WorkingSetData;
 import org.cee.client.workingset.WorkingSetUpdateResult;
+import org.cee.client.workingset.WorkingSetUpdateResult.State;
+import org.cee.service.DuplicateKeyException;
 import org.cee.service.workingset.WorkingSetService;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
@@ -90,7 +92,9 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
         } catch (StoreException e) {
         	LOG.error(COULD_NOT_UPDATE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_UPDATE_WORKING_SET);
-        }
+        } catch (DuplicateKeyException e) {
+			return new WorkingSetUpdateResult(State.entityExists, null, wsd, e.getEntityKey());
+		}
     }
     
     @Override

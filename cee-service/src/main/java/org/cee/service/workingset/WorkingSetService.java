@@ -6,6 +6,7 @@ import java.util.List;
 import org.cee.client.workingset.WorkingSetData;
 import org.cee.client.workingset.WorkingSetUpdateResult;
 import org.cee.client.workingset.WorkingSetUpdateResult.State;
+import org.cee.service.DuplicateKeyException;
 import org.cee.service.EntityNotFoundException;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
@@ -55,12 +56,12 @@ public class WorkingSetService {
     	return sitesWithDifferentLang;
     }
     
-    public WorkingSetUpdateResult update(WorkingSetData wsd) throws StoreException {
+    public WorkingSetUpdateResult update(WorkingSetData wsd) throws StoreException, DuplicateKeyException {
         String newName = wsd.getNewName();
         String oldName = wsd.getOldName();
         EntityKey newKey = EntityKey.get(newName);
         if (wsd.getIsNew() && workingSetStore.getWorkingSet(newKey) != null) {
-            return new WorkingSetUpdateResult(State.entityExists, null, wsd, newKey);
+        	throw new DuplicateKeyException(newKey);
         }
         List<EntityKey> sitesWithDifferentLang = validateSiteLanguages(wsd);
         WorkingSetUpdateResult result = new WorkingSetUpdateResult(State.ok, null, wsd, newKey);
@@ -87,7 +88,7 @@ public class WorkingSetService {
         return result;
     }
     
-    public WorkingSetUpdateResult addSite(EntityKey workingSetKey, EntityKey siteKey) throws StoreException, EntityNotFoundException {
+    public WorkingSetUpdateResult addSite(EntityKey workingSetKey, EntityKey siteKey) throws StoreException, EntityNotFoundException, DuplicateKeyException {
         WorkingSetData workingSet = get(workingSetKey);
         workingSet.getSites().add(siteKey);
         return update(workingSet);

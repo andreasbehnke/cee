@@ -14,10 +14,11 @@ import javax.ws.rs.core.MediaType;
 
 import org.cee.client.workingset.WorkingSetData;
 import org.cee.client.workingset.WorkingSetUpdateResult;
-import org.cee.rest.exception.DuplicateKeyException;
+import org.cee.rest.BaseResource;
 import org.cee.rest.exception.MissingParameterException;
 import org.cee.rest.exception.ValidationException;
 import org.cee.rest.exception.ValidationIssue;
+import org.cee.service.DuplicateKeyException;
 import org.cee.service.EntityNotFoundException;
 import org.cee.service.workingset.WorkingSetService;
 import org.cee.store.EntityKey;
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Path("workingset")
 @Produces(MediaType.APPLICATION_JSON)
 @Component
-public class WorkingSetResource {
+public class WorkingSetResource extends BaseResource {
 	
 	private WorkingSetService workingSetService;
 	
@@ -46,12 +47,6 @@ public class WorkingSetResource {
 	@Path("get/{key}")
 	public WorkingSetData get(@PathParam("key") String key) throws StoreException, EntityNotFoundException {
 		return workingSetService.get(EntityKey.get(key));
-	}
-	
-	private void checkNotNull(String fieldName, Object field, List<ValidationIssue> issues) {
-		if (field == null) {
-			issues.add(new ValidationIssue(fieldName, "Field " + fieldName + " must not be not empty"));
-		}
 	}
 	
 	private void validateInput(WorkingSetData workingSetData) throws ValidationException {
@@ -83,8 +78,6 @@ public class WorkingSetResource {
 		validateInput(workingSetData);
 		WorkingSetUpdateResult result = workingSetService.update(workingSetData);
 		switch (result.getState()) {
-		case entityExists:
-			throw new DuplicateKeyException(result);
 		case siteLanguagesDiffer:
 			throw new ValidationException(result);
 		default:

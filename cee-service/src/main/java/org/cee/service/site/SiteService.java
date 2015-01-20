@@ -8,6 +8,7 @@ import org.cee.client.site.SiteConverter;
 import org.cee.client.site.SiteData;
 import org.cee.client.site.SiteUpdateResult;
 import org.cee.client.site.SiteUpdateResult.State;
+import org.cee.service.DuplicateKeyException;
 import org.cee.service.EntityNotFoundException;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
@@ -93,9 +94,9 @@ public class SiteService {
         return guessName;
     }
 
-    public SiteUpdateResult update(SiteData siteData) throws StoreException {
-        if (siteStore.contains(siteData.getName()) && siteData.getIsNew()) {
-            return new SiteUpdateResult(State.entityExists, null);
+    public SiteUpdateResult update(SiteData siteData) throws StoreException, DuplicateKeyException {
+    	if (siteStore.contains(siteData.getName()) && siteData.getIsNew()) {
+        	throw new DuplicateKeyException(EntityKey.get(siteData.getName()));
         }
         EntityKey language = siteData.getLanguage();
         if (language == null)  {
