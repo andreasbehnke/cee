@@ -20,8 +20,8 @@ package org.cee.webreader.client;
  * #L%
  */
 
-import org.cee.client.EntityContent;
 import org.cee.store.article.ArticleKey;
+import org.cee.webreader.client.content.EntityContent;
 import org.cee.webreader.client.paging.PagingView;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;

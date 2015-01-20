@@ -21,8 +21,8 @@ package org.cee.webreader.client.ui;
  */
 
 
-import org.cee.client.EntityContent;
 import org.cee.store.EntityKey;
+import org.cee.webreader.client.content.EntityContent;
 import org.cee.webreader.client.content.EntityContentCell;
 import org.cee.webreader.client.content.EntityContentKeyProvider;
 import org.cee.webreader.client.content.SourceSelectionView;

@@ -24,12 +24,12 @@ package org.cee.webreader.server.content;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cee.client.EntityContent;
 import org.cee.client.site.SiteData;
 import org.cee.service.DuplicateKeyException;
 import org.cee.service.site.SiteService;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
+import org.cee.webreader.client.content.EntityContent;
 import org.cee.webreader.client.content.GwtSiteService;
 import org.cee.webreader.client.content.SiteUpdateResult;
 import org.cee.webreader.client.content.SiteUpdateResult.State;

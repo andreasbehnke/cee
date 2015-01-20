@@ -23,7 +23,7 @@ package org.cee.webreader.client.list;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cee.client.EntityContent;
+import org.cee.webreader.client.content.EntityContent;
 import org.cee.webreader.client.error.ErrorSourceBase;
 
 import com.google.gwt.user.cellview.client.CellList;

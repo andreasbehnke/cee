@@ -1,4 +1,4 @@
-package org.cee.client;
+package org.cee.webreader.client.content;
 
 /*
  * #%L

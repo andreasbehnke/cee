@@ -24,7 +24,7 @@ package org.cee.webreader.server.content.renderer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cee.client.EntityContent;
+import org.cee.webreader.client.content.EntityContent;
 
 public abstract class DefaultContentRenderer<K, T> implements ContentRenderer<K, T> {
 

@@ -23,7 +23,6 @@ package org.cee.webreader.client.content;
 
 import java.util.List;
 
-import org.cee.client.EntityContent;
 import org.cee.store.EntityKey;
 import org.cee.webreader.client.error.ErrorHandler;
 import org.cee.webreader.client.list.ListChangedEvent;
