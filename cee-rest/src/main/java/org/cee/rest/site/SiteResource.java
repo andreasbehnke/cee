@@ -15,7 +15,6 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import org.cee.client.site.FeedData;
 import org.cee.client.site.SiteData;
-import org.cee.client.site.SiteUpdateResult;
 import org.cee.rest.BaseResource;
 import org.cee.rest.exception.MissingParameterException;
 import org.cee.rest.exception.ValidationException;
@@ -83,7 +82,7 @@ public class SiteResource extends BaseResource {
 		}
 	}
 	
-	private SiteUpdateResult createOrUpdate(SiteData site) throws StoreException, ValidationException, MissingParameterException, DuplicateKeyException {
+	private SiteData createOrUpdate(SiteData site) throws StoreException, ValidationException, MissingParameterException, DuplicateKeyException {
 		if (site == null) {
 			throw new MissingParameterException("site");
 		}
@@ -92,13 +91,13 @@ public class SiteResource extends BaseResource {
 	}
 	
 	@POST
-	public SiteUpdateResult create(SiteData site) throws StoreException, ValidationException, MissingParameterException, DuplicateKeyException {
+	public SiteData create(SiteData site) throws StoreException, ValidationException, MissingParameterException, DuplicateKeyException {
 		site.setIsNew(true);
 		return createOrUpdate(site);
 	}
 	
 	@PUT
-	public SiteUpdateResult update(SiteData site) throws StoreException, ValidationException, MissingParameterException, DuplicateKeyException {
+	public SiteData update(SiteData site) throws StoreException, ValidationException, MissingParameterException, DuplicateKeyException {
 		site.setIsNew(false);
 		return createOrUpdate(site);
 	}

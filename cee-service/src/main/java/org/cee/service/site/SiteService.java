@@ -6,8 +6,6 @@ import java.util.List;
 import org.cee.client.site.FeedData;
 import org.cee.client.site.SiteConverter;
 import org.cee.client.site.SiteData;
-import org.cee.client.site.SiteUpdateResult;
-import org.cee.client.site.SiteUpdateResult.State;
 import org.cee.service.DuplicateKeyException;
 import org.cee.service.EntityNotFoundException;
 import org.cee.store.EntityKey;
@@ -94,15 +92,19 @@ public class SiteService {
         return guessName;
     }
 
-    public SiteUpdateResult update(SiteData siteData) throws StoreException, DuplicateKeyException {
+    public SiteData update(SiteData siteData) throws StoreException, DuplicateKeyException {
     	if (siteStore.contains(siteData.getName()) && siteData.getIsNew()) {
         	throw new DuplicateKeyException(EntityKey.get(siteData.getName()));
         }
-        EntityKey language = siteData.getLanguage();
+        /*
+         * TODO: Use Bean Validation here
+         * 
+         * EntityKey language = siteData.getLanguage();
         if (language == null)  {
         	return new SiteUpdateResult(State.languageMissing, null);
-        }
-        //set language for all feeds 
+        }*/
+        //set language for all feeds
+    	EntityKey language = siteData.getLanguage();
         for (FeedData feedData : siteData.getFeeds()) {
             if (feedData.getLanguage() == null) {
             	//if feed does not provide language information,
@@ -110,7 +112,7 @@ public class SiteService {
             	feedData.setLanguage(language);
             }
         }
-        EntityKey key = siteStore.update(SiteConverter.createFromSiteData(siteData));
-        return new SiteUpdateResult(State.ok, key);
+        siteStore.update(SiteConverter.createFromSiteData(siteData));
+        return siteData;
     }
 }

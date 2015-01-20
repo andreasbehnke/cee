@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.cee.client.site.FeedData;
 import org.cee.client.site.SiteData;
-import org.cee.client.site.SiteUpdateResult;
 import org.cee.store.EntityKey;
 import org.cee.webreader.client.async.LoadingInfoAsyncCallback;
 import org.cee.webreader.client.error.ErrorEvent;

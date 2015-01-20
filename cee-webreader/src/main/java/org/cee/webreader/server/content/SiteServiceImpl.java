@@ -26,13 +26,13 @@ import java.util.List;
 
 import org.cee.client.EntityContent;
 import org.cee.client.site.SiteData;
-import org.cee.client.site.SiteUpdateResult;
-import org.cee.client.site.SiteUpdateResult.State;
 import org.cee.service.DuplicateKeyException;
 import org.cee.service.site.SiteService;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
 import org.cee.webreader.client.content.GwtSiteService;
+import org.cee.webreader.client.content.SiteUpdateResult;
+import org.cee.webreader.client.content.SiteUpdateResult.State;
 import org.cee.webreader.client.error.ServiceException;
 import org.cee.webreader.server.content.renderer.SiteContentRenderer;
 import org.slf4j.Logger;
@@ -105,7 +105,7 @@ public class SiteServiceImpl implements GwtSiteService {
     @Override
     public SiteUpdateResult update(SiteData siteData) {
         try {
-            return siteService.update(siteData);
+            return new SiteUpdateResult(State.ok, EntityKey.get(siteService.update(siteData).getName()));
         } catch (StoreException e) {
             LOG.error(COULD_NOT_UPDATE_SITE, e);
             throw new ServiceException(COULD_NOT_UPDATE_SITE);
