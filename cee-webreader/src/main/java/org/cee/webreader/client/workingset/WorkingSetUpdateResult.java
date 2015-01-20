@@ -1,4 +1,4 @@
-package org.cee.client.workingset;
+package org.cee.webreader.client.workingset;
 
 /*
  * #%L
@@ -23,6 +23,7 @@ package org.cee.client.workingset;
 import java.io.Serializable;
 import java.util.List;
 
+import org.cee.client.workingset.WorkingSetData;
 import org.cee.store.EntityKey;
 
 public class WorkingSetUpdateResult implements Serializable {

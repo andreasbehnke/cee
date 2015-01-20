@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cee.client.workingset.WorkingSetData;
-import org.cee.client.workingset.WorkingSetUpdateResult;
-import org.cee.client.workingset.WorkingSetUpdateResult.State;
 import org.cee.service.DuplicateKeyException;
 import org.cee.service.EntityNotFoundException;
 import org.cee.store.EntityKey;
@@ -38,7 +36,7 @@ public class WorkingSetService {
     	if (ws == null) {
     		throw new EntityNotFoundException(workingSetKey);
     	}
-        return new WorkingSetData(ws);
+        return new WorkingSetData(ws, false);
     }
     
     public List<EntityKey> validateSiteLanguages(WorkingSetData wsd) throws StoreException {
@@ -56,18 +54,12 @@ public class WorkingSetService {
     	return sitesWithDifferentLang;
     }
     
-    public WorkingSetUpdateResult update(WorkingSetData wsd) throws StoreException, DuplicateKeyException {
+    public WorkingSetData update(WorkingSetData wsd) throws StoreException, DuplicateKeyException {
         String newName = wsd.getNewName();
         String oldName = wsd.getOldName();
         EntityKey newKey = EntityKey.get(newName);
         if (wsd.getIsNew() && workingSetStore.getWorkingSet(newKey) != null) {
         	throw new DuplicateKeyException(newKey);
-        }
-        List<EntityKey> sitesWithDifferentLang = validateSiteLanguages(wsd);
-        WorkingSetUpdateResult result = new WorkingSetUpdateResult(State.ok, null, wsd, newKey);
-        if (sitesWithDifferentLang.size() > 0) {
-        	result.setState(State.siteLanguagesDiffer);
-        	result.setSitesWithDifferentLang(sitesWithDifferentLang);
         }
         if (!wsd.getIsNew() && !newName.equals(oldName)) {
         	if (workingSetStore.getWorkingSet(newKey) != null) {
@@ -84,11 +76,11 @@ public class WorkingSetService {
         }
         workingSet.setSites(wsd.getSites());
         workingSet.setLanguage(wsd.getLanguage().getKey());
-        result.setKey(workingSetStore.update(workingSet));
-        return result;
+        workingSetStore.update(workingSet);
+        return new WorkingSetData(workingSet, wsd.getIsNew());
     }
     
-    public WorkingSetUpdateResult addSite(EntityKey workingSetKey, EntityKey siteKey) throws StoreException, EntityNotFoundException, DuplicateKeyException {
+    public WorkingSetData addSite(EntityKey workingSetKey, EntityKey siteKey) throws StoreException, EntityNotFoundException, DuplicateKeyException {
         WorkingSetData workingSet = get(workingSetKey);
         workingSet.getSites().add(siteKey);
         return update(workingSet);

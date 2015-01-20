@@ -23,8 +23,6 @@ package org.cee.webreader.client.workingset;
 import java.util.List;
 
 import org.cee.client.workingset.WorkingSetData;
-import org.cee.client.workingset.WorkingSetUpdateResult;
-import org.cee.client.workingset.WorkingSetUpdateResult.State;
 import org.cee.store.EntityKey;
 import org.cee.webreader.client.ConfirmView;
 import org.cee.webreader.client.async.NotificationCallback;
@@ -41,6 +39,7 @@ import org.cee.webreader.client.list.ListChangedHandler;
 import org.cee.webreader.client.list.MultiSelectListPresenter;
 import org.cee.webreader.client.list.SelectionListChangedEvent;
 import org.cee.webreader.client.list.SelectionListChangedHandler;
+import org.cee.webreader.client.workingset.WorkingSetUpdateResult.State;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

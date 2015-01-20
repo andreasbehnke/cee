@@ -24,7 +24,6 @@ package org.cee.webreader.client.workingset;
 import java.util.List;
 
 import org.cee.client.workingset.WorkingSetData;
-import org.cee.client.workingset.WorkingSetUpdateResult;
 import org.cee.store.EntityKey;
 
 import com.google.gwt.user.client.rpc.RemoteService;

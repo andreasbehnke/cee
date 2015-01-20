@@ -47,8 +47,8 @@ public class WorkingSetData implements Serializable {
     
     public WorkingSetData() {}
     
-    public WorkingSetData(WorkingSet workingSet) {
-    	this.isNew = false;
+    public WorkingSetData(WorkingSet workingSet, boolean isNew) {
+    	this.isNew = isNew;
     	this.newName = workingSet.getName();
     	this.oldName = workingSet.getName();
     	this.sites = workingSet.getSites();

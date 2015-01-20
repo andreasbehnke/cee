@@ -24,14 +24,14 @@ package org.cee.webreader.server.workingset;
 import java.util.List;
 
 import org.cee.client.workingset.WorkingSetData;
-import org.cee.client.workingset.WorkingSetUpdateResult;
-import org.cee.client.workingset.WorkingSetUpdateResult.State;
 import org.cee.service.DuplicateKeyException;
 import org.cee.service.workingset.WorkingSetService;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
 import org.cee.webreader.client.error.ServiceException;
 import org.cee.webreader.client.workingset.GwtWorkingSetService;
+import org.cee.webreader.client.workingset.WorkingSetUpdateResult;
+import org.cee.webreader.client.workingset.WorkingSetUpdateResult.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +88,8 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
     @Override
     public WorkingSetUpdateResult update(WorkingSetData wsd) {
         try {
-            return workingSetService.update(wsd);
+        	WorkingSetData workingSetData = workingSetService.update(wsd);
+            return new WorkingSetUpdateResult(State.ok, null, workingSetData, EntityKey.get(workingSetData.getNewName()));
         } catch (StoreException e) {
         	LOG.error(COULD_NOT_UPDATE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_UPDATE_WORKING_SET);
@@ -100,7 +101,8 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
     @Override
     public WorkingSetUpdateResult addSiteToWorkingSet(EntityKey workingSetKey, EntityKey siteKey) {
         try {
-        	return workingSetService.addSite(workingSetKey, siteKey);
+        	WorkingSetData workingSetData = workingSetService.addSite(workingSetKey, siteKey);
+        	return new WorkingSetUpdateResult(State.ok, null, workingSetData, EntityKey.get(workingSetData.getNewName()));
         } catch (Exception e) {
         	LOG.error(COULD_NOT_UPDATE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_UPDATE_WORKING_SET);

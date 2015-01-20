@@ -13,7 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.cee.client.workingset.WorkingSetData;
-import org.cee.client.workingset.WorkingSetUpdateResult;
 import org.cee.rest.BaseResource;
 import org.cee.rest.exception.MissingParameterException;
 import org.cee.rest.exception.ValidationException;
@@ -71,28 +70,22 @@ public class WorkingSetResource extends BaseResource {
 		return workingSetService.validateSiteLanguages(workingSetData);
 	}
 	
-	private WorkingSetUpdateResult createOrUpdate(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException, MissingParameterException {
+	private WorkingSetData createOrUpdate(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException, MissingParameterException {
 		if (workingSetData == null) {
 			throw new MissingParameterException("workingSetData");
 		}
 		validateInput(workingSetData);
-		WorkingSetUpdateResult result = workingSetService.update(workingSetData);
-		switch (result.getState()) {
-		case siteLanguagesDiffer:
-			throw new ValidationException(result);
-		default:
-			return result;
-		}
+		return workingSetService.update(workingSetData);
 	}
 	
 	@POST
-	public WorkingSetUpdateResult create(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException, MissingParameterException {
+	public WorkingSetData create(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException, MissingParameterException {
 		workingSetData.setIsNew(true);
 		return createOrUpdate(workingSetData);
 	}
 	
 	@PUT
-	public WorkingSetUpdateResult update(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException, MissingParameterException {
+	public WorkingSetData update(WorkingSetData workingSetData) throws StoreException, DuplicateKeyException, ValidationException, MissingParameterException {
 		workingSetData.setIsNew(false);
 		return createOrUpdate(workingSetData);
 	}
