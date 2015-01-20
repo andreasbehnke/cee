@@ -71,7 +71,7 @@ public class WorkingSetService {
         }
         if (!wsd.getIsNew() && !newName.equals(oldName)) {
         	if (workingSetStore.getWorkingSet(newKey) != null) {
-        		return new WorkingSetUpdateResult(State.entityExists, null, wsd, newKey);
+        		throw new DuplicateKeyException(newKey);
         	}
             workingSetStore.rename(oldName, newName);
         }
