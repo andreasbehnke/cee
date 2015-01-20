@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.cee.client.workingset.WorkingSetData;
 import org.cee.service.DuplicateKeyException;
+import org.cee.service.EntityNotFoundException;
 import org.cee.service.workingset.WorkingSetService;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
@@ -69,7 +70,7 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
     public WorkingSetData getWorkingSet(EntityKey workingSetKey) {
         try {
         	return workingSetService.get(workingSetKey);
-        } catch (Exception e) {
+        } catch (StoreException | EntityNotFoundException e) {
         	LOG.error(COULD_NOT_RETRIEVE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_RETRIEVE_WORKING_SET);
         }
@@ -103,7 +104,7 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
         try {
         	WorkingSetData workingSetData = workingSetService.addSite(workingSetKey, siteKey);
         	return new WorkingSetUpdateResult(State.ok, null, workingSetData, EntityKey.get(workingSetData.getNewName()));
-        } catch (Exception e) {
+        } catch (StoreException | EntityNotFoundException | DuplicateKeyException e) {
         	LOG.error(COULD_NOT_UPDATE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_UPDATE_WORKING_SET);
         }
@@ -113,7 +114,7 @@ public class WorkingSetServiceImpl implements GwtWorkingSetService {
     public void deleteWorkingSet(EntityKey workingSetKey) {
     	try {
     		workingSetService.delete(workingSetKey);
-		} catch (Exception e) {
+		} catch (StoreException | EntityNotFoundException e) {
 			LOG.error(COULD_NOT_DELETE_WORKING_SET, e);
             throw new ServiceException(COULD_NOT_DELETE_WORKING_SET);
 		}
