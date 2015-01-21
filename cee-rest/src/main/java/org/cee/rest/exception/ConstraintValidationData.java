@@ -19,4 +19,11 @@ public class ConstraintValidationData {
 		}
 	}
 
+	public List<ConstraintValidationIssue> getIssues() {
+		return issues;
+	}
+	
+	public void setIssues(List<ConstraintValidationIssue> issues) {
+		this.issues = issues;
+	}
 }
