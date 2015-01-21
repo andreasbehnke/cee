@@ -27,6 +27,7 @@
 		<property name="siteStore" ref="siteStore"/>
 	</bean>
 	<bean id="siteService" class="org.cee.service.site.SiteService">
+		<property name="validator" ref="validator"/>
 		<property name="workingSetStore" ref="workingSetStore"/>
 		<property name="siteStore" ref="siteStore"/>
 	</bean>

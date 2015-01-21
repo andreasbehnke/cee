@@ -2,6 +2,11 @@ package org.cee.service.site;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 
 import org.cee.client.site.FeedData;
 import org.cee.client.site.SiteConverter;
@@ -28,6 +33,8 @@ public class SiteService {
 	private SiteStore siteStore;
 
     private WorkingSetStore workingSetStore;
+    
+    private Validator validator;
 
     public void setSiteStore(SiteStore siteStore) {
         this.siteStore = siteStore;
@@ -36,6 +43,10 @@ public class SiteService {
     public void setWorkingSetStore(WorkingSetStore workingSetStore) {
         this.workingSetStore = workingSetStore;
     }
+    
+    public void setValidator(Validator validator) {
+		this.validator = validator;
+	}
 
     public List<EntityKey> orderedByName() throws StoreException {
     	return siteStore.getSitesOrderedByName();
@@ -93,17 +104,13 @@ public class SiteService {
     }
 
     public SiteData update(SiteData siteData) throws StoreException, DuplicateKeyException {
-    	if (siteStore.contains(siteData.getName()) && siteData.getIsNew()) {
+    	Set<ConstraintViolation<SiteData>> issues = validator.validate(siteData);
+    	if (!issues.isEmpty()) {
+    		throw new ConstraintViolationException(issues);
+    	}
+    	if (siteData.getIsNew() && siteStore.contains(siteData.getName())) {
         	throw new DuplicateKeyException(EntityKey.get(siteData.getName()));
         }
-        /*
-         * TODO: Use Bean Validation here
-         * 
-         * EntityKey language = siteData.getLanguage();
-        if (language == null)  {
-        	return new SiteUpdateResult(State.languageMissing, null);
-        }*/
-        //set language for all feeds
     	EntityKey language = siteData.getLanguage();
         for (FeedData feedData : siteData.getFeeds()) {
             if (feedData.getLanguage() == null) {

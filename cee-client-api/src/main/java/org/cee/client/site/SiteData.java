@@ -23,6 +23,9 @@ package org.cee.client.site;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.cee.store.EntityKey;
 
 /**
@@ -40,16 +43,21 @@ public class SiteData implements Serializable {
 
 	private boolean isNew = true;
 
+	@NotNull
 	private String name;
 
+	@NotNull
 	private String location;
 
 	private String title;
 
 	private String description;
 	
+	@NotNull
 	private EntityKey language;
 
+	@NotNull
+	@Size(min = 1)
 	private List<FeedData> feeds;
 
 	public boolean getIsNew() {
