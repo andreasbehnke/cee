@@ -1,6 +1,5 @@
 package org.cee.rest.site;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,12 +12,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cee.client.site.FeedData;
 import org.cee.client.site.SiteData;
-import org.cee.rest.BaseResource;
 import org.cee.rest.exception.MissingParameterException;
-import org.cee.rest.exception.ValidationException;
-import org.cee.rest.exception.ValidationIssue;
 import org.cee.service.DuplicateKeyException;
 import org.cee.service.EntityNotFoundException;
 import org.cee.service.site.SiteService;
@@ -30,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Path("site")
 @Produces(MediaType.APPLICATION_JSON)
 @Component
-public class SiteResource extends BaseResource {
+public class SiteResource {
 
 	private SiteService siteService;
 	
@@ -69,36 +64,21 @@ public class SiteResource extends BaseResource {
 		return siteService.guessUniqueSiteName(proposal);
 	}
 	
-	private void validateInput(SiteData siteData) throws ValidationException {
-		List<ValidationIssue> issues = new ArrayList<>();
-		checkNotNull("name", siteData.getName(), issues);
-		checkNotNull("language", siteData.getLanguage(), issues);
-		checkNotNull("location", siteData.getLocation(), issues);
-		if (!issues.isEmpty()) {
-			throw new ValidationException(issues);
-		}
-		if (siteData.getFeeds() == null) {
-			siteData.setFeeds(new ArrayList<FeedData>());
-		}
-	}
-	
-	private SiteData createOrUpdate(SiteData site) throws StoreException, ValidationException, MissingParameterException, DuplicateKeyException {
+	@POST
+	public SiteData create(SiteData site) throws StoreException, MissingParameterException, DuplicateKeyException {
 		if (site == null) {
 			throw new MissingParameterException("site");
 		}
-		validateInput(site);
+		site.setIsNew(true);
 		return siteService.update(site);
 	}
 	
-	@POST
-	public SiteData create(SiteData site) throws StoreException, ValidationException, MissingParameterException, DuplicateKeyException {
-		site.setIsNew(true);
-		return createOrUpdate(site);
-	}
-	
 	@PUT
-	public SiteData update(SiteData site) throws StoreException, ValidationException, MissingParameterException, DuplicateKeyException {
-		site.setIsNew(false);
-		return createOrUpdate(site);
+	public SiteData update(SiteData site) throws StoreException, MissingParameterException, DuplicateKeyException {
+		if (site == null) {
+			throw new MissingParameterException("site");
+		}
+		site.setIsNew(true);
+		return siteService.update(site);
 	}
 }

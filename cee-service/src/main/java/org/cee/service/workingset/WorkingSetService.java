@@ -2,6 +2,11 @@ package org.cee.service.workingset;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 
 import org.cee.client.workingset.WorkingSetData;
 import org.cee.service.DuplicateKeyException;
@@ -19,12 +24,18 @@ public class WorkingSetService {
 
 	private SiteStore siteStore;
 	
-    public void setWorkingSetStore(WorkingSetStore workingSetStore) {
+	private Validator validator;
+	
+	public void setWorkingSetStore(WorkingSetStore workingSetStore) {
         this.workingSetStore = workingSetStore;
     }
     
     public void setSiteStore(SiteStore siteStore) {
 		this.siteStore = siteStore;
+	}
+    
+    public void setValidator(Validator validator) {
+		this.validator = validator;
 	}
     
     public List<EntityKey> orderedByName() throws StoreException {
@@ -54,8 +65,12 @@ public class WorkingSetService {
     	return sitesWithDifferentLang;
     }
     
-    public WorkingSetData update(WorkingSetData wsd) throws StoreException, DuplicateKeyException {
-        String newName = wsd.getNewName();
+    public WorkingSetData update(WorkingSetData wsd) throws StoreException, DuplicateKeyException, ConstraintViolationException {
+    	Set<ConstraintViolation<WorkingSetData>> issues = validator.validate(wsd);
+    	if (!issues.isEmpty()) {
+    		throw new ConstraintViolationException(issues);
+    	}
+    	String newName = wsd.getNewName();
         String oldName = wsd.getOldName();
         EntityKey newKey = EntityKey.get(newName);
         if (wsd.getIsNew() && workingSetStore.getWorkingSet(newKey) != null) {
@@ -64,6 +79,7 @@ public class WorkingSetService {
         if (!wsd.getIsNew() && !newName.equals(oldName)) {
         	if (workingSetStore.getWorkingSet(newKey) != null) {
         		throw new DuplicateKeyException(newKey);
+        		
         	}
             workingSetStore.rename(oldName, newName);
         }

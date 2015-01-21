@@ -25,6 +25,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.cee.store.EntityKey;
 import org.cee.store.workingset.WorkingSet;
 
@@ -35,14 +37,17 @@ public class WorkingSetData implements Serializable {
     
 	private static final long serialVersionUID = 1L;
 
-	private Boolean isNew = true;
+	private boolean isNew = true;
 
+	@NotNull
 	private String newName;
     
     private String oldName;
     
+    @NotNull
     private EntityKey language;
     
+    @NotNull
     private List<EntityKey> sites = new ArrayList<EntityKey>();
     
     public WorkingSetData() {}
@@ -58,11 +63,11 @@ public class WorkingSetData implements Serializable {
     /**
      * @return If true, this bean is a new created working set, otherwise this working set should be updated
      */
-    public Boolean getIsNew() {
+    public boolean getIsNew() {
         return isNew;
     }
 
-    public void setIsNew(Boolean isNew) {
+    public void setIsNew(boolean isNew) {
         this.isNew = isNew;
     }
 
