@@ -54,8 +54,7 @@ public class SiteResource {
 	@GET
 	@Path("getAll/{keyList}")
 	public List<SiteData> getAll(@PathParam("keyList") String keyList) throws StoreException, EntityNotFoundException {
-		List<String> keys =	Arrays.asList(StringUtils.split(keyList,','));
-		return siteService.get(EntityKey.fromList(keys));
+		return siteService.get(EntityKey.fromCommaSeparatedList(keyList));
 	}
 	
 	@GET

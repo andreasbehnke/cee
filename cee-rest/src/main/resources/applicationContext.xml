@@ -50,4 +50,8 @@ http://www.springframework.org/schema/context/spring-context.xsd">
 	<bean class="org.cee.rest.language.LanguageResource">
 		<property name="languageService" ref="languageService" />
 	</bean>
+	
+	<bean class="org.cee.rest.article.ArticleResource">
+		<property name="articleService" ref="articleService" />
+	</bean>
 </beans>

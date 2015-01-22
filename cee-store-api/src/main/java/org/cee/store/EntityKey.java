@@ -22,7 +22,10 @@ package org.cee.store;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Key-name pair referencing an entity within a store
@@ -75,6 +78,10 @@ public class EntityKey implements Serializable {
 			result.add(EntityKey.get(key));
 		}
 		return result;
+	}
+	
+	public static List<EntityKey> fromCommaSeparatedList(String commaSeparatedList) {
+		return fromList(Arrays.asList(StringUtils.split(commaSeparatedList,',')));
 	}
 	
 	@Override
