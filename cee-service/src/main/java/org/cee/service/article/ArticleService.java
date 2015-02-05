@@ -10,6 +10,7 @@ import org.cee.store.StoreException;
 import org.cee.store.article.Article;
 import org.cee.store.article.ArticleKey;
 import org.cee.store.article.ArticleStore;
+import org.cee.store.site.SiteStore;
 import org.cee.store.workingset.WorkingSet;
 import org.cee.store.workingset.WorkingSetStore;
 import org.slf4j.Logger;
@@ -26,6 +27,8 @@ public class ArticleService {
     private static final String PARAMETER_WORKING_SET_KEY_MUST_NOT_BE_NULL = "Parameter workingSetKey must not be null";
 
     private static final String PARAMETER_SITE_KEYS_MUST_NOT_BE_NULL = "Parameter siteKeys must not be null";
+    
+    private static final String PARAMETER_SITE_KEYS_MUST_NOT_BE_EMPTY = "Parameter siteKeys must not be empty";
 
     private static final String PARAMETER_SITE_KEY_MUST_NOT_BE_NULL = "Parameter siteKey must not be null";
 
@@ -43,6 +46,8 @@ public class ArticleService {
 
 	private ArticleSearchService articleSearchService;
 	
+	private SiteStore siteStore;
+	
 	private WorkingSetStore workingSetStore;
 	
 	public void setArticleStore(ArticleStore articleStore) {
@@ -51,6 +56,10 @@ public class ArticleService {
 	
 	public void setArticleSearchService(ArticleSearchService articleSearchService) {
 		this.articleSearchService = articleSearchService;
+	}
+	
+	public void setSiteStore(SiteStore siteStore) {
+		this.siteStore = siteStore;
 	}
 
 	public void setWorkingSetStore(WorkingSetStore workingSetStore) {
@@ -121,6 +130,20 @@ public class ArticleService {
 	    }
 	    WorkingSet ws = workingSetStore.getWorkingSet(workingSetKey);
 	    return articleSearchService.findArticles(siteKeys, searchQuery, ws.getLanguage());
+	}
+	
+	public List<ArticleKey> findArticles(List<EntityKey> siteKeys, String searchQuery) throws StoreException, SearchException {
+	    if (siteKeys == null) {
+	        throw new IllegalArgumentException(PARAMETER_SITE_KEYS_MUST_NOT_BE_NULL);
+	    }
+	    if (siteKeys.isEmpty()) {
+	    	throw new IllegalArgumentException(PARAMETER_SITE_KEYS_MUST_NOT_BE_EMPTY);
+	    }
+	    if (searchQuery == null) {
+	        throw new IllegalArgumentException(PARAMETER_SEARCH_QUERY_MUST_NOT_BE_NULL);
+	    }
+	    String language = siteStore.getSite(siteKeys.get(0)).getLanguage();
+	    return articleSearchService.findArticles(siteKeys, searchQuery, language);
 	}
 	
 	public Article get(ArticleKey articleKey) throws StoreException {

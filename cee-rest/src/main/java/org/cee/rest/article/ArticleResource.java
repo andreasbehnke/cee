@@ -6,8 +6,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang3.StringUtils;
+import org.cee.search.SearchException;
 import org.cee.service.article.ArticleService;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
@@ -29,8 +32,12 @@ public class ArticleResource {
 	
 	@GET
 	@Path("{siteKeys}")
-	public List<ArticleKey> orderedByName(@PathParam("siteKeys") String siteKeys) throws StoreException {
-		return articleService.articlesOfSites(EntityKey.fromCommaSeparatedList(siteKeys));
+	public List<ArticleKey> orderedByName(@PathParam("siteKeys") String siteKeys, @QueryParam("query") String query) throws StoreException, SearchException {
+		if (StringUtils.isEmpty(query)) {
+			return articleService.articlesOfSites(EntityKey.fromCommaSeparatedList(siteKeys));
+		} else {
+			return articleService.findArticles(EntityKey.fromCommaSeparatedList(siteKeys), query);	
+		}
 	}
 	
 	@GET

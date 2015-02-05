@@ -33,6 +33,7 @@
 	</bean>
 	<bean id="articleService" class="org.cee.service.article.ArticleService">
 		<property name="workingSetStore" ref="workingSetStore"/>
+		<property name="siteStore" ref="siteStore"/>
 		<property name="articleStore" ref="articleStore"/>
 		<property name="articleSearchService" ref="articleSearchService"/>
 	</bean>
