@@ -12,9 +12,22 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-
-
-
+	
+	<!-- CORS Filter -->
+	<filter>
+		<filter-name>CORS</filter-name>
+		<filter-class>org.cee.rest.CorsFilter</filter-class>
+		<init-param>
+      		<param-name>allow-origin</param-name>
+      		<param-value>http://localhost:9000</param-value>
+    	</init-param> 
+	</filter>
+	<filter-mapping>
+        <filter-name>CORS</filter-name>
+        <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- REST Servlet -->
 	<servlet>
 		<servlet-name>Jersey REST Service</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
