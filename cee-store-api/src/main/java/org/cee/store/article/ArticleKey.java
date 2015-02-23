@@ -40,7 +40,11 @@ public class ArticleKey extends EntityKey {
     protected ArticleKey(String name, String key, String siteKey, double score) {
         super(name, key);
         this.siteKey = siteKey;
-        this.score = score;
+        if (Double.isNaN(score)) {
+        	this.score = -1;
+        } else {
+        	this.score = score;
+        }
     }
     
     public static ArticleKey get(String name, String key, String siteKey, double score) {
