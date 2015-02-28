@@ -13,6 +13,52 @@
 		<version>1.7-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
+
+	<profiles>
+			<profile>
+			<!--
+			****************************** 
+			* GWT client                 *
+			******************************
+			-->
+			<id>gwt</id>
+			<activation>
+				<property>
+					<name>client</name>
+					<value>gwt</value>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>com.cee</groupId>
+					<artifactId>cee-webreader</artifactId>
+					<type>war</type>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<!--
+			****************************** 
+			* REST client                *
+			******************************
+			-->
+			<id>rest</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>client</name>
+					<value>rest</value>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>com.cee</groupId>
+					<artifactId>cee-rest</artifactId>
+					<type>war</type>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 	
 	<build>
 		<plugins>
@@ -101,11 +147,6 @@
 	<dependencies>
 	
 		<!-- internal -->
-		<dependency>
-			<groupId>com.cee</groupId>
-			<artifactId>cee-webreader</artifactId>
-			<type>war</type>
-		</dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
 			<artifactId>jetty-starter</artifactId>
