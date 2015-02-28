@@ -215,7 +215,7 @@
 		<module>cee-processing</module>
 		<module>cee-service</module>
 		<module>cee-rest</module>	
-		<!--module>cee-webreader</module-->
+		<module>cee-webreader</module>
 		<module>cee-webreader-tomcat</module>
 		<module>cee-webreader-jetty</module>
 		<module>jetty-starter</module>

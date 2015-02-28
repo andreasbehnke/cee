@@ -103,7 +103,7 @@
 		<!-- internal -->
 		<dependency>
 			<groupId>com.cee</groupId>
-			<artifactId>cee-rest</artifactId>
+			<artifactId>cee-webreader</artifactId>
 			<type>war</type>
 		</dependency>
 		<dependency>
