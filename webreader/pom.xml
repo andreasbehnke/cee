@@ -23,6 +23,7 @@
 			-->
 			<id>gwt</id>
 			<activation>
+				<activeByDefault>true</activeByDefault>
 				<property>
 					<name>client</name>
 					<value>gwt</value>
@@ -44,7 +45,6 @@
 			-->
 			<id>rest</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
 				<property>
 					<name>client</name>
 					<value>rest</value>
