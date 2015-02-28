@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cee.search.SearchException;
 import org.cee.service.article.ArticleService;
 import org.cee.store.EntityKey;
+import org.cee.store.EntityKeyUtils;
 import org.cee.store.StoreException;
 import org.cee.store.article.ArticleKey;
 import org.springframework.beans.factory.annotation.Required;
@@ -34,9 +35,9 @@ public class ArticleResource {
 	@Path("{siteKeys}")
 	public List<ArticleKey> orderedByName(@PathParam("siteKeys") String siteKeys, @QueryParam("query") String query) throws StoreException, SearchException {
 		if (StringUtils.isEmpty(query)) {
-			return articleService.articlesOfSites(EntityKey.fromCommaSeparatedList(siteKeys));
+			return articleService.articlesOfSites(EntityKeyUtils.fromCommaSeparatedList(siteKeys));
 		} else {
-			return articleService.findArticles(EntityKey.fromCommaSeparatedList(siteKeys), query);	
+			return articleService.findArticles(EntityKeyUtils.fromCommaSeparatedList(siteKeys), query);	
 		}
 	}
 	

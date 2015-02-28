@@ -16,6 +16,7 @@ import org.cee.service.DuplicateKeyException;
 import org.cee.service.EntityNotFoundException;
 import org.cee.service.site.SiteService;
 import org.cee.store.EntityKey;
+import org.cee.store.EntityKeyUtils;
 import org.cee.store.StoreException;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
@@ -52,7 +53,7 @@ public class SiteResource {
 	@GET
 	@Path("getAll/{keyList}")
 	public List<SiteData> getAll(@PathParam("keyList") String keyList) throws StoreException, EntityNotFoundException {
-		return siteService.get(EntityKey.fromCommaSeparatedList(keyList));
+		return siteService.get(EntityKeyUtils.fromCommaSeparatedList(keyList));
 	}
 	
 	@GET
