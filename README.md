@@ -23,6 +23,4 @@ java -jar webreader/target/webreader-[version].war
 
 Build other profiles (development)
 
- * mvn clean install -Dclient=gwt -Dstore=jcr will build the webreader using JCR as backend store (jackrabbit implementation)
- * mvn clean install -Dclient=rest -Dstore=lucene will build the REST service (current development)
- * mvn clean install -Dclient=rest -Dstore=jcr will build the REST service based on JCR store backend
+ * mvn clean install -Dclient=rest will build the REST service (current development)

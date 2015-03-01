@@ -19,44 +19,6 @@
 		<gwtDraftCompile>false</gwtDraftCompile>
 		<warExcludes>repository/**,repository.xml,**/*.log,WEB-INF/deploy/**,WEB-INF/lib/**,WEB-INF/webreader/**,WEB-INF/jetty-web.xml,WEB-INF/classes</warExcludes>
 	</properties>
-	
-	<profiles>
-		<profile>
-			<id>jcr</id>
-			<activation>
-				<property>
-					<name>store</name>
-					<value>jcr</value>
-				</property>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>com.cee</groupId>
-					<artifactId>cee-store-jcr</artifactId>
-					<type>jar</type>
-					<scope>runtime</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>lucene</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-				<property>
-					<name>store</name>
-					<value>lucene</value>
-				</property>
-			</activation>
-			<dependencies>
-				<dependency>
-		            <groupId>com.cee</groupId>
-		            <artifactId>cee-store-lucene</artifactId>
-		            <type>jar</type>
-		            <scope>runtime</scope>
-		        </dependency>
-	        </dependencies>
-		</profile>
-	</profiles>
 
 	<dependencies>
 		<!-- internal -->
@@ -98,6 +60,12 @@
 			<type>jar</type>
 			<scope>runtime</scope>
 		</dependency>
+    <dependency>
+      <groupId>com.cee</groupId>
+      <artifactId>cee-store-lucene</artifactId>
+      <type>jar</type>
+      <scope>runtime</scope>
+    </dependency>
 		
 		<!-- external -->
 		<dependency>
