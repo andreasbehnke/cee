@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cee</groupId>
 	<artifactId>cee</artifactId>
-	<version>1.7</version>
+	<version>2-SNAPSHOT</version>
 	<name>Content Extraction Engine</name>
 	<description>Framework for extracting content from documents and websites</description>
 	<inceptionYear>2013</inceptionYear>
