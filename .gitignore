@@ -2,6 +2,7 @@
 **/.project
 **/.settings/*
 **/pom.xml.versionsBackup
+**/bin
 .project
 .settings/*
 /index
