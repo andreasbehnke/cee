@@ -22,6 +22,7 @@
 		<jetty.version>9.0.0.M0</jetty.version>
 		<source.encoding>UTF-8</source.encoding>
 	</properties>
+
 	<repositories>
 		<repository>
 			<id>boilerpipe</id>
@@ -29,25 +30,21 @@
 			<url>http://boilerpipe.googlecode.com/svn/repo</url>
 		</repository>
 	</repositories>
-	<distributionManagement>
-		<repository>
-			<id>internal</id>
-			<name>Internal Release Repository</name>
-			<url>${conf.repository.url}</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>Internal Snapshot Repository</name>
-			<url>${conf.snapshotRepository.url}</url>
-		</snapshotRepository>
-	</distributionManagement>
+
+  <distributionManagement>
+    <repository>
+      <id>local.maven.repository</id>
+      <name>Local Maven Repository</name>
+      <url>file://${basedir}/target</url>
+    </repository>
+  </distributionManagement>
 	
 	<scm>
-		<connection>scm:svn:file:///srv/svn/repos/cee/trunk</connection>
-		<developerConnection>scm:svn:file:///srv/svn/repos/cee/trunk</developerConnection>
-		<url>svn://192.168.1.201/cee/trunk</url>
+		<connection>git@github.com:andreasbehnke/cee.git</connection>
+		<developerConnection>git@github.com:andreasbehnke/cee.git</developerConnection>
+		<url>https://github.com/andreasbehnke/cee</url>
 	</scm>
-	
+
 	<build>
 		<plugins>
 		
@@ -92,7 +89,7 @@
 					<licenseName>apache_v2</licenseName>
 					<roots>
 						<root>src/main/java</root>
-						<root>src/main/resources</root>
+						<!--root>src/main/resources</root-->
 						<root>src/test/java</root>
 					</roots>
 				</configuration>
