@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>com.cee</groupId>
 		<artifactId>cee</artifactId>
-		<version>1.7-SNAPSHOT</version>
+		<version>1.7</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 

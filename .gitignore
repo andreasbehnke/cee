@@ -1,8 +1,10 @@
 **/.classpath
 **/.project
 **/.settings/*
+**/pom.xml.versionsBackup
 .project
 .settings/*
 /index
 /repository
 /derby.log
+/target
