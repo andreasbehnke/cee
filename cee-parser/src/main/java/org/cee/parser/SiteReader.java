@@ -91,7 +91,7 @@ public class SiteReader {
     }
 
 	private Feed readFeed(WebClient webClient, URL locationUrl) throws MalformedURLException, ParserException, IOException {
-    	Reader reader = webClient.openReader(locationUrl);
+    	Reader reader = webClient.openWebResponse(locationUrl).openReaderSource().getReader();
     	try {
     		return feedParser.parse(reader, locationUrl);
     	} finally {
@@ -130,7 +130,7 @@ public class SiteReader {
     private int processFeed(WebClient webClient, Feed feed, EntityKey siteKey, String language) throws MalformedURLException, ParserException, IOException, StoreException {
     	LOG.debug("processing feed {}", feed.getTitle());
     	URL location = new URL(feed.getLocation());
-    	Reader reader = webClient.openReader(location);
+    	Reader reader = webClient.openWebResponse(location).openReaderSource().getReader();
     	try {
     		int articleCount = 0;
 			List<Article> articles = feedParser.readArticles(reader, location);

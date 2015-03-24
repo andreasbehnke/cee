@@ -24,7 +24,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.URL;
 
 import org.cee.parser.net.ReaderSource;
@@ -81,10 +80,4 @@ public class ClassResourceWebClient implements  WebClient {
 			}
 		};
 	}
-
-	@Override
-    public Reader openReader(URL location) throws IOException {
-	    return openWebResponse(location).openReaderSource().getReader();
-    }
-
 }

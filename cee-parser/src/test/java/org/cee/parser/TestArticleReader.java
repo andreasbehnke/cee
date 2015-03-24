@@ -25,8 +25,8 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URL;
 
+import org.cee.BaseWebClientTest;
 import org.cee.parser.ArticleParser;
 import org.cee.parser.ArticleReader;
 import org.cee.parser.ParserException;
@@ -37,16 +37,15 @@ import org.cee.parser.net.WebResponse;
 import org.cee.store.article.Article;
 import org.junit.Test;
 
-public class TestArticleReader {
-
-	@Test
+public class TestArticleReader extends BaseWebClientTest {
+    
+    @Test
 	public void testReadArticle() throws ParserException, IOException {
 		Article input = new Article();
 		input.setLocation("http://any");
 		Article output = new Article();
-		Reader reader = mock(Reader.class);
-		WebClient webClient = mock(WebClient.class);
-		when(webClient.openReader(any(URL.class))).thenReturn(reader);
+		Reader reader = createReader();
+		WebClient webClient = createWebClient(reader);
 		ArticleParser articleParser = mock(ArticleParser.class);
 		when(articleParser.parse(same(reader), same(input), any(Settings.class))).thenReturn(output);
 		assertSame(output, new ArticleReader(articleParser).readArticle(webClient, input));
@@ -57,10 +56,9 @@ public class TestArticleReader {
 	public void testReadArticleThrowsIOException() throws ParserException, IOException {
 		Article input = new Article();
 		input.setLocation("http://any");
-		Reader reader = mock(Reader.class);
+		Reader reader = createReader();
 		Settings settings = new Settings();
-		WebClient webClient = mock(WebClient.class);
-		when(webClient.openReader(any(URL.class))).thenReturn(reader);
+		WebClient webClient = createWebClient(reader);
 		ArticleParser articleParser = mock(ArticleParser.class);
 		when(articleParser.parse(reader, input, settings)).thenThrow(new IOException());
 		try {

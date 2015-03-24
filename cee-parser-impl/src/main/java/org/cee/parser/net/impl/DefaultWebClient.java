@@ -24,6 +24,7 @@ package org.cee.parser.net.impl;
 import java.net.URL;
 
 import org.apache.http.client.HttpClient;
+import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * Default {@link WebClient} implementation uses the {@link HttpClient} for HTTP
  * connections and falls back to the java.net API for all other protocols.
  */
-public class DefaultWebClient extends BaseWebClient {
+public class DefaultWebClient implements WebClient {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultWebClient.class);
 	
@@ -64,6 +65,7 @@ public class DefaultWebClient extends BaseWebClient {
 		this.readerFactory = readerFactory;
 	}
 
+	@Override
 	public WebResponse openWebResponse(final URL location) {
 		if (readerFactory == null) {
 			throw new IllegalArgumentException("The property readerFactory has not been set yet!");

@@ -52,7 +52,7 @@ public class TestBoilerpipeArticleParser {
         article.setLocation(articleLocation.toExternalForm());
         ArticleParser parser = new BoilerpipeArticleParser(new TagsoupXmlReaderFactory());
         WebClient webClient = new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory());
-        Reader reader = webClient.openReader(articleLocation);
+        Reader reader = webClient.openWebResponse(articleLocation).openReaderSource().getReader();
         try {
         	parser.parse(reader, article, new Settings());
         } finally {
