@@ -30,39 +30,37 @@ import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.client.HttpClient;
-import org.apache.http.conn.routing.HttpRoutePlanner;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.protocol.HttpContext;
 
 public class DefaultHttpClientFactory implements HttpClientFactory {
+    
+    private final HttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+    
+    private final class RedirectHttpResponseInterceptor implements HttpResponseInterceptor {
+        
+        //Keep location changes for redirects in context
+        @Override
+        public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
+            if (response.containsHeader("Location")) {
+                Header[] locations = response.getHeaders("Location");
+                if (locations.length > 0) {
+                    URL location = new URL(locations[0].getValue());
+                    context.setAttribute(LAST_REDIRECT_URL, location);
+                }
+            }
+        }
+    }
 
     @Override
     public HttpClient createHttpClient() {
-        DefaultHttpClient client = new DefaultHttpClient();
-        
-        //Proxy settings
-        HttpRoutePlanner routePlanner = new ProxySelectorRoutePlanner(
-            client.getConnectionManager().getSchemeRegistry(),
-            ProxySelector.getDefault()
-        );
-        client.setRoutePlanner(routePlanner);
-        
-        //Keep location changes for redirects
-        client.addResponseInterceptor(new HttpResponseInterceptor() {
-            @Override
-            public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
-                if (response.containsHeader("Location")) {
-                    Header[] locations = response.getHeaders("Location");
-                    if (locations.length > 0) {
-                        URL location = new URL(locations[0].getValue());
-                        context.setAttribute(LAST_REDIRECT_URL, location);
-                    }
-                }
-            }
-        });
-        
-        return client;
+        return HttpClients.custom()
+                .setConnectionManager(connectionManager)
+                .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
+                .addInterceptorFirst(new RedirectHttpResponseInterceptor())
+                .build();
     }
-
 }
