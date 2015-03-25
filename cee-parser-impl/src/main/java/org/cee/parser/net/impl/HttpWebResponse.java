@@ -62,8 +62,17 @@ public final class HttpWebResponse extends BaseWebResponse {
 	    this.httpClient = httpClient;
 	}
     
+    private String getUrlWithoutHash(URL location) {
+        String result = location.toExternalForm();
+        int hashIndex = result.indexOf('#');
+        if (hashIndex > -1) {
+            return result.substring(0, hashIndex);
+        }
+        return result;
+    }
+    
     private void executeRequest() throws IOException {
-        HttpGet httpGet = new HttpGet(originalLocation.toExternalForm());
+        HttpGet httpGet = new HttpGet(getUrlWithoutHash(originalLocation));
         HttpContext context = new BasicHttpContext();
         HttpResponse response = httpClient.execute(httpGet, context);
         entity = response.getEntity();
