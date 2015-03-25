@@ -91,7 +91,7 @@ public class SiteReader {
     }
 
 	private Feed readFeed(WebClient webClient, URL locationUrl) throws MalformedURLException, ParserException, IOException {
-    	Reader reader = webClient.openWebResponse(locationUrl).openReaderSource().getReader();
+    	Reader reader = webClient.openWebResponse(locationUrl).openReader();
     	try {
     		return feedParser.parse(reader, locationUrl);
     	} finally {
@@ -130,7 +130,7 @@ public class SiteReader {
     private int processFeed(WebClient webClient, Feed feed, EntityKey siteKey, String language) throws MalformedURLException, ParserException, IOException, StoreException {
     	LOG.debug("processing feed {}", feed.getTitle());
     	URL location = new URL(feed.getLocation());
-    	Reader reader = webClient.openWebResponse(location).openReaderSource().getReader();
+    	Reader reader = webClient.openWebResponse(location).openReader();
     	try {
     		int articleCount = 0;
 			List<Article> articles = feedParser.readArticles(reader, location);
@@ -154,7 +154,7 @@ public class SiteReader {
     	try {
     		WebResponse response = webClient.openWebResponse(new URL(location));
     		URL locationUrl = response.getLocation();
-        	reader = response.openReaderSource().getReader();
+        	reader = response.openReader();
     		SiteExtraction siteExtraction = siteParser.parse(reader, locationUrl);
     		Site site = siteExtraction.getSite();
     		// use site location from response to handle HTTP redirects

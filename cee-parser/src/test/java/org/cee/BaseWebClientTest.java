@@ -1,13 +1,14 @@
 package org.cee;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 
-import org.cee.parser.net.ReaderSource;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebResponse;
 
@@ -20,9 +21,7 @@ public class BaseWebClientTest {
     protected WebClient createWebClient(Reader reader) throws IOException {
         WebClient webClient = mock(WebClient.class);
         WebResponse webResponse = mock(WebResponse.class);
-        ReaderSource readerSource = mock(ReaderSource.class);
-        when(readerSource.getReader()).thenReturn(reader);
-        when(webResponse.openReaderSource()).thenReturn(readerSource);
+        when(webResponse.openReader()).thenReturn(reader);
         when(webClient.openWebResponse(any(URL.class))).thenReturn(webResponse);
         return webClient; 
     }
@@ -31,10 +30,8 @@ public class BaseWebClientTest {
         for (int i = 0; i < urls.length; i++) {
             URL url = urls[i];
             Reader reader = readers[i];
-            ReaderSource readerSource = mock(ReaderSource.class);
             WebResponse webResponse = mock(WebResponse.class);
-            when(readerSource.getReader()).thenReturn(reader);
-            when(webResponse.openReaderSource()).thenReturn(readerSource);
+            when(webResponse.openReader()).thenReturn(reader);
             when(webClient.openWebResponse(eq(url))).thenReturn(webResponse);    
         } 
     }
@@ -43,7 +40,7 @@ public class BaseWebClientTest {
         for (int i = 0; i < urls.length; i++) {
             URL url = urls[i];
             WebResponse webResponse = mock(WebResponse.class);
-            when(webResponse.openReaderSource()).thenThrow(new IOException());
+            when(webResponse.openReader()).thenThrow(new IOException());
             when(webClient.openWebResponse(eq(url))).thenReturn(webResponse);    
         } 
     }

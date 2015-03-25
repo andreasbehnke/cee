@@ -52,7 +52,7 @@ public class TestRomeFeedParser {
 	
 	private Reader openReader(URL location) throws IOException {
 		WebClient webClient = new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory());
-        return webClient.openWebResponse(location).openReaderSource().getReader();
+        return webClient.openWebResponse(location).openReader();
 	}
 	
 	private List<Article> readArticles(URL location) throws IOException, ParserException {

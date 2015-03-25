@@ -20,18 +20,18 @@ package org.cee.parser;
  * #L%
  */
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.Reader;
 
 import org.cee.BaseWebClientTest;
-import org.cee.parser.ArticleParser;
-import org.cee.parser.ArticleReader;
-import org.cee.parser.ParserException;
 import org.cee.parser.ArticleParser.Settings;
-import org.cee.parser.net.ReaderSource;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebResponse;
 import org.cee.store.article.Article;
@@ -75,9 +75,7 @@ public class TestArticleReader extends BaseWebClientTest {
 		Article output = new Article();
 		Reader reader = mock(Reader.class);
 		WebResponse webResponse = mock(WebResponse.class);
-		ReaderSource readerSource = mock(ReaderSource.class);
-		when(readerSource.getReader()).thenReturn(reader);
-		when(webResponse.openReaderSource()).thenReturn(readerSource);
+		when(webResponse.openReader()).thenReturn(reader);
 		ArticleParser articleParser = mock(ArticleParser.class);
 		when(articleParser.parse(same(reader), same(input), any(Settings.class))).thenReturn(output);
 		assertSame(output, new ArticleReader(articleParser).readArticle(webResponse, input));

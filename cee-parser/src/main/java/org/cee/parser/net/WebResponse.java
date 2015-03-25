@@ -23,23 +23,26 @@ package org.cee.parser.net;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 
 public interface WebResponse {
     
 	/**
 	 * Opens a new {@link InputStream} to response data.
-	 * The implementation is responsible for handling multiple reads
-	 * of data stream.
+	 * An illegal state exception is thrown if this method is
+	 * called multiple times and this WebResponse implementation does
+	 * not support multiple reads.
 	 */
 	InputStream openStream() throws IOException;
     
 	/**
-	 * Opens a new {@link ReaderSource} to response data.
-	 * The implementation is responsible for handling multiple reads
-	 * of data stream.
-	 */
-    ReaderSource openReaderSource() throws IOException;
+	 * Opens a new {@link Reader} to response data.
+     * An illegal state exception is thrown if this method is
+     * called multiple times and this WebResponse implementation does
+     * not support multiple reads.
+     */
+    Reader openReader() throws IOException;
 
     String getContentType() throws IOException;
     

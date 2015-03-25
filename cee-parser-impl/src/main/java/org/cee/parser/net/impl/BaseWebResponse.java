@@ -23,15 +23,17 @@ package org.cee.parser.net.impl;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 
 import org.apache.commons.io.IOUtils;
-import org.cee.parser.net.ReaderSource;
 import org.cee.parser.net.WebResponse;
 
 
 public abstract class BaseWebResponse implements WebResponse {
 	
 	private byte[] buffer;
+	
+	private ReaderSource readerSource;
 	
 	private final ReaderFactory readerFactory;
 	
@@ -55,9 +57,23 @@ public abstract class BaseWebResponse implements WebResponse {
 	    }
 	    return new ByteArrayInputStream(buffer);
 	}
+	
+	protected abstract String getContentEncodingHint() throws IOException;
+	
+	private ReaderSource getReaderSource() throws IOException {
+	    if (readerSource == null) {
+	        this.readerSource = readerFactory.createReader(openStream(), getContentType(), getContentEncodingHint());
+	    }
+	    return readerSource; 
+	}
+	
+	@Override
+	public String getContentEncoding() throws IOException {
+	    return getReaderSource().getContentEncoding();
+	}
 
 	@Override
-    public final ReaderSource openReaderSource() throws IOException {
-    	return readerFactory.createReader(openStream(), getContentType(), getContentEncoding());
+    public final Reader openReader() throws IOException {
+    	return getReaderSource().getReader();
     }
 }

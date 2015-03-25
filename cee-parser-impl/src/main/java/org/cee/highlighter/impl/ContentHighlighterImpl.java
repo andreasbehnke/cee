@@ -83,7 +83,7 @@ public class ContentHighlighterImpl extends XmlReaderProvider implements Content
 		XMLReader xmlReader = createXmlReader();
 	    HighlightWriter writer = new HighlightWriter(output, templateCache, settings);
 	    xmlReader.setContentHandler(new HighlightHandler(article.getContent(), issues, writer, settings));
-	    Reader reader = response.openReaderSource().getReader();
+	    Reader reader = response.openReader();
 	    try {
 	    	xmlReader.parse(new InputSource(reader));
 	    } catch (SAXException e) {

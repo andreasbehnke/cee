@@ -38,15 +38,15 @@ final class DefaultWebResponse extends BaseWebResponse {
 	protected InputStream openStreamInternal() throws IOException {
 	    return originalLocation.openStream();
 	}
-
+	
 	@Override
-	public String getContentType() {
+	protected String getContentEncodingHint() {
 	    return null;
 	}
 
 	@Override
-	public String getContentEncoding() {
-		return null;
+	public String getContentType() {
+	    return null;
 	}
 
 	@Override

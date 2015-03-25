@@ -70,7 +70,7 @@ public class ContentHighlightHandler implements HttpRequestHandler {
 			
 			WebClient webClient = webClientFactory.createWebClient();
 			WebResponse webResponse = webClient.openWebResponse(new URL(article.getLocation()));
-			String contentEncoding = webResponse.openReaderSource().getContentEncoding();
+			String contentEncoding = webResponse.getContentEncoding();
 			response.setCharacterEncoding(contentEncoding);
 			
 			Settings settings = DefaultSettings.createDefaultSettings(new URL(article.getLocation()));

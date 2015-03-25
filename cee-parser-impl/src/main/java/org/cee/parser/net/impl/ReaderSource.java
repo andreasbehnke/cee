@@ -1,4 +1,4 @@
-package org.cee.parser.net;
+package org.cee.parser.net.impl;
 
 /*
  * #%L

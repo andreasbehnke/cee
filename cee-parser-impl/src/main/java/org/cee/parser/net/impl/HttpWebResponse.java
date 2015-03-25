@@ -87,6 +87,15 @@ public final class HttpWebResponse extends BaseWebResponse {
     protected InputStream openStreamInternal() throws IOException {
     	return getEntity().getContent();
     }
+    
+    @Override
+    protected String getContentEncodingHint() throws IOException {
+        Header contentEncodingHeader = getEntity().getContentEncoding();
+        if (contentEncodingHeader != null) {
+            return contentEncodingHeader.getValue();
+        }
+        return null;
+    }
 
 	@Override
 	public String getContentType() throws IOException {
@@ -95,15 +104,6 @@ public final class HttpWebResponse extends BaseWebResponse {
             return contentTypeHeader.getValue();
         }
         return null;
-	}
-
-	@Override
-	public String getContentEncoding() throws IOException {
-	    Header contentEncodingHeader = getEntity().getContentEncoding();
-		if (contentEncodingHeader != null) {
-			return contentEncodingHeader.getValue();
-		}
-    	return null;
 	}
 
 	@Override

@@ -40,7 +40,6 @@ import java.util.List;
 import org.cee.BaseWebClientTest;
 import org.cee.SiteExtraction;
 import org.cee.language.SiteLanguageDetector;
-import org.cee.parser.net.ReaderSource;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebResponse;
 import org.cee.store.EntityKey;
@@ -93,11 +92,9 @@ public class TestSiteReader extends BaseWebClientTest {
 		WebClient webClient = mock(WebClient.class);
 		WebResponse response = mock(WebResponse.class);
 		when(webClient.openWebResponse(locationUrl)).thenReturn(response);
-		ReaderSource readerSource = mock(ReaderSource.class);
-		when(response.openReaderSource()).thenReturn(readerSource);
-		when(response.getLocation()).thenReturn(redirectedLocationUrl);//the request may have been redirected, site reader should use new location internally.
 		Reader reader = mock(Reader.class);
-		when(readerSource.getReader()).thenReturn(reader);
+		when(response.openReader()).thenReturn(reader);
+		when(response.getLocation()).thenReturn(redirectedLocationUrl);//the request may have been redirected, site reader should use new location internally.
 		
 		SiteExtraction siteExtraction = new SiteExtraction();
 		URL feed1Url = new URL("http://www.mysite.com/feed1.rss");
@@ -146,11 +143,9 @@ public class TestSiteReader extends BaseWebClientTest {
 		WebClient webClient = mock(WebClient.class);
 		WebResponse response = mock(WebResponse.class);
 		when(webClient.openWebResponse(locationUrl)).thenReturn(response);
-		ReaderSource readerSource = mock(ReaderSource.class);
-		when(response.openReaderSource()).thenReturn(readerSource);
-		when(response.getLocation()).thenReturn(locationUrl);
 		Reader reader = mock(Reader.class);
-		when(readerSource.getReader()).thenReturn(reader);
+		when(response.openReader()).thenReturn(reader);
+		when(response.getLocation()).thenReturn(locationUrl);
 		
 		SiteParser siteParser = mock(SiteParser.class);
 		when(siteParser.parse(reader, locationUrl)).thenThrow(new IOException());
