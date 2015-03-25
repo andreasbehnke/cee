@@ -33,8 +33,6 @@ public abstract class BaseWebResponse implements WebResponse {
 	
 	private byte[] buffer;
 	
-	private ReaderSource readerSource;
-	
 	private final ReaderFactory readerFactory;
 	
 	protected BaseWebResponse(final ReaderFactory readerFactory) {
@@ -61,10 +59,7 @@ public abstract class BaseWebResponse implements WebResponse {
 	protected abstract String getContentEncodingHint() throws IOException;
 	
 	private ReaderSource getReaderSource() throws IOException {
-	    if (readerSource == null) {
-	        this.readerSource = readerFactory.createReader(openStream(), getContentType(), getContentEncodingHint());
-	    }
-	    return readerSource; 
+	    return readerFactory.createReader(openStream(), getContentType(), getContentEncodingHint());
 	}
 	
 	@Override
