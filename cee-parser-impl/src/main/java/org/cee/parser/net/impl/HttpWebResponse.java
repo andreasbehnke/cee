@@ -46,8 +46,8 @@ public final class HttpWebResponse extends BaseWebResponse {
 	
 	private URL location;
     
-    public HttpWebResponse(URL location, HttpClient httpClient, ReaderFactory readerFactory) {
-    	super(readerFactory);
+    public HttpWebResponse(URL location, HttpClient httpClient, ReaderFactory readerFactory, boolean bufferStream) {
+    	super(readerFactory, bufferStream);
 		if (location == null) {
 			throw new IllegalArgumentException("Paramter location must not be null!");
 		}

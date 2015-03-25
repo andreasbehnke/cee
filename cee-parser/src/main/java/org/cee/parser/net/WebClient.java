@@ -29,5 +29,5 @@ import java.net.URL;
  */
 public interface WebClient {
     
-    WebResponse openWebResponse(URL location);
+    WebResponse openWebResponse(URL location, boolean bufferStream);
 }

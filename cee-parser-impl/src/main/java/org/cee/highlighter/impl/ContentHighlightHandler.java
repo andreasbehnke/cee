@@ -67,7 +67,7 @@ public class ContentHighlightHandler implements HttpRequestHandler {
 		    ArticleKey articleKey = getArticleKey(request);
 			Article article = articleStore.getArticle(articleKey, false);
 			
-			WebResponse webResponse = this.webClient.openWebResponse(new URL(article.getLocation()));
+			WebResponse webResponse = this.webClient.openWebResponse(new URL(article.getLocation()), true);
 			String contentEncoding = webResponse.getContentEncoding();
 			response.setCharacterEncoding(contentEncoding);
 			

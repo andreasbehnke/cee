@@ -29,8 +29,8 @@ final class DefaultWebResponse extends BaseWebResponse {
 	
 	private final URL originalLocation;
 	
-	DefaultWebResponse(URL location, ReaderFactory readerFactory) {
-		super(readerFactory);
+	DefaultWebResponse(URL location, ReaderFactory readerFactory, boolean bufferStream) {
+		super(readerFactory, bufferStream);
 		this.originalLocation = location;
 	}
 

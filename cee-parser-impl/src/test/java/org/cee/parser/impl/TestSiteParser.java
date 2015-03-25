@@ -39,7 +39,7 @@ public class TestSiteParser {
 	private SiteExtraction readSite(URL siteLocation) throws IOException, ParserException {
 		WebClient webClient = new ClassResourceWebClient();
         SiteParserImpl parser = new SiteParserImpl(new TagsoupXmlReaderFactory());
-        try (Reader reader = webClient.openWebResponse(siteLocation).openReader()) {
+        try (Reader reader = webClient.openWebResponse(siteLocation, false).openReader()) {
         	return parser.parse(reader, siteLocation);
         }
 	}

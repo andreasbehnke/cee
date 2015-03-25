@@ -91,7 +91,7 @@ public class TestSiteReader extends BaseWebClientTest {
 		URL redirectedLocationUrl = new URL(redirectedLocation);
 		WebClient webClient = mock(WebClient.class);
 		WebResponse response = mock(WebResponse.class);
-		when(webClient.openWebResponse(locationUrl)).thenReturn(response);
+		when(webClient.openWebResponse(locationUrl, false)).thenReturn(response);
 		Reader reader = mock(Reader.class);
 		when(response.openReader()).thenReturn(reader);
 		when(response.getLocation()).thenReturn(redirectedLocationUrl);//the request may have been redirected, site reader should use new location internally.
@@ -142,7 +142,7 @@ public class TestSiteReader extends BaseWebClientTest {
 		URL locationUrl = new URL(location);
 		WebClient webClient = mock(WebClient.class);
 		WebResponse response = mock(WebResponse.class);
-		when(webClient.openWebResponse(locationUrl)).thenReturn(response);
+		when(webClient.openWebResponse(locationUrl, false)).thenReturn(response);
 		Reader reader = mock(Reader.class);
 		when(response.openReader()).thenReturn(reader);
 		when(response.getLocation()).thenReturn(locationUrl);

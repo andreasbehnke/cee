@@ -31,13 +31,16 @@ import org.cee.parser.net.WebResponse;
 
 public abstract class BaseWebResponse implements WebResponse {
 	
+    private final boolean bufferStream;
+    
 	private byte[] buffer;
 	
 	private final ReaderFactory readerFactory;
 	
 	private String contentEncoding;
 	
-	protected BaseWebResponse(final ReaderFactory readerFactory) {
+	protected BaseWebResponse(final ReaderFactory readerFactory, boolean bufferStream) {
+	    this.bufferStream = bufferStream;
 		this.readerFactory = readerFactory;
 	}
 	
@@ -45,6 +48,9 @@ public abstract class BaseWebResponse implements WebResponse {
 
 	@Override
 	public final InputStream openStream() throws IOException {
+	    if (!bufferStream) {
+	        return openStreamInternal();
+	    }
 	    if (buffer == null) {
 	    	// first call, open input stream and cache data
 	    	// for multiple reads

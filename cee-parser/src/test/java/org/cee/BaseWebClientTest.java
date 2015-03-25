@@ -22,7 +22,7 @@ public class BaseWebClientTest {
         WebClient webClient = mock(WebClient.class);
         WebResponse webResponse = mock(WebResponse.class);
         when(webResponse.openReader()).thenReturn(reader);
-        when(webClient.openWebResponse(any(URL.class))).thenReturn(webResponse);
+        when(webClient.openWebResponse(any(URL.class), any(Boolean.class))).thenReturn(webResponse);
         return webClient; 
     }
 
@@ -32,7 +32,7 @@ public class BaseWebClientTest {
             Reader reader = readers[i];
             WebResponse webResponse = mock(WebResponse.class);
             when(webResponse.openReader()).thenReturn(reader);
-            when(webClient.openWebResponse(eq(url))).thenReturn(webResponse);    
+            when(webClient.openWebResponse(eq(url), any(Boolean.class))).thenReturn(webResponse);    
         } 
     }
     
@@ -41,7 +41,7 @@ public class BaseWebClientTest {
             URL url = urls[i];
             WebResponse webResponse = mock(WebResponse.class);
             when(webResponse.openReader()).thenThrow(new IOException());
-            when(webClient.openWebResponse(eq(url))).thenReturn(webResponse);    
+            when(webClient.openWebResponse(eq(url), any(Boolean.class))).thenReturn(webResponse);    
         } 
     }
 }

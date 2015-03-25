@@ -41,7 +41,7 @@ public class ClassResourceWebClient implements  WebClient {
 	 * @see org.cee.parser.net.WebClient#openWebResponse(java.net.URL)
 	 */
 	@Override
-	public WebResponse openWebResponse(final URL location) {
+	public WebResponse openWebResponse(final URL location, boolean bufferStream) {
 		return new WebResponse() {
 
 			@Override

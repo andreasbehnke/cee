@@ -66,7 +66,7 @@ public class DefaultWebClient implements WebClient {
 	}
 
 	@Override
-	public WebResponse openWebResponse(final URL location) {
+	public WebResponse openWebResponse(final URL location, boolean bufferStream) {
 		if (readerFactory == null) {
 			throw new IllegalArgumentException("The property readerFactory has not been set yet!");
 		}
@@ -76,10 +76,10 @@ public class DefaultWebClient implements WebClient {
         	if (httpClient == null) {
         		throw new IllegalArgumentException("The property httpClient has not been set yet!");
         	}
-        	return new HttpWebResponse(location, httpClient, readerFactory);
+        	return new HttpWebResponse(location, httpClient, readerFactory, bufferStream);
         } else {
         	LOG.debug("open standard response for {}", location);
-            return new DefaultWebResponse(location, readerFactory);
+            return new DefaultWebResponse(location, readerFactory, bufferStream);
         }
     }
 }

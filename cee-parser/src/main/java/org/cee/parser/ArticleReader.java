@@ -46,7 +46,7 @@ public class ArticleReader {
 	
 	public Article readArticle(WebClient webClient, Article article, Settings settings) throws MalformedURLException, IOException, ParserException {
     	URL location = new URL(article.getLocation());
-    	try (Reader reader = webClient.openWebResponse(location).openReader()) {
+    	try (Reader reader = webClient.openWebResponse(location, false).openReader()) {
     	    return articleParser.parse(reader, article, settings);
     	}
     }
