@@ -25,7 +25,6 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
 import org.cee.parser.ArticleParser.Settings;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebResponse;
@@ -45,18 +44,11 @@ public class ArticleReader {
 	    this.articleParser = articleParser;
     }
 	
-	private Article readArticle(Reader reader, Article article, Settings settings) throws MalformedURLException, IOException, ParserException {
-    	try {
-    		return articleParser.parse(reader, article, settings);
-    	} finally {
-    		IOUtils.closeQuietly(reader);
-    	}
-    }
-    
-    public Article readArticle(WebClient webClient, Article article, Settings settings) throws MalformedURLException, IOException, ParserException {
+	public Article readArticle(WebClient webClient, Article article, Settings settings) throws MalformedURLException, IOException, ParserException {
     	URL location = new URL(article.getLocation());
-    	Reader reader = webClient.openWebResponse(location).openReader();
-    	return readArticle(reader, article, settings);
+    	try (Reader reader = webClient.openWebResponse(location).openReader()) {
+    	    return articleParser.parse(reader, article, settings);
+    	}
     }
     
     public Article readArticle(WebClient webClient, Article article) throws MalformedURLException, IOException, ParserException {
@@ -64,8 +56,9 @@ public class ArticleReader {
     }
     
     public Article readArticle(WebResponse response, Article article, Settings settings) throws MalformedURLException, IOException, ParserException {
-    	Reader reader = response.openReader();
-    	return readArticle(reader, article, settings);
+    	try (Reader reader = response.openReader()) {
+            return articleParser.parse(reader, article, settings);
+        }
     }
     
     public Article readArticle(WebResponse response, Article article) throws MalformedURLException, IOException, ParserException {

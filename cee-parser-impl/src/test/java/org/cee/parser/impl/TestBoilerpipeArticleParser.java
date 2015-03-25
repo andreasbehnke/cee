@@ -27,12 +27,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
 import org.cee.parser.ArticleParser;
-import org.cee.parser.ParserException;
 import org.cee.parser.ArticleParser.Settings;
-import org.cee.parser.impl.BoilerpipeArticleParser;
-import org.cee.parser.impl.TagsoupXmlReaderFactory;
+import org.cee.parser.ParserException;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.impl.DefaultHttpClientFactory;
 import org.cee.parser.net.impl.DefaultWebClient;
@@ -52,11 +49,8 @@ public class TestBoilerpipeArticleParser {
         article.setLocation(articleLocation.toExternalForm());
         ArticleParser parser = new BoilerpipeArticleParser(new TagsoupXmlReaderFactory());
         WebClient webClient = new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory());
-        Reader reader = webClient.openWebResponse(articleLocation).openReader();
-        try {
+        try (Reader reader = webClient.openWebResponse(articleLocation).openReader()) {
         	parser.parse(reader, article, new Settings());
-        } finally {
-        	IOUtils.closeQuietly(reader);
         }
         return article.getContentText();
 	}

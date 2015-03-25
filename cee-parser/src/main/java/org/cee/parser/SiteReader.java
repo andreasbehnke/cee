@@ -28,7 +28,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.cee.SiteExtraction;
 import org.cee.language.SiteLanguageDetector;
 import org.cee.parser.net.WebClient;
@@ -91,11 +90,8 @@ public class SiteReader {
     }
 
 	private Feed readFeed(WebClient webClient, URL locationUrl) throws MalformedURLException, ParserException, IOException {
-    	Reader reader = webClient.openWebResponse(locationUrl).openReader();
-    	try {
+    	try (Reader reader = webClient.openWebResponse(locationUrl).openReader()) {
     		return feedParser.parse(reader, locationUrl);
-    	} finally {
-    		IOUtils.closeQuietly(reader);
     	}
     }
 
@@ -130,8 +126,7 @@ public class SiteReader {
     private int processFeed(WebClient webClient, Feed feed, EntityKey siteKey, String language) throws MalformedURLException, ParserException, IOException, StoreException {
     	LOG.debug("processing feed {}", feed.getTitle());
     	URL location = new URL(feed.getLocation());
-    	Reader reader = webClient.openWebResponse(location).openReader();
-    	try {
+    	try (Reader reader = webClient.openWebResponse(location).openReader()) {
     		int articleCount = 0;
 			List<Article> articles = feedParser.readArticles(reader, location);
 			List<Article> articlesForUpdate = processArticles(webClient, articles, siteKey, language);
@@ -140,8 +135,6 @@ public class SiteReader {
 				LOG.debug("found {} new articles in feed {}", articleCount, feed.getTitle());
 			}
 			return articleCount;
-    	} finally {
-    		IOUtils.closeQuietly(reader);
     	}
     }
  
@@ -150,11 +143,9 @@ public class SiteReader {
     }
     
     public Site readSite(WebClient webClient, String location) throws MalformedURLException, ParserException, IOException {
-    	Reader reader = null;
-    	try {
-    		WebResponse response = webClient.openWebResponse(new URL(location));
-    		URL locationUrl = response.getLocation();
-        	reader = response.openReader();
+    	WebResponse response = webClient.openWebResponse(new URL(location));
+        URL locationUrl = response.getLocation();
+        try (Reader reader = response.openReader()) {
     		SiteExtraction siteExtraction = siteParser.parse(reader, locationUrl);
     		Site site = siteExtraction.getSite();
     		// use site location from response to handle HTTP redirects
@@ -164,8 +155,6 @@ public class SiteReader {
     		// detect site's language
     		site.setLanguage(siteLanguageDetector.detect(siteExtraction));
     		return site;
-    	} finally {
-    		IOUtils.closeQuietly(reader);
     	}
     }
 

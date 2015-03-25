@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.cee.parser.FeedParser;
 import org.cee.parser.ParserException;
 import org.cee.store.article.Article;
@@ -107,15 +106,12 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
 	}
 
 	private Document openDocument(final Reader reader) throws JDOMException, IOException {
-		Reader input = null;
-		try {
+		try (Reader input = new XmlFixerReader(reader)) {
 			SAXBuilder saxBuilder = createSAXBuilder();
-			input = new XmlFixerReader(reader);
+			
 			Document document = saxBuilder.build(new InputSource(input));
 			removeEmptyElements(document.getRootElement());
 			return document;
-		} finally {
-			IOUtils.closeQuietly(input);
 		}
 	}
 
@@ -147,12 +143,10 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
 	}
 
 	private String extractTextFromHtml(String html) throws IOException, SAXException {
-		Reader reader = null;
-		try {
+		try (Reader reader = new StringReader(html)) {
 			XMLReader xmlReader = xmlReaderProvider.createXmlReader();
 			BoilerpipeHTMLContentHandler boilerpipeHandler = new BoilerpipeHTMLContentHandler();
 			xmlReader.setContentHandler(boilerpipeHandler);
-			reader = new StringReader(html);
 			InputSource is = new InputSource(reader);
 			xmlReader.parse(is);
 			TextDocument textDoc = boilerpipeHandler.toTextDocument();
@@ -161,10 +155,6 @@ public class RomeFeedParser extends WireFeedInput implements FeedParser {
 				text = text.trim();
 			}
 			return text;
-		} finally {
-			if (reader != null) {
-				reader.close();
-			}
 		}
 	}
 

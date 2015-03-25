@@ -47,24 +47,14 @@ public class TemplateCache {
 		this.readerFactory = readerFactory;
 	}
 	
-	private String readContent(String templateResource) {
-		Reader reader = null;
-		InputStream input = null;
-		try {
-			input = getClass().getResourceAsStream(templateResource);
-			if (input == null) {
-				throw new IllegalArgumentException("Template resource " + templateResource + " not found!");
-			} else {
-				reader = readerFactory.createReader(input, "text/html", "UTF-8").getReader();
-				return IOUtils.toString(reader);
-			}
-		} catch (IOException e) {
+    private String readContent(String templateResource) {
+        try (InputStream input = getClass().getResourceAsStream(templateResource);
+                Reader reader = readerFactory.createReader(input, "text/html", "UTF-8").getReader()) {
+            return IOUtils.toString(reader);
+        } catch (IOException e) {
             throw new RuntimeException("Could not read content resource for " + templateResource, e);
-        } finally {
-			IOUtils.closeQuietly(reader);
-			IOUtils.closeQuietly(input);
-		}
-	}
+        }
+    }
 
 	public String getTemplateContent(String templateResource) {
 		if (templateResource == null) {

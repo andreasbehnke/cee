@@ -27,7 +27,6 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.cee.highlighter.ContentHighlighter;
 import org.cee.parser.ArticleParser;
 import org.cee.parser.ArticleReader;
@@ -83,13 +82,10 @@ public class ContentHighlighterImpl extends XmlReaderProvider implements Content
 		XMLReader xmlReader = createXmlReader();
 	    HighlightWriter writer = new HighlightWriter(output, templateCache, settings);
 	    xmlReader.setContentHandler(new HighlightHandler(article.getContent(), issues, writer, settings));
-	    Reader reader = response.openReader();
-	    try {
+	    try (Reader reader = response.openReader()) {
 	    	xmlReader.parse(new InputSource(reader));
 	    } catch (SAXException e) {
 	        throw new ParserException(e);
-        } finally {
-	    	IOUtils.closeQuietly(reader);
-	    }
+        }
     }
 }

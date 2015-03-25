@@ -48,11 +48,8 @@ public abstract class BaseWebResponse implements WebResponse {
 	    if (buffer == null) {
 	    	// first call, open input stream and cache data
 	    	// for multiple reads
-	    	InputStream input = openStreamInternal();
-	    	try {
+	    	try (InputStream input = openStreamInternal()) {
 		    	buffer = IOUtils.toByteArray(input);		
-	    	} finally {
-	    		IOUtils.closeQuietly(input);
 	    	}
 	    }
 	    return new ByteArrayInputStream(buffer);
