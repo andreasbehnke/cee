@@ -35,6 +35,8 @@ public abstract class BaseWebResponse implements WebResponse {
 	
 	private final ReaderFactory readerFactory;
 	
+	private String contentEncoding;
+	
 	protected BaseWebResponse(final ReaderFactory readerFactory) {
 		this.readerFactory = readerFactory;
 	}
@@ -64,7 +66,12 @@ public abstract class BaseWebResponse implements WebResponse {
 	
 	@Override
 	public String getContentEncoding() throws IOException {
-	    return getReaderSource().getContentEncoding();
+	    if (contentEncoding == null) {
+	        try (ReaderSource readerSource = getReaderSource()) {
+	            contentEncoding = readerSource.getContentEncoding();
+	        }
+	    }
+	    return contentEncoding;
 	}
 
 	@Override
