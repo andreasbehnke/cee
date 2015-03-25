@@ -16,7 +16,7 @@
 		</property>
 	</bean>
 
-	<bean id="webClientFactory" class="org.cee.parser.net.impl.ClassResourceWebClientFactory" />
+	<bean id="webClient" class="org.cee.parser.net.impl.ClassResourceWebClient" />
 	<bean id="luceneSiteIndexDirectory" class="org.apache.lucene.store.RAMDirectory" />
     <bean id="luceneWorkingSetIndexDirectory" class="org.apache.lucene.store.RAMDirectory" />
     <bean id="luceneArticleIndexDirectory" class="org.apache.lucene.store.RAMDirectory" />

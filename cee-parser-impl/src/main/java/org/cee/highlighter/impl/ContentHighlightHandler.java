@@ -30,11 +30,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.cee.highlighter.ContentHighlighter;
-import org.cee.highlighter.DefaultSettings;
 import org.cee.highlighter.ContentHighlighter.Settings;
+import org.cee.highlighter.DefaultSettings;
 import org.cee.parser.ParserException;
 import org.cee.parser.net.WebClient;
-import org.cee.parser.net.WebClientFactory;
 import org.cee.parser.net.WebResponse;
 import org.cee.store.StoreException;
 import org.cee.store.article.Article;
@@ -46,7 +45,7 @@ public class ContentHighlightHandler implements HttpRequestHandler {
 	
 	private ArticleStore articleStore;
 	
-	private WebClientFactory webClientFactory;
+	private WebClient webClient;
 	
 	private ContentHighlighter contentHighlighter;
 	
@@ -54,8 +53,8 @@ public class ContentHighlightHandler implements HttpRequestHandler {
 		this.articleStore = articleStore;
 	}
 	
-	public void setWebClientFactory(WebClientFactory webClientFactory) {
-	    this.webClientFactory = webClientFactory;
+	public void setWebClient(WebClient webClient) {
+	    this.webClient = webClient;
     }
 
 	public void setContentHighlighter(ContentHighlighter contentHighlighter) {
@@ -68,8 +67,7 @@ public class ContentHighlightHandler implements HttpRequestHandler {
 		    ArticleKey articleKey = getArticleKey(request);
 			Article article = articleStore.getArticle(articleKey, false);
 			
-			WebClient webClient = webClientFactory.createWebClient();
-			WebResponse webResponse = webClient.openWebResponse(new URL(article.getLocation()));
+			WebResponse webResponse = this.webClient.openWebResponse(new URL(article.getLocation()));
 			String contentEncoding = webResponse.getContentEncoding();
 			response.setCharacterEncoding(contentEncoding);
 			
