@@ -32,6 +32,10 @@
 	<logger name="com.cee">
 		<level value="DEBUG" />
 	</logger>
+ 
+    <logger name="org.apache.http.impl.conn">
+        <level value="DEBUG" />
+    </logger>
 
 	<root>
 		<level value="INFO" />
