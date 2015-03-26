@@ -63,47 +63,7 @@ public class SiteReader {
     private ArticleStore store;
     
     private ArticleReader articleReader;
-    
-    private class ReadArticleTask implements Callable<Article> {
-        
-        private Article article;
-        
-        private EntityKey siteKey;
-        
-        private WebClient webClient;
-        
-        private String language;
-        
-        public ReadArticleTask(Article article, EntityKey siteKey, WebClient webClient, String language) {
-            super();
-            this.article = article;
-            this.siteKey = siteKey;
-            this.webClient = webClient;
-            this.language = language;
-        }
 
-        @Override
-        public Article call() throws Exception {
-            Article result = null;
-            try {
-                if (!store.contains(this.siteKey, this.article.getExternalId())) {
-                    result = articleReader.readArticle(this.webClient, this.article);
-                    if (result != null) {
-                        result.setLanguage(language);
-                    }
-                }
-            } catch (IOException e) {
-                LOG.warn("Could not retrieve article {}, an io error occured", article.getLocation());
-            } catch (ParserException e) {
-                LOG.warn("Could not parse article {}", article.getLocation());
-            } catch (StoreException e) {
-                LOG.warn("Could not retrieve article from store {}", article.getLocation());
-            }
-            return result;
-        }
-        
-    };
-    
     public SiteReader() {
     }
 
@@ -149,10 +109,32 @@ public class SiteReader {
     	return feeds;
     }
     
-    private List<Article> processArticles(WebClient webClient, List<Article> articles, EntityKey siteKey, String language) throws StoreException, InterruptedException, ExecutionException {
-    	List<ReadArticleTask> tasks = new ArrayList<SiteReader.ReadArticleTask>();
-		for (Article article : articles) {
-            tasks.add(new ReadArticleTask(article, siteKey, webClient, language));
+    private List<Article> processArticles(final WebClient webClient, final List<Article> articles, final EntityKey siteKey, final String language) throws StoreException, InterruptedException, ExecutionException {
+    	List<Callable<Article>> tasks = new ArrayList<Callable<Article>>();
+		for (final Article article : articles) {
+            tasks.add(new Callable<Article>() {
+		        @Override
+		        public Article call() throws Exception {
+		            Article result = null;
+		            try {
+		                if (!store.contains(siteKey, article.getExternalId())) {
+		                    result = articleReader.readArticle(webClient, article);
+		                    if (result != null) {
+		                        result.setLanguage(language);
+		                    }
+		                }
+		            } catch (MalformedURLException e) {
+		                LOG.warn("Article has malformed URL: {}, ", article.getLocation());
+		            } catch (IOException e) {
+		                LOG.warn("Could not retrieve article {}, an io error occured", article.getLocation());
+		                LOG.warn("IO error:", e);
+		            } catch (ParserException e) {
+		                LOG.warn("Could not parse article {}", article.getLocation());
+		                LOG.warn("Parser error:", e);
+		            }
+		            return result;
+		        }
+            });
         }
 		List<Future<Article>> results = pool.invokeAll(tasks);
 		List<Article> articlesForUpdate = new ArrayList<Article>();
