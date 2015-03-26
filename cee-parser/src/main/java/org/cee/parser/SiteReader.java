@@ -27,6 +27,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
 
 import org.cee.SiteExtraction;
 import org.cee.language.SiteLanguageDetector;
@@ -48,6 +52,8 @@ public class SiteReader {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SiteReader.class);
 	
+	private final ForkJoinPool pool = new ForkJoinPool();
+	
 	private FeedParser feedParser;
     
     private SiteParser siteParser;
@@ -57,6 +63,46 @@ public class SiteReader {
     private ArticleStore store;
     
     private ArticleReader articleReader;
+    
+    private class ReadArticleTask implements Callable<Article> {
+        
+        private Article article;
+        
+        private EntityKey siteKey;
+        
+        private WebClient webClient;
+        
+        private String language;
+        
+        public ReadArticleTask(Article article, EntityKey siteKey, WebClient webClient, String language) {
+            super();
+            this.article = article;
+            this.siteKey = siteKey;
+            this.webClient = webClient;
+            this.language = language;
+        }
+
+        @Override
+        public Article call() throws Exception {
+            Article result = null;
+            try {
+                if (!store.contains(this.siteKey, this.article.getExternalId())) {
+                    result = articleReader.readArticle(this.webClient, this.article);
+                    if (result != null) {
+                        result.setLanguage(language);
+                    }
+                }
+            } catch (IOException e) {
+                LOG.warn("Could not retrieve article {}, an io error occured", article.getLocation());
+            } catch (ParserException e) {
+                LOG.warn("Could not parse article {}", article.getLocation());
+            } catch (StoreException e) {
+                LOG.warn("Could not retrieve article from store {}", article.getLocation());
+            }
+            return result;
+        }
+        
+    };
     
     public SiteReader() {
     }
@@ -103,27 +149,23 @@ public class SiteReader {
     	return feeds;
     }
     
-    private List<Article> processArticles(WebClient webClient, List<Article> articles, EntityKey siteKey, String language) throws StoreException {
-    	List<Article> articlesForUpdate = new ArrayList<Article>();
+    private List<Article> processArticles(WebClient webClient, List<Article> articles, EntityKey siteKey, String language) throws StoreException, InterruptedException, ExecutionException {
+    	List<ReadArticleTask> tasks = new ArrayList<SiteReader.ReadArticleTask>();
 		for (Article article : articles) {
-            if (!store.contains(siteKey, article.getExternalId())) {
-            	try {
-            		article = articleReader.readArticle(webClient, article);
-            		if (article != null) {
-            			article.setLanguage(language);
-            			articlesForUpdate.add(article);
-            		}
-        		} catch (IOException e) {
-    				LOG.warn("Could not retrieve article {}, an io error occured", article.getLocation());
-    			} catch (ParserException e) {
-    				LOG.warn("Could not parse article {}", article.getLocation());
-				}
+            tasks.add(new ReadArticleTask(article, siteKey, webClient, language));
+        }
+		List<Future<Article>> results = pool.invokeAll(tasks);
+		List<Article> articlesForUpdate = new ArrayList<Article>();
+        for (Future<Article> future : results) {
+            Article article = future.get();
+            if (article != null) {
+                articlesForUpdate.add(article);
             }
         }
 		return articlesForUpdate;
     }
  
-    private int processFeed(WebClient webClient, Feed feed, EntityKey siteKey, String language) throws MalformedURLException, ParserException, IOException, StoreException {
+    private int processFeed(WebClient webClient, Feed feed, EntityKey siteKey, String language) throws MalformedURLException, ParserException, IOException, StoreException, InterruptedException, ExecutionException {
     	LOG.debug("processing feed {}", feed.getTitle());
     	URL location = new URL(feed.getLocation());
     	try (Reader reader = webClient.openWebResponse(location, false).openReader()) {
@@ -176,7 +218,11 @@ public class SiteReader {
     				LOG.warn("Could not retrieve feed {}, an io error occured", feed.getLocation());
     			} catch (ParserException e) {
     				LOG.warn("Could not parse feed {}", feed.getLocation());
-				}
+				} catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     	LOG.info("found {} new articles in site {}", siteArticleCount, siteName);
