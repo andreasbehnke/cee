@@ -23,8 +23,6 @@ package org.cee.parser.net.impl;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.cee.parser.net.ReaderSource;
-
 /**
  * Provides factory methods for creating character readers
  */

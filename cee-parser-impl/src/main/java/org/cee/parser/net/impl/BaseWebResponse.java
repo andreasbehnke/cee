@@ -23,19 +23,24 @@ package org.cee.parser.net.impl;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 
 import org.apache.commons.io.IOUtils;
-import org.cee.parser.net.ReaderSource;
 import org.cee.parser.net.WebResponse;
 
 
 public abstract class BaseWebResponse implements WebResponse {
 	
+    private final boolean bufferStream;
+    
 	private byte[] buffer;
 	
 	private final ReaderFactory readerFactory;
 	
-	protected BaseWebResponse(final ReaderFactory readerFactory) {
+	private String contentEncoding;
+	
+	protected BaseWebResponse(final ReaderFactory readerFactory, boolean bufferStream) {
+	    this.bufferStream = bufferStream;
 		this.readerFactory = readerFactory;
 	}
 	
@@ -43,21 +48,37 @@ public abstract class BaseWebResponse implements WebResponse {
 
 	@Override
 	public final InputStream openStream() throws IOException {
+	    if (!bufferStream) {
+	        return openStreamInternal();
+	    }
 	    if (buffer == null) {
 	    	// first call, open input stream and cache data
 	    	// for multiple reads
-	    	InputStream input = openStreamInternal();
-	    	try {
+	    	try (InputStream input = openStreamInternal()) {
 		    	buffer = IOUtils.toByteArray(input);		
-	    	} finally {
-	    		IOUtils.closeQuietly(input);
 	    	}
 	    }
 	    return new ByteArrayInputStream(buffer);
 	}
+	
+	protected abstract String getContentEncodingHint() throws IOException;
+	
+	private ReaderSource getReaderSource() throws IOException {
+	    return readerFactory.createReader(openStream(), getContentType(), getContentEncodingHint());
+	}
+	
+	@Override
+	public String getContentEncoding() throws IOException {
+	    if (contentEncoding == null) {
+	        try (ReaderSource readerSource = getReaderSource()) {
+	            contentEncoding = readerSource.getContentEncoding();
+	        }
+	    }
+	    return contentEncoding;
+	}
 
 	@Override
-    public final ReaderSource openReaderSource() throws IOException {
-    	return readerFactory.createReader(openStream(), getContentType(), getContentEncoding());
+    public final Reader openReader() throws IOException {
+    	return getReaderSource().getReader();
     }
 }

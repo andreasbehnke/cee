@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.cee.parser.SiteReader;
 import org.cee.parser.net.WebClient;
-import org.cee.parser.net.WebClientFactory;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
 import org.cee.store.site.Site;
@@ -76,14 +75,14 @@ public class UpdateScheduler {
 	
 	private ScheduledExecutorService scheduler;
 	
-	private WebClientFactory webClientFactory;
+	private WebClient webClient;
 	
 	private SiteStore siteStore;
 	
 	private SiteReader siteReader;
 	
-	public void setWebClientFactory(WebClientFactory webClientFactory) {
-		this.webClientFactory = webClientFactory;
+	public void setWebClient(WebClient webClient) {
+		this.webClient = webClient;
 	}
 	
 	public void setSiteStore(SiteStore siteStore) {
@@ -182,13 +181,6 @@ public class UpdateScheduler {
 		}
 	}
 	
-	private WebClient createWebClient() {
-		if (webClientFactory == null) {
-			throw new IllegalStateException("Property webClientFactory has not been set");
-		}
-		return webClientFactory.createWebClient();
-	}
-
 	private synchronized void ensureThreadPool() {
 		if (pool == null) {
 			pool = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, workQueue);
@@ -206,7 +198,7 @@ public class UpdateScheduler {
         ensureThreadPool();
         if (!sitesInProgress.contains(siteKey)) {
             Site site = siteStore.getSite(siteKey);
-            SiteUpdateCommand command = new SiteUpdateCommand(createWebClient(), siteReader, site);
+            SiteUpdateCommand command = new SiteUpdateCommand(this.webClient, siteReader, site);
             command.addCommandCallback(new CommandCallback() {
                 @Override
                 public void notifyFinished() {

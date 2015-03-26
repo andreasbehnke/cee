@@ -24,6 +24,7 @@ package org.cee.parser.net.impl;
 import java.net.URL;
 
 import org.apache.http.client.HttpClient;
+import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * Default {@link WebClient} implementation uses the {@link HttpClient} for HTTP
  * connections and falls back to the java.net API for all other protocols.
  */
-public class DefaultWebClient extends BaseWebClient {
+public class DefaultWebClient implements WebClient {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultWebClient.class);
 	
@@ -64,7 +65,8 @@ public class DefaultWebClient extends BaseWebClient {
 		this.readerFactory = readerFactory;
 	}
 
-	public WebResponse openWebResponse(final URL location) {
+	@Override
+	public WebResponse openWebResponse(final URL location, boolean bufferStream) {
 		if (readerFactory == null) {
 			throw new IllegalArgumentException("The property readerFactory has not been set yet!");
 		}
@@ -74,10 +76,10 @@ public class DefaultWebClient extends BaseWebClient {
         	if (httpClient == null) {
         		throw new IllegalArgumentException("The property httpClient has not been set yet!");
         	}
-        	return new HttpWebResponse(location, httpClient, readerFactory);
+        	return new HttpWebResponse(location, httpClient, readerFactory, bufferStream);
         } else {
         	LOG.debug("open standard response for {}", location);
-            return new DefaultWebResponse(location, readerFactory);
+            return new DefaultWebResponse(location, readerFactory, bufferStream);
         }
     }
 }

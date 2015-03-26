@@ -46,8 +46,8 @@ public final class HttpWebResponse extends BaseWebResponse {
 	
 	private URL location;
     
-    public HttpWebResponse(URL location, HttpClient httpClient, ReaderFactory readerFactory) {
-    	super(readerFactory);
+    public HttpWebResponse(URL location, HttpClient httpClient, ReaderFactory readerFactory, boolean bufferStream) {
+    	super(readerFactory, bufferStream);
 		if (location == null) {
 			throw new IllegalArgumentException("Paramter location must not be null!");
 		}
@@ -62,8 +62,17 @@ public final class HttpWebResponse extends BaseWebResponse {
 	    this.httpClient = httpClient;
 	}
     
+    private String getUrlWithoutHash(URL location) {
+        String result = location.toExternalForm();
+        int hashIndex = result.indexOf('#');
+        if (hashIndex > -1) {
+            return result.substring(0, hashIndex);
+        }
+        return result;
+    }
+    
     private void executeRequest() throws IOException {
-        HttpGet httpGet = new HttpGet(originalLocation.toExternalForm());
+        HttpGet httpGet = new HttpGet(getUrlWithoutHash(originalLocation));
         HttpContext context = new BasicHttpContext();
         HttpResponse response = httpClient.execute(httpGet, context);
         entity = response.getEntity();
@@ -87,6 +96,15 @@ public final class HttpWebResponse extends BaseWebResponse {
     protected InputStream openStreamInternal() throws IOException {
     	return getEntity().getContent();
     }
+    
+    @Override
+    protected String getContentEncodingHint() throws IOException {
+        Header contentEncodingHeader = getEntity().getContentEncoding();
+        if (contentEncodingHeader != null) {
+            return contentEncodingHeader.getValue();
+        }
+        return null;
+    }
 
 	@Override
 	public String getContentType() throws IOException {
@@ -95,15 +113,6 @@ public final class HttpWebResponse extends BaseWebResponse {
             return contentTypeHeader.getValue();
         }
         return null;
-	}
-
-	@Override
-	public String getContentEncoding() throws IOException {
-	    Header contentEncodingHeader = getEntity().getContentEncoding();
-		if (contentEncodingHeader != null) {
-			return contentEncodingHeader.getValue();
-		}
-    	return null;
 	}
 
 	@Override

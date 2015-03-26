@@ -32,11 +32,8 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.cee.parser.FeedParser;
 import org.cee.parser.ParserException;
-import org.cee.parser.impl.RomeFeedParser;
-import org.cee.parser.impl.TagsoupXmlReaderFactory;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.impl.DefaultHttpClientFactory;
 import org.cee.parser.net.impl.DefaultWebClient;
@@ -52,16 +49,13 @@ public class TestRomeFeedParser {
 	
 	private Reader openReader(URL location) throws IOException {
 		WebClient webClient = new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory());
-        return webClient.openReader(location);
+        return webClient.openWebResponse(location, false).openReader();
 	}
 	
 	private List<Article> readArticles(URL location) throws IOException, ParserException {
 		FeedParser parser = createFeedParser();
-		Reader reader = openReader(location);
-		try {
+		try (Reader reader = openReader(location)) {
 			return parser.readArticles(reader, location);
-		} finally {
-			IOUtils.closeQuietly(reader);
 		}
 	}
 

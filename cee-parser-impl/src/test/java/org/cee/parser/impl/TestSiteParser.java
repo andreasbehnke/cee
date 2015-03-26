@@ -27,11 +27,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
 import org.cee.SiteExtraction;
 import org.cee.parser.ParserException;
-import org.cee.parser.impl.SiteParserImpl;
-import org.cee.parser.impl.TagsoupXmlReaderFactory;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.impl.ClassResourceWebClient;
 import org.cee.store.site.Site;
@@ -42,11 +39,8 @@ public class TestSiteParser {
 	private SiteExtraction readSite(URL siteLocation) throws IOException, ParserException {
 		WebClient webClient = new ClassResourceWebClient();
         SiteParserImpl parser = new SiteParserImpl(new TagsoupXmlReaderFactory());
-        Reader reader = webClient.openReader(siteLocation);
-        try {
+        try (Reader reader = webClient.openWebResponse(siteLocation, false).openReader()) {
         	return parser.parse(reader, siteLocation);
-        } finally {
-        	IOUtils.closeQuietly(reader);
         }
 	}
     

@@ -26,7 +26,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.cee.parser.ArticleParser;
 import org.cee.parser.ParserException;
 import org.cee.store.article.Article;
@@ -153,8 +152,6 @@ public class BoilerpipeArticleParser extends XmlReaderProvider implements Articl
             return article;
         } catch (BoilerpipeProcessingException | SAXException e) {
             throw new ParserException(e);
-        } finally {
-        	IOUtils.closeQuietly(reader);
         }
     }
 }

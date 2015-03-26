@@ -1,4 +1,4 @@
-package org.cee.parser.net;
+package org.cee.parser.net.impl;
 
 /*
  * #%L
@@ -20,9 +20,11 @@ package org.cee.parser.net;
  * #L%
  */
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.Reader;
 
-public class ReaderSource {
+public class ReaderSource implements Closeable {
 
 	private final Reader reader;
 	
@@ -40,4 +42,15 @@ public class ReaderSource {
 	public String getContentEncoding() {
 		return contentEncoding;
 	}
+
+	/**
+	 * Closes the underlying reader. This method must not be
+	 * called if the reader is being closed directly.
+	 */
+    @Override
+    public void close() throws IOException {
+        if (reader != null) {
+            reader.close();
+        }
+    }
 }

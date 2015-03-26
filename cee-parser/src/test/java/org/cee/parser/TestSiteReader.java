@@ -37,9 +37,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cee.BaseWebClientTest;
 import org.cee.SiteExtraction;
 import org.cee.language.SiteLanguageDetector;
-import org.cee.parser.net.ReaderSource;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebResponse;
 import org.cee.store.EntityKey;
@@ -52,16 +52,15 @@ import org.cee.store.site.Site;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 
-public class TestSiteReader {
+public class TestSiteReader extends BaseWebClientTest {
 
 	@Test
 	public void testReadFeed() throws IOException, ParserException {
 		String location = "http://www.mysite.com/feed.rss";
 		URL locationUrl = new URL(location);
 		Feed feed = new Feed();
-		Reader reader = mock(Reader.class);
-		WebClient webClient = mock(WebClient.class);
-		when(webClient.openReader(locationUrl)).thenReturn(reader);
+		Reader reader = createReader();
+		WebClient webClient = createWebClient(reader);
 		FeedParser feedParser = mock(FeedParser.class);
 		when(feedParser.parse(reader, locationUrl)).thenReturn(feed);
 		
@@ -73,9 +72,8 @@ public class TestSiteReader {
 	public void testReadFeedThrowsIOException() throws MalformedURLException, ParserException, IOException {
 		String location = "http://www.mysite.com/feed.rss";
 		URL locationUrl = new URL(location);
-		Reader reader = mock(Reader.class);
-		WebClient webClient = mock(WebClient.class);
-		when(webClient.openReader(locationUrl)).thenReturn(reader);
+		Reader reader = createReader();
+        WebClient webClient = createWebClient(reader);
 		FeedParser feedParser = mock(FeedParser.class);
 		when(feedParser.parse(reader, locationUrl)).thenThrow(new IOException());
 		try {
@@ -93,12 +91,10 @@ public class TestSiteReader {
 		URL redirectedLocationUrl = new URL(redirectedLocation);
 		WebClient webClient = mock(WebClient.class);
 		WebResponse response = mock(WebResponse.class);
-		when(webClient.openWebResponse(locationUrl)).thenReturn(response);
-		ReaderSource readerSource = mock(ReaderSource.class);
-		when(response.openReaderSource()).thenReturn(readerSource);
-		when(response.getLocation()).thenReturn(redirectedLocationUrl);//the request may have been redirected, site reader should use new location internally.
+		when(webClient.openWebResponse(locationUrl, false)).thenReturn(response);
 		Reader reader = mock(Reader.class);
-		when(readerSource.getReader()).thenReturn(reader);
+		when(response.openReader()).thenReturn(reader);
+		when(response.getLocation()).thenReturn(redirectedLocationUrl);//the request may have been redirected, site reader should use new location internally.
 		
 		SiteExtraction siteExtraction = new SiteExtraction();
 		URL feed1Url = new URL("http://www.mysite.com/feed1.rss");
@@ -117,12 +113,10 @@ public class TestSiteReader {
 		Reader readerFeed1 = mock(Reader.class);
 		Reader readerFeed2 = mock(Reader.class);
 		Reader readerFeed3 = mock(Reader.class);
-		when(webClient.openReader(feed1Url)).thenReturn(readerFeed1);
-		when(feedParser.parse(readerFeed1, feed1Url)).thenReturn(feed1);
-		when(webClient.openReader(feed2Url)).thenReturn(readerFeed2);
-		when(feedParser.parse(readerFeed2, feed2Url)).thenReturn(feed2);
-		when(webClient.openReader(feed3Url)).thenReturn(readerFeed3);
-		when(feedParser.parse(readerFeed3, feed3Url)).thenReturn(feed3);
+		addReaderUrls(webClient, new URL[]{feed1Url, feed2Url, feed3Url}, new Reader[]{readerFeed1, readerFeed2, readerFeed3});
+	    when(feedParser.parse(readerFeed1, feed1Url)).thenReturn(feed1);
+	    when(feedParser.parse(readerFeed2, feed2Url)).thenReturn(feed2);
+	    when(feedParser.parse(readerFeed3, feed3Url)).thenReturn(feed3);
 		
 		SiteLanguageDetector siteLanguageDetector = mock(SiteLanguageDetector.class);
 		when(siteLanguageDetector.detect(siteExtraction)).thenReturn("en");
@@ -148,12 +142,10 @@ public class TestSiteReader {
 		URL locationUrl = new URL(location);
 		WebClient webClient = mock(WebClient.class);
 		WebResponse response = mock(WebResponse.class);
-		when(webClient.openWebResponse(locationUrl)).thenReturn(response);
-		ReaderSource readerSource = mock(ReaderSource.class);
-		when(response.openReaderSource()).thenReturn(readerSource);
-		when(response.getLocation()).thenReturn(locationUrl);
+		when(webClient.openWebResponse(locationUrl, false)).thenReturn(response);
 		Reader reader = mock(Reader.class);
-		when(readerSource.getReader()).thenReturn(reader);
+		when(response.openReader()).thenReturn(reader);
+		when(response.getLocation()).thenReturn(locationUrl);
 		
 		SiteParser siteParser = mock(SiteParser.class);
 		when(siteParser.parse(reader, locationUrl)).thenThrow(new IOException());
@@ -204,8 +196,7 @@ public class TestSiteReader {
 		site.getFeeds().add(feedWithoutArticles);
 		
 		WebClient webClient = mock(WebClient.class, RETURNS_SMART_NULLS);
-		when(webClient.openReader(eq(feed1URL))).thenReturn(feed1Reader);
-		when(webClient.openReader(eq(feed3URL))).thenReturn(feed3Reader);
+		addReaderUrls(webClient, new URL[]{feed1URL, feed3URL}, new Reader[]{feed1Reader, feed3Reader});
 		
 		Article existingArticle = new Article();
 		existingArticle.setExternalId("existingArticle");
@@ -275,8 +266,7 @@ public class TestSiteReader {
 		site.getFeeds().add(feed2);
 		
 		WebClient webClient = mock(WebClient.class);
-		when(webClient.openReader(eq(feed1URL))).thenReturn(feed1Reader);
-		when(webClient.openReader(eq(feed2URL))).thenReturn(feed2Reader);
+		addReaderUrls(webClient, new URL[]{feed1URL, feed2URL}, new Reader[]{feed1Reader, feed2Reader});
 		
 		FeedParser feedParser = mock(FeedParser.class);
 		
@@ -307,8 +297,8 @@ public class TestSiteReader {
 		site.getFeeds().add(feed2);
 		
 		WebClient webClient = mock(WebClient.class);
-		when(webClient.openReader(eq(feed1URL))).thenThrow(new IOException());
-		when(webClient.openReader(eq(feed2URL))).thenReturn(feed2Reader);
+		addThrowsUrls(webClient, new URL[]{feed1URL});
+		addReaderUrls(webClient, new URL[]{feed2URL}, new Reader[]{feed2Reader});
 		
 		FeedParser feedParser = mock(FeedParser.class);
 		when(feedParser.readArticles(same(feed2Reader), eq(feed2URL))).thenReturn(new ArrayList<Article>());

@@ -27,7 +27,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
-import org.cee.parser.net.ReaderSource;
 import org.cee.parser.net.WebClient;
 import org.cee.parser.net.WebResponse;
 
@@ -42,7 +41,7 @@ public class ClassResourceWebClient implements  WebClient {
 	 * @see org.cee.parser.net.WebClient#openWebResponse(java.net.URL)
 	 */
 	@Override
-	public WebResponse openWebResponse(final URL location) {
+	public WebResponse openWebResponse(final URL location, boolean bufferStream) {
 		return new WebResponse() {
 
 			@Override
@@ -56,8 +55,8 @@ public class ClassResourceWebClient implements  WebClient {
 			}
 
 			@Override
-			public ReaderSource openReaderSource() throws IOException {
-				return new ReaderSource(new InputStreamReader(openStream()), null);
+			public Reader openReader() throws IOException {
+				return new InputStreamReader(openStream());
 			}
 
 			@Override
@@ -81,10 +80,4 @@ public class ClassResourceWebClient implements  WebClient {
 			}
 		};
 	}
-
-	@Override
-    public Reader openReader(URL location) throws IOException {
-	    return openWebResponse(location).openReaderSource().getReader();
-    }
-
 }

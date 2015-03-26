@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.input.XmlStreamReader;
-import org.cee.parser.net.ReaderSource;
 
 public class XmlStreamReaderFactory implements ReaderFactory {
 

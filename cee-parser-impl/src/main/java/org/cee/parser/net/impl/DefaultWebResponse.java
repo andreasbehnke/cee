@@ -29,8 +29,8 @@ final class DefaultWebResponse extends BaseWebResponse {
 	
 	private final URL originalLocation;
 	
-	DefaultWebResponse(URL location, ReaderFactory readerFactory) {
-		super(readerFactory);
+	DefaultWebResponse(URL location, ReaderFactory readerFactory, boolean bufferStream) {
+		super(readerFactory, bufferStream);
 		this.originalLocation = location;
 	}
 
@@ -38,15 +38,15 @@ final class DefaultWebResponse extends BaseWebResponse {
 	protected InputStream openStreamInternal() throws IOException {
 	    return originalLocation.openStream();
 	}
-
+	
 	@Override
-	public String getContentType() {
+	protected String getContentEncodingHint() {
 	    return null;
 	}
 
 	@Override
-	public String getContentEncoding() {
-		return null;
+	public String getContentType() {
+	    return null;
 	}
 
 	@Override

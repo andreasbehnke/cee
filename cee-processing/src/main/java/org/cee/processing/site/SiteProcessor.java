@@ -30,7 +30,6 @@ import org.cee.client.site.SiteData.SiteRetrivalState;
 import org.cee.parser.ParserException;
 import org.cee.parser.SiteReader;
 import org.cee.parser.net.WebClient;
-import org.cee.parser.net.WebClientFactory;
 import org.cee.store.site.Feed;
 import org.cee.store.site.Site;
 import org.slf4j.Logger;
@@ -46,30 +45,23 @@ public class SiteProcessor {
 	
 	private static final String PARSER_ERROR = "Resource {} could not be loaded, a parser error occured";
 	
-	private WebClientFactory webClientFactory;
+	private WebClient webClient;
 	
 	private SiteReader siteReader;
 	
-	public void setWebClientFactory(WebClientFactory webClientFactory) {
-		this.webClientFactory = webClientFactory;
+	public void setWebClient(WebClient webClient) {
+		this.webClient = webClient;
 	}
 	
 	public void setSiteReader(SiteReader siteReader) {
 		this.siteReader = siteReader;
 	}
 	
-	private WebClient createWebClient() {
-		if (webClientFactory == null) {
-			throw new IllegalStateException("Property webClientFactory has not been set");
-		}
-		return webClientFactory.createWebClient();
-	}
-
 	public SiteData retrieveSiteData(String location) {
 		SiteData info = new SiteData();
 		info.setIsNew(true);
 		try {
-			Site site = siteReader.readSite(createWebClient(), location);
+			Site site = siteReader.readSite(this.webClient, location);
 			info = SiteConverter.createFromSite(site, true);
 			info.setState(SiteRetrivalState.ok);
 		} catch(MalformedURLException e) {
@@ -89,7 +81,7 @@ public class SiteProcessor {
 		FeedData info = new FeedData();
 		info.setIsNew(true);
 		try {
-			Feed feed = siteReader.readFeed(createWebClient(), location);
+			Feed feed = siteReader.readFeed(this.webClient, location);
 			info = SiteConverter.createFromFeed(feed);
 			info.setState(SiteRetrivalState.ok);
 		} catch(MalformedURLException e) {

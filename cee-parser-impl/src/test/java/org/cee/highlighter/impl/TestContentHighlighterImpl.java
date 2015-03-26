@@ -34,20 +34,17 @@ import java.util.BitSet;
 import java.util.List;
 
 import org.cee.highlighter.ContentHighlighter.Settings;
-import org.cee.highlighter.impl.ContentHighlighterImpl;
-import org.cee.highlighter.impl.TemplateCache;
 import org.cee.parser.ArticleParser;
 import org.cee.parser.ArticleReader;
 import org.cee.parser.ParserException;
 import org.cee.parser.impl.SaxXmlReaderFactory;
 import org.cee.parser.impl.TagsoupXmlReaderFactory;
-import org.cee.parser.net.ReaderSource;
 import org.cee.parser.net.WebResponse;
 import org.cee.parser.net.impl.XmlStreamReaderFactory;
 import org.cee.store.article.Article;
 import org.cee.store.article.ContentExtractionMetaData;
-import org.cee.store.article.TextBlock;
 import org.cee.store.article.ContentExtractionMetaData.Property;
+import org.cee.store.article.TextBlock;
 import org.junit.Test;
 
 public class TestContentHighlighterImpl {
@@ -84,7 +81,7 @@ public class TestContentHighlighterImpl {
 		article.getContent().add(t2);
 		
 		WebResponse response = mock(WebResponse.class);
-		when(response.openReaderSource()).thenReturn(new ReaderSource(input, null));
+		when(response.openReader()).thenReturn(input);
 		
 		ArticleReader articleReader = mock(ArticleReader.class);
 		when(articleReader.readArticle(any(WebResponse.class), any(Article.class), any(ArticleParser.Settings.class))).thenReturn(article);
@@ -125,7 +122,7 @@ public class TestContentHighlighterImpl {
 		article.getContent().add(t2);
 		
 		WebResponse response = mock(WebResponse.class);
-		when(response.openReaderSource()).thenReturn(new ReaderSource(input, null));
+		when(response.openReader()).thenReturn(input);
 		
 		ArticleReader articleReader = mock(ArticleReader.class);
 		when(articleReader.readArticle(any(WebResponse.class), any(Article.class), any(ArticleParser.Settings.class))).thenReturn(article);

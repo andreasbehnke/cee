@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 
-import org.apache.commons.io.IOUtils;
 import org.cee.SiteExtraction;
 import org.cee.language.LanguageDetector;
 import org.cee.parser.ParserException;
@@ -76,10 +75,8 @@ public class SiteParserImpl extends XmlReaderProvider implements SiteParser {
             xmlReader.parse(is);
         } catch (SAXException e) { 
         	throw new ParserException("Could not parse site", e);
-        } finally {
-        	LOG.info("finished parsing site document {}", siteLocation);
-        	IOUtils.closeQuietly(reader);
         }
+        LOG.info("finished parsing site document {}", siteLocation);
         return siteHandler.getSiteExtraction();
     }
 }

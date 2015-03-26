@@ -22,7 +22,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
 	<!-- Parser -->
-	<bean id="webClientFactory" class="org.cee.parser.net.impl.DefaultWebClientFactory" scope="prototype">
+	<bean id="webClient" class="org.cee.parser.net.impl.DefaultWebClient">
 		<property name="httpClientFactory">
 		    <bean class="org.cee.parser.net.impl.DefaultHttpClientFactory" />
 		</property>
@@ -82,7 +82,7 @@
 	<!-- Spring HttpRequestHandlers -->
 	<bean id="contentHighlightHandler" class="org.cee.highlighter.impl.ContentHighlightHandler" scope="request">
 	     <property name="articleStore" ref="articleStore" />
-	     <property name="webClientFactory" ref="webClientFactory" />
+	     <property name="webClient" ref="webClient" />
 	     <property name="contentHighlighter" ref="contentHighlighter" />
 	</bean>
 </beans>

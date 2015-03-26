@@ -52,11 +52,8 @@ public class LanguageDetectorImpl implements LanguageDetector {
 	}
 	
 	private String readProfileFromResource(String language) throws IOException {
-		InputStream input = getClass().getResourceAsStream(PROFILE_RESOURCE + language);
-		try {
+		try (InputStream input = getClass().getResourceAsStream(PROFILE_RESOURCE + language)) {
 			return IOUtils.toString(input);
-		} finally {
-			IOUtils.closeQuietly(input);
 		}
 	}
 	
@@ -67,16 +64,13 @@ public class LanguageDetectorImpl implements LanguageDetector {
 		if (initialized) {
 			return;
 		}
-		InputStream input = getClass().getResourceAsStream(LANGUAGE_LIST_RESOURCE);
-		try {
+		try (InputStream input = getClass().getResourceAsStream(LANGUAGE_LIST_RESOURCE)) {
 			List<String> languageList = IOUtils.readLines(input);
 			List<String> languageProfiles = new ArrayList<String>();
 			for (String language : languageList) {
 	            languageProfiles.add(readProfileFromResource(language));
             }
 			DetectorFactory.loadProfile(languageProfiles);
-		} finally {
-			IOUtils.closeQuietly(input);
 		}
 		
 		initialized = true;
