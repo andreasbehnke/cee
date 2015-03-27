@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 
-import org.cee.parser.net.WebClient;
-import org.cee.parser.net.WebResponse;
+import org.cee.net.WebClient;
+import org.cee.net.WebResponse;
 
 public class BaseWebClientTest {
 

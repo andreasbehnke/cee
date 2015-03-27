@@ -28,12 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cee.highlighter.ContentHighlighter;
+import org.cee.net.WebResponse;
 import org.cee.parser.ArticleParser;
 import org.cee.parser.ArticleReader;
 import org.cee.parser.ParserException;
 import org.cee.parser.impl.SaxXmlReaderFactory;
 import org.cee.parser.impl.XmlReaderProvider;
-import org.cee.parser.net.WebResponse;
 import org.cee.store.article.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

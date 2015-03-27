@@ -34,8 +34,8 @@ import java.util.concurrent.Future;
 
 import org.cee.SiteExtraction;
 import org.cee.language.SiteLanguageDetector;
-import org.cee.parser.net.WebClient;
-import org.cee.parser.net.WebResponse;
+import org.cee.net.WebClient;
+import org.cee.net.WebResponse;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
 import org.cee.store.article.Article;

@@ -22,12 +22,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
 	<!-- Parser -->
-	<bean id="webClient" class="org.cee.parser.net.impl.DefaultWebClient">
+	<bean id="webClient" class="org.cee.net.impl.DefaultWebClient">
 		<property name="httpClientFactory">
-		    <bean class="org.cee.parser.net.impl.DefaultHttpClientFactory" />
+		    <bean class="org.cee.net.impl.DefaultHttpClientFactory" />
 		</property>
 		<property name="readerFactory">
-			<bean class="org.cee.parser.net.impl.XmlStreamReaderFactory" />
+			<bean class="org.cee.net.impl.XmlStreamReaderFactory" />
 		</property>
 	</bean>
 	
@@ -69,7 +69,7 @@
 
     <bean id="templateCache" class="org.cee.highlighter.impl.TemplateCache" scope="prototype">
         <property name="readerFactory">
-            <bean class="org.cee.parser.net.impl.XmlStreamReaderFactory" />
+            <bean class="org.cee.net.impl.XmlStreamReaderFactory" />
         </property>
     </bean>
 	

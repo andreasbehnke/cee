@@ -1,4 +1,4 @@
-package org.cee.parser.net.impl;
+package org.cee.net.impl;
 
 /*
  * #%L
@@ -26,7 +26,7 @@ import java.io.InputStream;
 import java.io.Reader;
 
 import org.apache.commons.io.IOUtils;
-import org.cee.parser.net.WebResponse;
+import org.cee.net.WebResponse;
 
 
 public abstract class BaseWebResponse implements WebResponse {

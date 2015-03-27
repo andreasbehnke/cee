@@ -1,4 +1,4 @@
-package org.cee.parser.net.impl;
+package org.cee.net.impl;
 
 /*
  * #%L
@@ -24,8 +24,8 @@ package org.cee.parser.net.impl;
 import java.net.URL;
 
 import org.apache.http.client.HttpClient;
-import org.cee.parser.net.WebClient;
-import org.cee.parser.net.WebResponse;
+import org.cee.net.WebClient;
+import org.cee.net.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

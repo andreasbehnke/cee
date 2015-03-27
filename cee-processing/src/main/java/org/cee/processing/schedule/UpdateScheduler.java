@@ -8,8 +8,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.cee.net.WebClient;
 import org.cee.parser.SiteReader;
-import org.cee.parser.net.WebClient;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
 import org.cee.store.site.Site;

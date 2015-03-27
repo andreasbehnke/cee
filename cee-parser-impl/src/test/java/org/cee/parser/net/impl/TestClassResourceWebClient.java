@@ -27,7 +27,7 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.cee.parser.net.impl.ClassResourceWebClient;
+import org.cee.net.impl.ClassResourceWebClient;
 import org.junit.Assert;
 import org.junit.Test;
 

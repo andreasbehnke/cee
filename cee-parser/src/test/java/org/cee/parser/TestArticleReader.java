@@ -31,9 +31,9 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.cee.BaseWebClientTest;
+import org.cee.net.WebClient;
+import org.cee.net.WebResponse;
 import org.cee.parser.ArticleParser.Settings;
-import org.cee.parser.net.WebClient;
-import org.cee.parser.net.WebResponse;
 import org.cee.store.article.Article;
 import org.junit.Test;
 

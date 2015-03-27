@@ -1,4 +1,4 @@
-package org.cee.parser.net.impl;
+package org.cee.net.impl;
 
 /*
  * #%L
@@ -27,8 +27,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
-import org.cee.parser.net.WebClient;
-import org.cee.parser.net.WebResponse;
+import org.cee.net.WebClient;
+import org.cee.net.WebResponse;
 
 /**
  * The class resource web client tries to map any request to a resource lookup to a local class path lookup.
@@ -38,7 +38,7 @@ import org.cee.parser.net.WebResponse;
 public class ClassResourceWebClient implements  WebClient {
 	/**
 	 * Only the path part of the URL is interpreted for retrieving resource from class path
-	 * @see org.cee.parser.net.WebClient#openWebResponse(java.net.URL)
+	 * @see org.cee.net.WebClient#openWebResponse(java.net.URL)
 	 */
 	@Override
 	public WebResponse openWebResponse(final URL location, boolean bufferStream) {

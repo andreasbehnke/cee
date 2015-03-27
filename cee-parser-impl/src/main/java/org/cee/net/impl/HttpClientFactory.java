@@ -1,8 +1,8 @@
-package org.cee.parser.net;
+package org.cee.net.impl;
 
 /*
  * #%L
- * Content Extraction Engine - News Parser
+ * Content Extraction Engine - News Parser Implementations
  * %%
  * Copyright (C) 2013 Andreas Behnke
  * %%
@@ -21,13 +21,12 @@ package org.cee.parser.net;
  */
 
 
-import java.net.URL;
+import org.apache.http.client.HttpClient;
 
-/**
- * Provides access to web resources. A web client manages connection state, this
- * includes authentication and cookies of HTTP connections.
- */
-public interface WebClient {
+public interface HttpClientFactory {
     
-    WebResponse openWebResponse(URL location, boolean bufferStream);
+    final static String LAST_REDIRECT_URL = "last_redirect_url";
+
+    HttpClient createHttpClient();
+    
 }

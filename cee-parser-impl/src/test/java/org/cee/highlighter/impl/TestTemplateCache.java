@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.cee.highlighter.impl.TemplateCache;
-import org.cee.parser.net.impl.XmlStreamReaderFactory;
+import org.cee.net.impl.XmlStreamReaderFactory;
 import org.junit.Test;
 
 public class TestTemplateCache {

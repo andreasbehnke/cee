@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.cee.parser.net.impl.ReaderFactory;
+import org.cee.net.impl.ReaderFactory;
 
 public class TemplateCache {
 	

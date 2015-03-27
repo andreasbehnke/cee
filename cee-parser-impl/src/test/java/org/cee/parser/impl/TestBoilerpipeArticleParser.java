@@ -27,13 +27,13 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 
+import org.cee.net.WebClient;
+import org.cee.net.impl.DefaultHttpClientFactory;
+import org.cee.net.impl.DefaultWebClient;
+import org.cee.net.impl.XmlStreamReaderFactory;
 import org.cee.parser.ArticleParser;
 import org.cee.parser.ArticleParser.Settings;
 import org.cee.parser.ParserException;
-import org.cee.parser.net.WebClient;
-import org.cee.parser.net.impl.DefaultHttpClientFactory;
-import org.cee.parser.net.impl.DefaultWebClient;
-import org.cee.parser.net.impl.XmlStreamReaderFactory;
 import org.cee.store.article.Article;
 import org.junit.Test;
 import org.slf4j.Logger;

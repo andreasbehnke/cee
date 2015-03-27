@@ -20,8 +20,8 @@ package org.cee.processing.schedule;
  * #L%
  */
 
+import org.cee.net.WebClient;
 import org.cee.parser.SiteReader;
-import org.cee.parser.net.WebClient;
 import org.cee.store.StoreException;
 import org.cee.store.site.Site;
 import org.slf4j.Logger;

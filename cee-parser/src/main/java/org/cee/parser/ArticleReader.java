@@ -25,9 +25,9 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.cee.net.WebClient;
+import org.cee.net.WebResponse;
 import org.cee.parser.ArticleParser.Settings;
-import org.cee.parser.net.WebClient;
-import org.cee.parser.net.WebResponse;
 import org.cee.store.article.Article;
 
 public class ArticleReader {
