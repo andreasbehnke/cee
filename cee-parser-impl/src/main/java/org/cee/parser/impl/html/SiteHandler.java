@@ -1,4 +1,4 @@
-package org.cee.parser.impl;
+package org.cee.parser.impl.html;
 
 /*
  * #%L

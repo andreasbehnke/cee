@@ -29,6 +29,7 @@ import org.cee.SiteExtraction;
 import org.cee.language.LanguageDetector;
 import org.cee.parser.ParserException;
 import org.cee.parser.SiteParser;
+import org.cee.parser.impl.html.SiteHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
