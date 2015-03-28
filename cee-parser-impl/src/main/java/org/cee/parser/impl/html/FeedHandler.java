@@ -11,6 +11,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * Internal handler class which will be registered with the XMLReader for
+ * reading all alternate feeds of a web-site.
+ */
 public class FeedHandler extends DefaultHandler {
     
     private static final Logger LOG = LoggerFactory.getLogger(FeedHandler.class);

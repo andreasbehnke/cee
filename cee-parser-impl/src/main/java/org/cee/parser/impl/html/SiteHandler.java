@@ -29,11 +29,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Internal handler class which will be registered with the XMLReader for
- * reading the feed and meta information of a web-site:
+ * reading meta information and content of a web-site:
  * <ol>
  * <li>The HTML title elements content is mapped to the property title.</li>
  * <li>The content of the meta element named "description" is mapped to the property description.</li>
- * <li>For each link element with the rel attribute set to "alternative" a feed is created.</li>
+ * <li>The document content is appended to property content.</li>
  * </ol>
  */
 public class SiteHandler extends DefaultHandler {
