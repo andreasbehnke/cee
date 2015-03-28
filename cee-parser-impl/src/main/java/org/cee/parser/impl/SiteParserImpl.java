@@ -24,12 +24,15 @@ package org.cee.parser.impl;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.cee.SiteExtraction;
 import org.cee.language.LanguageDetector;
 import org.cee.parser.ParserException;
 import org.cee.parser.SiteParser;
+import org.cee.parser.impl.html.FeedHandler;
 import org.cee.parser.impl.html.SiteHandler;
+import org.cee.store.site.Site;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -68,8 +71,9 @@ public class SiteParserImpl extends XmlReaderProvider implements SiteParser {
     @Override
     public SiteExtraction parse(Reader reader, URL siteLocation) throws IOException, ParserException {
         XMLReader xmlReader = createXmlReader();
-    	SiteHandler siteHandler = new SiteHandler(siteLocation);
-        xmlReader.setContentHandler(siteHandler);
+    	SiteHandler siteHandler = new SiteHandler();
+    	FeedHandler feedHandler = new FeedHandler(siteLocation);
+        xmlReader.setContentHandler(new TeeContentHandler(siteHandler, feedHandler));
         try {
         	InputSource is = new InputSource(reader);
         	LOG.info("start parsing site document {}", siteLocation);
@@ -78,6 +82,12 @@ public class SiteParserImpl extends XmlReaderProvider implements SiteParser {
         	throw new ParserException("Could not parse site", e);
         }
         LOG.info("finished parsing site document {}", siteLocation);
-        return siteHandler.getSiteExtraction();
+        SiteExtraction result = new SiteExtraction();
+        Site site = result.getSite();
+        site.setDescription(siteHandler.getDescription());
+        site.setTitle(siteHandler.getTitle());
+        result.setSiteContent(siteHandler.getContent().toString());
+        result.setFeedLocations(new ArrayList<URL>(feedHandler.getFeedLocations()));
+        return result;
     }
 }

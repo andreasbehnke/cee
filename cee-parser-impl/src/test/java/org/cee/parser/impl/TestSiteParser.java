@@ -52,10 +52,8 @@ public class TestSiteParser {
         assertEquals("SPIEGEL ONLINE - Nachrichten", site.getTitle());
         assertTrue(site.getDescription().startsWith("Deutschlands f"));
         assertEquals(2, siteExtraction.getFeedLocations().size());
-        URL feedLocation = siteExtraction.getFeedLocations().get(0);
-        assertEquals(new URL(siteLocation, "spiegelSchlagzeilen.rss"), feedLocation);
-        feedLocation = siteExtraction.getFeedLocations().get(1);
-        assertEquals(new URL(siteLocation, "spiegelNachrichten.rss"), feedLocation);
+        assertTrue(siteExtraction.getFeedLocations().contains(new URL(siteLocation, "spiegelSchlagzeilen.rss")));
+        assertTrue(siteExtraction.getFeedLocations().contains(new URL(siteLocation, "spiegelNachrichten.rss")));
 
     }
 }

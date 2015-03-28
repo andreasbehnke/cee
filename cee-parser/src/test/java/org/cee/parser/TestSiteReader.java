@@ -100,9 +100,11 @@ public class TestSiteReader extends BaseWebClientTest {
 		URL feed1Url = new URL("http://www.mysite.com/feed1.rss");
 		URL feed2Url = new URL("http://www.mysite.com/feed2.rss");
 		URL feed3Url = new URL("http://www.mysite.com/feed3.rss");
-		siteExtraction.getFeedLocations().add(feed1Url);
-		siteExtraction.getFeedLocations().add(feed2Url);
-		siteExtraction.getFeedLocations().add(feed3Url);
+		List<URL> feedLocations = new ArrayList<URL>();
+		feedLocations.add(feed1Url);
+		feedLocations.add(feed2Url);
+		feedLocations.add(feed3Url);
+		siteExtraction.setFeedLocations(feedLocations);
 		SiteParser siteParser = mock(SiteParser.class);
 		when(siteParser.parse(reader, redirectedLocationUrl)).thenReturn(siteExtraction);
 		

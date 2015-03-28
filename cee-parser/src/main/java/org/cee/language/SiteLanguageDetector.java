@@ -60,7 +60,7 @@ public class SiteLanguageDetector {
 		if (language != null) {
         	return language;
         }
-		String text = siteExtraction.getContent().toString();
+		String text = siteExtraction.getSiteContent();
 		if (detectors != null) {
 			for (LanguageDetector detector : detectors) {
 				language = detector.detect(text);
