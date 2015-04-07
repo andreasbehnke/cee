@@ -15,6 +15,11 @@ public class TeeContentHandler implements ContentHandler {
     public TeeContentHandler(ContentHandler... delegates) {
         this.delegates = Arrays.asList(delegates);
     }
+    
+    public TeeContentHandler add(ContentHandler contentHandler) {
+        this.delegates.add(contentHandler);
+        return this;
+    }
 
     @Override
     public void setDocumentLocator(Locator locator) {
