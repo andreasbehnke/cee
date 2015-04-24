@@ -23,22 +23,30 @@ package org.cee.net.impl;
 
 import java.io.IOException;
 import java.net.ProxySelector;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.client.HttpClient;
+import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
 public class DefaultHttpClientFactory implements HttpClientFactory {
     
-    private final HttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+    private final static String USER_AGENT = "User-Agent:Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36";
+    
+    private final Collection<Header> defaultHeaders;
+    
+    private final HttpClientConnectionManager connectionManager;
     
     private final class RedirectHttpResponseInterceptor implements HttpResponseInterceptor {
         
@@ -48,11 +56,20 @@ public class DefaultHttpClientFactory implements HttpClientFactory {
             if (response.containsHeader("Location")) {
                 Header[] locations = response.getHeaders("Location");
                 if (locations.length > 0) {
-                    URL location = new URL(locations[0].getValue());
-                    context.setAttribute(LAST_REDIRECT_URL, location);
+                    context.setAttribute(LAST_REDIRECT_URL, locations[0].getValue());
                 }
             }
         }
+    }
+    
+    public DefaultHttpClientFactory() {
+        PoolingHttpClientConnectionManager poolingConnectionManager = new PoolingHttpClientConnectionManager();
+        poolingConnectionManager.setDefaultMaxPerRoute(5);
+        poolingConnectionManager.setMaxTotal(20);
+        poolingConnectionManager.setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(5000).build());
+        this.connectionManager = poolingConnectionManager;
+        defaultHeaders = new ArrayList<Header>();
+        defaultHeaders.add(new BasicHeader(HTTP.USER_AGENT, USER_AGENT));
     }
 
     @Override
@@ -61,6 +78,7 @@ public class DefaultHttpClientFactory implements HttpClientFactory {
                 .setConnectionManager(connectionManager)
                 .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
                 .addInterceptorFirst(new RedirectHttpResponseInterceptor())
+                .setDefaultHeaders(defaultHeaders)
                 .build();
     }
 }
