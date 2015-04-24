@@ -33,9 +33,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.cee.net.WebClient;
-import org.cee.net.impl.DefaultHttpClientFactory;
-import org.cee.net.impl.DefaultWebClient;
-import org.cee.net.impl.XmlStreamReaderFactory;
+import org.cee.net.impl.ClassResourceWebClient;
 import org.cee.parser.FeedParser;
 import org.cee.parser.ParserException;
 import org.cee.store.article.Article;
@@ -48,7 +46,7 @@ public class TestRomeFeedParser {
 	}
 	
 	private Reader openReader(URL location) throws IOException {
-		WebClient webClient = new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory());
+		WebClient webClient = new ClassResourceWebClient();
         return webClient.openWebResponse(location, false).openReader();
 	}
 	
@@ -61,7 +59,7 @@ public class TestRomeFeedParser {
 
 	@Test
     public void testReadArticles() throws ParserException, IOException {
-		List<Article> articles = readArticles(getClass().getResource("spiegelNachrichten.rss"));
+		List<Article> articles = readArticles(new URL ("http://www.example.com/org/cee/parser/impl/spiegelNachrichten.rss"));
         
         assertEquals(7, articles.size());
         Article article = articles.get(0);
@@ -77,7 +75,7 @@ public class TestRomeFeedParser {
 
     @Test
     public void testReadHtmlShortText() throws ParserException, IOException {
-    	List<Article> articles = readArticles(getClass().getResource("feedWithHtmlDescription.rss"));
+    	List<Article> articles = readArticles(new URL ("http://www.example.com/org/cee/parser/impl/feedWithHtmlDescription.rss"));
         
         Article article = articles.get(0);
         assertEquals(
@@ -87,13 +85,13 @@ public class TestRomeFeedParser {
     
     @Test
     public void testReadArticlesRegressionIssue143() throws MalformedURLException, ParserException, IOException {
-    	List<Article> articles = readArticles(getClass().getResource("issue143.xml"));
+    	List<Article> articles = readArticles(new URL ("http://www.example.com/org/cee/parser/impl/issue143.xml"));
         assertEquals(42, articles.size());
     }
     
     @Test
     public void testReadArticlesRegressionIssue297() throws MalformedURLException, ParserException, IOException {
-    	List<Article> articles = readArticles(getClass().getResource("issue297.xml"));
+    	List<Article> articles = readArticles(new URL ("http://www.example.com/org/cee/parser/impl/issue297.xml"));
         assertNotNull(articles.get(0).getShortText());
         assertTrue(articles.get(0).getShortText().contains("Dresden (dpa/sn) - Dresden will"));
     }

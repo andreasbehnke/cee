@@ -28,9 +28,7 @@ import java.io.Reader;
 import java.net.URL;
 
 import org.cee.net.WebClient;
-import org.cee.net.impl.DefaultHttpClientFactory;
-import org.cee.net.impl.DefaultWebClient;
-import org.cee.net.impl.XmlStreamReaderFactory;
+import org.cee.net.impl.ClassResourceWebClient;
 import org.cee.parser.ArticleParser;
 import org.cee.parser.ArticleParser.Settings;
 import org.cee.parser.ParserException;
@@ -48,7 +46,7 @@ public class TestBoilerpipeArticleParser {
 		article.setTitle(articleTitle);
         article.setLocation(articleLocation.toExternalForm());
         ArticleParser parser = new BoilerpipeArticleParser(new TagsoupXmlReaderFactory());
-        WebClient webClient = new DefaultWebClient(new DefaultHttpClientFactory(), new XmlStreamReaderFactory());
+        WebClient webClient = new ClassResourceWebClient();
         try (Reader reader = webClient.openWebResponse(articleLocation, false).openReader()) {
         	parser.parse(reader, article, new Settings());
         }
@@ -83,7 +81,7 @@ public class TestBoilerpipeArticleParser {
     public void testParse() throws ParserException, IOException {
     	assertTrue(testExpectedContent(
     			"Russischer Ölkonzern Rosneft steigt bei BP ein",
-				getClass().getResource("spiegelArticle.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/spiegelArticle.html"), 
 				"Tony Hayward"));
     }
 	
@@ -91,7 +89,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue144() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Der verpatzte Abgang des Josef Ackermann",
-				getClass().getResource("issue144.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue144.html"), 
 				"die Polizei durchsucht das Büro"));
 	}
 	
@@ -99,7 +97,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue146() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Troika sieht Portugal auf gutem Weg",
-				getClass().getResource("issue146.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue146.html"), 
 				"Die Portugiesen selbst sind weniger optimistisch"));
 	}
 	
@@ -108,7 +106,7 @@ public class TestBoilerpipeArticleParser {
     public void testParseRegressionIssue205() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Obama schaltet Werbespots in Pakistan",
-				getClass().getResource("issue205.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue205.html"), 
 				"In dem 52 Sekunden kurzen und mit Urdu-Untertiteln versehenen Beitrag"));
     }
     
@@ -116,7 +114,7 @@ public class TestBoilerpipeArticleParser {
     public void testParseRegressionIssue206() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Nach Freitagsgebeten Tote bei antiwestlichen Protesten in Pakistan",
-				getClass().getResource("issue206.html"),
+				new URL("http://www.example.com/org/cee/parser/impl/issue206.html"),
 				//first article half
 				"Mehrere westliche Staaten haben aus Furcht vor Ausschreitungen ihre Botschaften in islamischen Ländern geschlossen",
 				"Nach ersten Meldungen wurden dabei mindestens 15 Menschen getötet und mehr als 160 verletzt",
@@ -130,7 +128,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue212() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Hisbollah bekennt sich zu Drohneneinsatz",
-				getClass().getResource("issue212.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue212.html"), 
 				"Die libanesische Hisbollah erklärte, sie habe das Flugobjekt zu Spionagezwecken eingesetzt"));
 	}
 
@@ -138,7 +136,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue214() throws ParserException, IOException {
 		assertTrue(testUnexpectedContent(
 				"Apple-Preiserhöhung betrifft auch In-App-Käufe",
-				getClass().getResource("issue214.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue214.html"), 
 				"Am 26. Oktober kommt Windows 8 in den Handel"));
 	}
 	
@@ -146,7 +144,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue215() throws ParserException, IOException {
 		assertTrue(testUnexpectedContent(
 				"Ex-Partner von Zuckerberg wegen Milliardenbetrugs verhaftet",
-				getClass().getResource("issue215.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue215.html"), 
 				"Aus Datenschutzgründen wird Ihre IP-Adresse nur dann gespeichert"));
 	}
 	
@@ -154,7 +152,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue216() throws ParserException, IOException {
 		assertTrue(testUnexpectedContent(
 				"Sicherheitsupdate für Firefox und Thunderbird",
-				getClass().getResource("issue216.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue216.html"), 
 				"heise online > News > 2012 > KW 43 > Sicherheitsupdate für Firefox und Thunderbird",
 				"27.10.2012 16:32",
 				"« Vorige | Nächste »",
@@ -165,11 +163,11 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue217() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Niederlage auf Schalke: Nürnberg-Fans belagern Mannschaftsbus",
-				getClass().getResource("issue217.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue217.html"), 
 				"Die Lage beruhigte sich erst nach dem Eingreifen der Polizei und von"));
 		assertTrue(testUnexpectedContent(
 				"Niederlage auf Schalke: Nürnberg-Fans belagern Mannschaftsbus",
-				getClass().getResource("issue217.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue217.html"), 
 				"Auf anderen Social Networks teilen",
 				"Forumname",
 				"alles aus der Rubrik Sport",
@@ -180,7 +178,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue218() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Israel: Unter Feuer",
-				getClass().getResource("issue218.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue218.html"), 
 				"Hebron sollen mehr als 1500",
 				"auf dem Betonblock, der aus der wüstenhaften Hochebene",
 				"Das Schicksal der Bewohner ist noch ungewiss",
@@ -192,7 +190,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue219() throws ParserException, IOException {
 		assertTrue(testUnexpectedContent(
 				"Eher kleine Wellen nach Tsunami-Warnung",
-				getClass().getResource("issue219.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue219.html"), 
 				"Erdbeben vor Kanadas Westküste",
 				"Eher kleine Wellen nach Tsunami-Warnung"));
 	}
@@ -201,7 +199,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue220() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Googles Web Toolkit 2.5 mit schlankerem Code",
-				getClass().getResource("issue220.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue220.html"), 
 				"ein in Java geschriebenes quelloffenes Webframework für Ajax-Anwendungen",
 				"GWT enthält als Besonderheit einen Java-nach-JavaScript-Compiler"));
 	}
@@ -210,7 +208,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue279() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Zu viel Angst vor der Geburt",
-				getClass().getResource("issue279.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue279.html"), 
 				"Etwa fünf Prozent der Schwangeren fürchten sich extrem vor einer natürlichen Geburt.",
 				"Unnötige Kaiserschnitte zu vermeiden, sei schon deshalb wünschenswert, weil es durch diese OP öfter zu Komplikationen wie Blutungen, Infektionen und Stillproblemen komme, sagte Utz-Billing."));
 	}
@@ -219,7 +217,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue280() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Oliver Welke: „Ich bin irre, ich weiß“",
-				getClass().getResource("issue280.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue280.html"), 
 				"Günter Netzer, größter noch lebender Fußballexperte, soll gesagt haben, es gebe im Leben Wichtigeres, als gegen einen Fußball zu treten. Der Mann muss verrückt geworden sein.",
 				" Alle, die irgendwann ein Mikrofon in der Hand gehalten haben, hören sich danach anders an. "));
 	}
@@ -228,7 +226,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue281() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Nato-Aufklärungsdrohne: Abgeordnete fordern Global-Hawk-Beschaffung zu prüfen",
-				getClass().getResource("issue281.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue281.html"), 
 				"hinsichtlich des nationalen Drohenprojekts „Euro Hawk“",
 				"De Maizière (CDU) hatte am Freitag den Vorwurf zurückgewiesen, das Drohnenprojekt „Euro Hawk“ zu spät gestoppt zu haben."));
 	}
@@ -237,7 +235,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue282() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Soldat bei Messerattacke in Paris verletzt",
-				getClass().getResource("issue282.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue282.html"), 
 				"In London wurde außerdem ein Freund eines der beiden mutmaßlichen Täter festgenommen."));
 	}
 	
@@ -245,7 +243,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue283() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"In Istanbul sind der Fotograf Jim Rakete und der Lyriker Gerhard Falkner Freunde geworden",
-				getClass().getResource("issue283.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue283.html"), 
 				"Der Fotograf Jim Rakete und der Lyriker Gerhard Falkner leben beide in Berlin.",
 				"Die Kulturakademie Tarabya hat einen doppelten Boden. Man ist in Istanbul und ist es nicht.",
 				"Falkner kneift die Augen zusammen, Rakete rückt seine Sonnenbrille zurecht."));
@@ -255,7 +253,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue284() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Fangmengen: EU will Fischerei beschränken",
-				getClass().getResource("issue284.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue284.html"), 
 				"Meere sollen besser",
 				"erlaubt sein\", teilte die irische",
 				"Generell hatte das Parlament eine ehrgeizigere Linie verfochten"));
@@ -265,7 +263,7 @@ public class TestBoilerpipeArticleParser {
 	public void testParseRegressionIssue287() throws ParserException, IOException {
 		assertTrue(testExpectedContent(
 				"Armutsbekämpfung bei der UN : Extreme Armut bis 2030 beseitigen",
-				getClass().getResource("issue287.html"), 
+				new URL("http://www.example.com/org/cee/parser/impl/issue287.html"), 
 				"Mit einem ehrgeizigen Fahrplan",
 				"Die Politiker stehen einem Gremium aus 27 Regierungsmitgliedern und",
 				"Wachstum und eine Verdopplung des Anteils erneuerbarer Energien"));
