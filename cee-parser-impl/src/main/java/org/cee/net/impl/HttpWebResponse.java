@@ -79,9 +79,9 @@ public final class HttpWebResponse extends BaseWebResponse {
         if (entity == null) {
             throw new IOException("No entity received for " + originalLocation.toExternalForm());
         }
-        URL redirectUrl = (URL) context.getAttribute(HttpClientFactory.LAST_REDIRECT_URL);
+        String redirectUrl = (String)context.getAttribute(HttpClientFactory.LAST_REDIRECT_URL);
         if (redirectUrl != null) {
-            location = redirectUrl;
+            location = new URL(originalLocation, redirectUrl);
         }
     }
 	
