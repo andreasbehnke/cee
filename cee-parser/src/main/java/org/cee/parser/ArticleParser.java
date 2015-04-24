@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.cee.store.article.Article;
-import org.cee.store.article.ContentExtractionMetaData;
 import org.cee.store.article.TextBlock;
 
 public interface ArticleParser {
@@ -59,9 +58,6 @@ public interface ArticleParser {
     
     /**
      * Parses the article content page and adds the content {@link TextBlock}s to the article.
-     * @param reader Reader to read article content from
-     * @param article The article to be parsed, parser will add {@link TextBlock} to the content of article
-     * @param provideMetaData If true, the parser adds {@link ContentExtractionMetaData} to each generated {@link TextBlock}
      * @return The article with new content added or null if the article content has a poor quality and could not be parsed
      * @throws ParserException If the source could not be parsed
      * @throws IOException If an IO error occurred
