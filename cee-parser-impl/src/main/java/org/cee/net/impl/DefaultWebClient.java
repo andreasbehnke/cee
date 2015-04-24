@@ -40,6 +40,8 @@ public class DefaultWebClient implements WebClient {
     private static final String HTTP_PROTOCOL = "http";
 
     private static final String HTTPS_PROTOCOL = "https";
+    
+    private static final String FTP_PROTOCOL = "ftp";
 
     private HttpClient httpClient;
     
@@ -64,6 +66,14 @@ public class DefaultWebClient implements WebClient {
 	public void setReaderFactory(ReaderFactory readerFactory) {
 		this.readerFactory = readerFactory;
 	}
+	
+	@Override
+	public boolean isSupported(URL location) {
+	    String protocol = location.getProtocol();
+        return protocol.equalsIgnoreCase(HTTP_PROTOCOL) 
+                || protocol.equalsIgnoreCase(HTTPS_PROTOCOL) 
+                || protocol.equalsIgnoreCase(FTP_PROTOCOL);
+	}
 
 	@Override
 	public WebResponse openWebResponse(final URL location, boolean bufferStream) {
@@ -77,9 +87,10 @@ public class DefaultWebClient implements WebClient {
         		throw new IllegalArgumentException("The property httpClient has not been set yet!");
         	}
         	return new HttpWebResponse(location, httpClient, readerFactory, bufferStream);
-        } else {
-        	LOG.debug("open standard response for {}", location);
+        } else if (protocol.equalsIgnoreCase(FTP_PROTOCOL)) {
+        	LOG.debug("open ftp response for {}", location);
             return new DefaultWebResponse(location, readerFactory, bufferStream);
         }
+        throw new IllegalArgumentException("Unsupported protocol: " + location);
     }
 }

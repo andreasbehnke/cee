@@ -36,6 +36,12 @@ import org.cee.net.WebResponse;
  * is used for testing purposes.
  */
 public class ClassResourceWebClient implements  WebClient {
+    
+    @Override
+    public boolean isSupported(URL location) {
+        return true;
+    }
+    
 	/**
 	 * Only the path part of the URL is interpreted for retrieving resource from class path
 	 * @see org.cee.net.WebClient#openWebResponse(java.net.URL)
