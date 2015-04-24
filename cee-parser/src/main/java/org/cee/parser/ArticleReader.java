@@ -34,25 +34,32 @@ public class ArticleReader {
 
 	private ArticleParser articleParser;
 	
+	private WebClient webClient;
+	
 	public ArticleReader() {}
 	
-	public ArticleReader(ArticleParser articleParser) {
+	public ArticleReader(ArticleParser articleParser, WebClient webClient) {
 		this.articleParser = articleParser;
+		this.webClient = webClient;
 	}
 	
 	public void setArticleParser(ArticleParser articleParser) {
 	    this.articleParser = articleParser;
     }
 	
-	public Article readArticle(WebClient webClient, Article article, Settings settings) throws MalformedURLException, IOException, ParserException {
+	public void setWebClient(WebClient webClient) {
+		this.webClient = webClient;
+	}
+	
+	public Article readArticle(Article article, Settings settings) throws MalformedURLException, IOException, ParserException {
     	URL location = new URL(article.getLocation());
     	try (Reader reader = webClient.openWebResponse(location, false).openReader()) {
     	    return articleParser.parse(reader, article, settings);
     	}
     }
     
-    public Article readArticle(WebClient webClient, Article article) throws MalformedURLException, IOException, ParserException {
-    	return readArticle(webClient, article, new Settings());
+    public Article readArticle(Article article) throws MalformedURLException, IOException, ParserException {
+    	return readArticle(article, new Settings());
     }
     
     public Article readArticle(WebResponse response, Article article, Settings settings) throws MalformedURLException, IOException, ParserException {

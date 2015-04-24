@@ -57,6 +57,7 @@
     
     <bean id="articleReader" class="org.cee.parser.ArticleReader" scope="prototype">
         <property name="articleParser" ref="articleParser" />
+        <property name="webClient" ref="webClient"></property>
     </bean>
     
 	<bean id="siteReader" class="org.cee.parser.SiteReader" scope="prototype">

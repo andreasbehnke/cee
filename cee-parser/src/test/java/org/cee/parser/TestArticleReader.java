@@ -48,7 +48,7 @@ public class TestArticleReader extends BaseWebClientTest {
 		WebClient webClient = createWebClient(reader);
 		ArticleParser articleParser = mock(ArticleParser.class);
 		when(articleParser.parse(same(reader), same(input), any(Settings.class))).thenReturn(output);
-		assertSame(output, new ArticleReader(articleParser).readArticle(webClient, input));
+		assertSame(output, new ArticleReader(articleParser, webClient).readArticle(input));
 		verify(reader).close();
 	}
 	
@@ -62,7 +62,7 @@ public class TestArticleReader extends BaseWebClientTest {
 		ArticleParser articleParser = mock(ArticleParser.class);
 		when(articleParser.parse(reader, input, settings)).thenThrow(new IOException());
 		try {
-			new ArticleReader(articleParser).readArticle(webClient, input, settings);
+			new ArticleReader(articleParser, webClient).readArticle(input, settings);
 		} finally {
 			verify(reader).close();
 		}
@@ -78,7 +78,7 @@ public class TestArticleReader extends BaseWebClientTest {
 		when(webResponse.openReader()).thenReturn(reader);
 		ArticleParser articleParser = mock(ArticleParser.class);
 		when(articleParser.parse(same(reader), same(input), any(Settings.class))).thenReturn(output);
-		assertSame(output, new ArticleReader(articleParser).readArticle(webResponse, input));
+		assertSame(output, new ArticleReader(articleParser, null).readArticle(webResponse, input));
 		verify(reader).close();
 	}
 }

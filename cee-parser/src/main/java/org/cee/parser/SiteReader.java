@@ -118,7 +118,7 @@ public class SiteReader {
 		            Article result = null;
 		            try {
 		                if (!store.contains(siteKey, article.getExternalId())) {
-		                    result = articleReader.readArticle(webClient, article);
+		                    result = articleReader.readArticle(article);
 		                    if (result != null) {
 		                        result.setLanguage(language);
 		                    }

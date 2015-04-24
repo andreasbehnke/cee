@@ -229,10 +229,10 @@ public class TestSiteReader extends BaseWebClientTest {
 		when(articleStore.contains(eq(EntityKey.get("My Site")), eq("article2"))).thenReturn(false);
 
 		ArticleReader articleReader = mock(ArticleReader.class, RETURNS_SMART_NULLS);
-		when(articleReader.readArticle(webClient, unparsableArticle)).thenReturn(null);
-		when(articleReader.readArticle(webClient, throwsException)).thenThrow(new IOException());
-		when(articleReader.readArticle(webClient, article1)).thenReturn(article1);
-		when(articleReader.readArticle(webClient, article2)).thenReturn(article2);
+		when(articleReader.readArticle(unparsableArticle)).thenReturn(null);
+		when(articleReader.readArticle(throwsException)).thenThrow(new IOException());
+		when(articleReader.readArticle(article1)).thenReturn(article1);
+		when(articleReader.readArticle(article2)).thenReturn(article2);
 		
 		@SuppressWarnings("unchecked")
 		List<ArticleKey> feed1ArticleKeys = mock(List.class, RETURNS_SMART_NULLS);
