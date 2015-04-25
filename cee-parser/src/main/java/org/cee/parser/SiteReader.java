@@ -54,6 +54,8 @@ public class SiteReader {
 	
 	private final ForkJoinPool pool = new ForkJoinPool();
 	
+	private WebClient webClient;
+	
 	private FeedParser feedParser;
     
     private SiteParser siteParser;
@@ -67,13 +69,18 @@ public class SiteReader {
     public SiteReader() {
     }
 
-    public SiteReader(ArticleStore store, ArticleReader articleReader, FeedParser feedParser, SiteParser siteParser, SiteLanguageDetector siteLanguageDetector) {
-        this.store = store;
+    public SiteReader(WebClient webClient, ArticleStore store, ArticleReader articleReader, FeedParser feedParser, SiteParser siteParser, SiteLanguageDetector siteLanguageDetector) {
+        this.webClient = webClient;
+    	this.store = store;
         this.articleReader = articleReader;
         this.feedParser = feedParser;
         this.siteParser = siteParser;
         this.siteLanguageDetector = siteLanguageDetector;
     }
+    
+    public void setWebClient(WebClient webClient) {
+		this.webClient = webClient;
+	}
     
     public void setArticleReader(ArticleReader articleReader) {
 	    this.articleReader = articleReader;
@@ -95,21 +102,21 @@ public class SiteReader {
         this.store = store;
     }
 
-	private Feed readFeed(WebClient webClient, URL locationUrl) throws MalformedURLException, ParserException, IOException {
-    	try (Reader reader = webClient.openWebResponse(locationUrl, false).openReader()) {
+	private Feed readFeed(URL locationUrl) throws MalformedURLException, ParserException, IOException {
+    	try (Reader reader = this.webClient.openWebResponse(locationUrl, false).openReader()) {
     		return feedParser.parse(reader, locationUrl);
     	}
     }
 
-    private List<Feed> readFeeds(WebClient webClient, List<URL> feedLocations) throws IOException, ParserException {
+    private List<Feed> readFeeds(List<URL> feedLocations) throws IOException, ParserException {
     	List<Feed> feeds = new ArrayList<Feed>();
     	for (URL feedLocation : feedLocations) {
-    		feeds.add(readFeed(webClient, feedLocation));
+    		feeds.add(readFeed(feedLocation));
         }
     	return feeds;
     }
     
-    private List<Article> processArticles(final WebClient webClient, final List<Article> articles, final EntityKey siteKey, final String language) throws StoreException, InterruptedException, ExecutionException {
+    private List<Article> processArticles(final List<Article> articles, final EntityKey siteKey, final String language) throws StoreException, InterruptedException, ExecutionException {
     	List<Callable<Article>> tasks = new ArrayList<Callable<Article>>();
 		for (final Article article : articles) {
             tasks.add(new Callable<Article>() {
@@ -147,13 +154,13 @@ public class SiteReader {
 		return articlesForUpdate;
     }
  
-    private int processFeed(WebClient webClient, Feed feed, EntityKey siteKey, String language) throws MalformedURLException, ParserException, IOException, StoreException, InterruptedException, ExecutionException {
+    private int processFeed(Feed feed, EntityKey siteKey, String language) throws MalformedURLException, ParserException, IOException, StoreException, InterruptedException, ExecutionException {
     	LOG.debug("processing feed {}", feed.getTitle());
     	URL location = new URL(feed.getLocation());
-    	try (Reader reader = webClient.openWebResponse(location, false).openReader()) {
+    	try (Reader reader = this.webClient.openWebResponse(location, false).openReader()) {
     		int articleCount = 0;
 			List<Article> articles = feedParser.readArticles(reader, location);
-			List<Article> articlesForUpdate = processArticles(webClient, articles, siteKey, language);
+			List<Article> articlesForUpdate = processArticles(articles, siteKey, language);
 			if (articlesForUpdate.size() > 0) {
 				articleCount = store.addNewArticles(siteKey, articlesForUpdate).size();
 				LOG.debug("found {} new articles in feed {}", articleCount, feed.getTitle());
@@ -162,12 +169,12 @@ public class SiteReader {
     	}
     }
  
-    public Feed readFeed(WebClient webClient, String location) throws MalformedURLException, ParserException, IOException {
-    	return readFeed(webClient, new URL(location));
+    public Feed readFeed(String location) throws MalformedURLException, ParserException, IOException {
+    	return readFeed(new URL(location));
     }
     
-    public Site readSite(WebClient webClient, String location) throws MalformedURLException, ParserException, IOException {
-    	WebResponse response = webClient.openWebResponse(new URL(location), false);
+    public Site readSite(String location) throws MalformedURLException, ParserException, IOException {
+    	WebResponse response = this.webClient.openWebResponse(new URL(location), false);
         URL locationUrl = response.getLocation();
         try (Reader reader = response.openReader()) {
     		SiteExtraction siteExtraction = siteParser.parse(reader, locationUrl);
@@ -175,7 +182,7 @@ public class SiteReader {
     		// use site location from response to handle HTTP redirects
     		site.setLocation(locationUrl.toExternalForm());
     		// read all site's feeds
-    		site.setFeeds(readFeeds(webClient, siteExtraction.getFeedLocations()));
+    		site.setFeeds(readFeeds(siteExtraction.getFeedLocations()));
     		// detect site's language
     		site.setLanguage(siteLanguageDetector.detect(siteExtraction));
     		return site;
@@ -186,7 +193,7 @@ public class SiteReader {
      * Reads the content syndication feed of the site and adds all new articles
      * to the site. The article content is read from the articles web-site.
      */
-    public int update(WebClient webClient, Site site) throws StoreException {
+    public int update(Site site) throws StoreException {
         String siteName = site.getName();
     	LOG.info("starting update for site {}", siteName);
         EntityKey siteKey = EntityKey.get(siteName);
@@ -195,7 +202,7 @@ public class SiteReader {
     	for (Feed feed : site.getFeeds()) {
     		if (feed.isActive()) {
     			try  {
-    				siteArticleCount += processFeed(webClient, feed, siteKey, language);
+    				siteArticleCount += processFeed(feed, siteKey, language);
     			} catch (IOException e) {
     				LOG.warn("Could not retrieve feed {}, an io error occured", feed.getLocation());
     			} catch (ParserException e) {

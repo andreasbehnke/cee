@@ -27,7 +27,6 @@ import org.cee.client.site.FeedData;
 import org.cee.client.site.SiteConverter;
 import org.cee.client.site.SiteData;
 import org.cee.client.site.SiteData.SiteRetrivalState;
-import org.cee.net.WebClient;
 import org.cee.parser.ParserException;
 import org.cee.parser.SiteReader;
 import org.cee.store.site.Feed;
@@ -45,13 +44,7 @@ public class SiteProcessor {
 	
 	private static final String PARSER_ERROR = "Resource {} could not be loaded, a parser error occured";
 	
-	private WebClient webClient;
-	
 	private SiteReader siteReader;
-	
-	public void setWebClient(WebClient webClient) {
-		this.webClient = webClient;
-	}
 	
 	public void setSiteReader(SiteReader siteReader) {
 		this.siteReader = siteReader;
@@ -61,7 +54,7 @@ public class SiteProcessor {
 		SiteData info = new SiteData();
 		info.setIsNew(true);
 		try {
-			Site site = siteReader.readSite(this.webClient, location);
+			Site site = siteReader.readSite(location);
 			info = SiteConverter.createFromSite(site, true);
 			info.setState(SiteRetrivalState.ok);
 		} catch(MalformedURLException e) {
@@ -81,7 +74,7 @@ public class SiteProcessor {
 		FeedData info = new FeedData();
 		info.setIsNew(true);
 		try {
-			Feed feed = siteReader.readFeed(this.webClient, location);
+			Feed feed = siteReader.readFeed(location);
 			info = SiteConverter.createFromFeed(feed);
 			info.setState(SiteRetrivalState.ok);
 		} catch(MalformedURLException e) {

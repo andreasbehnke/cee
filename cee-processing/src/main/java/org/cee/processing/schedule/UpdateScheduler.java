@@ -8,7 +8,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.cee.net.WebClient;
 import org.cee.parser.SiteReader;
 import org.cee.store.EntityKey;
 import org.cee.store.StoreException;
@@ -75,15 +74,9 @@ public class UpdateScheduler {
 	
 	private ScheduledExecutorService scheduler;
 	
-	private WebClient webClient;
-	
 	private SiteStore siteStore;
 	
 	private SiteReader siteReader;
-	
-	public void setWebClient(WebClient webClient) {
-		this.webClient = webClient;
-	}
 	
 	public void setSiteStore(SiteStore siteStore) {
 		this.siteStore = siteStore;
@@ -198,7 +191,7 @@ public class UpdateScheduler {
         ensureThreadPool();
         if (!sitesInProgress.contains(siteKey)) {
             Site site = siteStore.getSite(siteKey);
-            SiteUpdateCommand command = new SiteUpdateCommand(this.webClient, siteReader, site);
+            SiteUpdateCommand command = new SiteUpdateCommand(siteReader, site);
             command.addCommandCallback(new CommandCallback() {
                 @Override
                 public void notifyFinished() {

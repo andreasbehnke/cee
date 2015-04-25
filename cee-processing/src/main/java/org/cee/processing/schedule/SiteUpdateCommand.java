@@ -20,7 +20,6 @@ package org.cee.processing.schedule;
  * #L%
  */
 
-import org.cee.net.WebClient;
 import org.cee.parser.SiteReader;
 import org.cee.store.StoreException;
 import org.cee.store.site.Site;
@@ -34,14 +33,11 @@ public class SiteUpdateCommand extends AbstractCommand {
 	
 	private static final Logger log = LoggerFactory.getLogger(SiteUpdateCommand.class);
 	
-	private final WebClient webClient;
-	
 	private final SiteReader siteReader;
 	
 	private final Site site;
 
-	public SiteUpdateCommand(WebClient webClient, SiteReader siteReader, Site site) {
-	    this.webClient = webClient;
+	public SiteUpdateCommand(SiteReader siteReader, Site site) {
 	    this.siteReader = siteReader;
 	    this.site = site;
     }
@@ -50,7 +46,7 @@ public class SiteUpdateCommand extends AbstractCommand {
 	protected void runInternal() {
 		try {
 			log.info("Start updating site {} at location {}", site.getName(), site.getLocation());
-			siteReader.update(webClient, site);
+			siteReader.update(site);
 			log.info("Finished updating site {} at location {}", site.getName(), site.getLocation());
 		} catch (StoreException e) {
 			log.error("Could not store articles of site", e);

@@ -40,12 +40,10 @@
 		<property name="updateSchedulerFixedDelay" value="${update.service.scheduler.fixed.delay}" />		
 		<property name="siteStore" ref="siteStore" />
 		<property name="siteReader" ref="siteReader" />
-		<property name="webClient" ref="webClient" />
 	</bean>
 	
 	<!-- SiteProcessor -->
 	<bean id="siteProcessor" class="org.cee.processing.site.SiteProcessor">
 		<property name="siteReader" ref="siteReader" />
-		<property name="webClient" ref="webClient" />
 	</bean>
 </beans>

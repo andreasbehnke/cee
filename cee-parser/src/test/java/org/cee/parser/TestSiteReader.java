@@ -64,7 +64,7 @@ public class TestSiteReader extends BaseWebClientTest {
 		FeedParser feedParser = mock(FeedParser.class);
 		when(feedParser.parse(reader, locationUrl)).thenReturn(feed);
 		
-		assertSame(feed, new SiteReader(null, null, feedParser, null, null).readFeed(webClient, location));
+		assertSame(feed, new SiteReader(webClient, null, null, feedParser, null, null).readFeed(location));
 		verify(reader).close();
 	}
 	
@@ -77,7 +77,7 @@ public class TestSiteReader extends BaseWebClientTest {
 		FeedParser feedParser = mock(FeedParser.class);
 		when(feedParser.parse(reader, locationUrl)).thenThrow(new IOException());
 		try {
-			new SiteReader(null, null, feedParser, null, null).readFeed(webClient, location);	
+			new SiteReader(webClient, null, null, feedParser, null, null).readFeed(location);	
 		} finally {
 			verify(reader).close();	
 		}
@@ -123,7 +123,7 @@ public class TestSiteReader extends BaseWebClientTest {
 		SiteLanguageDetector siteLanguageDetector = mock(SiteLanguageDetector.class);
 		when(siteLanguageDetector.detect(siteExtraction)).thenReturn("en");
 		
-		Site site = new SiteReader(null, null, feedParser, siteParser, siteLanguageDetector).readSite(webClient, location);
+		Site site = new SiteReader(webClient, null, null, feedParser, siteParser, siteLanguageDetector).readSite(location);
 		assertEquals("en", site.getLanguage());
 		assertEquals(redirectedLocation, site.getLocation());
 		assertEquals(3, site.getFeeds().size());
@@ -153,7 +153,7 @@ public class TestSiteReader extends BaseWebClientTest {
 		when(siteParser.parse(reader, locationUrl)).thenThrow(new IOException());
 		
 		try {
-			new SiteReader(null, null, null, siteParser, null).readSite(webClient, location);
+			new SiteReader(webClient, null, null, null, siteParser, null).readSite(location);
 		} finally {
 			verify(reader).close();
 		}
@@ -243,7 +243,7 @@ public class TestSiteReader extends BaseWebClientTest {
 		when(articleStore.addNewArticles(eq(EntityKey.get("My Site")), argThat(new IsArticleListOfNElements(2)))).thenReturn(feed1ArticleKeys);
 		when(articleStore.addNewArticles(eq(EntityKey.get("My Site")), argThat(new IsArticleListOfNElements(0)))).thenReturn(feed3ArticleKeys);
 
-		assertEquals(2, new SiteReader(articleStore, articleReader, feedParser, null, null).update(webClient, site));
+		assertEquals(2, new SiteReader(webClient, articleStore, articleReader, feedParser, null, null).update(site));
 		
 		verify(feed1Reader).close();
 		verify(feed3Reader).close();
@@ -275,7 +275,7 @@ public class TestSiteReader extends BaseWebClientTest {
 		when(feedParser.readArticles(same(feed1Reader), eq(feed1URL))).thenThrow(new IOException());
 		when(feedParser.readArticles(same(feed2Reader), eq(feed2URL))).thenReturn(new ArrayList<Article>());
 		
-		new SiteReader(null, null, feedParser, null, null).update(webClient, site);
+		new SiteReader(webClient, null, null, feedParser, null, null).update(site);
 		verify(feedParser).readArticles(same(feed1Reader), eq(feed1URL));
 		verify(feed1Reader).close();
 		verify(feedParser).readArticles(same(feed2Reader), eq(feed2URL));
@@ -305,7 +305,7 @@ public class TestSiteReader extends BaseWebClientTest {
 		FeedParser feedParser = mock(FeedParser.class);
 		when(feedParser.readArticles(same(feed2Reader), eq(feed2URL))).thenReturn(new ArrayList<Article>());
 		
-		new SiteReader(null, null, feedParser, null, null).update(webClient, site);
+		new SiteReader(webClient, null, null, feedParser, null, null).update(site);
 		verify(feedParser).readArticles(same(feed2Reader), eq(feed2URL));
 		verify(feed2Reader).close();	
 	}

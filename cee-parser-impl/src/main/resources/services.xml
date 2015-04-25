@@ -61,6 +61,7 @@
     </bean>
     
 	<bean id="siteReader" class="org.cee.parser.SiteReader" scope="prototype">
+		<property name="webClient" ref="webClient"></property>
 		<property name="articleReader" ref="articleReader" />
 		<property name="feedParser" ref="feedParser" />
 		<property name="siteLanguageDetector" ref="siteLanguageDetector" />
