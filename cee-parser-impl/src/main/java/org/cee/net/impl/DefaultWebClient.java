@@ -22,6 +22,13 @@ package org.cee.net.impl;
 
 
 import java.net.URL;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 import org.apache.http.client.HttpClient;
 import org.cee.net.WebClient;
@@ -42,6 +49,10 @@ public class DefaultWebClient implements WebClient {
     private static final String HTTPS_PROTOCOL = "https";
     
     private static final String FTP_PROTOCOL = "ftp";
+    
+    private final ConcurrentMap<URL, ExecutorService> executorServiceByUrl = new ConcurrentHashMap<>();
+    
+    private final AtomicInteger threadCount = new AtomicInteger(0);
 
     private HttpClient httpClient;
     
@@ -65,6 +76,18 @@ public class DefaultWebClient implements WebClient {
 
 	public void setReaderFactory(ReaderFactory readerFactory) {
 		this.readerFactory = readerFactory;
+	}
+	
+	private Thread createNewThread(URL location, Runnable runnable) {
+		Thread t = new Thread(runnable);
+		t.setName(location.getHost() + "#" + threadCount.incrementAndGet());
+		return t;
+	}
+	
+	private ExecutorService getExecutorServiceForUrl(URL location) {
+		return executorServiceByUrl.computeIfAbsent(location, (url) -> { 
+			return Executors.newFixedThreadPool(5, (r) -> { return this.createNewThread(location, r); } ); 
+		});
 	}
 	
 	@Override
@@ -93,4 +116,10 @@ public class DefaultWebClient implements WebClient {
         }
         throw new IllegalArgumentException("Unsupported protocol: " + location);
     }
+	
+	@Override
+	public <T> Future<T> processWebResponse(URL location, boolean bufferStream, Function<WebResponse, T> responseProcessor) {
+		ExecutorService executorService = getExecutorServiceForUrl(location);
+		return executorService.submit( () -> { return responseProcessor.apply(openWebResponse(location, bufferStream)); });
+	}
 }

@@ -26,6 +26,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.function.Function;
 
 import org.cee.net.WebClient;
 import org.cee.net.WebResponse;
@@ -36,6 +41,8 @@ import org.cee.net.WebResponse;
  * is used for testing purposes.
  */
 public class ClassResourceWebClient implements  WebClient {
+	
+	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     
     @Override
     public boolean isSupported(URL location) {
@@ -85,5 +92,15 @@ public class ClassResourceWebClient implements  WebClient {
 			    return location;
 			}
 		};
+	}
+	
+	@Override
+	public <T> Future<T> processWebResponse(final URL location, final boolean bufferStream, Function<WebResponse, T> responseProcessor) {
+		return executorService.submit(new Callable<T>() {
+			@Override
+			public T call() throws Exception {
+				return responseProcessor.apply(openWebResponse(location, bufferStream));
+			}
+		});
 	}
 }

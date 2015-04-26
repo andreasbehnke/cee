@@ -22,6 +22,8 @@ package org.cee.net;
 
 
 import java.net.URL;
+import java.util.concurrent.Future;
+import java.util.function.Function;
 
 /**
  * Provides access to web resources. A web client manages connection state, this
@@ -32,4 +34,6 @@ public interface WebClient {
     boolean isSupported(URL location);
     
     WebResponse openWebResponse(URL location, boolean bufferStream);
+    
+    <T> Future<T> processWebResponse(URL location, boolean bufferStream, Function<WebResponse, T> responseProcessor);
 }
