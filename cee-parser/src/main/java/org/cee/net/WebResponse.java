@@ -50,5 +50,7 @@ public interface WebResponse {
     
     long getContentLength() throws IOException;
     
+    URL getOriginalLocation();
+    
     URL getLocation() throws IOException;
 }

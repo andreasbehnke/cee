@@ -127,4 +127,9 @@ public final class HttpWebResponse extends BaseWebResponse {
 	    }
         return location;
 	}
+	
+	@Override
+	public URL getOriginalLocation() {
+		return originalLocation;
+	}
 }

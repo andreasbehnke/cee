@@ -3,22 +3,21 @@ package org.cee.site.crawler;
 import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.cee.crawler.FollowConstraint;
 import org.cee.crawler.SiteCrawler;
 import org.cee.crawler.SiteCrawlerCallback;
 import org.cee.net.WebClient;
+import org.cee.net.WebResponse;
 import org.cee.parser.impl.SaxXmlReaderFactory;
 import org.cee.parser.impl.TeeContentHandler;
 import org.cee.parser.impl.XmlReaderProvider;
@@ -33,9 +32,7 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
     
     private static final Logger LOG = LoggerFactory.getLogger(SiteCrawlerImpl.class);
 
-    private ExecutorService executorService;
-    
-    private final Set<URL> visitedLinks = new HashSet<URL>();
+    private final Set<URL> visitedLinks = Collections.newSetFromMap(new ConcurrentHashMap<>());
     
     public SiteCrawlerImpl(SaxXmlReaderFactory xmlReaderFactory) {
         super(xmlReaderFactory);
@@ -55,28 +52,31 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
         }
     }
     
-    private Set<URL> crawlPage(WebClient webClient, URL location, SiteCrawlerCallback callback) {
-        StopWatch stopWatch = new StopWatch();
+    private Set<URL> crawlPage(WebResponse webResponse, SiteCrawlerCallback callback) {
+    	Set<URL> links = null;
+    	StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        XMLReader xmlReader = createXmlReader();
-        LinkHandler linkHandler = new LinkHandler(location);
-        ContentHandler contentHandler = null;
-        ContentHandler[] contentHandlers = notifyPageStart(location, callback);
-        if (contentHandlers == null) {
-            contentHandler = linkHandler;
-        } else {
-            contentHandler = new TeeContentHandler(contentHandlers).add(linkHandler);
-        }
-        xmlReader.setContentHandler(contentHandler);
-        try(Reader reader = webClient.openWebResponse(location, false).openReader()) {
+        try(Reader reader = webResponse.openReader()) {
+        	XMLReader xmlReader = createXmlReader();
+        	URL location = webResponse.getLocation();
+            LinkHandler linkHandler = new LinkHandler(location);
+            ContentHandler contentHandler = null;
+            ContentHandler[] contentHandlers = notifyPageStart(location, callback);
+            if (contentHandlers == null) {
+                contentHandler = linkHandler;
+            } else {
+                contentHandler = new TeeContentHandler(contentHandlers).add(linkHandler);
+            }
+            xmlReader.setContentHandler(contentHandler);
             xmlReader.parse(new InputSource(reader));
+            notifyPageFinished(location, callback, contentHandlers);
+            links = linkHandler.getLinks();
+            stopWatch.stop();
+            LOG.info("Visiting location {} took {} and found {} new links.", new Object[]{location, stopWatch, links.size()});
         } catch (Exception e) {
-            LOG.warn("Could not open link resource for " + location, e);
+        	LOG.warn("Could not open link resource for " + webResponse.getOriginalLocation(), e);
+        	links = Collections.emptySet();
         }
-        notifyPageFinished(location, callback, contentHandlers);
-        Set<URL> links = linkHandler.getLinks();
-        stopWatch.stop();
-        LOG.debug("Visiting location {} took {} and found {} new links.", new Object[]{location, stopWatch, links.size()});
         return links;
     }
     
@@ -89,45 +89,48 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
         return true;
     }
     
+    private <T> void waitForAllFutures(List<Future<T>> results) throws InterruptedException {
+    	for (Future<T> future : results) {
+    		if (!future.isDone()) {
+                try {
+                	future.get();
+                } catch (CancellationException ignore) {
+                } catch (ExecutionException ignore) {
+                }
+            }
+		}
+    }
+    
     @Override
     public void crawl(final WebClient webClient, URL siteLocation, final SiteCrawlerCallback callback, FollowConstraint... followConstraints) throws InterruptedException {
-        executorService = Executors.newFixedThreadPool(20);
         int depth = 0;
         Set<URL> linksToBeProcessed = new LinkedHashSet<>();
         linksToBeProcessed.add(siteLocation);
-        try {
-            while(!linksToBeProcessed.isEmpty()) {
-                List<Callable<Set<URL>>> tasks = new ArrayList<Callable<Set<URL>>>();
-                for (final URL location : linksToBeProcessed) {
-                    tasks.add(new Callable<Set<URL>>() {
-                        
-                        @Override
-                        public Set<URL> call() {
-                            return crawlPage(webClient, location, callback);
-                        }
-                    });
-                    this.visitedLinks.add(location);
-                }
-                List<Future<Set<URL>>> results = executorService.invokeAll(tasks);
-                linksToBeProcessed.clear();
-                for (Future<Set<URL>> result : results) {
-                    try {
-                        Set<URL> pageResult = result.get();
-                        for (URL link : pageResult) {
-                            if (!this.visitedLinks.contains(link) && follow(link, depth, followConstraints)) {
-                                linksToBeProcessed.add(link);
-                            }
-                        }
-                    } catch (InterruptedException | ExecutionException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                depth++;
-                
+        while(!linksToBeProcessed.isEmpty()) {
+        	List<Future<Set<URL>>> results = new ArrayList<>();
+            for (final URL location : linksToBeProcessed) {
+            	try {
+            		results.add( webClient.processWebResponse(location, false, (wr) -> { return crawlPage(wr, callback); } ) );
+            	} catch(Exception e) {
+            		LOG.error("Could not add response processor to processing queue", e);
+            	}
+            	this.visitedLinks.add(location);
             }
-        } finally {
-            executorService.shutdownNow();
-            executorService.awaitTermination(1, TimeUnit.MINUTES);
+            waitForAllFutures(results);
+            linksToBeProcessed.clear();
+            for (Future<Set<URL>> result : results) {
+                try {
+                    Set<URL> pageResult = result.get();
+                    for (URL link : pageResult) {
+                        if (!this.visitedLinks.contains(link) && follow(link, depth, followConstraints)) {
+                            linksToBeProcessed.add(link);
+                        }
+                    }
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            depth++;
         }
     }
 }

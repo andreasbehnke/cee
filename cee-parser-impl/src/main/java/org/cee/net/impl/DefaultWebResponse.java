@@ -58,4 +58,9 @@ final class DefaultWebResponse extends BaseWebResponse {
 	public URL getLocation() {
 	    return originalLocation;
 	}
+	
+	@Override
+	public URL getOriginalLocation() {
+		return originalLocation;
+	}
 }

@@ -22,6 +22,8 @@ public class LinkHandler extends DefaultHandler {
 
     private static final String A_ELEMENT = "a";
     
+    private static final String JAVASCRIPT = "javascript:";
+    
     private final Set<URL> links = new HashSet<>();
     
     private final URL baseUrl;
@@ -38,7 +40,7 @@ public class LinkHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (localName.equalsIgnoreCase(A_ELEMENT)) {
             String href = attributes.getValue(HREF_ATTRIBUTE);
-            if (href != null) {
+            if (href != null && !href.startsWith(JAVASCRIPT)) {
                 LOG.debug("found link to {}", new Object[]{href});
                 URL location = null;
                 try {

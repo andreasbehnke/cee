@@ -64,9 +64,9 @@ public class DefaultHttpClientFactory implements HttpClientFactory {
     
     public DefaultHttpClientFactory() {
         PoolingHttpClientConnectionManager poolingConnectionManager = new PoolingHttpClientConnectionManager();
-        poolingConnectionManager.setDefaultMaxPerRoute(5);
+        poolingConnectionManager.setDefaultMaxPerRoute(4);
         poolingConnectionManager.setMaxTotal(20);
-        poolingConnectionManager.setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(5000).build());
+        poolingConnectionManager.setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(3000).build());
         this.connectionManager = poolingConnectionManager;
         defaultHeaders = new ArrayList<Header>();
         defaultHeaders.add(new BasicHeader(HTTP.USER_AGENT, USER_AGENT));

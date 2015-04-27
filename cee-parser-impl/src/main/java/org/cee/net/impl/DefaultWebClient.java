@@ -21,7 +21,9 @@ package org.cee.net.impl;
  */
 
 
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
@@ -50,9 +52,9 @@ public class DefaultWebClient implements WebClient {
     
     private static final String FTP_PROTOCOL = "ftp";
     
-    private final ConcurrentMap<URL, ExecutorService> executorServiceByUrl = new ConcurrentHashMap<>();
+    private final ConcurrentMap<InetAddress, ExecutorService> executorServiceByHost = new ConcurrentHashMap<>();
     
-    private final AtomicInteger threadCount = new AtomicInteger(0);
+    private final ConcurrentMap<String, AtomicInteger> threadCountOfDomain = new ConcurrentHashMap<>();
 
     private HttpClient httpClient;
     
@@ -78,15 +80,18 @@ public class DefaultWebClient implements WebClient {
 		this.readerFactory = readerFactory;
 	}
 	
-	private Thread createNewThread(URL location, Runnable runnable) {
+	private Thread createNewThread(String domain, Runnable runnable) {
 		Thread t = new Thread(runnable);
-		t.setName(location.getHost() + "#" + threadCount.incrementAndGet());
+		int count = threadCountOfDomain.computeIfAbsent(domain, (s) -> { return new AtomicInteger(0);}).incrementAndGet();
+		t.setName(domain + "#" + count);
 		return t;
 	}
 	
-	private ExecutorService getExecutorServiceForUrl(URL location) {
-		return executorServiceByUrl.computeIfAbsent(location, (url) -> { 
-			return Executors.newFixedThreadPool(5, (r) -> { return this.createNewThread(location, r); } ); 
+	private ExecutorService getExecutorServiceForUrl(URL location) throws UnknownHostException {
+		String host = location.getHost();
+		final InetAddress inetAddr = InetAddress.getByName(host);
+		return executorServiceByHost.computeIfAbsent(inetAddr, (url) -> {
+			return Executors.newFixedThreadPool(5, (r) -> { return this.createNewThread(inetAddr.toString(), r); } ); 
 		});
 	}
 	
@@ -119,7 +124,10 @@ public class DefaultWebClient implements WebClient {
 	
 	@Override
 	public <T> Future<T> processWebResponse(URL location, boolean bufferStream, Function<WebResponse, T> responseProcessor) {
-		ExecutorService executorService = getExecutorServiceForUrl(location);
-		return executorService.submit( () -> { return responseProcessor.apply(openWebResponse(location, bufferStream)); });
+		try {
+			return getExecutorServiceForUrl(location).submit( () -> { return responseProcessor.apply(openWebResponse(location, bufferStream)); });
+		} catch (UnknownHostException e) {
+			throw new RuntimeException("Could no add processor to processing queue", e);
+		}
 	}
 }

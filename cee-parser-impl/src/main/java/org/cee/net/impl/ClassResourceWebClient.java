@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -91,16 +90,16 @@ public class ClassResourceWebClient implements  WebClient {
 			public URL getLocation() {
 			    return location;
 			}
+			
+			@Override
+			public URL getOriginalLocation() {
+				return location;
+			}
 		};
 	}
 	
 	@Override
 	public <T> Future<T> processWebResponse(final URL location, final boolean bufferStream, Function<WebResponse, T> responseProcessor) {
-		return executorService.submit(new Callable<T>() {
-			@Override
-			public T call() throws Exception {
-				return responseProcessor.apply(openWebResponse(location, bufferStream));
-			}
-		});
+		return executorService.submit( () -> { return responseProcessor.apply(openWebResponse(location, bufferStream)); } );
 	}
 }
