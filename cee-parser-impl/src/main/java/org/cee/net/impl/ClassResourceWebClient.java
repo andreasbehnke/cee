@@ -29,6 +29,7 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import org.cee.net.WebClient;
@@ -101,5 +102,14 @@ public class ClassResourceWebClient implements  WebClient {
 	@Override
 	public <T> Future<T> processWebResponse(final URL location, final boolean bufferStream, Function<WebResponse, T> responseProcessor) {
 		return executorService.submit( () -> { return responseProcessor.apply(openWebResponse(location, bufferStream)); } );
+	}
+	
+	@Override
+	public void shutdown() {
+		executorService.shutdownNow();
+		try {
+			executorService.awaitTermination(60, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+		}
 	}
 }

@@ -36,4 +36,6 @@ public interface WebClient {
     WebResponse openWebResponse(URL location, boolean bufferStream);
     
     <T> Future<T> processWebResponse(URL location, boolean bufferStream, Function<WebResponse, T> responseProcessor);
+    
+    void shutdown();
 }

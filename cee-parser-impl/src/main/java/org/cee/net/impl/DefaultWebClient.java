@@ -21,14 +21,16 @@ package org.cee.net.impl;
  */
 
 
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -52,18 +54,27 @@ public class DefaultWebClient implements WebClient {
     
     private static final String FTP_PROTOCOL = "ftp";
     
-    private final ConcurrentMap<InetAddress, ExecutorService> executorServiceByHost = new ConcurrentHashMap<>();
+    private final List<ExecutorService> poolOfThreadPools = new ArrayList<>();
     
-    private final ConcurrentMap<String, AtomicInteger> threadCountOfDomain = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Integer> threadPoolByHost = new ConcurrentHashMap<>();
+    
+    private final ConcurrentMap<String, AtomicInteger> threadCountOfPrefix = new ConcurrentHashMap<>();
+    
+    private final AtomicInteger poolCount = new AtomicInteger(0);
 
     private HttpClient httpClient;
     
     private ReaderFactory readerFactory;
 
     public DefaultWebClient() {
+    	for(int i = 0; i < 5; i++) {
+    		final String prefix = "pool#" + i + ":";
+    		poolOfThreadPools.add(Executors.newFixedThreadPool(5, (r) -> { return this.createNewThread(prefix, r); } ));
+    	}
     }
 
     public DefaultWebClient(HttpClientFactory httpClientFactory, ReaderFactory readerFactory) {
+    	this();
         this.readerFactory = readerFactory;
         setHttpClientFactory(httpClientFactory);
     }
@@ -80,19 +91,17 @@ public class DefaultWebClient implements WebClient {
 		this.readerFactory = readerFactory;
 	}
 	
-	private Thread createNewThread(String domain, Runnable runnable) {
+	private Thread createNewThread(String prefix, Runnable runnable) {
 		Thread t = new Thread(runnable);
-		int count = threadCountOfDomain.computeIfAbsent(domain, (s) -> { return new AtomicInteger(0);}).incrementAndGet();
-		t.setName(domain + "#" + count);
+		int count = threadCountOfPrefix.computeIfAbsent(prefix, (s) -> { return new AtomicInteger(0);}).incrementAndGet();
+		t.setName(prefix + "#" + count);
 		return t;
 	}
-	
+
 	private ExecutorService getExecutorServiceForUrl(URL location) throws UnknownHostException {
 		String host = location.getHost();
-		final InetAddress inetAddr = InetAddress.getByName(host);
-		return executorServiceByHost.computeIfAbsent(inetAddr, (url) -> {
-			return Executors.newFixedThreadPool(5, (r) -> { return this.createNewThread(inetAddr.toString(), r); } ); 
-		});
+		int poolNumber = threadPoolByHost.computeIfAbsent(host, (h) -> { return this.poolCount.getAndIncrement() % 5; } );
+		return poolOfThreadPools.get(poolNumber);
 	}
 	
 	@Override
@@ -128,6 +137,19 @@ public class DefaultWebClient implements WebClient {
 			return getExecutorServiceForUrl(location).submit( () -> { return responseProcessor.apply(openWebResponse(location, bufferStream)); });
 		} catch (UnknownHostException e) {
 			throw new RuntimeException("Could no add processor to processing queue", e);
+		}
+	}
+	
+	@Override
+	public void shutdown() {
+		for (ExecutorService executorService : poolOfThreadPools) {
+			executorService.shutdownNow();
+		}
+		for (ExecutorService executorService : poolOfThreadPools) {
+			try {
+				executorService.awaitTermination(60, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+			}
 		}
 	}
 }
