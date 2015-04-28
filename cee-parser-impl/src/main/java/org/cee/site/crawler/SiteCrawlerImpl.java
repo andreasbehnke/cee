@@ -34,8 +34,11 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
 
     private final Set<URL> visitedLinks = Collections.newSetFromMap(new ConcurrentHashMap<>());
     
-    public SiteCrawlerImpl(SaxXmlReaderFactory xmlReaderFactory) {
+    private final WebClient webClient; 
+    
+    public SiteCrawlerImpl(WebClient webClient, SaxXmlReaderFactory xmlReaderFactory) {
         super(xmlReaderFactory);
+        this.webClient = webClient;
     }
     
     private ContentHandler[] notifyPageStart(URL location, SiteCrawlerCallback callback) {
@@ -102,7 +105,7 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
     }
     
     @Override
-    public void crawl(final WebClient webClient, URL siteLocation, final SiteCrawlerCallback callback, FollowConstraint... followConstraints) throws InterruptedException {
+    public void crawl(URL siteLocation, final SiteCrawlerCallback callback, FollowConstraint... followConstraints) throws InterruptedException {
         int depth = 0;
         Set<URL> linksToBeProcessed = new LinkedHashSet<>();
         linksToBeProcessed.add(siteLocation);
@@ -110,7 +113,7 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
         	List<Future<Set<URL>>> results = new ArrayList<>();
             for (final URL location : linksToBeProcessed) {
             	try {
-            		results.add( webClient.processWebResponse(location, false, (wr) -> { return crawlPage(wr, callback); } ) );
+            		results.add(this.webClient.processWebResponse(location, false, (wr) -> { return crawlPage(wr, callback); } ) );
             	} catch(Exception e) {
             		LOG.error("Could not add response processor to processing queue", e);
             	}
