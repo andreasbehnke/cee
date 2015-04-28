@@ -58,7 +58,7 @@ public class DefaultWebClient implements WebClient {
     
     private final ConcurrentMap<String, Integer> threadPoolByHost = new ConcurrentHashMap<>();
     
-    private final ConcurrentMap<String, AtomicInteger> threadCountOfPrefix = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, AtomicInteger> threadCountByPrefix = new ConcurrentHashMap<>();
     
     private final AtomicInteger poolCount = new AtomicInteger(0);
 
@@ -93,7 +93,7 @@ public class DefaultWebClient implements WebClient {
 	
 	private Thread createNewThread(String prefix, Runnable runnable) {
 		Thread t = new Thread(runnable);
-		int count = threadCountOfPrefix.computeIfAbsent(prefix, (s) -> { return new AtomicInteger(0);}).incrementAndGet();
+		int count = threadCountByPrefix.computeIfAbsent(prefix, (s) -> { return new AtomicInteger(0);}).incrementAndGet();
 		t.setName(prefix + "#" + count);
 		return t;
 	}
