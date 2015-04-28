@@ -16,6 +16,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.cee.crawler.FollowConstraint;
 import org.cee.crawler.PageHandler;
 import org.cee.crawler.SiteCrawler;
+import org.cee.crawler.SupportedProtocolConstraint;
 import org.cee.net.WebClient;
 import org.cee.net.WebResponse;
 import org.cee.parser.impl.SaxXmlReaderFactory;
@@ -122,6 +123,7 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
     
     @Override
     public void crawl(URL siteLocation) throws InterruptedException {
+    	followIf(new SupportedProtocolConstraint(webClient));
         int depth = 0;
         Set<URL> linksToBeProcessed = new LinkedHashSet<>();
         linksToBeProcessed.add(siteLocation);
