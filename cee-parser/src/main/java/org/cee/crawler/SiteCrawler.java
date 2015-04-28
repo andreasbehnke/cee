@@ -4,6 +4,9 @@ import java.net.URL;
 
 public interface SiteCrawler {
 
-    void crawl(URL location, SiteCrawlerCallback siteCrawlerCallback, FollowConstraint... followConstraints) throws Exception;
-
+	SiteCrawler setPageHandler(PageHandler pageHandler);
+    
+    SiteCrawler followIf(FollowConstraint followConstraint);
+    
+    void crawl(URL location) throws InterruptedException;
 }

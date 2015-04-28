@@ -14,8 +14,8 @@ import java.util.concurrent.Future;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.cee.crawler.FollowConstraint;
+import org.cee.crawler.PageHandler;
 import org.cee.crawler.SiteCrawler;
-import org.cee.crawler.SiteCrawlerCallback;
 import org.cee.net.WebClient;
 import org.cee.net.WebResponse;
 import org.cee.parser.impl.SaxXmlReaderFactory;
@@ -34,28 +34,32 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
 
     private final Set<URL> visitedLinks = Collections.newSetFromMap(new ConcurrentHashMap<>());
     
-    private final WebClient webClient; 
+    private final WebClient webClient;
+    
+    private final List<FollowConstraint> followConstraints = new ArrayList<>();
+    
+    private PageHandler pageHandler;
     
     public SiteCrawlerImpl(WebClient webClient, SaxXmlReaderFactory xmlReaderFactory) {
         super(xmlReaderFactory);
         this.webClient = webClient;
     }
     
-    private ContentHandler[] notifyPageStart(URL location, SiteCrawlerCallback callback) {
-        if (callback != null) {
-            return callback.onPageStart(location);
+    private ContentHandler[] notifyPageStart(URL location) {
+    	if (pageHandler != null) {
+            return pageHandler.onPageStart(location);
         } else {
             return null;
         }
     }
     
-    private void notifyPageFinished(URL location, SiteCrawlerCallback callback, ContentHandler... contentHandlers) {
-        if (callback != null) {
-            callback.onPageFinished(location, contentHandlers);
+    private void notifyPageFinished(URL location, ContentHandler... contentHandlers) {
+        if (pageHandler != null) {
+        	pageHandler.onPageFinished(location, contentHandlers);
         }
     }
     
-    private Set<URL> crawlPage(WebResponse webResponse, SiteCrawlerCallback callback) {
+    private Set<URL> crawlPage(WebResponse webResponse) {
     	Set<URL> links = null;
     	StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -64,7 +68,7 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
         	URL location = webResponse.getLocation();
             LinkHandler linkHandler = new LinkHandler(location);
             ContentHandler contentHandler = null;
-            ContentHandler[] contentHandlers = notifyPageStart(location, callback);
+            ContentHandler[] contentHandlers = notifyPageStart(location);
             if (contentHandlers == null) {
                 contentHandler = linkHandler;
             } else {
@@ -72,7 +76,7 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
             }
             xmlReader.setContentHandler(contentHandler);
             xmlReader.parse(new InputSource(reader));
-            notifyPageFinished(location, callback, contentHandlers);
+            notifyPageFinished(location, contentHandlers);
             links = linkHandler.getLinks();
             stopWatch.stop();
             LOG.info("duration: {}, links: {}, location: {}", new Object[]{stopWatch, links.size(), location});
@@ -83,7 +87,7 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
         return links;
     }
     
-    private boolean follow(URL link, int depth, FollowConstraint... followConstraints) {
+    private boolean shouldFollow(URL link, int depth) {
         for (FollowConstraint followConstraint : followConstraints) {
             if (!followConstraint.follow(depth, link)) {
                 return false;
@@ -105,7 +109,19 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
     }
     
     @Override
-    public void crawl(URL siteLocation, final SiteCrawlerCallback callback, FollowConstraint... followConstraints) throws InterruptedException {
+    public SiteCrawler followIf(FollowConstraint followConstraint) {
+    	this.followConstraints.add(followConstraint);
+    	return this;
+    }
+    
+    @Override
+    public SiteCrawler setPageHandler(PageHandler pageHandler) {
+    	this.pageHandler = pageHandler;
+    	return this;
+    }
+    
+    @Override
+    public void crawl(URL siteLocation) throws InterruptedException {
         int depth = 0;
         Set<URL> linksToBeProcessed = new LinkedHashSet<>();
         linksToBeProcessed.add(siteLocation);
@@ -113,7 +129,7 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
         	List<Future<Set<URL>>> results = new ArrayList<>();
             for (final URL location : linksToBeProcessed) {
             	try {
-            		results.add(this.webClient.processWebResponse(location, false, (wr) -> { return crawlPage(wr, callback); } ) );
+            		results.add(this.webClient.processWebResponse(location, false, (wr) -> { return crawlPage(wr); } ) );
             	} catch(Exception e) {
             		LOG.error("Could not add response processor to processing queue", e);
             	}
@@ -125,7 +141,7 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
                 try {
                     Set<URL> pageResult = result.get();
                     for (URL link : pageResult) {
-                        if (!this.visitedLinks.contains(link) && follow(link, depth, followConstraints)) {
+                        if (!this.visitedLinks.contains(link) && shouldFollow(link, depth)) {
                             linksToBeProcessed.add(link);
                         }
                     }
