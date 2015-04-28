@@ -72,9 +72,9 @@ public class SiteCrawlerImpl extends XmlReaderProvider implements SiteCrawler {
             notifyPageFinished(location, callback, contentHandlers);
             links = linkHandler.getLinks();
             stopWatch.stop();
-            LOG.info("Visiting location {} took {} and found {} new links.", new Object[]{location, stopWatch, links.size()});
+            LOG.info("duration: {}, links: {}, location: {}", new Object[]{stopWatch, links.size(), location});
         } catch (Exception e) {
-        	LOG.warn("Could not open link resource for " + webResponse.getOriginalLocation(), e);
+        	LOG.warn("error ({}) processing location {}", new Object[]{ e.getMessage(), webResponse.getOriginalLocation() } );
         	links = Collections.emptySet();
         }
         return links;
