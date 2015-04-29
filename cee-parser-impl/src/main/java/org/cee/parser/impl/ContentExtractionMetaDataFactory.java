@@ -28,8 +28,12 @@ import org.cee.store.article.ContentExtractionMetaData.Property;
 
 import de.l3s.boilerpipe.document.TextBlock;
 
-public class ContentExtractionMetaDataFactory {
+public final class ContentExtractionMetaDataFactory {
     
+	public static final ContentExtractionMetaDataFactory INSTANCE = new ContentExtractionMetaDataFactory();
+	
+	private ContentExtractionMetaDataFactory() {}
+	
     private List<Property> buildExtractionInformationMap(TextBlock textBlock) {
     	List<Property> properties = new ArrayList<ContentExtractionMetaData.Property>();
     	properties.add(new Property("tag level", textBlock.getTagLevel()));

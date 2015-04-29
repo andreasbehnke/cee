@@ -143,7 +143,7 @@ public class BoilerpipeArticleParser extends XmlReaderProvider implements Articl
             	String paragraph = block.getText();
             	org.cee.store.article.TextBlock internalBlock = new org.cee.store.article.TextBlock(paragraph);
             	if (settings.isProvideMetaData()) {
-            		ContentExtractionMetaData metaData = new ContentExtractionMetaDataFactory().create(content.size(), block);
+            		ContentExtractionMetaData metaData = ContentExtractionMetaDataFactory.INSTANCE.create(content.size(), block);
             		internalBlock.setMetaData(metaData);
             	}
             	content.add(internalBlock);
