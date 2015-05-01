@@ -23,7 +23,7 @@
 		</dependency>
 
 		<!-- external -->
-		<dependency>
+	    <dependency>
 		    <groupId>com.google.code.gson</groupId>
 		    <artifactId>gson</artifactId>
 		</dependency>
@@ -44,6 +44,11 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 		<!-- testing -->
+		<dependency>
+            <groupId>javax.servlet</groupId>
+    	    <artifactId>javax.servlet-api</artifactId>
+    	    <scope>test</scope>
+	    </dependency>
 		<dependency>
 			<groupId>com.cee</groupId>
 			<artifactId>cee-store-test-suite</artifactId>

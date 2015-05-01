@@ -35,9 +35,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
 	
 	<import resource="classpath*:services.xml" />
 	
-	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
-	    <property name="providerClass" value="org.apache.bval.jsr303.ApacheValidationProvider" />
-	</bean>
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 	
 	<bean class="org.cee.rest.workingset.WorkingSetResource">
 		<property name="workingSetService" ref="workingSetService" />

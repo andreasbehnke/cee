@@ -100,10 +100,15 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.bval</groupId>
-			<artifactId>org.apache.bval.bundle</artifactId>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+	     <groupId>javax.el</groupId>
+	     <artifactId>javax.el-api</artifactId>
+	     <scope>runtime</scope>
+	    </dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
